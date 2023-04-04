@@ -1,0 +1,71 @@
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using System.Data;
+
+namespace UserManagement.Api.Controllers
+{
+    [ApiController]
+    [Produces("application/json")]
+    [Route("role")]
+    [Authorize(AuthenticationSchemes = "Bearer")]
+    public class RoleController : ControllerBase
+    {
+        private readonly RoleManager<IdentityRole> _roleManager;
+        public RoleController(RoleManager<IdentityRole> roleManager)
+        {
+            _roleManager = roleManager;
+        }
+
+
+        [HttpPost("create")]
+        public Task<IdentityResult> AddAsync(IdentityRole role)
+        {
+            var result = _roleManager.CreateAsync(role);
+            return result;
+        }
+
+
+        [HttpPut("update")]
+        public async Task<IdentityResult> UpdateAsync(IdentityRole role)
+        {
+            var roleToBeUpdated = await _roleManager.FindByIdAsync(role.Id);
+            if (roleToBeUpdated == null)
+            {
+                return IdentityResult.Failed(new IdentityError() { Description = $"Role {role.Name} was not found!" });
+            }
+
+            roleToBeUpdated.Name = role.Name;
+
+            var result = await _roleManager.UpdateAsync(roleToBeUpdated);
+            return result;
+        }
+
+        [HttpDelete("remove/{rolename}")]
+        public async Task<IdentityResult> RemoveAsync([FromRoute] string rolename)
+        {
+            var roleToDelete = await _roleManager.FindByNameAsync(rolename);
+            if (roleToDelete == null)
+            {
+                return IdentityResult.Failed(new IdentityError() { Description = $"Role {rolename} was not found!" });
+            }
+
+            var result = await _roleManager.DeleteAsync(roleToDelete);
+            return result;
+        }
+
+        [HttpGet("{name}")]
+        public Task<IdentityRole> GetAsync([FromRoute] string name)
+        {
+            var result = _roleManager.FindByNameAsync(name);
+            return result;
+        }
+
+        [HttpGet]
+        public IEnumerable<IdentityRole> GetAllAsync()
+        {
+            var result = _roleManager.Roles.AsEnumerable();
+            return result;
+        }
+    }
+}

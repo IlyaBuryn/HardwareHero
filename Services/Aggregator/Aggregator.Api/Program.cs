@@ -1,6 +1,7 @@
 using Aggregator.Api.Middlewares;
 using Aggregator.BusinessLogic.Extensions;
 using FluentValidation.AspNetCore;
+using HardwareHero.Services.Shared.Constants;
 using Microsoft.IdentityModel.Tokens;
 using System.Text.Json.Serialization;
 
@@ -18,7 +19,7 @@ builder.Services.AddControllers(options =>
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-var connectionString = builder.Configuration.GetConnectionString("AggregatorDbConnection");
+var connectionString = builder.Configuration.GetConnectionString(ConnectionNames.AggregatorConnection);
 if (connectionString != null)
 {
     builder.Services.ConfigureBusinessLogicLayer(connectionString);

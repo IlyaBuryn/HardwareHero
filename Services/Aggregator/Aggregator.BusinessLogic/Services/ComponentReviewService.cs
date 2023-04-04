@@ -1,9 +1,9 @@
 ﻿using Aggregator.BusinessLogic.Contracts;
 using Aggregator.DataAccess.Contracts;
-using Aggregator.Models;
 using AutoMapper;
 using HardwareHero.Services.Shared.DTOs;
 using HardwareHero.Services.Shared.Exceptions;
+using HardwareHero.Services.Shared.Models.Aggregator;
 
 namespace Aggregator.BusinessLogic.Services
 {

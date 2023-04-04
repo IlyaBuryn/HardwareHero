@@ -1,5 +1,5 @@
 ﻿using Aggregator.DataAccess.Data.Configurations;
-using Aggregator.Models;
+using HardwareHero.Services.Shared.Models.Aggregator;
 using Microsoft.EntityFrameworkCore;
 
 namespace Aggregator.DataAccess.Data

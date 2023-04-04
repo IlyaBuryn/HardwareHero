@@ -1,0 +1,11 @@
+version: '3.4'
+
+services:
+  hardwarehero.identity.api:
+    container_name: authentication-api
+    image: ${DOCKER_REGISTRY-}hardwareheroidentityapi
+    build:
+      context: .
+      dockerfile: Services/Identity/HardwareHero.Identity.Api/Dockerfile
+    networks:
+      - backend

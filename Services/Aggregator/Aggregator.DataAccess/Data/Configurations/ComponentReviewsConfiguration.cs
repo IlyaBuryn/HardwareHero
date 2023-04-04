@@ -1,4 +1,4 @@
-﻿using Aggregator.Models;
+﻿using HardwareHero.Services.Shared.Models.Aggregator;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

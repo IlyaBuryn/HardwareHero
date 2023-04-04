@@ -1,6 +1,6 @@
-﻿using Aggregator.Models;
-using AutoMapper;
+﻿using AutoMapper;
 using HardwareHero.Services.Shared.DTOs;
+using HardwareHero.Services.Shared.Models.Aggregator;
 
 namespace Aggregator.BusinessLogic.MappingProfiles
 {

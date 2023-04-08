@@ -13,15 +13,13 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
-using static Duende.IdentityServer.Models.IdentityResources;
 
 namespace IdentityServer
 {
     public class SeedData
     {
-        public static void EnsureSeedData(string connectionString)
+        public static void SetupUserContext(ServiceCollection services, string connectionString)
         {
-            var services = new ServiceCollection();
             services.AddLogging();
             services.AddDbContext<UsersDbContext>(options =>
                options.UseSqlServer(connectionString));
@@ -29,7 +27,10 @@ namespace IdentityServer
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<UsersDbContext>()
                 .AddDefaultTokenProviders();
+        }
 
+        public static void EnsureSeedData(ServiceCollection services)
+        {
             using (var serviceProvider = services.BuildServiceProvider())
             {
                 using (var scope = serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope())
@@ -63,6 +64,7 @@ namespace IdentityServer
                                 }
                             }                            
                         };
+
                         var result = userMgr.CreateAsync(isaac, "Pass_123").Result;
                         if (!result.Succeeded)
                         {

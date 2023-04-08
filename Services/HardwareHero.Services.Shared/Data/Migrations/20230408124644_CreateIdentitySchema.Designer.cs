@@ -4,6 +4,7 @@ using HardwareHero.Services.Shared.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HardwareHero.Services.Shared.Data.Migrations
 {
     [DbContext(typeof(UsersDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230408124644_CreateIdentitySchema")]
+    partial class CreateIdentitySchema
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -30,7 +33,7 @@ namespace HardwareHero.Services.Shared.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("WishLists");
+                    b.ToTable("WishLists", (string)null);
                 });
 
             modelBuilder.Entity("HardwareHero.Services.Shared.Models.Identity.WishListComponents", b =>
@@ -49,7 +52,7 @@ namespace HardwareHero.Services.Shared.Data.Migrations
 
                     b.HasIndex("WishListId");
 
-                    b.ToTable("WishListComponents");
+                    b.ToTable("WishListComponents", (string)null);
                 });
 
             modelBuilder.Entity("HardwareHero.Services.Shared.Models.UserManagementService.ApplicationUser", b =>
@@ -79,7 +82,8 @@ namespace HardwareHero.Services.Shared.Data.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
 
                     b.Property<string>("NormalizedEmail")
                         .HasMaxLength(256)

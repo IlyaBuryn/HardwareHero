@@ -40,6 +40,7 @@ namespace IdentityServer
             var migrationsAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
             var identityConnectionString = Configuration.GetConnectionString(ConnectionNames.IdentityServerConnection);
 
+            services.AddLogging();
             services.AddDbContext<UsersDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString(ConnectionNames.UsersConnection)));
 

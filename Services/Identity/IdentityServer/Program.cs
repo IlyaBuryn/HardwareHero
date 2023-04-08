@@ -50,8 +50,10 @@ namespace IdentityServer
                 {
                     Log.Information("Seeding database...");
                     var config = host.Services.GetRequiredService<IConfiguration>();
-                    var connectionString = config.GetConnectionString(ConnectionNames.UsersConnection);
-                    SeedData.EnsureSeedData(connectionString);
+                    var connectionString = config.GetConnectionString(ConnectionNames.UsersConnection); 
+                    var services = new ServiceCollection();
+                    SeedData.SetupUserContext(services, connectionString);
+                    SeedData.EnsureSeedData(services);
                     Log.Information("Done seeding database.");
                     return 0;
                 }

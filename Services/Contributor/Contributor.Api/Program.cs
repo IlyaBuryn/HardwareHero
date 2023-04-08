@@ -1,11 +1,8 @@
-using Aggregator.Api.Middlewares;
-using Aggregator.BusinessLogic.Extensions;
-using FluentValidation.AspNetCore;
 using HardwareHero.Services.Shared.Constants;
-using HardwareHero.Services.Shared.Settings;
-using IdentityServer4.AccessTokenValidation;
-using Microsoft.IdentityModel.Tokens;
 using System.Text.Json.Serialization;
+using Contributor.BusinessLogic.Extensions;
+using IdentityServer4.AccessTokenValidation;
+using HardwareHero.Services.Shared.Settings;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,13 +12,13 @@ builder.Services.AddControllers(options =>
     {
         options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
         options.JsonSerializerOptions.WriteIndented = true;
-    })
-    .AddFluentValidation();
+    });
+//.AddFluentValidation();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-var connectionString = builder.Configuration.GetConnectionString(ConnectionNames.AggregatorConnection);
+var connectionString = builder.Configuration.GetConnectionString(ConnectionNames.ContributorsConnection);
 if (connectionString != null)
 {
     builder.Services.ConfigureBusinessLogicLayer(connectionString);
@@ -48,7 +45,7 @@ builder.Services.AddCors();
 
 var app = builder.Build();
 
-app.UseMiddleware<ExceptionHandlerMiddleware>();
+//app.UseMiddleware<ExceptionHandlerMiddleware>();
 
 app.UseHttpsRedirection();
 app.UseRouting();
@@ -59,6 +56,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
 app.UseCors(x => x
     .AllowAnyOrigin()
     .AllowAnyMethod()

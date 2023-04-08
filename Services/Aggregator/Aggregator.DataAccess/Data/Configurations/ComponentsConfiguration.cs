@@ -11,10 +11,10 @@ namespace Aggregator.DataAccess.Data.Configurations
             builder.HasKey(c => c.Id);
             builder.Property(c => c.Id).ValueGeneratedOnAdd();
 
-            builder.Property(c => c.Name).IsRequired().HasMaxLength(255);
+            builder.Property(c => c.Name).IsRequired().HasMaxLength(256);
             builder.HasIndex(c => c.Name).IsUnique();
 
-            builder.Property(c => c.Description).HasMaxLength(1023);
+            builder.Property(c => c.Description).HasMaxLength(1024);
 
             builder.HasData
             (

@@ -13,10 +13,14 @@ namespace Aggregator.Api.Controllers
     public class ComponentReviewController : ControllerBase
     {
         private readonly IComponentReviewService _componentReviewService;
+        private readonly PageSizeSettings _pageSizeSettings;
 
-        public ComponentReviewController(IComponentReviewService componentReviewService)
+        public ComponentReviewController(
+            IComponentReviewService componentReviewService,
+            IOptions<PageSizeSettings> pageSizeSettings)
         {
             _componentReviewService = componentReviewService;
+            _pageSizeSettings = pageSizeSettings.Value;
         }
 
 
@@ -33,11 +37,10 @@ namespace Aggregator.Api.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> GetComponentReviewsByComponentIdAsync(
             [FromRoute] int pageNumber,
-            [FromRoute] Guid componentId,
-            [FromServices] IOptions<PageSizeSettings> pageSizeSettings)
+            [FromRoute] Guid componentId)
         {
             var response = await _componentReviewService
-                .GetComponentReviewsAsPageByComponentIdAsync(pageNumber, pageSizeSettings.Value.PageSize, componentId);
+                .GetComponentReviewsAsPageByComponentIdAsync(pageNumber, _pageSizeSettings.PageSize, componentId);
             return Ok(response);
         }
     }

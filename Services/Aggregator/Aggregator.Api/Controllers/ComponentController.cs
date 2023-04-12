@@ -13,10 +13,14 @@ namespace Aggregator.Api.Controllers
     public class ComponentController : ControllerBase
     {
         private readonly IComponentService _componentService;
+        private readonly PageSizeSettings _pageSizeSettings;
 
-        public ComponentController(IComponentService componentService)
+        public ComponentController(
+            IComponentService componentService,
+            IOptions<PageSizeSettings> pageSizeSettings)
         {
             _componentService = componentService;
+            _pageSizeSettings = pageSizeSettings.Value;
         }
 
         [HttpPost("component")]
@@ -68,10 +72,9 @@ namespace Aggregator.Api.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> GetComponents(
             [FromRoute] int pageNumber,
-            [FromHeader(Name = "X-Specification-Filter")] string specificationFilter,
-            [FromServices] IOptions<PageSizeSettings> pageSizeSettings)
+            [FromHeader(Name = "X-Specification-Filter")] string specificationFilter)
         {
-            var response = await _componentService.GetComponentsAsPageAsync(pageNumber, pageSizeSettings.Value.PageSize, specificationFilter);
+            var response = await _componentService.GetComponentsAsPageAsync(pageNumber, _pageSizeSettings.PageSize, specificationFilter);
             return Ok(response);
         }
     }

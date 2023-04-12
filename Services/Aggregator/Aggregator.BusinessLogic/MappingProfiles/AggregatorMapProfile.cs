@@ -8,10 +8,11 @@ namespace Aggregator.BusinessLogic.MappingProfiles
     {
         public AggregatorMapProfile()
         {
-            CreateMap<Component, ComponentDto>().ReverseMap();
             CreateMap<ComponentReview, ComponentReviewDto>()
                 .ForMember(dto => dto.Component,  opt => opt.MapFrom(ent => ent.Component))
                 .ReverseMap();
+
+            CreateMap<Component, ComponentDto>().ReverseMap();
         }
     }
 }

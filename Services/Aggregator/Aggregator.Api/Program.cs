@@ -1,10 +1,9 @@
-using Aggregator.Api.Middlewares;
 using Aggregator.BusinessLogic.Extensions;
 using FluentValidation.AspNetCore;
 using HardwareHero.Services.Shared.Constants;
+using HardwareHero.Services.Shared.Middlewares;
 using HardwareHero.Services.Shared.Settings;
 using IdentityServer4.AccessTokenValidation;
-using Microsoft.IdentityModel.Tokens;
 using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -27,6 +26,9 @@ if (connectionString != null)
     builder.Services.ConfigureBusinessLogicLayer(connectionString);
 }
 
+builder.Services.Configure<PageSizeSettings>(options =>
+    builder.Configuration.GetSection("PageSizeSettings").Bind(options));
+
 builder.Services.AddAuthentication(
 IdentityServerAuthenticationDefaults.AuthenticationScheme)
     .AddIdentityServerAuthentication(options =>
@@ -40,7 +42,7 @@ builder.Services.AddAuthorization(options =>
     options.AddPolicy("ApiScope", policy =>
     {
         policy.RequireAuthenticatedUser();
-        policy.RequireClaim("scope", IdentityClientSettings.ServicesApiScope);
+        policy.RequireClaim("scope", IdentityClientConstants.ServicesApiScope);
     });
 });
 

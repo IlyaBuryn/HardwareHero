@@ -2,6 +2,6 @@
 {
     public class PageSizeSettings
     {
-        public int PageSize { get; set; } = 15;
+        public int PageSize { get; set; }
     }
 }

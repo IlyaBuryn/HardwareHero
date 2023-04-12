@@ -1,6 +1,6 @@
-﻿namespace HardwareHero.Services.Shared.Settings
+﻿namespace HardwareHero.Services.Shared.Constants
 {
-    public static class IdentityClientSettings
+    public static class IdentityClientConstants
     {
         public const string ServicesApiScope = "HardwareHero.Service.Api";
         public const string UsersApiScope = "HardwareHero.Users.Api";

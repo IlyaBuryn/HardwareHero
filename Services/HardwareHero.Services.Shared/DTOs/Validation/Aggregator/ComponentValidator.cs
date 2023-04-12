@@ -2,7 +2,7 @@
 using HardwareHero.Services.Shared.DTOs.Validation.Attributes;
 using HardwareHero.Services.Shared.Settings;
 
-namespace HardwareHero.Services.Shared.DTOs.Validation
+namespace HardwareHero.Services.Shared.DTOs.Validation.Aggregator
 {
     [Validator(typeof(ComponentDto))]
     public class ComponentValidator : AbstractValidator<ComponentDto>

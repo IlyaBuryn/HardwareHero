@@ -2,7 +2,6 @@
 
 namespace HardwareHero.Services.Shared.Models.Contributor
 {
-    [Table("Contributors")]
     public class ContributorModel : BaseEntity
     {
         public Guid UserId { get; set; }
@@ -15,5 +14,6 @@ namespace HardwareHero.Services.Shared.Models.Contributor
         public Guid? ReviewRefId { get; set; }
         public virtual ContributorExcellence ContributorExcellence { get; set; }
         public Guid ContributorExcellenceId { get; set; }
+        public virtual ICollection<ChatRoom> ChatRooms { get; set; }
     }
 }

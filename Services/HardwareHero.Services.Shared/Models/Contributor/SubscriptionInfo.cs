@@ -6,5 +6,8 @@
         public DateTime ExpiryDate { get; set; }
         public virtual SubscriptionPlan Plan { get; set; }
         public Guid PlanId { get; set; }
+        public virtual ContributorModel Contributor { get; set; }
+        public Guid ContributorId { get; set; }
+
     }
 }

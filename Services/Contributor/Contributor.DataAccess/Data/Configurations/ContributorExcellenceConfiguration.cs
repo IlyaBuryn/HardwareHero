@@ -15,7 +15,7 @@ namespace Contributor.DataAccess.Data.Configurations
             builder.Property(c => c.Name).IsRequired().HasMaxLength(128);
             builder.HasIndex(c => c.Name).IsUnique();
 
-            builder.Property(c => c.Logo).IsRequired().HasMaxLength(1024);
+            builder.Property(c => c.Logo).IsRequired().HasMaxLength(512);
 
             builder.HasData
             (

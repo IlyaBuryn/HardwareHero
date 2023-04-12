@@ -22,8 +22,8 @@ namespace Contributor.DataAccess.Data
             base.OnModelCreating(modelBuilder);
             modelBuilder.ApplyConfiguration(new ChatMessageConfiguration());
             modelBuilder.ApplyConfiguration(new ChatRoomConfiguration());
-            modelBuilder.ApplyConfiguration(new ContributorConfiguration());
             modelBuilder.ApplyConfiguration(new ContributorExcellenceConfiguration());
+            modelBuilder.ApplyConfiguration(new ContributorConfiguration());
             modelBuilder.ApplyConfiguration(new ReferencesConfiguration());
             modelBuilder.ApplyConfiguration(new SubscriptionPlanConfiguration());
             modelBuilder.ApplyConfiguration(new SubscriptionInfoConfiguration());

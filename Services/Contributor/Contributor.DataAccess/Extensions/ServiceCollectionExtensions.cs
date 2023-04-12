@@ -13,7 +13,7 @@ namespace Contributor.DataAccess.Extensions
             builder.AddDbContext<ContributorDbContext>(options =>
                 options.UseSqlServer(connectionString));
 
-            builder.AddScoped(typeof(IPageRepositoryAsync<>), typeof(ContributorEFRepository<>));
+            builder.AddScoped(typeof(ICrudRepositoryAsync<>), typeof(ContributorEFRepository<>));
 
             builder.AddScoped<DbContext, ContributorDbContext>();
         }

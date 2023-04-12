@@ -1,11 +1,12 @@
-﻿namespace Contributor.BusinessLogic.Contracts
+﻿using HardwareHero.Services.Shared.DTOs.Contributor;
+
+namespace Contributor.BusinessLogic.Contracts
 {
     public interface ISubscriptionService
     {
         Task<Guid?> AddSubscriptionPlanAsync(SubscriptionPlanDto subscriptionPlanToAdd);
         Task<bool> UpdateSubscriptionPlanAsync(SubscriptionPlanDto subscriptionPlanToUpdate);
-        Task<bool> RemoveSubscriptionPlanAsync(SubscriptionPlanDto subscriptionPlanToRemove);
-        //TODO: Maybe I should add new model `SubscriptionInfo`->`SubscriptionPlan`
-        //      that contain info about plan (date, discount, ~~~)
+        Task<bool> RemoveSubscriptionPlanAsync(Guid subscriptionPlanId);
+        Task<bool> UpdateSubscriptionInfoAsync(SubscriptionInfoDto subscriptionInfoToUpdate);
     }
 }

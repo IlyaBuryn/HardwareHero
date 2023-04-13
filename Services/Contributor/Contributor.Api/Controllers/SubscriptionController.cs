@@ -1,5 +1,4 @@
 ﻿using Contributor.BusinessLogic.Contracts;
-using Contributor.BusinessLogic.Services;
 using HardwareHero.Services.Shared.DTOs.Contributor;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -51,6 +50,15 @@ namespace Contributor.Api.Controllers
         {
             var response = await _subscriptionService
                 .RemoveSubscriptionPlanAsync(subscriptionPlanId);
+            return Ok(response);
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetPlansAsync()
+        {
+            var response = await _subscriptionService
+                .GetSubscriptionPlansAsync();
             return Ok(response);
         }
     }

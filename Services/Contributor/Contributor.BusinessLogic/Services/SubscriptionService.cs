@@ -101,5 +101,12 @@ namespace Contributor.BusinessLogic.Services
             var subscribersCount = subscribers.Count();
             return subscribersCount == 0;
         }
+
+        public async Task<List<SubscriptionPlanDto?>> GetSubscriptionPlansAsync()
+        {
+            var plans = await _subscriptionPlanRepo.GetManyEntitiesAsync();
+            var result = _mapper.Map<List<SubscriptionPlanDto>>(plans.ToList());
+            return result;
+        }
     }
 }

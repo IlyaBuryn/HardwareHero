@@ -8,5 +8,6 @@ namespace Contributor.BusinessLogic.Contracts
         Task<bool> UpdateSubscriptionPlanAsync(SubscriptionPlanDto subscriptionPlanToUpdate);
         Task<bool> RemoveSubscriptionPlanAsync(Guid subscriptionPlanId);
         Task<bool> UpdateSubscriptionInfoAsync(SubscriptionInfoDto subscriptionInfoToUpdate);
+        Task<List<SubscriptionPlanDto?>> GetSubscriptionPlansAsync();
     }
 }

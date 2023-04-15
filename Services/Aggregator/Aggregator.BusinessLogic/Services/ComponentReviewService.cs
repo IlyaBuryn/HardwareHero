@@ -23,8 +23,8 @@ namespace Aggregator.BusinessLogic.Services
         public async Task<Guid> AddComponentReviewAsync(ComponentReviewDto componentReviewToAdd)
         {
             var review = _mapper.Map<ComponentReview>(componentReviewToAdd);
-
             var result = await _componentReviewRepo.CreateEntityAsync(review);
+            
             return result;
         }
 

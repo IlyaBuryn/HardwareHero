@@ -19,12 +19,12 @@ namespace Aggregator.DataAccess.Repositories
             _dbSet = dbContext.Set<T>();
         }
 
-        public async Task<IQueryable<T?>> GetPageAsync(IQueryable<T?> set, int pageNumber, int pageSize)
+        public async Task<IEnumerable<T?>> GetPageAsync(IQueryable<T?> set, int pageNumber, int pageSize)
         {
             int skip = (pageNumber - 1) * pageSize;
-            set = set.Skip(skip).Take(pageSize);
+            var result = set.Skip(skip).Take(pageSize);
 
-            return await Task.FromResult(set);
+            return await result.ToListAsync();
         }
     }
 }

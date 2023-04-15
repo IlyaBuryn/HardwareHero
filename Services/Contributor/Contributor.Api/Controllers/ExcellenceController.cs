@@ -24,6 +24,7 @@ namespace Contributor.Api.Controllers
         {
             var response = await _excellenceService
                 .UpdateExcellenceAsync(excellenceToUpdate);
+            
             return Ok(response);
         }
 
@@ -33,6 +34,7 @@ namespace Contributor.Api.Controllers
         {
             var response = await _excellenceService
                 .GetExcellenceByNameAsync(name);
+            
             return Ok(response);
         }
 
@@ -42,6 +44,7 @@ namespace Contributor.Api.Controllers
         {
             var response = await _excellenceService
                 .GetExcellenceNamesAsync();
+            
             return Ok(response);
         }
     }

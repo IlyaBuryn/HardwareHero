@@ -27,7 +27,9 @@ namespace Aggregator.Api.Controllers
         [Authorize("ClientIdPolicy")] //(Roles = "Manager")
         public async Task<IActionResult> AddComponentAsync([FromBody] ComponentDto componentToAdd)
         {
-            var response = await _componentService.AddComponentAsync(componentToAdd);
+            var response = await _componentService
+                .AddComponentAsync(componentToAdd);
+
             return CreatedAtAction(nameof(AddComponentAsync), response);
         }
 
@@ -36,7 +38,9 @@ namespace Aggregator.Api.Controllers
         [Authorize("ClientIdPolicy")] //(Roles = "Manager")
         public async Task<IActionResult> UpdateComponentAsync([FromBody] ComponentDto componentToUpdate)
         {
-            var response = await _componentService.UpdateComponentAsync(componentToUpdate);
+            var response = await _componentService
+                .UpdateComponentAsync(componentToUpdate);
+            
             return Ok(response);
         }
 
@@ -45,7 +49,9 @@ namespace Aggregator.Api.Controllers
         [Authorize("ClientIdPolicy")] //(Roles = "Manager")
         public async Task<IActionResult> RemoveComponentAsync([FromRoute] Guid componentId)
         {
-            var response = await _componentService.RemoveComponentAsync(componentId);
+            var response = await _componentService
+                .RemoveComponentAsync(componentId);
+            
             return Ok(response);
         }
 
@@ -54,7 +60,9 @@ namespace Aggregator.Api.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> GetComponentById([FromRoute] Guid componentId)
         {
-            var response = await _componentService.GetComponentByIdAsync(componentId);
+            var response = await _componentService
+                .GetComponentByIdAsync(componentId);
+            
             return Ok(response);
         }
 
@@ -63,7 +71,9 @@ namespace Aggregator.Api.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> GetComponentAvgMark([FromRoute] Guid componentId)
         {
-            var response = await _componentService.GetComponentAvgMark(componentId);
+            var response = await _componentService
+                .GetComponentAvgMark(componentId);
+            
             return Ok(response);
         }
 
@@ -74,7 +84,9 @@ namespace Aggregator.Api.Controllers
             [FromRoute] int pageNumber,
             [FromHeader(Name = "X-Specification-Filter")] string specificationFilter)
         {
-            var response = await _componentService.GetComponentsAsPageAsync(pageNumber, _pageSizeSettings.PageSize, specificationFilter);
+            var response = await _componentService
+                .GetComponentsAsPageAsync(pageNumber, _pageSizeSettings.PageSize, specificationFilter);
+            
             return Ok(response);
         }
     }

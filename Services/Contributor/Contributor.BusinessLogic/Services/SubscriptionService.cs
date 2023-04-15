@@ -44,6 +44,7 @@ namespace Contributor.BusinessLogic.Services
             subscriptionInfo.Plan = subscriptionPlan;
 
             var result = await _subscriptionInfoRepo.UpdateEntityAsync(subscriptionInfo);
+            
             return result;
         }
 
@@ -51,6 +52,7 @@ namespace Contributor.BusinessLogic.Services
         {
             var subscriptionPlan = _mapper.Map<SubscriptionPlan>(subscriptionPlanToAdd);
             var result = await _subscriptionPlanRepo.CreateEntityAsync(subscriptionPlan);
+            
             return result;
         }
 
@@ -69,6 +71,7 @@ namespace Contributor.BusinessLogic.Services
             }
 
             var result = await _subscriptionPlanRepo.RemoveEntityAsync(subscriptionPlan.Id);
+            
             return result;
         }
 
@@ -91,6 +94,7 @@ namespace Contributor.BusinessLogic.Services
             subscriptionPlan.PriorityLevel = subscriptionPlanToUpdate.PriorityLevel;
 
             var result = await _subscriptionPlanRepo.UpdateEntityAsync(subscriptionPlan);
+            
             return result;
         }
 
@@ -106,6 +110,7 @@ namespace Contributor.BusinessLogic.Services
         {
             var plans = await _subscriptionPlanRepo.GetManyEntitiesAsync();
             var result = _mapper.Map<List<SubscriptionPlanDto>>(plans.ToList());
+            
             return result;
         }
     }

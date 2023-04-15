@@ -54,7 +54,6 @@ namespace Aggregator.BusinessLogic.Services
                 }
             }
 
-
             var page = await _componentRepo.GetPageAsync(filteredComponents, pageNumber, pageSize);
 
             return _mapper.Map<List<ComponentDto?>>(page);
@@ -78,8 +77,8 @@ namespace Aggregator.BusinessLogic.Services
             }
 
             var component = _mapper.Map<Component>(componentToAdd);
-
             var result = await _componentRepo.CreateEntityAsync(component);
+            
             return result;
         }
 
@@ -138,6 +137,7 @@ namespace Aggregator.BusinessLogic.Services
 
             int count = reviews.Count();
             int trueCount = reviews.Count(x => x.Recommended);
+            
             return (decimal)trueCount / count * 100;
         }
     }

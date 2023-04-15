@@ -30,6 +30,7 @@ namespace Contributor.BusinessLogic.Services
             }
 
             var result = _mapper.Map<ContributorExcellenceDto>(excellence);
+            
             return result;
         }
 
@@ -66,6 +67,7 @@ namespace Contributor.BusinessLogic.Services
             excellenceCheck.Logo = excellenceToUpdate.Logo;
 
             var result = await _excellenceRepo.UpdateEntityAsync(excellenceCheck);
+            
             return result;
         }
     }

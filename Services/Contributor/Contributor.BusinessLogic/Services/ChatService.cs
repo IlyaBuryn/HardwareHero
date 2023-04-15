@@ -43,6 +43,7 @@ namespace Contributor.BusinessLogic.Services
             
             var chat = _mapper.Map<ChatRoom>(chatToAdd);
             var result = await _chatRoomRepo.CreateEntityAsync(chat);
+            
             return result;
         }
 
@@ -65,9 +66,10 @@ namespace Contributor.BusinessLogic.Services
                 throw new NotFoundException(nameof(chat));
             }
 
-            chat.Contributors = _mapper.Map<ICollection<ContributorModel>>(chatToUpdate.Contributors);
-            
+            chat.Contributors = _mapper
+                .Map<ICollection<ContributorModel>>(chatToUpdate.Contributors);
             var result = await _chatRoomRepo.UpdateEntityAsync(chat);
+            
             return result;
         }
 
@@ -81,6 +83,7 @@ namespace Contributor.BusinessLogic.Services
             }
 
             var result = await _chatRoomRepo.RemoveEntityAsync(chatRoomId);
+            
             return result;
         }
 
@@ -95,6 +98,7 @@ namespace Contributor.BusinessLogic.Services
             }
 
             var result = _mapper.Map<ChatRoomDto>(chat);
+            
             return result;
         }
 
@@ -131,6 +135,7 @@ namespace Contributor.BusinessLogic.Services
             chatRoom.ChatMessages.Add(message);
 
             var result = await _chatRoomRepo.UpdateEntityAsync(chatRoom);
+            
             return result;
         }
 
@@ -145,6 +150,7 @@ namespace Contributor.BusinessLogic.Services
                     return false;
                 }
             }
+            
             return true;
         }
     }

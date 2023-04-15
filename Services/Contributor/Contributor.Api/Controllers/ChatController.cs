@@ -23,6 +23,7 @@ namespace Contributor.Api.Controllers
         {
             var response = await _chatService
                 .AddChatRoomAsync(chatToAdd);
+            
             return CreatedAtAction(nameof(CreateAsync), response);
         }
 
@@ -32,6 +33,7 @@ namespace Contributor.Api.Controllers
         {
             var response = await _chatService
                 .ManageMessageAsync(messageToSend);
+            
             return CreatedAtAction(nameof(SendMessageAsync), response);
         }
 
@@ -41,6 +43,7 @@ namespace Contributor.Api.Controllers
         {
             var response = await _chatService
                 .UpdateChatRoomAsync(chatToUpdate);
+            
             return Ok(response);
         }
 
@@ -50,6 +53,7 @@ namespace Contributor.Api.Controllers
         {
             var response = await _chatService
                 .DeleteChatRoomAsync(chatRoomId);
+            
             return Ok(response);
         }
 
@@ -59,6 +63,7 @@ namespace Contributor.Api.Controllers
         {
             var response = await _chatService
                 .GetChatByIdAsync(chatRoomId);
+            
             return Ok(response);
         }
 
@@ -68,6 +73,7 @@ namespace Contributor.Api.Controllers
         {
             var response = await _chatService
                 .GetChatsByContributorIdAsync(contributorId);
+            
             return Ok(response);
         }
     }

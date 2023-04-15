@@ -43,8 +43,8 @@ namespace Contributor.BusinessLogic.Services
             }
 
             var contributor = _mapper.Map<ContributorModel>(contributorToAdd);
-
             var result = await _contributorRepo.CreateEntityAsync(contributor);
+            
             return result;
         }
 
@@ -58,8 +58,8 @@ namespace Contributor.BusinessLogic.Services
             }
 
             var result = _mapper.Map<ReferenceDto>(contributor.ComponentRef);
-            return result;
             
+            return result;
         }
 
         public async Task<ReferenceDto?> GetReviewReferencesByContributorIdAsync(Guid contributorId)
@@ -72,6 +72,7 @@ namespace Contributor.BusinessLogic.Services
             }
 
             var result = _mapper.Map<ReferenceDto>(contributor.ReviewRef);
+            
             return result;
         }
 
@@ -79,6 +80,7 @@ namespace Contributor.BusinessLogic.Services
         {
             var contributors = await _contributorRepo.GetManyEntitiesAsync();
             var result = _mapper.Map<List<ContributorDto>>(contributors.ToList());
+            
             return result;
         }
 
@@ -92,6 +94,7 @@ namespace Contributor.BusinessLogic.Services
             }
             
             var result = await _contributorRepo.RemoveEntityAsync(contributorId);
+            
             return result;
         }
 
@@ -117,6 +120,7 @@ namespace Contributor.BusinessLogic.Services
             contributor.SubscriptionInfo = _mapper.Map<SubscriptionInfo>(contributorToUpdate.SubscriptionInfo);
 
             var result = await _contributorRepo.UpdateEntityAsync(contributor);
+            
             return result;
         }
 
@@ -130,6 +134,7 @@ namespace Contributor.BusinessLogic.Services
             }
 
             var result = _mapper.Map<ContributorExcellenceDto>(contributor.ContributorExcellence);
+            
             return result;
         }
 
@@ -145,6 +150,7 @@ namespace Contributor.BusinessLogic.Services
             }
 
             var result = _mapper.Map<ContributorDto>(contributor);
+            
             return result;
         }
     }

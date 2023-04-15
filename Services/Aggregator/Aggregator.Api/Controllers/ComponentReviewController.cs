@@ -28,7 +28,9 @@ namespace Aggregator.Api.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> AddComponentReviewAsync([FromBody] ComponentReviewDto componentReviewToAdd)
         {
-            var response = await _componentReviewService.AddComponentReviewAsync(componentReviewToAdd);
+            var response = await _componentReviewService
+                .AddComponentReviewAsync(componentReviewToAdd);
+            
             return CreatedAtAction(nameof(AddComponentReviewAsync), response);
         }
 
@@ -41,6 +43,7 @@ namespace Aggregator.Api.Controllers
         {
             var response = await _componentReviewService
                 .GetComponentReviewsAsPageByComponentIdAsync(pageNumber, _pageSizeSettings.PageSize, componentId);
+            
             return Ok(response);
         }
     }

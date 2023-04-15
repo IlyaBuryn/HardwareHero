@@ -1,10 +1,8 @@
 ﻿using FluentValidation;
 using HardwareHero.Services.Shared.DTOs.Contributor;
-using HardwareHero.Services.Shared.DTOs.Validation.Attributes;
 
 namespace HardwareHero.Services.Shared.DTOs.Validation.Contributor
 {
-    [Validator(typeof(SubscriptionPlanDto))]
     public class SubscriptionPlanValidator : AbstractValidator<SubscriptionPlanDto>
     {
         public SubscriptionPlanValidator()

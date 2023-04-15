@@ -24,6 +24,7 @@ namespace Contributor.Api.Controllers
         {
             var response = await _contributorService
                 .AddContributorAsync(contributorToAdd);
+            
             return CreatedAtAction(nameof(CreateAsync), response);
         }
 
@@ -33,6 +34,7 @@ namespace Contributor.Api.Controllers
         {
             var response = await _contributorService
                 .UpdateContributorAsync(contributorToUpdate);
+            
             return Ok(response);
         }
 
@@ -42,6 +44,7 @@ namespace Contributor.Api.Controllers
         {
             var response = await _contributorService
                 .RemoveContributorAsync(contributorId);
+            
             return Ok(response);
         }
 
@@ -51,6 +54,7 @@ namespace Contributor.Api.Controllers
         {
             var response = await _contributorService
                 .GetContributorByNameAsync(name);
+            
             return Ok(response);
         }
 
@@ -60,6 +64,7 @@ namespace Contributor.Api.Controllers
         {
             var response = await _contributorService
                 .GetContributorsAsync();
+            
             return Ok(response);
         }
 
@@ -69,6 +74,7 @@ namespace Contributor.Api.Controllers
         {
             var response = await _contributorService
                 .GetReviewReferencesByContributorIdAsync(contributorId);
+            
             return Ok(response);
         }
 
@@ -78,6 +84,7 @@ namespace Contributor.Api.Controllers
         {
             var response = await _contributorService
                 .GetComponentReferencesByContributorIdAsync(contributorId);
+            
             return Ok(response);
         }
 
@@ -87,6 +94,7 @@ namespace Contributor.Api.Controllers
         {
             var response = await _contributorService
                 .GetExcellenceByContributorIdAsync(contributorId);
+            
             return Ok(response);
         }
     }

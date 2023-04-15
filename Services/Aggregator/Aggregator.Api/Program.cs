@@ -1,21 +1,12 @@
+using Aggregator.Api.Extensions;
 using Aggregator.BusinessLogic.Extensions;
-using FluentValidation.AspNetCore;
 using HardwareHero.Services.Shared.Constants;
 using HardwareHero.Services.Shared.Middlewares;
 using HardwareHero.Services.Shared.Settings;
-using IdentityServer4.AccessTokenValidation;
-using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers(options =>
-    options.SuppressAsyncSuffixInActionNames = false)
-    .AddJsonOptions(options =>
-    {
-        options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
-        options.JsonSerializerOptions.WriteIndented = true;
-    })
-    .AddFluentValidation();
+builder.Services.AddCustomControllers();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -26,25 +17,11 @@ if (connectionString != null)
     builder.Services.ConfigureBusinessLogicLayer(connectionString);
 }
 
-builder.Services.Configure<PageSizeSettings>(options =>
-    builder.Configuration.GetSection("PageSizeSettings").Bind(options));
+builder.Services.ConfigureOptions<PageSizeSettings>(builder.Configuration);
 
-builder.Services.AddAuthentication(
-IdentityServerAuthenticationDefaults.AuthenticationScheme)
-    .AddIdentityServerAuthentication(options =>
-    {
-        options.Authority = "https://localhost:5001";
-        options.RequireHttpsMetadata = false;
-    });
+builder.Services.AddIdentityServerAuthentication();
 
-builder.Services.AddAuthorization(options =>
-{
-    options.AddPolicy("ApiScope", policy =>
-    {
-        policy.RequireAuthenticatedUser();
-        policy.RequireClaim("scope", IdentityClientConstants.ServicesApiScope);
-    });
-});
+builder.Services.AddApiScopeAuthorization();
 
 builder.Services.AddCors();
 

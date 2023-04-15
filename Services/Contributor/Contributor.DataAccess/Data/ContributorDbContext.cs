@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using HardwareHero.Services.Shared.Models.Contributor;
 using Contributor.DataAccess.Data.Configurations;
+using System.Reflection;
 
 namespace Contributor.DataAccess.Data
 {
@@ -20,13 +21,7 @@ namespace Contributor.DataAccess.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            modelBuilder.ApplyConfiguration(new ChatMessageConfiguration());
-            modelBuilder.ApplyConfiguration(new ChatRoomConfiguration());
-            modelBuilder.ApplyConfiguration(new ContributorExcellenceConfiguration());
-            modelBuilder.ApplyConfiguration(new ContributorConfiguration());
-            modelBuilder.ApplyConfiguration(new ReferencesConfiguration());
-            modelBuilder.ApplyConfiguration(new SubscriptionPlanConfiguration());
-            modelBuilder.ApplyConfiguration(new SubscriptionInfoConfiguration());
+            modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
         }
     }
 }

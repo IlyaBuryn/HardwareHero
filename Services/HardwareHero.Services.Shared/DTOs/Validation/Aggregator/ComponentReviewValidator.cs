@@ -1,9 +1,7 @@
 ﻿using FluentValidation;
-using HardwareHero.Services.Shared.DTOs.Validation.Attributes;
 
 namespace HardwareHero.Services.Shared.DTOs.Validation.Aggregator
 {
-    [Validator(typeof(ComponentReviewDto))]
     public class ComponentReviewValidator : AbstractValidator<ComponentReviewDto>
     {
         public ComponentReviewValidator()

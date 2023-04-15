@@ -1,6 +1,7 @@
 ﻿using Aggregator.DataAccess.Data.Configurations;
 using HardwareHero.Services.Shared.Models.Aggregator;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection;
 
 namespace Aggregator.DataAccess.Data
 {
@@ -15,8 +16,7 @@ namespace Aggregator.DataAccess.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            modelBuilder.ApplyConfiguration(new ComponentsConfiguration());
-            modelBuilder.ApplyConfiguration(new ComponentReviewsConfiguration());
+            modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
         }
     }
 }

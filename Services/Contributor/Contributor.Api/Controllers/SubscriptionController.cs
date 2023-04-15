@@ -23,6 +23,7 @@ namespace Contributor.Api.Controllers
         {
             var response = await _subscriptionService
                 .AddSubscriptionPlanAsync(subscriptionPlanToAdd);
+            
             return CreatedAtAction(nameof(CreatePlanAsync), response);
         }
 
@@ -32,6 +33,7 @@ namespace Contributor.Api.Controllers
         {
             var response = await _subscriptionService
                 .UpdateSubscriptionPlanAsync(subscriptionPlanToUpdate);
+            
             return Ok(response);
         }
 
@@ -41,6 +43,7 @@ namespace Contributor.Api.Controllers
         {
             var response = await _subscriptionService
                 .UpdateSubscriptionInfoAsync(subscriptionInfoToUpdate);
+            
             return Ok(response);
         }
 
@@ -50,6 +53,7 @@ namespace Contributor.Api.Controllers
         {
             var response = await _subscriptionService
                 .RemoveSubscriptionPlanAsync(subscriptionPlanId);
+            
             return Ok(response);
         }
 
@@ -59,6 +63,7 @@ namespace Contributor.Api.Controllers
         {
             var response = await _subscriptionService
                 .GetSubscriptionPlansAsync();
+            
             return Ok(response);
         }
     }

@@ -1,7 +1,9 @@
 ﻿using HardwareHero.Services.Shared.Exceptions;
+using System.Net.Http;
 using System.Net;
+using Microsoft.AspNetCore.Http;
 
-namespace Aggregator.Api.Middlewares
+namespace HardwareHero.Services.Shared.Middlewares
 {
     public class ExceptionHandlerMiddleware
     {

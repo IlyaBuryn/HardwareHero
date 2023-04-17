@@ -12,6 +12,6 @@ namespace HardwareHero.Services.Shared.DTOs
         public bool Recommended { get; set; }
         public string? ContributorName { get; set; }
         public string? ContributorLogo { get; set; }
-        public Component? Component { get; set; }
+        public ComponentDto? Component { get; set; }
     }
 }

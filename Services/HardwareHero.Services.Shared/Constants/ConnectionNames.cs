@@ -5,5 +5,6 @@
         public const string UsersConnection = "UsersDatabaseConnection";
         public const string IdentityServerConnection = "IdentityServerDatabaseConnection";
         public const string AggregatorConnection = "AggregatorDbConnection";
+        public const string ContributorsConnection = "ContributorDbConnection";
     }
 }

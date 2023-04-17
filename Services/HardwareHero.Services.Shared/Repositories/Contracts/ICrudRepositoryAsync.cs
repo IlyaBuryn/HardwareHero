@@ -1,9 +1,9 @@
 ﻿using HardwareHero.Services.Shared.Models;
 using System.Linq.Expressions;
 
-namespace Aggregator.DataAccess.Contracts
+namespace HardwareHero.Services.Shared.Repositories.Contracts
 {
-    public interface IRepositoryAsync<T>
+    public interface ICrudRepositoryAsync<T>
         where T : BaseEntity
     {
         Task<Guid> CreateEntityAsync(T entityToCreate);
@@ -18,6 +18,5 @@ namespace Aggregator.DataAccess.Contracts
         Task<IQueryable<T?>> GetManyEntitiesAsync(Func<T, object>? orderBy,
             Expression<Func<T, bool>> expression,
             params Expression<Func<T, object>>[]? includeProperties);
-        Task<IQueryable<T?>> GetPageAsync(IQueryable<T?> set, int pageNumber, int pageSize);
     }
 }

@@ -1,21 +1,21 @@
 ﻿using Aggregator.BusinessLogic.Contracts;
-using Aggregator.DataAccess.Contracts;
 using AutoMapper;
 using HardwareHero.Services.Shared.DTOs;
 using HardwareHero.Services.Shared.Exceptions;
 using HardwareHero.Services.Shared.Models.Aggregator;
+using HardwareHero.Services.Shared.Repositories.Contracts;
 
 namespace Aggregator.BusinessLogic.Services
 {
     public class ComponentService : IComponentService
     {
-        private readonly IRepositoryAsync<Component> _componentRepo;
-        private readonly IRepositoryAsync<ComponentReview> _componentReviewRepo;
+        private readonly IPageRepositoryAsync<Component> _componentRepo;
+        private readonly IPageRepositoryAsync<ComponentReview> _componentReviewRepo;
         private readonly IMapper _mapper;
 
         public ComponentService(
-            IRepositoryAsync<Component> componentRepo,
-            IRepositoryAsync<ComponentReview> componentReviewRepo,
+            IPageRepositoryAsync<Component> componentRepo,
+            IPageRepositoryAsync<ComponentReview> componentReviewRepo,
             IMapper mapper)
         {
             _componentRepo = componentRepo;
@@ -54,7 +54,6 @@ namespace Aggregator.BusinessLogic.Services
                 }
             }
 
-
             var page = await _componentRepo.GetPageAsync(filteredComponents, pageNumber, pageSize);
 
             return _mapper.Map<List<ComponentDto?>>(page);
@@ -78,8 +77,8 @@ namespace Aggregator.BusinessLogic.Services
             }
 
             var component = _mapper.Map<Component>(componentToAdd);
-
             var result = await _componentRepo.CreateEntityAsync(component);
+            
             return result;
         }
 
@@ -138,6 +137,7 @@ namespace Aggregator.BusinessLogic.Services
 
             int count = reviews.Count();
             int trueCount = reviews.Count(x => x.Recommended);
+            
             return (decimal)trueCount / count * 100;
         }
     }

@@ -1,20 +1,12 @@
-using Aggregator.Api.Middlewares;
+using Aggregator.Api.Extensions;
 using Aggregator.BusinessLogic.Extensions;
-using FluentValidation.AspNetCore;
 using HardwareHero.Services.Shared.Constants;
-using Microsoft.IdentityModel.Tokens;
-using System.Text.Json.Serialization;
+using HardwareHero.Services.Shared.Middlewares;
+using HardwareHero.Services.Shared.Settings;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers(options =>
-    options.SuppressAsyncSuffixInActionNames = false)
-    .AddJsonOptions(options =>
-    {
-        options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
-        options.JsonSerializerOptions.WriteIndented = true;
-    })
-    .AddFluentValidation();
+builder.Services.AddCustomControllers();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -25,20 +17,11 @@ if (connectionString != null)
     builder.Services.ConfigureBusinessLogicLayer(connectionString);
 }
 
-builder.Services.AddAuthentication("Bearer")
-    .AddJwtBearer("Bearer", options =>
-    {
-        options.Authority = "https://localhost:5005";
-        options.TokenValidationParameters = new TokenValidationParameters
-        {
-            ValidateAudience = false,
-        };
-    });
+builder.Services.ConfigureOptions<PageSizeSettings>(builder.Configuration);
 
-builder.Services.AddAuthorization(options =>
-{
-    options.AddPolicy("ClientIdPolicy", policy => policy.RequireClaim("client_id", "aggregatorClient"));
-});
+builder.Services.AddIdentityServerAuthentication();
+
+builder.Services.AddApiScopeAuthorization();
 
 builder.Services.AddCors();
 

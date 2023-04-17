@@ -42,5 +42,13 @@ namespace Aggregator.Api.Extensions
             })
             .AddFluentValidation();
         }
+
+        public static void ConfigureOptions<T>(this IServiceCollection services, IConfiguration configuration) where T : class
+        {
+            services.Configure<T>(options =>
+            {
+                configuration.GetSection(typeof(T).Name).Bind(options);
+            });
+        }
     }
 }

@@ -6,6 +6,7 @@ using HardwareHero.Services.Shared.Settings;
 using Duende.IdentityServer;
 using Duende.IdentityServer.Models;
 using System.Collections.Generic;
+using HardwareHero.Services.Shared.Constants;
 
 namespace IdentityServer
 {
@@ -21,9 +22,9 @@ namespace IdentityServer
         public static IEnumerable<ApiScope> ApiScopes =>
             new ApiScope[]
             {
-                new ApiScope(IdentityClientSettings.AggregatorApiScope),
-                new ApiScope(IdentityClientSettings.UsersApiScope),
-                new ApiScope(IdentityClientSettings.WebScope),
+                new ApiScope(IdentityClientConstants.ServicesApiScope),
+                new ApiScope(IdentityClientConstants.UsersApiScope),
+                new ApiScope(IdentityClientConstants.WebScope),
             };
 
         public static IEnumerable<Client> Clients =>
@@ -41,9 +42,9 @@ namespace IdentityServer
                     {
                         IdentityServerConstants.StandardScopes.OpenId,
                         IdentityServerConstants.StandardScopes.Profile,
-                        IdentityClientSettings.AggregatorApiScope,
-                        IdentityClientSettings.UsersApiScope,
-                        IdentityClientSettings.WebScope
+                        IdentityClientConstants.ServicesApiScope,
+                        IdentityClientConstants.UsersApiScope,
+                        IdentityClientConstants.WebScope
                     }
                 },
                 new Client
@@ -59,7 +60,7 @@ namespace IdentityServer
                     {
                         IdentityServerConstants.StandardScopes.OpenId,
                         IdentityServerConstants.StandardScopes.Profile,
-                        IdentityClientSettings.WebScope
+                        IdentityClientConstants.WebScope
                     }
                 },
             };

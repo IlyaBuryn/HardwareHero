@@ -1,7 +1,4 @@
-﻿using Newtonsoft.Json;
-using System.ComponentModel.DataAnnotations.Schema;
-
-namespace HardwareHero.Services.Shared.DTOs
+﻿namespace HardwareHero.Services.Shared.DTOs
 {
     public class ComponentDto
     {

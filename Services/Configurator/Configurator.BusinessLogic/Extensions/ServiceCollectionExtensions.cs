@@ -1,7 +1,9 @@
 ﻿using Configurator.BusinessLogic.Contracts;
 using Configurator.BusinessLogic.MapProfiles;
 using Configurator.BusinessLogic.Services;
+using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
+using System.Reflection;
 
 namespace Configurator.BusinessLogic.Extensions
 {
@@ -11,12 +13,13 @@ namespace Configurator.BusinessLogic.Extensions
         {
             ConfigureServices(builder);
             ConfigureMapProfiles(builder);
-            //ConfigureDtoValidators(builder);
+            ConfigureDtoValidators(builder);
         }
 
         private static void ConfigureServices(IServiceCollection service)
         {
             service.AddScoped<IAssemblyService, AssemblyService>();
+            service.AddScoped<IComponentTypesService, ComponentTypesService>();
         }
 
         private static void ConfigureMapProfiles(IServiceCollection service)
@@ -25,6 +28,12 @@ namespace Configurator.BusinessLogic.Extensions
             {
                 cfg.AddProfile<ConfiguratorMapProfile>();
             });
+        }
+
+        private static void ConfigureDtoValidators(IServiceCollection service)
+        {
+            var assembly = Assembly.Load(new AssemblyName("HardwareHero.Services.Shared"));
+            service.AddValidatorsFromAssembly(assembly);
         }
     }
 }

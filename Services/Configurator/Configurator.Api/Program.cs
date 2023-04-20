@@ -3,8 +3,15 @@ using HardwareHero.Services.Shared.Settings;
 using Configurator.BusinessLogic.Extensions;
 using Configurator.Api.Extensions;
 using HardwareHero.Services.Shared.Middlewares;
+using MongoDB.Bson.Serialization.Conventions;
 
 var builder = WebApplication.CreateBuilder(args);
+
+var pack = new ConventionPack
+{
+    new IgnoreIfNullConvention(true)
+};
+ConventionRegistry.Register("IgnoreIfNull", pack, t => true);
 
 builder.Services.AddCustomControllers();
 

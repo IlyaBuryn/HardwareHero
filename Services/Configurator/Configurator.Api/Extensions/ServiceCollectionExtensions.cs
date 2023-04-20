@@ -1,6 +1,7 @@
-﻿using HardwareHero.Services.Shared.Constants;
+﻿using FluentValidation.AspNetCore;
+using HardwareHero.Services.Shared.Constants;
 using IdentityServer4.AccessTokenValidation;
-using System.Text.Json.Serialization;
+using MongoDB.Bson.Serialization.Conventions;
 
 namespace Configurator.Api.Extensions
 {
@@ -33,8 +34,8 @@ namespace Configurator.Api.Extensions
             services.AddControllers(options =>
             {
                 options.SuppressAsyncSuffixInActionNames = false;
-            });
-            //.AddFluentValidation();
+            })
+            .AddFluentValidation();
         }
 
         public static void ConfigureOptions<T>(this IServiceCollection services, IConfiguration configuration, string optionName) where T : class

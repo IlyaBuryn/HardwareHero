@@ -1,5 +1,4 @@
 ﻿using HardwareHero.Services.Shared.DTOs.Configurator;
-using HardwareHero.Services.Shared.Models.Configurator;
 
 namespace Configurator.BusinessLogic.Contracts
 {

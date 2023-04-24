@@ -24,7 +24,7 @@ namespace Aggregator.Api.Controllers
         }
 
         [HttpPost("component")]
-        [Authorize("ClientIdPolicy")] //(Roles = "Manager")
+        //[Authorize("ClientIdPolicy")] //(Roles = "Manager")
         public async Task<IActionResult> AddComponentAsync([FromBody] ComponentDto componentToAdd)
         {
             var response = await _componentService
@@ -35,7 +35,7 @@ namespace Aggregator.Api.Controllers
 
 
         [HttpPut("component")]
-        [Authorize("ClientIdPolicy")] //(Roles = "Manager")
+        //[Authorize("ClientIdPolicy")] //(Roles = "Manager")
         public async Task<IActionResult> UpdateComponentAsync([FromBody] ComponentDto componentToUpdate)
         {
             var response = await _componentService
@@ -46,7 +46,7 @@ namespace Aggregator.Api.Controllers
 
 
         [HttpDelete("component/{componentId}")]
-        [Authorize("ClientIdPolicy")] //(Roles = "Manager")
+        //[Authorize("ClientIdPolicy")] //(Roles = "Manager")
         public async Task<IActionResult> RemoveComponentAsync([FromRoute] Guid componentId)
         {
             var response = await _componentService

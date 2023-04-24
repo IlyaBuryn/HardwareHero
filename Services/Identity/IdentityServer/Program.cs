@@ -38,7 +38,12 @@ namespace IdentityServer
 
             try
             {
-                var seed = args.Contains("/seed");
+                var seed = Environment.GetEnvironmentVariable("SEED").Contains("/seed");
+                if (!seed)
+                {
+                    seed = args.Contains("/seed");
+                }
+
                 if (seed)
                 {
                     args = args.Except(new[] { "/seed" }).ToArray();
@@ -54,17 +59,19 @@ namespace IdentityServer
                     var services = new ServiceCollection();
                     SeedData.SetupUserContext(services, connectionString);
                     SeedData.EnsureSeedData(services);
-                    Log.Information("Done seeding database.");
-                    return 0;
+                    Log.Information("Done seeding database.\n");
+                    //return 0;
                 }
 
                 Log.Information("Starting host...");
                 host.Run();
+
                 return 0;
             }
             catch (Exception ex)
             {
                 Log.Fatal(ex, "Host terminated unexpectedly.");
+
                 return 1;
             }
             finally

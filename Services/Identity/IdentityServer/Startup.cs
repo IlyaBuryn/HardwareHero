@@ -19,6 +19,7 @@ using HardwareHero.Services.Shared.Constants;
 using Duende.IdentityServer.EntityFramework.Mappers;
 using Duende.IdentityServer.Models;
 using Microsoft.EntityFrameworkCore.Diagnostics;
+using IdentityServer.Extensions;
 
 namespace IdentityServer
 {
@@ -76,6 +77,7 @@ namespace IdentityServer
 
         public void Configure(IApplicationBuilder app)
         {
+            app.MigrationInitialization();
             InitializeDatabase(app);
 
             if (Environment.IsDevelopment())

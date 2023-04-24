@@ -32,15 +32,17 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleTestApp", "Tools\Con
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Contributor.DataAccess", "Services\Contributor\Contributor.DataAccess\Contributor.DataAccess.csproj", "{A109A505-239C-4846-9A89-BC3FD8C0D441}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Contributor.BusinessLogic", "Services\Contributor\Contributor.BusinessLogic\Contributor.BusinessLogic.csproj", "{50D65A8B-0E66-4288-8162-60F85E140B7C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Contributor.BusinessLogic", "Services\Contributor\Contributor.BusinessLogic\Contributor.BusinessLogic.csproj", "{50D65A8B-0E66-4288-8162-60F85E140B7C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Contributor.Api", "Services\Contributor\Contributor.Api\Contributor.Api.csproj", "{A51C98F0-32EF-4CF9-A13F-DE6587D8212A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Contributor.Api", "Services\Contributor\Contributor.Api\Contributor.Api.csproj", "{A51C98F0-32EF-4CF9-A13F-DE6587D8212A}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Configurator", "Configurator", "{B08E54FF-0414-4A92-8245-3308B534E0A7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Configurator.BusinessLogic", "Services\Configurator\Configurator.BusinessLogic\Configurator.BusinessLogic.csproj", "{2A198CFC-CD13-4CD2-BB31-558C086A60A3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Configurator.BusinessLogic", "Services\Configurator\Configurator.BusinessLogic\Configurator.BusinessLogic.csproj", "{2A198CFC-CD13-4CD2-BB31-558C086A60A3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Configurator.Api", "Services\Configurator\Configurator.Api\Configurator.Api.csproj", "{D66A8481-938D-44CD-8EAA-13B93CB23BF8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Configurator.Api", "Services\Configurator\Configurator.Api\Configurator.Api.csproj", "{D66A8481-938D-44CD-8EAA-13B93CB23BF8}"
+EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{06243310-F852-45A7-8160-00BE881B3030}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -96,6 +98,10 @@ Global
 		{D66A8481-938D-44CD-8EAA-13B93CB23BF8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D66A8481-938D-44CD-8EAA-13B93CB23BF8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D66A8481-938D-44CD-8EAA-13B93CB23BF8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{06243310-F852-45A7-8160-00BE881B3030}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{06243310-F852-45A7-8160-00BE881B3030}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{06243310-F852-45A7-8160-00BE881B3030}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{06243310-F852-45A7-8160-00BE881B3030}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -23,7 +23,6 @@ namespace IdentityServer
             new ApiScope[]
             {
                 new ApiScope(IdentityClientConstants.ServicesApiScope),
-                new ApiScope(IdentityClientConstants.UsersApiScope),
                 new ApiScope(IdentityClientConstants.WebScope),
             };
 
@@ -43,7 +42,6 @@ namespace IdentityServer
                         IdentityServerConstants.StandardScopes.OpenId,
                         IdentityServerConstants.StandardScopes.Profile,
                         IdentityClientConstants.ServicesApiScope,
-                        IdentityClientConstants.UsersApiScope,
                         IdentityClientConstants.WebScope
                     }
                 },

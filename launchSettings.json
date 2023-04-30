@@ -4,7 +4,12 @@
       "commandName": "DockerCompose",
       "commandVersion": "1.0",
       "serviceActions": {
-        "hardwarehero.identity.api": "StartDebugging"
+        "hardwarehero.identity.api": "StartDebugging",
+        "aggregator.api": "StartDebugging",
+        "contributor.api": "StartDebugging",
+        "configurator.api": "StartDebugging",
+        "identityserver": "StartDebugging",
+        "usermanagement.api": "StartDebugging"
       }
     }
   }

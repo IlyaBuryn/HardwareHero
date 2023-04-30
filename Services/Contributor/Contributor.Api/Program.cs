@@ -27,6 +27,8 @@ builder.Services.AddCors();
 
 var app = builder.Build();
 
+app.DatabaseInitialization();
+
 app.UseMiddleware<ExceptionHandlerMiddleware>();
 
 app.UseHttpsRedirection();

@@ -1,11 +1,112 @@
 version: '3.4'
 
+networks:
+  backend:
+    
+
 services:
-  hardwarehero.identity.api:
-    container_name: authentication-api
-    image: ${DOCKER_REGISTRY-}hardwareheroidentityapi
-    build:
-      context: .
-      dockerfile: Services/Identity/HardwareHero.Identity.Api/Dockerfile
+  hardwarehero.mssql:
+    container_name: HardwareHero-mssql
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=password@#12345
     networks:
       - backend
+    ports:
+      - 8080:1433
+
+  hardwarehero.mongo:
+    container_name: HardwareHero-mongo
+    image: mongo
+    ports:
+      - 8090:27017
+    networks:
+      - backend
+
+  aggregator.api:
+    container_name: Aggregator-api
+    image: ${DOCKER_REGISTRY-}aggregatorapi
+    build:
+      context: .
+      dockerfile: Services/Aggregator/Aggregator.Api/Dockerfile
+    depends_on:
+      - hardwarehero.mssql
+    networks:
+      - backend
+    ports:
+      - 8005:4005
+    environment:
+      - DB_HOST=hardwarehero.mssql
+      - DB_NAME=HardwareHero.AggregatorDb
+      - DB_SA_PASSWORD=password@#12345
+
+  contributor.api:
+    container_name: Contributor-api
+    image: ${DOCKER_REGISTRY-}contributorapi
+    build:
+      context: .
+      dockerfile: Services/Contributor/Contributor.Api/Dockerfile
+    depends_on:
+      - hardwarehero.mssql
+    networks:
+      - backend
+    ports:
+      - 8007:4007
+    environment:
+      - DB_HOST=hardwarehero.mssql
+      - DB_NAME=HardwareHero.ContributorDb
+      - DB_SA_PASSWORD=password@#12345
+
+  configurator.api:
+    container_name: Configurator-api
+    image: ${DOCKER_REGISTRY-}configuratorapi
+    build:
+      context: .
+      dockerfile: Services/Configurator/Configurator.Api/Dockerfile
+    depends_on:
+      - hardwarehero.mongo
+    networks:
+      - backend
+    ports:
+      - 8009:4009
+    environment:
+      - DB_HOST=hardwarehero.mongo
+      - DB_NAME=Configurator
+
+  identityserver:
+    container_name: IdentityServer
+    image: ${DOCKER_REGISTRY-}identityserver
+    build:
+      context: .
+      dockerfile: Services/Identity/IdentityServer/Dockerfile
+    depends_on:
+      - hardwarehero.mssql
+    networks:
+      - backend
+    ports:
+      - 8001:4001
+    environment:
+      - DB_HOST=hardwarehero.mssql
+      - DB_NAME=HardwareHero.IdentityServer
+      - DB_SA_PASSWORD=password@#12345
+      - SEED=/seed
+
+
+  usermanagement.api:
+    container_name: Users-api
+    image: ${DOCKER_REGISTRY-}usermanagementapi
+    build:
+      context: .
+      dockerfile: Services/Identity/UserManagement.Api/Dockerfile
+    depends_on:
+      - hardwarehero.mssql
+    networks:
+      - backend
+    ports:
+      - 8003:4003
+    environment:
+      - DB_HOST=hardwarehero.mssql
+      - DB_NAME=HardwareHero.Users
+      - DB_SA_PASSWORD=password@#12345
+

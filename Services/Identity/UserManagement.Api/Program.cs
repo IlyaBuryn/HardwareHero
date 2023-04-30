@@ -5,6 +5,7 @@ using HardwareHero.Services.Shared.Settings;
 using IdentityServer4.AccessTokenValidation;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using UserManagement.Api.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -51,6 +52,7 @@ builder.Services.AddControllers();
 
 var app = builder.Build();
 
+app.MigrationInitialization();
 
 app.UseHttpsRedirection();
 

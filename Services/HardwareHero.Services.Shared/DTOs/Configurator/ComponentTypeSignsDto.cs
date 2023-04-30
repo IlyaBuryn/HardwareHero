@@ -1,0 +1,10 @@
+﻿namespace HardwareHero.Services.Shared.DTOs.Configurator
+{
+    public class ComponentTypeSignsDto
+    {
+        public Guid Id { get; set; }
+        public string[] ComponentNames { get; set; }
+        public ComponentTypeSpecificationDto[] Specifications { get; set; }
+        public string Image { get; set; }
+    }
+}

@@ -7,5 +7,6 @@
         public const string AggregatorConnection = "AggregatorDbConnection";
         public const string ContributorsConnection = "ContributorDbConnection";
         public const string ConfiguratorConnection = "ConfiguratorMongoDatabase";
+        public const string PricesConnection = "PricesMongoDatabase";
     }
 }

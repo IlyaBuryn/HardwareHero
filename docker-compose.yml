@@ -74,6 +74,23 @@ services:
       - DB_HOST=hardwarehero.mongo
       - DB_NAME=Configurator
 
+  prices.api:
+    container_name: Prices-api
+    image: ${DOCKER_REGISTRY-}pricesapi
+    build:
+      context: .
+      dockerfile: Services/Prices/Prices.Api/Dockerfile
+    depends_on:
+      - hardwarehero.mongo
+    networks:
+      - backend
+    ports:
+      - 8011:4011
+    environment:
+      - DB_HOST=hardwarehero.mongo
+      - DB_NAME=Prices
+
+
   identityserver:
     container_name: IdentityServer
     image: ${DOCKER_REGISTRY-}identityserver
@@ -91,7 +108,6 @@ services:
       - DB_NAME=HardwareHero.IdentityServer
       - DB_SA_PASSWORD=password@#12345
       - SEED=/seed
-
 
   usermanagement.api:
     container_name: Users-api

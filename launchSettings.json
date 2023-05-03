@@ -9,7 +9,9 @@
         "contributor.api": "StartDebugging",
         "configurator.api": "StartDebugging",
         "identityserver": "StartDebugging",
-        "usermanagement.api": "StartDebugging"
+        "usermanagement.api": "StartDebugging",
+        "prices.api": "StartDebugging",
+        "mail.api": "StartDebugging"
       }
     }
   }

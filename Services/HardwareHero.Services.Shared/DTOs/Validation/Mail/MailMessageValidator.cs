@@ -15,6 +15,9 @@ namespace HardwareHero.Services.Shared.DTOs.Validation.Mail
 
             RuleFor(x => x.SenderId).NotEmpty()
                 .WithMessage("{PropertyName} is required!");
+
+            RuleFor(x => x.RecipientsEmailAddress).NotEmpty()
+                .WithMessage("{PropertyName} is required!");
         }
     }
 }

@@ -1,20 +1,42 @@
+using HardwareHero.Services.Shared.Constants;
+using HardwareHero.Services.Shared.Settings;
+using Mail.BusinessLogic.Extensions;
+using Mail.Api.Extensions;
+using HardwareHero.Services.Shared.Middlewares;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+builder.Services.AddCustomControllers();
 
-builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.ConfigureOptions<DatabaseSettings>(
+    builder.Configuration,
+    ConnectionNames.MailConnection);
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.ConfigureBusinessLogicLayer();
+
+builder.Services.AddIdentityServerAuthentication();
+
+builder.Services.AddApiScopeAuthorization();
+
+builder.Services.AddCors();
+
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+app.UseMiddleware<ExceptionHandlerMiddleware>();
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseCors(x => x
+    .AllowAnyOrigin()
+    .AllowAnyMethod()
+    .AllowAnyHeader());
 
 app.UseHttpsRedirection();
 

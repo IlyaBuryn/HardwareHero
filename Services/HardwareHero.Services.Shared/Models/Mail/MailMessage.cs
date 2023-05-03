@@ -10,5 +10,6 @@ namespace HardwareHero.Services.Shared.Models.Mail
         public string MessageContent { get; set; }
         public DateTime Timestamp { get; set; }
         public Guid SenderId { get; set; }
+        public string RecipientsEmailAddress { get; set; }
     }
 }

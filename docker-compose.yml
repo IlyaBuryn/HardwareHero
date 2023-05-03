@@ -90,6 +90,21 @@ services:
       - DB_HOST=hardwarehero.mongo
       - DB_NAME=Prices
 
+  mail.api:
+    container_name: Mail-api
+    image: ${DOCKER_REGISTRY-}mailapi
+    build:
+      context: .
+      dockerfile: Services/Mail/Mail.Api/Dockerfile
+    depends_on:
+      - hardwarehero.mongo
+    networks:
+      - backend
+    ports:
+      - 8013:4013
+    environment:
+      - DB_HOST=hardwarehero.mongo
+      - DB_NAME=Mail
 
   identityserver:
     container_name: IdentityServer
@@ -125,4 +140,3 @@ services:
       - DB_HOST=hardwarehero.mssql
       - DB_NAME=HardwareHero.Users
       - DB_SA_PASSWORD=password@#12345
-

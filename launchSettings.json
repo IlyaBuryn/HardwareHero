@@ -10,7 +10,8 @@
         "configurator.api": "StartDebugging",
         "identityserver": "StartDebugging",
         "usermanagement.api": "StartDebugging",
-        "prices.api": "StartDebugging"
+        "prices.api": "StartDebugging",
+        "mail.api": "StartDebugging"
       }
     }
   }

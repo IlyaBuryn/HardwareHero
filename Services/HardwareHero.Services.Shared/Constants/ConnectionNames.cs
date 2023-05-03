@@ -8,5 +8,6 @@
         public const string ContributorsConnection = "ContributorDbConnection";
         public const string ConfiguratorConnection = "ConfiguratorMongoDatabase";
         public const string PricesConnection = "PricesMongoDatabase";
+        public const string MailConnection = "MailMongoDatabase";
     }
 }

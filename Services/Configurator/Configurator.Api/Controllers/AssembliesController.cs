@@ -6,7 +6,7 @@ namespace Configurator.Api.Controllers
 {
     [ApiController]
     [Produces("application/json")]
-    [Route("assemblies")]
+    [Route("api/assemblies")]
     public class AssembliesController : ControllerBase
     {
         private readonly IAssemblyService _assemblyService;

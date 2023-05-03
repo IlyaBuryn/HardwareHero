@@ -7,7 +7,7 @@ namespace Contributor.Api.Controllers
 {
     [ApiController]
     [Produces("application/json")]
-    [Route("subscription")]
+    [Route("api/subscription")]
     public class SubscriptionController : ControllerBase
     {
         private readonly ISubscriptionService _subscriptionService;

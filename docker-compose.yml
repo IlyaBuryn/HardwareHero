@@ -2,8 +2,8 @@ version: '3.4'
 
 networks:
   backend:
+  frontend:
     
-
 services:
   hardwarehero.mssql:
     container_name: HardwareHero-mssql
@@ -34,8 +34,6 @@ services:
       - hardwarehero.mssql
     networks:
       - backend
-    ports:
-      - 8005:4005
     environment:
       - DB_HOST=hardwarehero.mssql
       - DB_NAME=HardwareHero.AggregatorDb
@@ -51,8 +49,6 @@ services:
       - hardwarehero.mssql
     networks:
       - backend
-    ports:
-      - 8007:4007
     environment:
       - DB_HOST=hardwarehero.mssql
       - DB_NAME=HardwareHero.ContributorDb
@@ -68,8 +64,6 @@ services:
       - hardwarehero.mongo
     networks:
       - backend
-    ports:
-      - 8009:4009
     environment:
       - DB_HOST=hardwarehero.mongo
       - DB_NAME=Configurator
@@ -84,14 +78,11 @@ services:
       - hardwarehero.mssql
     networks:
       - backend
-    ports:
-      - 8001:4001
     environment:
       - DB_HOST=hardwarehero.mssql
       - DB_NAME=HardwareHero.IdentityServer
       - DB_SA_PASSWORD=password@#12345
       - SEED=/seed
-
 
   usermanagement.api:
     container_name: Users-api
@@ -103,10 +94,18 @@ services:
       - hardwarehero.mssql
     networks:
       - backend
-    ports:
-      - 8003:4003
     environment:
       - DB_HOST=hardwarehero.mssql
       - DB_NAME=HardwareHero.Users
       - DB_SA_PASSWORD=password@#12345
 
+  apigateway.ocelot:
+    container_name: HardwareHero-apiGateway
+    image: ${DOCKER_REGISTRY-}apigatewayocelot
+    build:
+      context: .
+      dockerfile: ApiGateway/ApiGateway.Ocelot/Dockerfile
+    ports:
+      - 8070:80
+    networks:
+      - backend

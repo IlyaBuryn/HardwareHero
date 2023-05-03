@@ -1,0 +1,361 @@
+{
+  "Routes": [
+    // Aggregator Web API
+    {
+      "UpstreamPathTemplate": "/api/aggregator/component",
+      "UpstreamHttpMethod": [ "Post", "Put" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "aggregator.api",
+          "Port": 80
+        }
+      ],
+      "DownstreamPathTemplate": "/api/aggregator/component"
+    },
+    {
+      "UpstreamPathTemplate": "/api/aggregator/component/{componentId}",
+      "UpstreamHttpMethod": [ "Delete", "Get" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "aggregator.api",
+          "Port": 80
+        }
+      ],
+      "DownstreamPathTemplate": "/api/aggregator/component/{componentId}"
+    },
+    {
+      "UpstreamPathTemplate": "/api/aggregator/components/{pageNumber}",
+      "UpstreamHttpMethod": [ "Get" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "aggregator.api",
+          "Port": 80
+        }
+      ],
+      "DownstreamPathTemplate": "/api/aggregator/components/{pageNumber}"
+    },
+    {
+      "UpstreamPathTemplate": "/api/aggregator/component-mark/{componentId}",
+      "UpstreamHttpMethod": [ "Get" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "aggregator.api",
+          "Port": 80
+        }
+      ],
+      "DownstreamPathTemplate": "/api/aggregator/component-mark/{componentId}"
+    },
+    // Contributor Web API
+    {
+      "UpstreamPathTemplate": "/api/contributor",
+      "UpstreamHttpMethod": [ "Post", "Put", "Get" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "contributor.api",
+          "Port": 80
+        }
+      ],
+      "DownstreamPathTemplate": "/api/contributor"
+    },
+    {
+      "UpstreamPathTemplate": "/api/contributor/{contributorId}",
+      "UpstreamHttpMethod": [ "Delete" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "contributor.api",
+          "Port": 80
+        }
+      ],
+      "DownstreamPathTemplate": "/api/contributor/{contributorId}"
+    },
+    {
+      "UpstreamPathTemplate": "/api/contributor/{name}",
+      "UpstreamHttpMethod": [ "Get" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "contributor.api",
+          "Port": 80
+        }
+      ],
+      "DownstreamPathTemplate": "/api/contributor/{name}"
+    },
+    {
+      "UpstreamPathTemplate": "/api/contributor/{contributorId}/review-ref",
+      "UpstreamHttpMethod": [ "Get" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "contributor.api",
+          "Port": 80
+        }
+      ],
+      "DownstreamPathTemplate": "/api/contributor/{contributorId}/review-ref"
+    },
+    {
+      "UpstreamPathTemplate": "/api/contributor/{contributorId}/component-ref",
+      "UpstreamHttpMethod": [ "Get" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "contributor.api",
+          "Port": 80
+        }
+      ],
+      "DownstreamPathTemplate": "/api/contributor/{contributorId}/component-ref"
+    },
+    {
+      "UpstreamPathTemplate": "/api/contributor/{contributorId}/excellence",
+      "UpstreamHttpMethod": [ "Get" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "contributor.api",
+          "Port": 80
+        }
+      ],
+      "DownstreamPathTemplate": "/api/contributor/{contributorId}/excellence"
+    },
+    {
+      "UpstreamPathTemplate": "/api/excellence",
+      "UpstreamHttpMethod": [ "Put" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "contributor.api",
+          "Port": 80
+        }
+      ],
+      "DownstreamPathTemplate": "/api/excellence"
+    },
+    {
+      "UpstreamPathTemplate": "/api/excellence/{name}",
+      "UpstreamHttpMethod": [ "Get" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "contributor.api",
+          "Port": 80
+        }
+      ],
+      "DownstreamPathTemplate": "/api/excellence/{name}"
+    },
+    {
+      "UpstreamPathTemplate": "/api/excellence/names",
+      "UpstreamHttpMethod": [ "Get" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "contributor.api",
+          "Port": 80
+        }
+      ],
+      "DownstreamPathTemplate": "/api/excellence/names"
+    },
+    {
+      "UpstreamPathTemplate": "/api/contributors/chat",
+      "UpstreamHttpMethod": [ "Post", "Put", "Get" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "contributor.api",
+          "Port": 80
+        }
+      ],
+      "DownstreamPathTemplate": "/api/contributors/chat"
+    },
+    {
+      "UpstreamPathTemplate": "/api/contributors/chat/message",
+      "UpstreamHttpMethod": [ "Post" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "contributor.api",
+          "Port": 80
+        }
+      ],
+      "DownstreamPathTemplate": "/api/contributors/chat/message"
+    },
+    {
+      "UpstreamPathTemplate": "/api/contributors/chat/{chatRoom}",
+      "UpstreamHttpMethod": [ "Delete", "Get" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "contributor.api",
+          "Port": 80
+        }
+      ],
+      "DownstreamPathTemplate": "/api/contributors/chat/{chatRoom}"
+    },
+    {
+      "UpstreamPathTemplate": "/api/subscription",
+      "UpstreamHttpMethod": [ "Get" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "contributor.api",
+          "Port": 80
+        }
+      ],
+      "DownstreamPathTemplate": "/api/subscription"
+    },
+    {
+      "UpstreamPathTemplate": "/api/subscription/plan",
+      "UpstreamHttpMethod": [ "Post", "Put" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "contributor.api",
+          "Port": 80
+        }
+      ],
+      "DownstreamPathTemplate": "/api/subscription/plan"
+    },
+    {
+      "UpstreamPathTemplate": "/api/subscription/info",
+      "UpstreamHttpMethod": [ "Put" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "contributor.api",
+          "Port": 80
+        }
+      ],
+      "DownstreamPathTemplate": "/api/subscription/info"
+    },
+    {
+      "UpstreamPathTemplate": "/api/subscription/plan/{subscriptionPlanId}",
+      "UpstreamHttpMethod": [ "Delete" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "contributor.api",
+          "Port": 80
+        }
+      ],
+      "DownstreamPathTemplate": "/api/subscription/plan/{subscriptionPlanId}"
+    },
+    // Configurator Web API
+    {
+      "UpstreamPathTemplate": "/api/assemblies",
+      "UpstreamHttpMethod": [ "Post", "Put", "Get" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "configurator.api",
+          "Port": 80
+        }
+      ],
+      "DownstreamPathTemplate": "/api/assemblies"
+    },
+    {
+      "UpstreamPathTemplate": "/api/assemblies/{assemblyId}",
+      "UpstreamHttpMethod": [ "Delete" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "configurator.api",
+          "Port": 80
+        }
+      ],
+      "DownstreamPathTemplate": "/api/assemblies/{assemblyId}"
+    },
+    {
+      "UpstreamPathTemplate": "/api/assemblies/{userId}",
+      "UpstreamHttpMethod": [ "Get" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "configurator.api",
+          "Port": 80
+        }
+      ],
+      "DownstreamPathTemplate": "/api/assemblies/{userId}"
+    },
+    {
+      "UpstreamPathTemplate": "/api/assemblies/{assemblyId}/components",
+      "UpstreamHttpMethod": [ "Get" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "configurator.api",
+          "Port": 80
+        }
+      ],
+      "DownstreamPathTemplate": "/api/assemblies/{assemblyId}/components"
+    },
+    {
+      "UpstreamPathTemplate": "/api/configurator/component-type-signs",
+      "UpstreamHttpMethod": [ "Post", "Put", "Get" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "configurator.api",
+          "Port": 80
+        }
+      ],
+      "DownstreamPathTemplate": "/api/configurator/component-type-signs"
+    },
+    {
+      "UpstreamPathTemplate": "/api/configurator/component-type-signs/{name}",
+      "UpstreamHttpMethod": [ "Get" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "configurator.api",
+          "Port": 80
+        }
+      ],
+      "DownstreamPathTemplate": "/api/configurator/component-type-signs/{name}"
+    },
+    {
+      "UpstreamPathTemplate": "/api/configurator/component-type-signs/configure",
+      "UpstreamHttpMethod": [ "Post" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "configurator.api",
+          "Port": 80
+        }
+      ],
+      "DownstreamPathTemplate": "/api/configurator/component-type-signs/configure"
+    }
+  ],
+  "GlobalConfiguration": {
+    "BaseUrl": "http://localhost:8070"
+  }
+}

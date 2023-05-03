@@ -9,7 +9,7 @@ namespace Aggregator.Api.Controllers
 {
     [ApiController]
     [Produces("application/json")]
-    [Route("aggregator")]
+    [Route("api/aggregator")]
     public class ComponentController : ControllerBase
     {
         private readonly IComponentService _componentService;

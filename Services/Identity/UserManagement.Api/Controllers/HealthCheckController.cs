@@ -5,7 +5,7 @@ namespace UserManagement.Api.Controllers
 {
     [ApiController]
     [Produces("application/json")]
-    [Route("health-check")]
+    [Route("api/health-check")]
     [AllowAnonymous]
     public class HealthCheckController : ControllerBase
     {

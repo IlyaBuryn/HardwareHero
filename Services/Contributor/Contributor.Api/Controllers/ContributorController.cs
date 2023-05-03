@@ -7,7 +7,7 @@ namespace Contributor.Api.Controllers
 {
     [ApiController]
     [Produces("application/json")]
-    [Route("contributor")]
+    [Route("api/contributor")]
     public class ContributorController : ControllerBase
     {
         private readonly IContributorService _contributorService;

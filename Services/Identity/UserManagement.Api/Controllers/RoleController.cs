@@ -7,7 +7,7 @@ namespace UserManagement.Api.Controllers
 {
     [ApiController]
     [Produces("application/json")]
-    [Route("role")]
+    [Route("api/role")]
     [Authorize(AuthenticationSchemes = "Bearer")]
     public class RoleController : ControllerBase
     {

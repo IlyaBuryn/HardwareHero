@@ -7,7 +7,7 @@ namespace Contributor.Api.Controllers
 {
     [ApiController]
     [Produces("application/json")]
-    [Route("contributors/chat")]
+    [Route("api/contributors/chat")]
     public class ChatController : ControllerBase
     {
         private readonly IChatService _chatService;

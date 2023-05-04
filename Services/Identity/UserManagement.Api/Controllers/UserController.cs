@@ -8,7 +8,7 @@ namespace UserManagement.Api.Controllers
 {
     [ApiController]
     [Produces("application/json")]
-    [Route("user")]
+    [Route("api/user")]
     [Authorize(AuthenticationSchemes = "Bearer")]
     public class UserController : ControllerBase
     {

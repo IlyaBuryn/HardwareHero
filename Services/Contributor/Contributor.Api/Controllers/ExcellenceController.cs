@@ -8,7 +8,7 @@ namespace Contributor.Api.Controllers
 {
     [ApiController]
     [Produces("application/json")]
-    [Route("excellence")]
+    [Route("api/excellence")]
     public class ExcellenceController : ControllerBase
     {
         private readonly IContributorExcellenceService _excellenceService;

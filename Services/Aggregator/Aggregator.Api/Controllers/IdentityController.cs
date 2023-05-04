@@ -5,7 +5,7 @@ namespace Aggregator.Api.Controllers
 {
     [ApiController]
     [Produces("application/json")]
-    [Route("aggregator")]
+    [Route("api/aggregator")]
     [Authorize]
     public class IdentityController : ControllerBase
     {

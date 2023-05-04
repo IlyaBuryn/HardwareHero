@@ -341,18 +341,59 @@
       ],
       "DownstreamPathTemplate": "/api/configurator/component-type-signs/{name}"
     },
+    // Prices Web API
     {
-      "UpstreamPathTemplate": "/api/configurator/component-type-signs/configure",
+      "UpstreamPathTemplate": "/api/custom-prices",
       "UpstreamHttpMethod": [ "Post" ],
 
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "configurator.api",
+          "Host": "prices.api",
           "Port": 80
         }
       ],
-      "DownstreamPathTemplate": "/api/configurator/component-type-signs/configure"
+      "DownstreamPathTemplate": "/api/custom-prices"
+    },
+    {
+      "UpstreamPathTemplate": "/api/custom-prices/{componentId}",
+      "UpstreamHttpMethod": [ "Get" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "prices.api",
+          "Port": 80
+        }
+      ],
+      "DownstreamPathTemplate": "/api/custom-prices/{componentId}"
+    },
+    {
+      "UpstreamPathTemplate": "/api/custom-prices/{componentId}/latest",
+      "UpstreamHttpMethod": [ "Get" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "prices.api",
+          "Port": 80
+        }
+      ],
+      "DownstreamPathTemplate": "/api/custom-prices/{componentId}/latest"
+    },
+    // Mail Web API
+    {
+      "UpstreamPathTemplate": "/api/mail/send",
+      "UpstreamHttpMethod": [ "Post" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "mail.api",
+          "Port": 80
+        }
+      ],
+      "DownstreamPathTemplate": "/api/mail/send"
     }
   ],
   "GlobalConfiguration": {

@@ -1,10 +1,4 @@
-﻿// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
-// Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
-
-
-using HardwareHero.Services.Shared.Settings;
-using Duende.IdentityServer;
-using Duende.IdentityServer.Models;
+﻿using Duende.IdentityServer.Models;
 using System.Collections.Generic;
 using HardwareHero.Services.Shared.Constants;
 
@@ -13,11 +7,11 @@ namespace IdentityServer
     public static class Config
     {
         public static IEnumerable<IdentityResource> IdentityResources =>
-                   new IdentityResource[]
-                   {
+            new IdentityResource[]
+            {
                 new IdentityResources.OpenId(),
                 new IdentityResources.Profile(),
-                   };
+            };
 
         public static IEnumerable<ApiScope> ApiScopes =>
             new ApiScope[]
@@ -39,8 +33,8 @@ namespace IdentityServer
 
                     AllowedScopes =
                     {
-                        IdentityServerConstants.StandardScopes.OpenId,
-                        IdentityServerConstants.StandardScopes.Profile,
+                        Duende.IdentityServer.IdentityServerConstants.StandardScopes.OpenId,
+                        Duende.IdentityServer.IdentityServerConstants.StandardScopes.Profile,
                         IdentityClientConstants.ServicesApiScope,
                         IdentityClientConstants.WebScope
                     }
@@ -56,8 +50,8 @@ namespace IdentityServer
 
                     AllowedScopes =
                     {
-                        IdentityServerConstants.StandardScopes.OpenId,
-                        IdentityServerConstants.StandardScopes.Profile,
+                        Duende.IdentityServer.IdentityServerConstants.StandardScopes.OpenId,
+                        Duende.IdentityServer.IdentityServerConstants.StandardScopes.Profile,
                         IdentityClientConstants.WebScope
                     }
                 },

@@ -27,7 +27,7 @@ namespace Aggregator.BusinessLogic.Services
         {
             if (pageSize <= 0 || pageNumber <= 0)
             {
-                throw new DataValidationException("Incorrect page number and(or) size provided!");
+                throw new PageOptionsValidationException();
             }
 
             var component = new Component { Specifications = specificationFilter };
@@ -73,7 +73,7 @@ namespace Aggregator.BusinessLogic.Services
                 expression: x => x.Name == componentToAdd.Name);
             if (componentName != null)
             {
-                throw new DataValidationException($"This component \"{componentToAdd.Name}\" is already exist!");
+                throw new AlreadyExistException(nameof(componentToAdd), componentToAdd.Name);
             }
 
             var component = _mapper.Map<Component>(componentToAdd);
@@ -107,7 +107,7 @@ namespace Aggregator.BusinessLogic.Services
                 expression: x => x.Name == componentToUpdate.Name);
             if (componentName != null)
             {
-                throw new DataValidationException($"This component \"{componentToUpdate.Name}\" is already exist!");
+                throw new AlreadyExistException(nameof(componentToUpdate), componentToUpdate.Name);
             }
 
             component.Name = componentToUpdate.Name;
@@ -119,7 +119,7 @@ namespace Aggregator.BusinessLogic.Services
             return await _componentRepo.UpdateEntityAsync(component);
         }
 
-        public async Task<decimal> GetComponentAvgMark(Guid componentId)
+        public async Task<decimal> GetComponentAvgMarkAsync(Guid componentId)
         {
             var component = await _componentRepo.GetOneEntityAsync(
                 expression: x => x.Id == componentId);

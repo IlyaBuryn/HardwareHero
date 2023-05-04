@@ -8,6 +8,7 @@ namespace Contributor.Api.Controllers
     [ApiController]
     [Produces("application/json")]
     [Route("api/contributors/chat")]
+    [Authorize(AuthenticationSchemes = "Bearer")]
     public class ChatController : ControllerBase
     {
         private readonly IChatService _chatService;
@@ -18,7 +19,6 @@ namespace Contributor.Api.Controllers
         }
 
         [HttpPost]
-        [AllowAnonymous]
         public async Task<IActionResult> CreateAsync([FromBody] ChatRoomDto chatToAdd)
         {
             var response = await _chatService
@@ -28,7 +28,6 @@ namespace Contributor.Api.Controllers
         }
 
         [HttpPost("message")]
-        [AllowAnonymous]
         public async Task<IActionResult> SendMessageAsync([FromBody] ChatMessageDto messageToSend)
         {
             var response = await _chatService
@@ -38,7 +37,6 @@ namespace Contributor.Api.Controllers
         }
 
         [HttpPut]
-        [AllowAnonymous]
         public async Task<IActionResult> UpdateAsync([FromBody] ChatRoomDto chatToUpdate)
         {
             var response = await _chatService
@@ -48,7 +46,6 @@ namespace Contributor.Api.Controllers
         }
 
         [HttpDelete("{chatRoomId}")]
-        [AllowAnonymous]
         public async Task<IActionResult> DeleteAsync([FromRoute] Guid chatRoomId)
         {
             var response = await _chatService
@@ -58,7 +55,6 @@ namespace Contributor.Api.Controllers
         }
 
         [HttpGet("{chatRoomId}")]
-        [AllowAnonymous]
         public async Task<IActionResult> GetByIdAsync([FromRoute] Guid chatRoomId)
         {
             var response = await _chatService
@@ -68,7 +64,6 @@ namespace Contributor.Api.Controllers
         }
 
         [HttpGet]
-        [AllowAnonymous]
         public async Task<IActionResult> GetChatsByContributorIdAsync([FromBody] Guid contributorId)
         {
             var response = await _chatService

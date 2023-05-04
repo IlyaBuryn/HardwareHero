@@ -1,10 +1,8 @@
-﻿// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
-// Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
-
-
-using System;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
+using System.Threading.Tasks;
 using HardwareHero.Services.Shared.Data;
 using HardwareHero.Services.Shared.Models.Identity;
 using HardwareHero.Services.Shared.Models.UserManagementService;
@@ -29,7 +27,7 @@ namespace IdentityServer
                 .AddDefaultTokenProviders();
         }
 
-        public static void EnsureSeedData(ServiceCollection services)
+        public static async Task EnsureSeedData(ServiceCollection services)
         {
             using (var serviceProvider = services.BuildServiceProvider())
             {
@@ -39,6 +37,23 @@ namespace IdentityServer
                     context.Database.Migrate();
 
                     var userMgr = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+                    var roleMgr = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+
+                    var roles = new List<IdentityRole>() { 
+                        new IdentityRole() { Name = "User", NormalizedName = "User" },
+                        new IdentityRole() { Name = "Admin", NormalizedName = "Administrator" },
+                        new IdentityRole() { Name = "Manager", NormalizedName = "Manager" },
+                        new IdentityRole() { Name = "Contributor", NormalizedName = "Contributor" } };
+                    foreach (var role in roles)
+                    {
+                        var result = await roleMgr.CreateAsync(role);
+
+                        if (!result.Succeeded)
+                        {
+                            throw new Exception(result.Errors.First().Description);
+                        }
+                    }
+
                     var isaac = userMgr.FindByNameAsync("isaac").Result;
                     if (isaac == null)
                     {
@@ -110,6 +125,16 @@ namespace IdentityServer
                         {
                             throw new Exception(result.Errors.First().Description);
                         }
+
+                        foreach (var role in roles)
+                        {
+                            result = await userMgr.AddToRoleAsync(isaac, role.Name);
+                            if (!result.Succeeded)
+                            {
+                                throw new Exception(result.Errors.First().Description);
+                            }
+                        }
+
                         Log.Debug("Isaac has been updated");
                     }
                 }

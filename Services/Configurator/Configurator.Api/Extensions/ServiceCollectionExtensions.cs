@@ -1,7 +1,6 @@
 ﻿using FluentValidation.AspNetCore;
 using HardwareHero.Services.Shared.Constants;
 using IdentityServer4.AccessTokenValidation;
-using MongoDB.Bson.Serialization.Conventions;
 
 namespace Configurator.Api.Extensions
 {
@@ -12,7 +11,7 @@ namespace Configurator.Api.Extensions
             services.AddAuthentication(IdentityServerAuthenticationDefaults.AuthenticationScheme)
                 .AddIdentityServerAuthentication(options =>
                 {
-                    options.Authority = "https://localhost:5001";
+                    options.Authority = IdentityServerConstants.IdentityServerAuthority;
                     options.RequireHttpsMetadata = false;
                 });
         }
@@ -34,8 +33,13 @@ namespace Configurator.Api.Extensions
             services.AddControllers(options =>
             {
                 options.SuppressAsyncSuffixInActionNames = false;
-            })
-            .AddFluentValidation();
+            });
+        }
+
+        public static void AddFluentValidation(this IServiceCollection services)
+        {
+            services.AddFluentValidationAutoValidation()
+                .AddFluentValidationClientsideAdapters();
         }
 
         public static void ConfigureOptions<T>(this IServiceCollection services, IConfiguration configuration, string optionName) where T : class
@@ -44,6 +48,11 @@ namespace Configurator.Api.Extensions
             {
                 configuration.GetSection(optionName).Bind(options);
             });
+        }
+
+        public static void ConfigureDatabaseOptions(this IServiceCollection services)
+        {
+            services.AddScoped<Config>();
         }
     }
 }

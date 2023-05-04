@@ -12,6 +12,5 @@ namespace Contributor.BusinessLogic.Contracts
         Task<ReferenceDto?> GetReviewReferencesByContributorIdAsync(Guid contributorId);
         Task<ReferenceDto?> GetComponentReferencesByContributorIdAsync(Guid contributorId);
         Task<ContributorExcellenceDto?> GetExcellenceByContributorIdAsync(Guid contributorId);
-        // TODO: method to get ApplicationUser by contributor
     }
 }

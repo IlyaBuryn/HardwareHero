@@ -12,7 +12,7 @@ namespace Aggregator.Api.Extensions
             services.AddAuthentication(IdentityServerAuthenticationDefaults.AuthenticationScheme)
                 .AddIdentityServerAuthentication(options =>
                 {
-                    options.Authority = "https://localhost:5001";
+                    options.Authority = IdentityServerConstants.IdentityServerAuthority;
                     options.RequireHttpsMetadata = false;
                 });
         }
@@ -39,8 +39,13 @@ namespace Aggregator.Api.Extensions
             {
                 options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
                 options.JsonSerializerOptions.WriteIndented = true;
-            })
-            .AddFluentValidation();
+            });
+        }
+
+        public static void AddFluentValidation(this IServiceCollection services)
+        {
+            services.AddFluentValidationAutoValidation()
+                .AddFluentValidationClientsideAdapters();
         }
 
         public static void ConfigureOptions<T>(this IServiceCollection services, IConfiguration configuration) where T : class

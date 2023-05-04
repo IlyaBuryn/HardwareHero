@@ -1,5 +1,6 @@
 ﻿using Configurator.BusinessLogic.Contracts;
 using HardwareHero.Services.Shared.DTOs.Configurator;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Configurator.Api.Controllers
@@ -7,6 +8,7 @@ namespace Configurator.Api.Controllers
     [ApiController]
     [Produces("application/json")]
     [Route("api/assemblies")]
+    [Authorize(AuthenticationSchemes = "Bearer")]
     public class AssembliesController : ControllerBase
     {
         private readonly IAssemblyService _assemblyService;

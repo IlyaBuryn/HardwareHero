@@ -11,7 +11,7 @@ namespace Prices.Api.Extensions
             services.AddAuthentication(IdentityServerAuthenticationDefaults.AuthenticationScheme)
                 .AddIdentityServerAuthentication(options =>
                 {
-                    options.Authority = "https://localhost:5001";
+                    options.Authority = IdentityServerConstants.IdentityServerAuthority;
                     options.RequireHttpsMetadata = false;
                 });
         }
@@ -33,8 +33,13 @@ namespace Prices.Api.Extensions
             services.AddControllers(options =>
             {
                 options.SuppressAsyncSuffixInActionNames = false;
-            })
-            .AddFluentValidation();
+            });
+        }
+
+        public static void AddFluentValidation(this IServiceCollection services)
+        {
+            services.AddFluentValidationAutoValidation()
+                .AddFluentValidationClientsideAdapters();
         }
 
         public static void ConfigureOptions<T>(this IServiceCollection services, IConfiguration configuration, string optionName) where T : class

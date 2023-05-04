@@ -11,7 +11,7 @@ namespace Contributor.DataAccess.Extensions
         {
             using (var serviceScope = app.ApplicationServices.CreateScope())
             {
-                serviceScope.ServiceProvider.GetService<ContributorDbContext>()
+                serviceScope.ServiceProvider.GetService<ContributorDbContext>()!
                     .Database.Migrate();
             }
         }

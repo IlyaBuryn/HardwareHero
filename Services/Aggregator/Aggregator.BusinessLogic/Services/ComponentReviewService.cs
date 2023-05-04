@@ -32,7 +32,7 @@ namespace Aggregator.BusinessLogic.Services
         {
             if (pageSize <= 0 || pageNumber <= 0)
             {
-                throw new DataValidationException("Incorrect page number and(or) size provided!");
+                throw new PageOptionsValidationException();
             }
 
             var reviews = await _componentReviewRepo.GetManyEntitiesAsync(

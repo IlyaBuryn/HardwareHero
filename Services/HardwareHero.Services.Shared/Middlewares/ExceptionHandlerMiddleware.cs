@@ -1,5 +1,4 @@
 ﻿using HardwareHero.Services.Shared.Exceptions;
-using System.Net.Http;
 using System.Net;
 using Microsoft.AspNetCore.Http;
 
@@ -30,11 +29,21 @@ namespace HardwareHero.Services.Shared.Middlewares
                 context.Response.StatusCode = (int)HttpStatusCode.NotFound;
                 await context.Response.WriteAsync(ex.Message);
             }
-            //catch (AuthenticateException ex)
-            //{
-            //    context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
-            //    await context.Response.WriteAsync(ex.Message);
-            //}
+            catch (AuthorizationException ex)
+            {
+                context.Response.StatusCode = (int)HttpStatusCode.Forbidden;
+                await context.Response.WriteAsync(ex.Message);
+            }
+            catch (AlreadyExistException ex)
+            {
+                context.Response.StatusCode = (int)HttpStatusCode.Conflict;
+                await context.Response.WriteAsync(ex.Message);
+            }
+            catch (PageOptionsValidationException ex)
+            {
+                context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                await context.Response.WriteAsync(ex.Message);
+            }
         }
     }
 }

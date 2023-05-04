@@ -9,6 +9,6 @@ namespace Aggregator.BusinessLogic.Contracts
         Task<Guid?> AddComponentAsync(ComponentDto componentToAdd);
         Task<bool> UpdateComponentAsync(ComponentDto componentToUpdate);
         Task<bool> RemoveComponentAsync(Guid componentId);
-        Task<decimal> GetComponentAvgMark(Guid componentId);
+        Task<decimal> GetComponentAvgMarkAsync(Guid componentId);
     }
 }

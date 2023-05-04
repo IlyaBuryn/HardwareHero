@@ -10,6 +10,7 @@ namespace Aggregator.Api.Controllers
     [ApiController]
     [Produces("application/json")]
     [Route("api/aggregator")]
+    [Authorize(AuthenticationSchemes = "Bearer")]
     public class ComponentReviewController : ControllerBase
     {
         private readonly IComponentReviewService _componentReviewService;
@@ -25,7 +26,6 @@ namespace Aggregator.Api.Controllers
 
 
         [HttpPost("component-review")]
-        [AllowAnonymous]
         public async Task<IActionResult> AddComponentReviewAsync([FromBody] ComponentReviewDto componentReviewToAdd)
         {
             var response = await _componentReviewService
@@ -36,13 +36,18 @@ namespace Aggregator.Api.Controllers
 
 
         [HttpGet("component-reviews/{componentId}/{pageNumber}")]
-        [AllowAnonymous]
         public async Task<IActionResult> GetComponentReviewsByComponentIdAsync(
             [FromRoute] int pageNumber,
-            [FromRoute] Guid componentId)
+            [FromRoute] Guid componentId,
+            [FromHeader(Name = "X-Page-Size")] int? pageSize)
         {
+            if (pageSize == null || pageSize <= 0)
+            {
+                pageSize = _pageSizeSettings.PageSize;
+            }
+
             var response = await _componentReviewService
-                .GetComponentReviewsAsPageByComponentIdAsync(pageNumber, _pageSizeSettings.PageSize, componentId);
+                .GetComponentReviewsAsPageByComponentIdAsync(pageNumber, (int)pageSize, componentId);
             
             return Ok(response);
         }

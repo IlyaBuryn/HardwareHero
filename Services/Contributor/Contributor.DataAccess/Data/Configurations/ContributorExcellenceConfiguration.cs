@@ -22,8 +22,8 @@ namespace Contributor.DataAccess.Data.Configurations
                 new ContributorExcellence()
                 {
                     Id = new Guid("3f46062f-56d8-4897-a37f-ff4e920b2d73"),
-                    Name = "Test Name",
-                    Logo = string.Empty,
+                    Name = "NewEgg.com",
+                    Logo = "newegg.com.png",
                 }
             );
         }

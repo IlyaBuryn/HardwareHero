@@ -11,7 +11,7 @@ namespace Aggregator.DataAccess.Extensions
         {
             using (var serviceScope = app.ApplicationServices.CreateScope())
             {
-                serviceScope.ServiceProvider.GetService<AggregatorDbContext>()
+                serviceScope.ServiceProvider.GetService<AggregatorDbContext>()!
                     .Database.Migrate();
             }
         }

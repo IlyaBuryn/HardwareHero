@@ -79,7 +79,7 @@ namespace Configurator.BusinessLogic.Services
             return result;
         }
 
-        public async Task<List<ComponentTypeSignsDto?>> SeedDatabaseAsync(List<ComponentTypeSigns> signsListToAdd)
+        public async Task<List<ComponentTypeSignsDto>> SeedDatabaseAsync(List<ComponentTypeSigns> signsListToAdd)
         {
             foreach (var signs in signsListToAdd)
             {
@@ -99,7 +99,7 @@ namespace Configurator.BusinessLogic.Services
             return await GetComponentTypeSignsAsync();
         }
 
-        public async Task<List<ComponentTypeSignsDto?>> GetComponentTypeSignsAsync()
+        public async Task<List<ComponentTypeSignsDto>> GetComponentTypeSignsAsync()
         {
             var documents = await _componentTypeCollection.Find(new BsonDocument()).ToListAsync();
             var result = _mapper.Map<List<ComponentTypeSignsDto>>(documents);

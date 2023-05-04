@@ -32,14 +32,14 @@ namespace Contributor.BusinessLogic.Services
                 expression: x => x.UserId == contributorToAdd.UserId);
             if (contributorCheck != null)
             {
-                throw new DataValidationException($"This user is already a contributor!");
+                throw new AlreadyExistException("user", string.Empty, "contributor");
             }
 
             var excellenceCheck = await _excellenceRepo.GetOneEntityAsync(
                 expression: x => x.Name == contributorToAdd.ContributorExcellence.Name);
             if (excellenceCheck != null)
             {
-                throw new DataValidationException($"This company name is already exist!");
+                throw new AlreadyExistException("company name");
             }
 
             var contributor = _mapper.Map<ContributorModel>(contributorToAdd);

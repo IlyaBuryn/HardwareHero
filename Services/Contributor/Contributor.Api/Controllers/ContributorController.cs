@@ -8,6 +8,7 @@ namespace Contributor.Api.Controllers
     [ApiController]
     [Produces("application/json")]
     [Route("api/contributor")]
+    [Authorize(AuthenticationSchemes = "Bearer")]
     public class ContributorController : ControllerBase
     {
         private readonly IContributorService _contributorService;
@@ -18,7 +19,6 @@ namespace Contributor.Api.Controllers
         }
 
         [HttpPost]
-        [AllowAnonymous]
 
         public async Task<IActionResult> CreateAsync([FromBody] ContributorDto contributorToAdd)
         {
@@ -29,7 +29,6 @@ namespace Contributor.Api.Controllers
         }
 
         [HttpPut]
-        [AllowAnonymous]
         public async Task<IActionResult> UpdateAsync([FromBody] ContributorDto contributorToUpdate)
         {
             var response = await _contributorService
@@ -39,7 +38,6 @@ namespace Contributor.Api.Controllers
         }
 
         [HttpDelete("{contributorId}")]
-        [AllowAnonymous]
         public async Task<IActionResult> DeleteAsync([FromRoute] Guid contributorId)
         {
             var response = await _contributorService
@@ -49,7 +47,6 @@ namespace Contributor.Api.Controllers
         }
 
         [HttpGet("{name}")]
-        [AllowAnonymous]
         public async Task<IActionResult> GetByNameAsync([FromRoute] string name)
         {
             var response = await _contributorService
@@ -59,7 +56,6 @@ namespace Contributor.Api.Controllers
         }
 
         [HttpGet]
-        [AllowAnonymous]
         public async Task<IActionResult> GetAsync()
         {
             var response = await _contributorService
@@ -69,7 +65,6 @@ namespace Contributor.Api.Controllers
         }
 
         [HttpGet("{contributorId}/review-ref")]
-        [AllowAnonymous]
         public async Task<IActionResult> GetReviewReferencesByContributorIdAsync([FromRoute] Guid contributorId)
         {
             var response = await _contributorService
@@ -79,7 +74,6 @@ namespace Contributor.Api.Controllers
         }
 
         [HttpGet("{contributorId}/component-ref")]
-        [AllowAnonymous]
         public async Task<IActionResult> GetComponentReferencesByContributorIdAsync([FromRoute] Guid contributorId)
         {
             var response = await _contributorService
@@ -89,7 +83,6 @@ namespace Contributor.Api.Controllers
         }
 
         [HttpGet("{contributorId}/excellence")]
-        [AllowAnonymous]
         public async Task<IActionResult> GetExcellenceByContributorIdAsync([FromRoute] Guid contributorId)
         {
             var response = await _contributorService

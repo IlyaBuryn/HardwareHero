@@ -4,13 +4,14 @@
     <TargetFramework>net7.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <UserSecretsId>34f3ad60-c88d-49bb-8fd9-391c2e13e0ab</UserSecretsId>
+    <UserSecretsId>2a59caaf-d700-449d-a455-5463ff6d10b5</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <DockerfileContext>..\..\..</DockerfileContext>
     <DockerComposeProjectPath>..\..\..\docker-compose.dcproj</DockerComposeProjectPath>
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="FluentValidation.AspNetCore" Version="11.3.0" />
     <PackageReference Include="IdentityServer4.AccessTokenValidation" Version="3.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.0" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.17.2" />
@@ -18,11 +19,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\Mail.BusinessLogic\Mail.BusinessLogic.csproj" />
+    <ProjectReference Include="..\..\HardwareHero.Services.Shared\HardwareHero.Services.Shared.csproj" />
+    <ProjectReference Include="..\Prices.BusinessLogic\Prices.BusinessLogic.csproj" />
   </ItemGroup>
 
 </Project>

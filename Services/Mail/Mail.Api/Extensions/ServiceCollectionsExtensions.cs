@@ -1,6 +1,6 @@
 ﻿using FluentValidation.AspNetCore;
 using HardwareHero.Services.Shared.Constants;
-using IdentityServer4.AccessTokenValidation;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Mail.Api.Extensions
 {
@@ -8,11 +8,15 @@ namespace Mail.Api.Extensions
     {
         public static void AddIdentityServerAuthentication(this IServiceCollection services)
         {
-            services.AddAuthentication(IdentityServerAuthenticationDefaults.AuthenticationScheme)
-                .AddIdentityServerAuthentication(options =>
+            services.AddAuthentication(IdentityServerConstants.AuthenticationScheme)
+                .AddJwtBearer(IdentityServerConstants.AuthenticationScheme, options =>
                 {
                     options.Authority = IdentityServerConstants.IdentityServerAuthority;
                     options.RequireHttpsMetadata = false;
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateAudience = false
+                    };
                 });
         }
 

@@ -1,83 +1,49 @@
 ﻿using HardwareHero.Services.Shared.Constants;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
+using IdentityServer;
+using IdentityServer.Extensions;
+using IdentityServer.Migrations.ConfigurationDb;
 using Serilog;
-using Serilog.Events;
-using Serilog.Sinks.SystemConsole.Themes;
-using System;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace IdentityServer
+Log.Logger = new LoggerConfiguration()
+    .WriteTo.Console()
+    .CreateBootstrapLogger();
+
+Log.Information("Starting up");
+
+try
 {
-    public class Program
+    var builder = WebApplication.CreateBuilder(args);
+
+    builder.Host.UseSerilog((ctx, lc) => lc
+        .WriteTo.Console(outputTemplate: "[{Timestamp:HH:mm:ss} {Level}] {SourceContext}{NewLine}{Message:lj}{NewLine}{Exception}{NewLine}")
+        .Enrich.FromLogContext()
+        .ReadFrom.Configuration(ctx.Configuration));
+
+    var app = builder
+        .ConfigureServices()
+        .ConfigurePipeline();
+
+    var isSeed = Environment.GetEnvironmentVariable("SEED").Contains("/seed");
+    if (!isSeed)
     {
-        public static async Task<int> Main(string[] args)
-        {
-            Log.Logger = new LoggerConfiguration()
-                .MinimumLevel.Debug()
-                .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
-                .MinimumLevel.Override("Microsoft.Hosting.Lifetime", LogEventLevel.Information)
-                .MinimumLevel.Override("System", LogEventLevel.Warning)
-                .MinimumLevel.Override("Microsoft.AspNetCore.Authentication", LogEventLevel.Information)
-                .Enrich.FromLogContext()
-                .WriteTo.Console(outputTemplate: "[{Timestamp:HH:mm:ss} {Level}] {SourceContext}{NewLine}{Message:lj}{NewLine}{Exception}{NewLine}", theme: AnsiConsoleTheme.Code)
-                .CreateLogger();
-
-            try
-            {
-                var seed = Environment.GetEnvironmentVariable("SEED").Contains("/seed");
-                if (!seed)
-                {
-                    seed = args.Contains("/seed");
-                }
-
-                if (seed)
-                {
-                    args = args.Except(new[] { "/seed" }).ToArray();
-                }
-
-                var host = CreateHostBuilder(args).Build();
-
-                if (seed)
-                {
-                    Log.Information("Seeding database...");
-
-                    var config = host.Services.GetRequiredService<IConfiguration>();
-                    var connectionString = config.GetConnectionString(ConnectionNames.UsersConnection);
-                    
-                    var services = new ServiceCollection();
-                    SeedData.SetupUserContext(services, connectionString);
-                    await SeedData.EnsureSeedData(services);
-
-                    Log.Information("Done seeding database.\n");
-                }
-
-                Log.Information("Starting host...");
-                host.Run();
-
-                return 0;
-            }
-            catch (Exception ex)
-            {
-                Log.Fatal(ex, "Host terminated unexpectedly.");
-
-                return 1;
-            }
-            finally
-            {
-                Log.CloseAndFlush();
-            }
-        }
-
-        public static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args)
-                .UseSerilog()
-                .ConfigureWebHostDefaults(webBuilder =>
-                {
-                    webBuilder.UseStartup<Startup>();
-                });
+        isSeed = args.Contains("/seed");
     }
+
+    if (isSeed)
+    {
+        Log.Information("Seeding database...");
+        await SeedData.EnsureSeedData(app);
+        Log.Information("Done seeding database. Exiting.");
+    }
+
+    app.Run();
+}
+catch (Exception ex) when (ex.GetType().Name is not "StopTheHostException") // https://github.com/dotnet/runtime/issues/60600
+{
+    Log.Fatal(ex, "Unhandled exception");
+}
+finally
+{
+    Log.Information("Shut down complete");
+    Log.CloseAndFlush();
 }

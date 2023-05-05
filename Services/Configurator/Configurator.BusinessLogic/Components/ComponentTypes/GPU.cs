@@ -1,4 +1,6 @@
-﻿namespace Configurator.BusinessLogic.Components.ComponentTypes
+﻿using MongoDB.Bson.Serialization.Attributes;
+
+namespace Configurator.BusinessLogic.Components.ComponentTypes
 {
     public class GPU : ComponentTypeSigns
     {

@@ -34,7 +34,6 @@ services:
       - 8070:80
     networks:
       - backend
-      - DB_SA_PASSWORD=password@#12345
 
   aggregator.api:
     container_name: Aggregator-api
@@ -108,24 +107,6 @@ services:
       - DB_HOST=hardwarehero.mongo
       - DB_NAME=Mail
 
-  identityserver:
-    container_name: IdentityServer
-    image: ${DOCKER_REGISTRY-}identityserver
-    build:
-      context: .
-      dockerfile: Services/Identity/IdentityServer/Dockerfile
-    depends_on:
-      - hardwarehero.mssql
-    ports:
-      - 8001:80
-    networks:
-      - backend
-    environment:
-      - DB_HOST=hardwarehero.mssql
-      - DB_NAME=HardwareHero.IdentityServer
-      - DB_SA_PASSWORD=password@#12345
-      - SEED=/seed
-
   usermanagement.api:
     container_name: Users-api
     image: ${DOCKER_REGISTRY-}usermanagementapi
@@ -140,3 +121,21 @@ services:
       - DB_HOST=hardwarehero.mssql
       - DB_NAME=HardwareHero.Users
       - DB_SA_PASSWORD=password@#12345
+
+  identityserver:
+    container_name: IdentityServer
+    image: ${DOCKER_REGISTRY-}identityserver
+    build:
+      context: .
+      dockerfile: Services/Identity/IdentityServer/Dockerfile
+    depends_on:
+      - hardwarehero.mssql
+      - usermanagement.api
+    networks:
+      - backend
+    environment:
+      - DB_HOST=hardwarehero.mssql
+      - DB_NAME=HardwareHero.IdentityServer
+      - DB_SA_PASSWORD=password@#12345
+      - SEED=/seed
+

@@ -13,33 +13,33 @@ namespace HardwareHero.Services.Shared.Clients.UserManagementService
         public UserClient(HttpClient httpClient, IOptions<ServiceAddressOptions> options) : base(httpClient, options) { }
 
         public async Task<IdentityResult> AddAsync(CreateUserRequest request)
-            => await SendPostRequest(request, $"/user/create");
+            => await SendPostRequest(request, $"/gateway/user");
 
         public async Task<IdentityResult> ChangePasswordAsync(UserPasswordChangeRequest request)
-            => await SendPostRequest(request, $"/user/change-password");
+            => await SendPostRequest(request, $"/gateway/user/change-password");
 
         public async Task<IdentityResult> AddToRoleAsync(AddRemoveRoleRequest request)
-            => await SendPostRequest(request, $"/user/add-to-role");
+            => await SendPostRequest(request, $"/gateway/user/add-to-role");
 
         public async Task<IdentityResult> AddToRolesAsync(AddRemoveRolesRequest request)
-            => await SendPostRequest(request, $"/user/add-to-roles");
+            => await SendPostRequest(request, $"/gateway/user/add-to-roles");
 
         public async Task<IdentityResult> RemoveFromRoleAsync(AddRemoveRoleRequest request)
-            => await SendPostRequest(request, $"/user/remove-from-role");
+            => await SendPostRequest(request, $"/gateway/user/remove-from-role");
 
         public async Task<IdentityResult> RemoveFromRolesAsync(AddRemoveRolesRequest request)
-            => await SendPostRequest(request, $"/user/remove-from-roles");
+            => await SendPostRequest(request, $"/gateway/user/remove-from-roles");
 
         public async Task<UserManagementServiceResponse<ApplicationUser>> GetAsync(string name)
-            => await SendGetRequest<ApplicationUser>($"user/{name}");
+            => await SendGetRequest<ApplicationUser>($"/gateway/user/{name}");
 
         public async Task<UserManagementServiceResponse<IEnumerable<ApplicationUser>>> GetAllAsync()
-            => await SendGetRequest<IEnumerable<ApplicationUser>>($"/user/");
+            => await SendGetRequest<IEnumerable<ApplicationUser>>($"/gateway/user");
 
         public async Task<IdentityResult> RemoveAsync(string property)
-            => await SendDeleteRequest(property, $"/user/remove/");
+            => await SendDeleteRequest(property, $"/gateway/user/remove");
 
         public async Task<IdentityResult> UpdateAsync(ApplicationUser user)
-            => await SendPutRequest(user, $"/user/update");
+            => await SendPutRequest(user, $"/gateway/user");
     }
 }

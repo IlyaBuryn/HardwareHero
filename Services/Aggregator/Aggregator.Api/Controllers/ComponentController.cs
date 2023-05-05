@@ -10,7 +10,7 @@ namespace Aggregator.Api.Controllers
     [ApiController]
     [Produces("application/json")]
     [Route("api/aggregator")]
-    [Authorize(AuthenticationSchemes = "Bearer")]
+    [Authorize]
     public class ComponentController : ControllerBase
     {
         private readonly IComponentService _componentService;

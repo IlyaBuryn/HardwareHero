@@ -19,7 +19,7 @@ namespace UserManagement.Api.Controllers
         }
 
 
-        [HttpPost("create")]
+        [HttpPost]
         public Task<IdentityResult> CreateAsync(CreateUserRequest request)
         {
             var result = _userManager.CreateAsync(request.User, request.Password);
@@ -27,7 +27,7 @@ namespace UserManagement.Api.Controllers
         }
 
 
-        [HttpPut("update")]
+        [HttpPut]
         public async Task<IdentityResult> UpdateAsync(ApplicationUser user)
         {
             var userToBeUpdated = await _userManager.FindByNameAsync(user.UserName);

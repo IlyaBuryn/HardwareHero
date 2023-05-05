@@ -18,7 +18,7 @@ namespace UserManagement.Api.Controllers
         }
 
 
-        [HttpPost("create")]
+        [HttpPost]
         public async Task<IdentityResult> AddAsync(IdentityRole role)
         {
             var result = await _roleManager.CreateAsync(role);
@@ -26,7 +26,7 @@ namespace UserManagement.Api.Controllers
         }
 
 
-        [HttpPut("update")]
+        [HttpPut]
         public async Task<IdentityResult> UpdateAsync(IdentityRole role)
         {
             var roleToBeUpdated = await _roleManager.FindByIdAsync(role.Id);
@@ -47,7 +47,7 @@ namespace UserManagement.Api.Controllers
             var roleToDelete = await _roleManager.FindByNameAsync(roleName);
             if (roleToDelete == null)
             {
-                return IdentityResult.Failed(new IdentityError() { Description = $"Role {rolName} was not found!" });
+                return IdentityResult.Failed(new IdentityError() { Description = $"Role {roleName} was not found!" });
             }
 
             var result = await _roleManager.DeleteAsync(roleToDelete);

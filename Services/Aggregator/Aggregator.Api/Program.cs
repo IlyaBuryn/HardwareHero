@@ -3,6 +3,7 @@ using Aggregator.BusinessLogic.Extensions;
 using HardwareHero.Services.Shared.Constants;
 using HardwareHero.Services.Shared.Middlewares;
 using HardwareHero.Services.Shared.Settings;
+using Microsoft.IdentityModel.Logging;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,6 +28,8 @@ builder.Services.AddIdentityServerAuthentication();
 builder.Services.AddApiScopeAuthorization();
 
 builder.Services.AddCors();
+
+IdentityModelEventSource.ShowPII = true;
 
 var app = builder.Build();
 

@@ -1,6 +1,8 @@
-﻿using FluentValidation.AspNetCore;
+﻿using Configurator.BusinessLogic.Components.ComponentTypes;
+using FluentValidation.AspNetCore;
 using HardwareHero.Services.Shared.Constants;
-using IdentityServer4.AccessTokenValidation;
+using Microsoft.IdentityModel.Tokens;
+using MongoDB.Bson.Serialization;
 
 namespace Configurator.Api.Extensions
 {
@@ -8,12 +10,28 @@ namespace Configurator.Api.Extensions
     {
         public static void AddIdentityServerAuthentication(this IServiceCollection services)
         {
-            services.AddAuthentication(IdentityServerAuthenticationDefaults.AuthenticationScheme)
-                .AddIdentityServerAuthentication(options =>
+            services.AddAuthentication(IdentityServerConstants.AuthenticationScheme)
+                .AddJwtBearer(IdentityServerConstants.AuthenticationScheme, options =>
                 {
                     options.Authority = IdentityServerConstants.IdentityServerAuthority;
                     options.RequireHttpsMetadata = false;
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateAudience = false
+                    };
                 });
+        }
+
+        public static void RegisterMongoClassMap(this IServiceCollection services)
+        {
+            BsonClassMap.RegisterClassMap<CPU>();
+            BsonClassMap.RegisterClassMap<GPU>();
+            BsonClassMap.RegisterClassMap<MB>();
+            BsonClassMap.RegisterClassMap<SD>();
+            BsonClassMap.RegisterClassMap<RAM>();
+            BsonClassMap.RegisterClassMap<PS>();
+            BsonClassMap.RegisterClassMap<Case>();
+            BsonClassMap.RegisterClassMap<Cooler>();
         }
 
         public static void AddApiScopeAuthorization(this IServiceCollection services)
@@ -50,7 +68,7 @@ namespace Configurator.Api.Extensions
             });
         }
 
-        public static void ConfigureDatabaseOptions(this IServiceCollection services)
+        public static void ConfigureCustomServices(this IServiceCollection services)
         {
             services.AddScoped<Config>();
         }

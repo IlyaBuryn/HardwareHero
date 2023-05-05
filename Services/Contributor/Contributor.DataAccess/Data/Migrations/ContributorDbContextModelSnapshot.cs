@@ -57,7 +57,7 @@ namespace Contributor.DataAccess.Data.Migrations
                     b.Property<DateTime>("Timestamp")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2023, 4, 12, 18, 11, 10, 250, DateTimeKind.Local).AddTicks(4552));
+                        .HasDefaultValue(new DateTime(2023, 5, 5, 15, 52, 35, 510, DateTimeKind.Local).AddTicks(4601));
 
                     b.HasKey("Id");
 
@@ -106,8 +106,8 @@ namespace Contributor.DataAccess.Data.Migrations
                         new
                         {
                             Id = new Guid("3f46062f-56d8-4897-a37f-ff4e920b2d73"),
-                            Logo = "",
-                            Name = "Test Name"
+                            Logo = "newegg.com.png",
+                            Name = "NewEgg.com"
                         });
                 });
 
@@ -193,7 +193,7 @@ namespace Contributor.DataAccess.Data.Migrations
                     b.Property<DateTime>("ExpiryDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2023, 5, 12, 18, 11, 10, 251, DateTimeKind.Local).AddTicks(9894));
+                        .HasDefaultValue(new DateTime(2023, 6, 4, 15, 52, 35, 512, DateTimeKind.Local).AddTicks(7810));
 
                     b.Property<Guid>("PlanId")
                         .ValueGeneratedOnAdd()
@@ -203,7 +203,7 @@ namespace Contributor.DataAccess.Data.Migrations
                     b.Property<DateTime>("RenewalDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2023, 4, 12, 18, 11, 10, 251, DateTimeKind.Local).AddTicks(9664));
+                        .HasDefaultValue(new DateTime(2023, 5, 5, 15, 52, 35, 512, DateTimeKind.Local).AddTicks(7437));
 
                     b.HasKey("Id");
 
@@ -219,9 +219,9 @@ namespace Contributor.DataAccess.Data.Migrations
                         {
                             Id = new Guid("cf7a198c-c551-456f-a519-e8679f3d0662"),
                             ContributorId = new Guid("ef12555d-c912-402d-a045-148091680d9a"),
-                            ExpiryDate = new DateTime(2023, 5, 12, 18, 11, 10, 252, DateTimeKind.Local).AddTicks(144),
+                            ExpiryDate = new DateTime(2023, 6, 4, 15, 52, 35, 512, DateTimeKind.Local).AddTicks(8040),
                             PlanId = new Guid("ca7f44ac-ec3c-4caa-9ee7-dc1c6550a681"),
-                            RenewalDate = new DateTime(2023, 4, 12, 18, 11, 10, 252, DateTimeKind.Local).AddTicks(143)
+                            RenewalDate = new DateTime(2023, 5, 5, 15, 52, 35, 512, DateTimeKind.Local).AddTicks(8039)
                         });
                 });
 

@@ -10,7 +10,7 @@
         "configurator.api": "StartDebugging",
         "identityserver": "StartDebugging",
         "usermanagement.api": "StartDebugging",
-        "apigateway.ocelot": "StartDebugging"
+        "apigateway.ocelot": "StartDebugging",
         "prices.api": "StartDebugging",
         "mail.api": "StartDebugging"
       }

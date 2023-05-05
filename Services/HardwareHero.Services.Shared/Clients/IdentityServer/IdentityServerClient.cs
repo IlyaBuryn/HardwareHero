@@ -27,7 +27,7 @@ namespace HardwareHero.Services.Shared.Clients.IdentityServer
             };
 
             var content = new FormUrlEncodedContent(keyValues);
-            var response = await HttpClient.PostAsync("/connect/token", content);
+            var response = await HttpClient.PostAsync("/gateway/token", content);
             var responseContent = await response.Content.ReadAsStringAsync();
 
             var token = JsonConvert.DeserializeObject<Token>(responseContent);

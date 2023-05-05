@@ -1,7 +1,5 @@
 ﻿using Duende.IdentityServer.EntityFramework.DbContexts;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace IdentityServer.Extensions
 {

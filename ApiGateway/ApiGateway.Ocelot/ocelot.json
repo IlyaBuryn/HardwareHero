@@ -2,7 +2,7 @@
   "Routes": [
     // Aggregator Web API
     {
-      "UpstreamPathTemplate": "/api/aggregator/component",
+      "UpstreamPathTemplate": "/gateway/aggregator/component",
       "UpstreamHttpMethod": [ "Post", "Put" ],
 
       "DownstreamScheme": "http",
@@ -15,7 +15,7 @@
       "DownstreamPathTemplate": "/api/aggregator/component"
     },
     {
-      "UpstreamPathTemplate": "/api/aggregator/component/{componentId}",
+      "UpstreamPathTemplate": "/gateway/aggregator/component/{componentId}",
       "UpstreamHttpMethod": [ "Delete", "Get" ],
 
       "DownstreamScheme": "http",
@@ -28,7 +28,7 @@
       "DownstreamPathTemplate": "/api/aggregator/component/{componentId}"
     },
     {
-      "UpstreamPathTemplate": "/api/aggregator/components/{pageNumber}",
+      "UpstreamPathTemplate": "/gateway/aggregator/components/{pageNumber}",
       "UpstreamHttpMethod": [ "Get" ],
 
       "DownstreamScheme": "http",
@@ -41,7 +41,7 @@
       "DownstreamPathTemplate": "/api/aggregator/components/{pageNumber}"
     },
     {
-      "UpstreamPathTemplate": "/api/aggregator/component-mark/{componentId}",
+      "UpstreamPathTemplate": "/gateway/aggregator/component-mark/{componentId}",
       "UpstreamHttpMethod": [ "Get" ],
 
       "DownstreamScheme": "http",
@@ -53,9 +53,35 @@
       ],
       "DownstreamPathTemplate": "/api/aggregator/component-mark/{componentId}"
     },
+    {
+      "UpstreamPathTemplate": "/gateway/aggregator/component-review",
+      "UpstreamHttpMethod": [ "Post" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "aggregator.api",
+          "Port": 80
+        }
+      ],
+      "DownstreamPathTemplate": "/api/aggregator/component-review"
+    },
+    {
+      "UpstreamPathTemplate": "/gateway/aggregator/component-reviews/{componentId}/{pageNumber}",
+      "UpstreamHttpMethod": [ "Get" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "aggregator.api",
+          "Port": 80
+        }
+      ],
+      "DownstreamPathTemplate": "/api/aggregator/component-reviews/{componentId}/{pageNumber}"
+    },
     // Contributor Web API
     {
-      "UpstreamPathTemplate": "/api/contributor",
+      "UpstreamPathTemplate": "/gateway/contributor",
       "UpstreamHttpMethod": [ "Post", "Put", "Get" ],
 
       "DownstreamScheme": "http",
@@ -68,7 +94,7 @@
       "DownstreamPathTemplate": "/api/contributor"
     },
     {
-      "UpstreamPathTemplate": "/api/contributor/{contributorId}",
+      "UpstreamPathTemplate": "/gateway/contributor/{contributorId}",
       "UpstreamHttpMethod": [ "Delete" ],
 
       "DownstreamScheme": "http",
@@ -81,7 +107,7 @@
       "DownstreamPathTemplate": "/api/contributor/{contributorId}"
     },
     {
-      "UpstreamPathTemplate": "/api/contributor/{name}",
+      "UpstreamPathTemplate": "/gateway/contributor/{name}",
       "UpstreamHttpMethod": [ "Get" ],
 
       "DownstreamScheme": "http",
@@ -94,7 +120,7 @@
       "DownstreamPathTemplate": "/api/contributor/{name}"
     },
     {
-      "UpstreamPathTemplate": "/api/contributor/{contributorId}/review-ref",
+      "UpstreamPathTemplate": "/gateway/contributor/{contributorId}/review-ref",
       "UpstreamHttpMethod": [ "Get" ],
 
       "DownstreamScheme": "http",
@@ -107,7 +133,7 @@
       "DownstreamPathTemplate": "/api/contributor/{contributorId}/review-ref"
     },
     {
-      "UpstreamPathTemplate": "/api/contributor/{contributorId}/component-ref",
+      "UpstreamPathTemplate": "/gateway/contributor/{contributorId}/component-ref",
       "UpstreamHttpMethod": [ "Get" ],
 
       "DownstreamScheme": "http",
@@ -120,7 +146,7 @@
       "DownstreamPathTemplate": "/api/contributor/{contributorId}/component-ref"
     },
     {
-      "UpstreamPathTemplate": "/api/contributor/{contributorId}/excellence",
+      "UpstreamPathTemplate": "/gateway/contributor/{contributorId}/excellence",
       "UpstreamHttpMethod": [ "Get" ],
 
       "DownstreamScheme": "http",
@@ -133,7 +159,7 @@
       "DownstreamPathTemplate": "/api/contributor/{contributorId}/excellence"
     },
     {
-      "UpstreamPathTemplate": "/api/excellence",
+      "UpstreamPathTemplate": "/gateway/excellence",
       "UpstreamHttpMethod": [ "Put" ],
 
       "DownstreamScheme": "http",
@@ -146,7 +172,7 @@
       "DownstreamPathTemplate": "/api/excellence"
     },
     {
-      "UpstreamPathTemplate": "/api/excellence/{name}",
+      "UpstreamPathTemplate": "/gateway/excellence/{name}",
       "UpstreamHttpMethod": [ "Get" ],
 
       "DownstreamScheme": "http",
@@ -159,7 +185,7 @@
       "DownstreamPathTemplate": "/api/excellence/{name}"
     },
     {
-      "UpstreamPathTemplate": "/api/excellence/names",
+      "UpstreamPathTemplate": "/gateway/excellence/names",
       "UpstreamHttpMethod": [ "Get" ],
 
       "DownstreamScheme": "http",
@@ -172,7 +198,7 @@
       "DownstreamPathTemplate": "/api/excellence/names"
     },
     {
-      "UpstreamPathTemplate": "/api/contributors/chat",
+      "UpstreamPathTemplate": "/gateway/contributors/chat",
       "UpstreamHttpMethod": [ "Post", "Put", "Get" ],
 
       "DownstreamScheme": "http",
@@ -185,7 +211,7 @@
       "DownstreamPathTemplate": "/api/contributors/chat"
     },
     {
-      "UpstreamPathTemplate": "/api/contributors/chat/message",
+      "UpstreamPathTemplate": "/gateway/contributors/chat/message",
       "UpstreamHttpMethod": [ "Post" ],
 
       "DownstreamScheme": "http",
@@ -198,7 +224,7 @@
       "DownstreamPathTemplate": "/api/contributors/chat/message"
     },
     {
-      "UpstreamPathTemplate": "/api/contributors/chat/{chatRoom}",
+      "UpstreamPathTemplate": "/gateway/contributors/chat/{chatRoom}",
       "UpstreamHttpMethod": [ "Delete", "Get" ],
 
       "DownstreamScheme": "http",
@@ -211,7 +237,7 @@
       "DownstreamPathTemplate": "/api/contributors/chat/{chatRoom}"
     },
     {
-      "UpstreamPathTemplate": "/api/subscription",
+      "UpstreamPathTemplate": "/gateway/subscription",
       "UpstreamHttpMethod": [ "Get" ],
 
       "DownstreamScheme": "http",
@@ -224,7 +250,7 @@
       "DownstreamPathTemplate": "/api/subscription"
     },
     {
-      "UpstreamPathTemplate": "/api/subscription/plan",
+      "UpstreamPathTemplate": "/gateway/subscription/plan",
       "UpstreamHttpMethod": [ "Post", "Put" ],
 
       "DownstreamScheme": "http",
@@ -237,7 +263,7 @@
       "DownstreamPathTemplate": "/api/subscription/plan"
     },
     {
-      "UpstreamPathTemplate": "/api/subscription/info",
+      "UpstreamPathTemplate": "/gateway/subscription/info",
       "UpstreamHttpMethod": [ "Put" ],
 
       "DownstreamScheme": "http",
@@ -250,7 +276,7 @@
       "DownstreamPathTemplate": "/api/subscription/info"
     },
     {
-      "UpstreamPathTemplate": "/api/subscription/plan/{subscriptionPlanId}",
+      "UpstreamPathTemplate": "/gateway/subscription/plan/{subscriptionPlanId}",
       "UpstreamHttpMethod": [ "Delete" ],
 
       "DownstreamScheme": "http",
@@ -264,7 +290,7 @@
     },
     // Configurator Web API
     {
-      "UpstreamPathTemplate": "/api/assemblies",
+      "UpstreamPathTemplate": "/gateway/assemblies",
       "UpstreamHttpMethod": [ "Post", "Put", "Get" ],
 
       "DownstreamScheme": "http",
@@ -277,7 +303,7 @@
       "DownstreamPathTemplate": "/api/assemblies"
     },
     {
-      "UpstreamPathTemplate": "/api/assemblies/{assemblyId}",
+      "UpstreamPathTemplate": "/gateway/assemblies/{assemblyId}",
       "UpstreamHttpMethod": [ "Delete" ],
 
       "DownstreamScheme": "http",
@@ -290,7 +316,7 @@
       "DownstreamPathTemplate": "/api/assemblies/{assemblyId}"
     },
     {
-      "UpstreamPathTemplate": "/api/assemblies/{userId}",
+      "UpstreamPathTemplate": "/gateway/assemblies/{userId}",
       "UpstreamHttpMethod": [ "Get" ],
 
       "DownstreamScheme": "http",
@@ -303,7 +329,7 @@
       "DownstreamPathTemplate": "/api/assemblies/{userId}"
     },
     {
-      "UpstreamPathTemplate": "/api/assemblies/{assemblyId}/components",
+      "UpstreamPathTemplate": "/gateway/assemblies/{assemblyId}/components",
       "UpstreamHttpMethod": [ "Get" ],
 
       "DownstreamScheme": "http",
@@ -316,7 +342,7 @@
       "DownstreamPathTemplate": "/api/assemblies/{assemblyId}/components"
     },
     {
-      "UpstreamPathTemplate": "/api/configurator/component-type-signs",
+      "UpstreamPathTemplate": "/gateway/configurator/component-type-signs",
       "UpstreamHttpMethod": [ "Post", "Put", "Get" ],
 
       "DownstreamScheme": "http",
@@ -329,7 +355,7 @@
       "DownstreamPathTemplate": "/api/configurator/component-type-signs"
     },
     {
-      "UpstreamPathTemplate": "/api/configurator/component-type-signs/{name}",
+      "UpstreamPathTemplate": "/gateway/configurator/component-type-signs/{name}",
       "UpstreamHttpMethod": [ "Get" ],
 
       "DownstreamScheme": "http",
@@ -343,7 +369,7 @@
     },
     // Prices Web API
     {
-      "UpstreamPathTemplate": "/api/custom-prices",
+      "UpstreamPathTemplate": "/gateway/custom-prices",
       "UpstreamHttpMethod": [ "Post" ],
 
       "DownstreamScheme": "http",
@@ -356,7 +382,7 @@
       "DownstreamPathTemplate": "/api/custom-prices"
     },
     {
-      "UpstreamPathTemplate": "/api/custom-prices/{componentId}",
+      "UpstreamPathTemplate": "/gateway/custom-prices/{componentId}",
       "UpstreamHttpMethod": [ "Get" ],
 
       "DownstreamScheme": "http",
@@ -369,7 +395,7 @@
       "DownstreamPathTemplate": "/api/custom-prices/{componentId}"
     },
     {
-      "UpstreamPathTemplate": "/api/custom-prices/{componentId}/latest",
+      "UpstreamPathTemplate": "/gateway/custom-prices/{componentId}/latest",
       "UpstreamHttpMethod": [ "Get" ],
 
       "DownstreamScheme": "http",
@@ -383,7 +409,7 @@
     },
     // Mail Web API
     {
-      "UpstreamPathTemplate": "/api/mail/send",
+      "UpstreamPathTemplate": "/gateway/mail/send",
       "UpstreamHttpMethod": [ "Post" ],
 
       "DownstreamScheme": "http",
@@ -394,6 +420,177 @@
         }
       ],
       "DownstreamPathTemplate": "/api/mail/send"
+    },
+    // IdentityServer
+    {
+      "UpstreamPathTemplate": "/gateway/token",
+      "UpstreamHttpMethod": [ "Post" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "identityserver",
+          "Port": 80
+        }
+      ],
+      "DownstreamPathTemplate": "/connect/token"
+    },
+    {
+      "UpstreamPathTemplate": "/.well-known/openid-configuration",
+      "UpstreamHttpMethod": [ "Get" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "identityserver",
+          "Port": 80
+        }
+      ],
+      "DownstreamPathTemplate": "/.well-known/openid-configuration"
+    },
+    // User managemant Web API
+    {
+      "UpstreamPathTemplate": "/gateway/user/change-password",
+      "UpstreamHttpMethod": [ "Post" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "usermanagement.api",
+          "Port": 80
+        }
+      ],
+      "DownstreamPathTemplate": "/api/user/change-password"
+    },
+    {
+      "UpstreamPathTemplate": "/gateway/user/add-to-role",
+      "UpstreamHttpMethod": [ "Post" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "usermanagement.api",
+          "Port": 80
+        }
+      ],
+      "DownstreamPathTemplate": "/api/user/add-to-role"
+    },
+    {
+      "UpstreamPathTemplate": "/gateway/user/add-to-roles",
+      "UpstreamHttpMethod": [ "Post" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "usermanagement.api",
+          "Port": 80
+        }
+      ],
+      "DownstreamPathTemplate": "/api/user/add-to-roles"
+    },
+    {
+      "UpstreamPathTemplate": "/gateway/user/remove-from-role",
+      "UpstreamHttpMethod": [ "Post" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "usermanagement.api",
+          "Port": 80
+        }
+      ],
+      "DownstreamPathTemplate": "/api/user/remove-from-role"
+    },
+    {
+      "UpstreamPathTemplate": "/gateway/user/remove-from-roles",
+      "UpstreamHttpMethod": [ "Post" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "usermanagement.api",
+          "Port": 80
+        }
+      ],
+      "DownstreamPathTemplate": "/api/user/remove-from-roles"
+    },
+    {
+      "UpstreamPathTemplate": "/gateway/user/{name}",
+      "UpstreamHttpMethod": [ "Get" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "usermanagement.api",
+          "Port": 80
+        }
+      ],
+      "DownstreamPathTemplate": "/api/user/{name}"
+    },
+    {
+      "UpstreamPathTemplate": "/gateway/user",
+      "UpstreamHttpMethod": [ "Get", "Post", "Put" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "usermanagement.api",
+          "Port": 80
+        }
+      ],
+      "DownstreamPathTemplate": "/api/user"
+    },
+    {
+      "UpstreamPathTemplate": "/gateway/user/remove",
+      "UpstreamHttpMethod": [ "Delete" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "usermanagement.api",
+          "Port": 80
+        }
+      ],
+      "DownstreamPathTemplate": "/api/user/remove"
+    },
+    {
+      "UpstreamPathTemplate": "/gateway/role",
+      "UpstreamHttpMethod": [ "Post", "Put", "Get" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "usermanagement.api",
+          "Port": 80
+        }
+      ],
+      "DownstreamPathTemplate": "/api/role"
+    },
+    {
+      "UpstreamPathTemplate": "/gateway/role/remove",
+      "UpstreamHttpMethod": [ "Delete" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "usermanagement.api",
+          "Port": 80
+        }
+      ],
+      "DownstreamPathTemplate": "/api/role/remove"
+    },
+    {
+      "UpstreamPathTemplate": "/gateway/role/{name}",
+      "UpstreamHttpMethod": [ "Get" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "usermanagement.api",
+          "Port": 80
+        }
+      ],
+      "DownstreamPathTemplate": "/api/role/{name}"
     }
   ],
   "GlobalConfiguration": {

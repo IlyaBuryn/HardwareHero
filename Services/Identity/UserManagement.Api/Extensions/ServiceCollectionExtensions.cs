@@ -1,9 +1,9 @@
 ﻿using HardwareHero.Services.Shared.Constants;
 using HardwareHero.Services.Shared.Data;
 using HardwareHero.Services.Shared.Models.UserManagementService;
-using IdentityServer4.AccessTokenValidation;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 namespace UserManagement.Api.Extensions
 {
@@ -11,13 +11,16 @@ namespace UserManagement.Api.Extensions
     {
         public static void AddIdentityServerAuthentication(this IServiceCollection services)
         {
-            services.AddAuthentication(
-                IdentityServerAuthenticationDefaults.AuthenticationScheme)
-                    .AddIdentityServerAuthentication(options =>
+            services.AddAuthentication(IdentityServerConstants.AuthenticationScheme)
+                .AddJwtBearer(IdentityServerConstants.AuthenticationScheme, options =>
+                {
+                    options.Authority = IdentityServerConstants.IdentityServerAuthority;
+                    options.RequireHttpsMetadata = false;
+                    options.TokenValidationParameters = new TokenValidationParameters
                     {
-                        options.Authority = IdentityServerConstants.IdentityServerAuthority;
-                        options.RequireHttpsMetadata = false;
-                    });
+                        ValidateAudience = false
+                    };
+                });
         }
 
         public static void AddIdentityServerAuthorization(this IServiceCollection services)

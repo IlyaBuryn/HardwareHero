@@ -2,7 +2,8 @@
 {
     public class IdentityServerConstants
     {
-        public const string IdentityServerAuthority = "http://identityserver:8001";
-        public const string IdentityServerApiName = "http://identityserver:8001/resources";
+        public const string IdentityServerAuthority = "http://identityserver";
+        public const string IdentityServerApiName = "http://identityserver/resources";
+        public const string AuthenticationScheme = "Bearer";
     }
 }

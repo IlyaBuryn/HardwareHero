@@ -15,12 +15,9 @@ builder.Services.AddControllers();
 var app = builder.Build();
 
 app.MigrationInitialization();
-
 app.UseHttpsRedirection();
-
 app.UseAuthorization();
 app.UseAuthentication();
-
 app.MapControllers().RequireAuthorization("ApiScope");
 
 app.Run();

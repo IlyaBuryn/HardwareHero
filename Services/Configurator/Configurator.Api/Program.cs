@@ -3,9 +3,10 @@ using HardwareHero.Services.Shared.Settings;
 using Configurator.BusinessLogic.Extensions;
 using Configurator.Api.Extensions;
 using HardwareHero.Services.Shared.Middlewares;
-using Configurator.Api;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.RegisterMongoClassMap();
 
 builder.Services.AddCustomControllers();
 
@@ -25,14 +26,13 @@ builder.Services.AddIdentityServerAuthentication();
 
 builder.Services.AddApiScopeAuthorization();
 
-builder.Services.ConfigureDatabaseOptions();
+builder.Services.ConfigureCustomServices();
 
 builder.Services.AddCors();
 
 var app = builder.Build();
 
-var config = app.Services.GetService<Config>();
-await config!.SeedDatabaseAsync();
+await app.ConfigureDatabaseAsync();
 
 app.UseMiddleware<ExceptionHandlerMiddleware>();
 

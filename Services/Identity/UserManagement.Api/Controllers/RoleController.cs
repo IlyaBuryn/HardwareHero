@@ -8,7 +8,7 @@ namespace UserManagement.Api.Controllers
     [ApiController]
     [Produces("application/json")]
     [Route("api/role")]
-    [Authorize(AuthenticationSchemes = "Bearer")]
+    [Authorize]
     public class RoleController : ControllerBase
     {
         private readonly RoleManager<IdentityRole> _roleManager;

@@ -3,7 +3,7 @@
     "Mail": {
       "commandName": "Project",
       "launchBrowser": false,
-      "launchUrl": "swagger",
+      //"launchUrl": "swagger",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },

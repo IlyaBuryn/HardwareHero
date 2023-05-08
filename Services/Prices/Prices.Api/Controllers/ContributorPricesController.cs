@@ -8,7 +8,7 @@ namespace Prices.Api.Controllers
     [ApiController]
     [Produces("application/json")]
     [Route("api/custom-prices")]
-    [Authorize(AuthenticationSchemes = "Bearer")]
+    [Authorize]
     public class ContributorPricesController : ControllerBase
     {
         private readonly IContributorPricesService _contributorPricesService;

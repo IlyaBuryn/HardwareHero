@@ -7,7 +7,7 @@ namespace Mail.Api.Controllers
     [ApiController]
     [Produces("application/json")]
     [Route("api/mail")]
-    [Authorize(AuthenticationSchemes = "Bearer")]
+    [Authorize]
     public class MailController : ControllerBase
     {
         private readonly IMailService _mailService;

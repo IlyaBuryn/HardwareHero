@@ -8,7 +8,7 @@ namespace Contributor.Api.Controllers
     [ApiController]
     [Produces("application/json")]
     [Route("api/subscription")]
-    [Authorize(AuthenticationSchemes = "Bearer")]
+    [Authorize]
     public class SubscriptionController : ControllerBase
     {
         private readonly ISubscriptionService _subscriptionService;

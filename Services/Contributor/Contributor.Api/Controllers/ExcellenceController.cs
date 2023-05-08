@@ -8,7 +8,7 @@ namespace Contributor.Api.Controllers
     [ApiController]
     [Produces("application/json")]
     [Route("api/excellence")]
-    [Authorize(AuthenticationSchemes = "Bearer")]
+    [Authorize]
     public class ExcellenceController : ControllerBase
     {
         private readonly IContributorExcellenceService _excellenceService;

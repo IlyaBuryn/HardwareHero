@@ -9,7 +9,7 @@ namespace UserManagement.Api.Controllers
     [ApiController]
     [Produces("application/json")]
     [Route("api/user")]
-    [Authorize(AuthenticationSchemes = "Bearer")]
+    [Authorize]
     public class UserController : ControllerBase
     {
         private readonly UserManager<ApplicationUser> _userManager;

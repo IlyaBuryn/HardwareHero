@@ -8,7 +8,7 @@ namespace Contributor.Api.Controllers
     [ApiController]
     [Produces("application/json")]
     [Route("api/contributor")]
-    [Authorize(AuthenticationSchemes = "Bearer")]
+    [Authorize]
     public class ContributorController : ControllerBase
     {
         private readonly IContributorService _contributorService;

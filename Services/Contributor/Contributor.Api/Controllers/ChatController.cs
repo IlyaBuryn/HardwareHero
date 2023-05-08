@@ -8,7 +8,7 @@ namespace Contributor.Api.Controllers
     [ApiController]
     [Produces("application/json")]
     [Route("api/contributors/chat")]
-    [Authorize(AuthenticationSchemes = "Bearer")]
+    [Authorize]
     public class ChatController : ControllerBase
     {
         private readonly IChatService _chatService;

@@ -83,7 +83,7 @@ public class SeedData
                 }
             };
 
-            var result = userMgr.CreateAsync(isaac, "Pass_123").Result;
+            var result = userMgr.CreateAsync(isaac, "Isaac_0").Result;
             if (!result.Succeeded)
             {
                 throw new Exception(result.Errors.First().Description);
@@ -94,6 +94,7 @@ public class SeedData
                     new Claim(JwtClaimTypes.GivenName, "Isaac"),
                     new Claim(JwtClaimTypes.FamilyName, "Bishop"),
                     new Claim(JwtClaimTypes.WebSite, "http://isaac-bishop.com"),
+                    new Claim(JwtClaimTypes.Role, "Admin"),
                 }).Result;
             if (!result.Succeeded)
             {

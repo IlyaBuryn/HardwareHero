@@ -10,7 +10,7 @@ namespace Configurator.BusinessLogic.Components.ComponentTypes
             {
                 Id = new Guid("d8facf00-4c48-4a31-9e03-cfb0e8d8e3fc"),
                 ComponentNames = new[] { "Graphics card", "GPU" },
-                Image = "configurator-gpu.svg",
+                Image = "gpu-image.jpg",
                 Specifications = new[]
                 {
                     new ComponentTypeSpecification()

@@ -1,7 +1,4 @@
-﻿using HardwareHero.Services.Shared.Constants;
-using IdentityServer;
-using IdentityServer.Extensions;
-using IdentityServer.Migrations.ConfigurationDb;
+﻿using IdentityServer;
 using Serilog;
 
 Log.Logger = new LoggerConfiguration()
@@ -23,7 +20,10 @@ try
         .ConfigureServices()
         .ConfigurePipeline();
 
-    var isSeed = Environment.GetEnvironmentVariable("SEED").Contains("/seed");
+
+    var seedEnvironmentVariable = Environment.GetEnvironmentVariable("SEED");
+    var isSeed = seedEnvironmentVariable != null && seedEnvironmentVariable.Contains("/seed");
+
     if (!isSeed)
     {
         isSeed = args.Contains("/seed");

@@ -10,7 +10,7 @@ namespace Configurator.BusinessLogic.Components.ComponentTypes
             {
                 Id = new Guid("248541fb-9cc9-45cd-b11d-33732e6b48e7"),
                 ComponentNames = new[] { "Motherboard", "MB", },
-                Image = "configurator-motherboard.svg",
+                Image = "mb-image.jpg",
                 Specifications = new[]
                 {
                     new ComponentTypeSpecification()

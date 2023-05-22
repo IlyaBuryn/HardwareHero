@@ -10,7 +10,7 @@ namespace Configurator.BusinessLogic.Components.ComponentTypes
             {
                 Id = new Guid("7153cab9-2651-4d76-a8d7-c7b94b8b594e"),
                 ComponentNames = new[] { "SD", "SSD", "M2", "HDD", "Storage device" },
-                Image = "configurator-sd.svg",
+                Image = "ssd-image.jpg",
                 Specifications = new[]
                 {
                     new ComponentTypeSpecification()

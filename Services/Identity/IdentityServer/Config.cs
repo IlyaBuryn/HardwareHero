@@ -10,6 +10,7 @@ public static class Config
         {
             new IdentityResources.OpenId(),
             new IdentityResources.Profile(),
+            new IdentityResource("roles", "Your role(s)", new []{"role"}),
         };
 
     public static IEnumerable<ApiScope> ApiScopes =>
@@ -25,39 +26,41 @@ public static class Config
             new Client
             {
                 ClientId = "test.client",
-                ClientName = "Test Client",
-
-                AllowedGrantTypes = GrantTypes.ClientCredentials,
-                ClientSecrets = { new Secret("511536EF-F270-4058-80CA-1C89C192F69A".Sha256()) },
-
-                AllowedScopes =
+                ClientName = "Test client",
+                ClientSecrets = { new Secret("secret".Sha256()) },
+                
+                AllowedGrantTypes = GrantTypes.Code,
+                AllowedScopes = 
                 {
-                    Duende.IdentityServer.IdentityServerConstants.StandardScopes.OpenId,
-                    Duende.IdentityServer.IdentityServerConstants.StandardScopes.Profile,
-                    IdentityClientConstants.ServicesApiScope,
-                    IdentityClientConstants.WebScope,
-                }
+                    IdentityClientConstants.ServicesApiScope
+                },
             },
-
             new Client
             {
-                ClientId = "external",
-                ClientName ="External Client",
-                AllowedGrantTypes = GrantTypes.ResourceOwnerPassword,
-
+                ClientId = "react.web.app",
+                ClientName = "spa",
+                ClientSecrets = {new Secret("secret".Sha256())},
                 RequireClientSecret = false,
-
-                RedirectUris = { "https://localhost:44300/signin-oidc" },
-                FrontChannelLogoutUri = "https://localhost:44300/signout-oidc",
-                PostLogoutRedirectUris = { "https://localhost:44300/signout-callback-oidc" },
+                AllowedGrantTypes =  new[] { GrantType.AuthorizationCode, GrantType.ResourceOwnerPassword },
 
                 AllowOfflineAccess = true,
-                AllowedScopes =
+
+                RedirectUris = { "http://localhost:5001/home" },
+                PostLogoutRedirectUris = { "http://localhost:5001/home" },
+                AllowedCorsOrigins= { "http://localhost:5001" },
+
+                AllowedScopes = new List<string>
                 {
                     Duende.IdentityServer.IdentityServerConstants.StandardScopes.OpenId,
                     Duende.IdentityServer.IdentityServerConstants.StandardScopes.Profile,
+                    Duende.IdentityServer.IdentityServerConstants.StandardScopes.Email,
                     IdentityClientConstants.WebScope,
-                }
-            },
+                    IdentityClientConstants.ServicesApiScope,
+                    "roles",
+                },
+            }
         };
+
+    public static Client GetSpaClient =>
+        Clients.Where(x => x.ClientName == "spa").FirstOrDefault();
 }

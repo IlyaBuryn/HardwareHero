@@ -1,3 +1,4 @@
+using System.Reflection;
 using UserManagement.Api.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);

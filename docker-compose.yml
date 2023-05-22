@@ -2,9 +2,20 @@ version: '3.4'
 
 networks:
   backend:
-  frontend:
     
 services:
+  
+  react.client:
+    container_name: React-app
+    image: client
+    build:
+      context: ../HardwareHero.UI/web
+      dockerfile: Dockerfile
+    networks:
+      - backend
+    ports:
+      - 5001:3000
+
   hardwarehero.mssql:
     container_name: HardwareHero-mssql
     image: mcr.microsoft.com/mssql/server:2022-latest
@@ -133,9 +144,16 @@ services:
       - usermanagement.api
     networks:
       - backend
+    ports:
+      - 5000:80
     environment:
       - DB_HOST=hardwarehero.mssql
       - DB_NAME=HardwareHero.IdentityServer
       - DB_SA_PASSWORD=password@#12345
       - SEED=/seed
 
+  proxy:
+    container_name: Nginx-proxy
+    image: nginx:mainline
+    networks:
+      - backend

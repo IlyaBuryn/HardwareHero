@@ -10,7 +10,7 @@ namespace Configurator.BusinessLogic.Components.ComponentTypes
             {
                 Id = new Guid("ed0ce5e4-7b63-4e94-a579-070a2e5ec6de"),
                 ComponentNames = new[] { "Processor", "CPU" },
-                Image = "configurator-cpu.svg",
+                Image = "cpu-image.jpg",
                 Specifications = new[]
                 {
                     new ComponentTypeSpecification()

@@ -10,7 +10,7 @@ namespace Configurator.BusinessLogic.Components.ComponentTypes
             {
                 Id = new Guid("49f8efff-deaf-4120-9431-5b220c6c8bb9"),
                 ComponentNames = new[] { "Case", "Tower" },
-                Image = "configurator-case.svg",
+                Image = "case-image.jpg",
                 Specifications = new[]
                 {
                     new ComponentTypeSpecification()

@@ -8,7 +8,7 @@ namespace Configurator.Api.Controllers
     [ApiController]
     [Produces("application/json")]
     [Route("api/assemblies")]
-    [Authorize]
+    [AllowAnonymous]
     public class AssembliesController : ControllerBase
     {
         private readonly IAssemblyService _assemblyService;

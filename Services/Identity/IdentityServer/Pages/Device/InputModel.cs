@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace IdentityServer.Pages.Device;
 
 public class InputModel

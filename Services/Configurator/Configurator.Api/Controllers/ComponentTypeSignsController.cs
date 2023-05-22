@@ -8,7 +8,7 @@ namespace Configurator.Api.Controllers
     [ApiController]
     [Produces("application/json")]
     [Route("api/configurator/component-type-signs")]
-    [Authorize]
+    [AllowAnonymous]
     public class ComponentTypeSignsController : ControllerBase
     {
         private readonly IComponentTypesService _componentTypesService;

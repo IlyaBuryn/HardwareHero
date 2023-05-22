@@ -10,7 +10,6 @@ namespace Aggregator.Api.Controllers
     [ApiController]
     [Produces("application/json")]
     [Route("api/aggregator")]
-    [Authorize]
     public class ComponentController : ControllerBase
     {
         private readonly IComponentService _componentService;
@@ -25,7 +24,7 @@ namespace Aggregator.Api.Controllers
         }
 
         [HttpPost("component")]
-        //[Authorize("ClientIdPolicy")] //(Roles = "Manager")
+        [Authorize]
         public async Task<IActionResult> AddComponentAsync([FromBody] ComponentDto componentToAdd)
         {
             var response = await _componentService
@@ -36,7 +35,7 @@ namespace Aggregator.Api.Controllers
 
 
         [HttpPut("component")]
-        //[Authorize("ClientIdPolicy")] //(Roles = "Manager")
+        [Authorize]
         public async Task<IActionResult> UpdateComponentAsync([FromBody] ComponentDto componentToUpdate)
         {
             var response = await _componentService
@@ -47,7 +46,7 @@ namespace Aggregator.Api.Controllers
 
 
         [HttpDelete("component/{componentId}")]
-        //[Authorize("ClientIdPolicy")] //(Roles = "Manager")
+        [Authorize]
         public async Task<IActionResult> RemoveComponentAsync([FromRoute] Guid componentId)
         {
             var response = await _componentService
@@ -58,6 +57,7 @@ namespace Aggregator.Api.Controllers
 
 
         [HttpGet("component/{componentId}")]
+        [AllowAnonymous]
         public async Task<IActionResult> GetComponentById([FromRoute] Guid componentId)
         {
             var response = await _componentService
@@ -68,6 +68,7 @@ namespace Aggregator.Api.Controllers
 
 
         [HttpGet("component-mark/{componentId}")]
+        [Authorize]
         public async Task<IActionResult> GetComponentAvgMark([FromRoute] Guid componentId)
         {
             var response = await _componentService
@@ -78,6 +79,7 @@ namespace Aggregator.Api.Controllers
 
 
         [HttpGet("components/{pageNumber}")]
+        [AllowAnonymous]
         public async Task<IActionResult> GetComponents(
             [FromRoute] int pageNumber,
             [FromHeader(Name = "X-Specification-Filter")] string specificationFilter,

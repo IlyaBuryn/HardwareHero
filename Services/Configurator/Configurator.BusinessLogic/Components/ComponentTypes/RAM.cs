@@ -10,7 +10,7 @@ namespace Configurator.BusinessLogic.Components.ComponentTypes
             {
                 Id = new Guid("573c50b6-6dc1-4c3b-889d-a2965577a8b1"),
                 ComponentNames = new[] { "RAM", "Random access memory" },
-                Image = "configurator-ram.svg",
+                Image = "ram-image.jpg",
                 Specifications = new[]
                 {
                     new ComponentTypeSpecification()

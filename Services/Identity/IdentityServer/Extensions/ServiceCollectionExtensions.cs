@@ -8,6 +8,7 @@ using Microsoft.IdentityModel.Tokens;
 using Duende.IdentityServer;
 using System.IdentityModel.Tokens.Jwt;
 using HardwareHero.Services.Shared.Constants;
+using Duende.IdentityServer.AspNetIdentity;
 
 namespace IdentityServer.Extensions
 {
@@ -57,7 +58,8 @@ namespace IdentityServer.Extensions
                 options.RemoveConsumedTokens = true;
             })
             .AddAspNetIdentity<ApplicationUser>()
-            .AddResourceOwnerValidator<UserValidator>();
+            .AddResourceOwnerValidator<UserValidator>()
+            .AddProfileService<ProfileService>();
         }
 
         public static void AddCustomIdentity(this IServiceCollection services)

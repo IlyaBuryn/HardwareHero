@@ -16,10 +16,7 @@ namespace HardwareHero.Services.Shared.DTOs.Validation.Contributor
             RuleFor(c => c.Region).MaximumLength(128)
                 .WithMessage("{PropertyName} must be less than {MaxLength} characters!");
 
-            RuleFor(c => c.SubscriptionInfoId).NotEmpty()
-                .WithMessage("{PropertyName} is required.");
-
-            RuleFor(c => c.ContributorExcellenceId).NotEmpty()
+            RuleFor(c => c.ContributorExcellence).NotEmpty()
                 .WithMessage("{PropertyName} is required.");
         }
     }

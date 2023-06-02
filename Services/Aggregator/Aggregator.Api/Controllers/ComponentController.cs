@@ -83,6 +83,7 @@ namespace Aggregator.Api.Controllers
         public async Task<IActionResult> GetComponents(
             [FromRoute] int pageNumber,
             [FromHeader(Name = "X-Specification-Filter")] string specificationFilter,
+            [FromHeader(Name = "X-Search-String")] string? searchString,
             [FromHeader(Name = "X-Page-Size")] int? pageSize)
         {
             if (pageSize == null || pageSize <= 0)
@@ -91,8 +92,26 @@ namespace Aggregator.Api.Controllers
             }
 
             var response = await _componentService
-                .GetComponentsAsPageAsync(pageNumber, (int)pageSize, specificationFilter);
+                .GetComponentsAsPageAsync(pageNumber, (int)pageSize, specificationFilter, searchString);
             
+            return Ok(response);
+        }
+
+        [HttpGet("components/pageCount")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetPageCount(
+            [FromHeader(Name = "X-Specification-Filter")] string specificationFilter,
+            [FromHeader(Name = "X-Search-String")] string? searchString,
+            [FromHeader(Name = "X-Page-Size")] int? pageSize)
+        {
+            if (pageSize == null || pageSize <= 0)
+            {
+                pageSize = _pageSizeSettings.PageSize;
+            }
+
+            var response = await _componentService
+                .GetComponentsPageCount((int)pageSize, specificationFilter, searchString);
+
             return Ok(response);
         }
     }

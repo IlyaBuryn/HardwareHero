@@ -8,7 +8,7 @@ namespace Configurator.Api.Controllers
     [ApiController]
     [Produces("application/json")]
     [Route("api/assemblies")]
-    [AllowAnonymous]
+    [Authorize]
     public class AssembliesController : ControllerBase
     {
         private readonly IAssemblyService _assemblyService;
@@ -24,7 +24,7 @@ namespace Configurator.Api.Controllers
             var response = await _assemblyService
                 .AddAssemblyAsync(assemblyToAdd);
 
-            return CreatedAtAction(nameof(CreateAsync), response);
+            return Ok(response);
         }
 
         [HttpPut]
@@ -55,10 +55,12 @@ namespace Configurator.Api.Controllers
         }
 
         [HttpGet("{userId}")]
-        public async Task<IActionResult> GetAllByUserIdAsync([FromRoute] Guid userId, [FromBody] string ccategory)
+        public async Task<IActionResult> GetAllByUserIdAsync([FromRoute] Guid userId)
         {
             var response = await _assemblyService
-                .GetAssemblyListByUserIdAsync(userId, ccategory);
+
+
+                .GetAssemblyListByUserIdAsync(userId, "PC");
 
             return Ok(response);
         }

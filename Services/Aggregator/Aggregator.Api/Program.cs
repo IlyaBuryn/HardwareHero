@@ -33,7 +33,7 @@ IdentityModelEventSource.ShowPII = true;
 
 var app = builder.Build();
 
-app.DatabaseInitialization();
+await app.DatabaseInitialization();
 app.UseMiddleware<ExceptionHandlerMiddleware>();
 app.UseHttpsRedirection();
 app.UseRouting();

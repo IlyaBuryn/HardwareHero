@@ -66,21 +66,7 @@ public class SeedData
                 Name = "Isaac Bishop",
                 Email = "isaac@email.com",
                 EmailConfirmed = true,
-                RegistrationDate = DateTime.Now,
-                WishList = new WishList()
-                {
-                    Components = new[]
-                    {
-                            new WishListComponents()
-                            {
-                                ComponentId = new Guid("0712D311-71E5-4C5B-8F80-1B1B08180851"),
-                            },
-                            new WishListComponents()
-                            {
-                                ComponentId = new Guid("17BB6742-6611-4865-99F4-222610FB1B88"),
-                            },
-                        }
-                }
+                RegistrationDate = DateTime.Now
             };
 
             var result = userMgr.CreateAsync(isaac, "Isaac_0").Result;
@@ -105,32 +91,43 @@ public class SeedData
         else
         {
             Log.Debug("Isaac already exists");
+        }
 
-            if (isaac.WishList == null)
+        var ilya = userMgr.FindByNameAsync("ilya").Result;
+        if (ilya == null)
+        {
+            ilya = new ApplicationUser
             {
-                isaac.WishList = new WishList()
-                {
-                    Components = new[]
-                    {
-                            new WishListComponents()
-                            {
-                                ComponentId = new Guid("0712D311-71E5-4C5B-8F80-1B1B08180851"),
-                            },
-                            new WishListComponents()
-                            {
-                                ComponentId = new Guid("17BB6742-6611-4865-99F4-222610FB1B88"),
-                            },
-                        }
-                };
-            }
+                UserName = "ilya",
+                Name = "Ilya Buryn",
+                Email = "ilya@m.com",
+                EmailConfirmed = true,
+                RegistrationDate = DateTime.Now,
+                WishList = new WishList(),
+            };
 
-            var result = userMgr.UpdateAsync(isaac).Result;
+            var result = userMgr.CreateAsync(ilya, "Isaac_0").Result;
             if (!result.Succeeded)
             {
                 throw new Exception(result.Errors.First().Description);
             }
 
-            Log.Debug("Isaac has been updated");
+            result = userMgr.AddClaimsAsync(isaac, new Claim[]{
+                    new Claim(JwtClaimTypes.Name, "Ilya Buryn"),
+                    new Claim(JwtClaimTypes.GivenName, "Ilya"),
+                    new Claim(JwtClaimTypes.FamilyName, "Buryn"),
+                    new Claim(JwtClaimTypes.WebSite, "http://ilya-buryn.com"),
+                    new Claim(JwtClaimTypes.Role, "User"),
+                }).Result;
+            if (!result.Succeeded)
+            {
+                throw new Exception(result.Errors.First().Description);
+            }
+            Log.Debug("Ilya has been created");
+        }
+        else
+        {
+            Log.Debug("Ilya already exists");
         }
 
         foreach (var role in roles)
@@ -138,10 +135,20 @@ public class SeedData
             var roleCheck = await userMgr.IsInRoleAsync(isaac, role.Name);
             if (!roleCheck)
             {
-                var result = await userMgr.AddToRoleAsync(isaac, role.Name);
-                if (!result.Succeeded)
+                if (role.Name == "User")
                 {
-                    throw new Exception(result.Errors.First().Description);
+                    var resultIlya = await userMgr.AddToRoleAsync(ilya, role.Name);
+                    if (!resultIlya.Succeeded)
+                    {
+                        throw new Exception(resultIlya.Errors.First().Description);
+                    }
+                    Log.Debug($"Role \"{role.Name}\" added to user: \"{ilya}\"");
+                }
+
+                var resultIsaac = await userMgr.AddToRoleAsync(isaac, role.Name);
+                if (!resultIsaac.Succeeded)
+                {
+                    throw new Exception(resultIsaac.Errors.First().Description);
                 }
                 Log.Debug($"Role \"{role.Name}\" added to user: \"{isaac}\"");
             }

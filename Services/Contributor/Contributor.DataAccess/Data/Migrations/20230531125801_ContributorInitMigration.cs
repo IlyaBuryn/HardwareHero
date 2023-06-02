@@ -72,6 +72,8 @@ namespace Contributor.DataAccess.Data.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Region = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
+                    IsConfirmed = table.Column<bool>(type: "bit", nullable: true),
+                    TimeStamp = table.Column<DateTime>(type: "datetime2", nullable: true, defaultValue: new DateTime(2023, 5, 31, 15, 58, 1, 475, DateTimeKind.Local).AddTicks(4751)),
                     SubscriptionInfoId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     ComponentRefId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     ReviewRefId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
@@ -104,7 +106,7 @@ namespace Contributor.DataAccess.Data.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Text = table.Column<string>(type: "nvarchar(2048)", maxLength: 2048, nullable: false),
-                    Timestamp = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValue: new DateTime(2023, 4, 12, 18, 11, 10, 250, DateTimeKind.Local).AddTicks(4552)),
+                    Timestamp = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValue: new DateTime(2023, 5, 31, 15, 58, 1, 474, DateTimeKind.Local).AddTicks(534)),
                     SenderId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     ChatRoomId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
@@ -154,8 +156,8 @@ namespace Contributor.DataAccess.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    RenewalDate = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValue: new DateTime(2023, 4, 12, 18, 11, 10, 251, DateTimeKind.Local).AddTicks(9664)),
-                    ExpiryDate = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValue: new DateTime(2023, 5, 12, 18, 11, 10, 251, DateTimeKind.Local).AddTicks(9894)),
+                    RenewalDate = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValue: new DateTime(2023, 5, 31, 15, 58, 1, 476, DateTimeKind.Local).AddTicks(1341)),
+                    ExpiryDate = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValue: new DateTime(2023, 6, 30, 15, 58, 1, 476, DateTimeKind.Local).AddTicks(1607)),
                     PlanId = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValue: new Guid("ca7f44ac-ec3c-4caa-9ee7-dc1c6550a681")),
                     ContributorId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
@@ -179,7 +181,7 @@ namespace Contributor.DataAccess.Data.Migrations
             migrationBuilder.InsertData(
                 table: "ContributorExcellences",
                 columns: new[] { "Id", "Logo", "Name" },
-                values: new object[] { new Guid("3f46062f-56d8-4897-a37f-ff4e920b2d73"), "", "Test Name" });
+                values: new object[] { new Guid("3f46062f-56d8-4897-a37f-ff4e920b2d73"), "newegg.com.png", "NewEgg.com" });
 
             migrationBuilder.InsertData(
                 table: "SubscriptionPlans",
@@ -193,13 +195,13 @@ namespace Contributor.DataAccess.Data.Migrations
 
             migrationBuilder.InsertData(
                 table: "Contributors",
-                columns: new[] { "Id", "ComponentRefId", "ContributorExcellenceId", "Region", "ReviewRefId", "SubscriptionInfoId", "UserId" },
-                values: new object[] { new Guid("ef12555d-c912-402d-a045-148091680d9a"), null, new Guid("3f46062f-56d8-4897-a37f-ff4e920b2d73"), "Poland", null, new Guid("cf7a198c-c551-456f-a519-e8679f3d0662"), new Guid("8fe35832-874a-447b-a076-6e030b87d7eb") });
+                columns: new[] { "Id", "ComponentRefId", "ContributorExcellenceId", "IsConfirmed", "Region", "ReviewRefId", "SubscriptionInfoId", "UserId" },
+                values: new object[] { new Guid("ef12555d-c912-402d-a045-148091680d9a"), null, new Guid("3f46062f-56d8-4897-a37f-ff4e920b2d73"), true, "Belarus", null, new Guid("cf7a198c-c551-456f-a519-e8679f3d0662"), new Guid("8fe35832-874a-447b-a076-6e030b87d7eb") });
 
             migrationBuilder.InsertData(
                 table: "SubscriptionInfo",
                 columns: new[] { "Id", "ContributorId", "ExpiryDate", "PlanId", "RenewalDate" },
-                values: new object[] { new Guid("cf7a198c-c551-456f-a519-e8679f3d0662"), new Guid("ef12555d-c912-402d-a045-148091680d9a"), new DateTime(2023, 5, 12, 18, 11, 10, 252, DateTimeKind.Local).AddTicks(144), new Guid("ca7f44ac-ec3c-4caa-9ee7-dc1c6550a681"), new DateTime(2023, 4, 12, 18, 11, 10, 252, DateTimeKind.Local).AddTicks(143) });
+                values: new object[] { new Guid("cf7a198c-c551-456f-a519-e8679f3d0662"), new Guid("ef12555d-c912-402d-a045-148091680d9a"), new DateTime(2023, 6, 30, 15, 58, 1, 476, DateTimeKind.Local).AddTicks(1845), new Guid("ca7f44ac-ec3c-4caa-9ee7-dc1c6550a681"), new DateTime(2023, 5, 31, 15, 58, 1, 476, DateTimeKind.Local).AddTicks(1843) });
 
             migrationBuilder.CreateIndex(
                 name: "IX_ChatMessages_ChatRoomId",

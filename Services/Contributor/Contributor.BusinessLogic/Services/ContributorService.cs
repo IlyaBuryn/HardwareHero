@@ -78,7 +78,12 @@ namespace Contributor.BusinessLogic.Services
 
         public async Task<List<ContributorDto?>> GetContributorsAsync()
         {
-            var contributors = await _contributorRepo.GetManyEntitiesAsync();
+            var contributors = await _contributorRepo.GetManyEntitiesAsync(
+                includeProperties: new System.Linq.Expressions.Expression<Func<ContributorModel, object>>[] {
+                    x => x.ContributorExcellence,
+                    x => x.SubscriptionInfo,
+                    x => x.ComponentRef,
+                    x => x.ReviewRef });
             var result = _mapper.Map<List<ContributorDto>>(contributors.ToList());
             
             return result;
@@ -151,6 +156,20 @@ namespace Contributor.BusinessLogic.Services
 
             var result = _mapper.Map<ContributorDto>(contributor);
             
+            return result;
+        }
+
+        public async Task<ContributorDto?> GetContributorByUserId(Guid userId)
+        {
+            var contributor = await _contributorRepo.GetOneEntityAsync(
+                expression: x => x.UserId == userId);
+            if (contributor == null)
+            {
+                throw new NotFoundException(nameof(contributor));
+            }
+
+            var result = _mapper.Map<ContributorDto>(contributor);
+
             return result;
         }
     }

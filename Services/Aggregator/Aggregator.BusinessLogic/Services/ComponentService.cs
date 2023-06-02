@@ -4,6 +4,8 @@ using HardwareHero.Services.Shared.DTOs;
 using HardwareHero.Services.Shared.Exceptions;
 using HardwareHero.Services.Shared.Models.Aggregator;
 using HardwareHero.Services.Shared.Repositories.Contracts;
+using Newtonsoft.Json;
+using System.Linq.Expressions;
 
 namespace Aggregator.BusinessLogic.Services
 {
@@ -23,7 +25,7 @@ namespace Aggregator.BusinessLogic.Services
             _mapper = mapper;
         }
 
-        public async Task<List<ComponentDto?>> GetComponentsAsPageAsync(int pageNumber, int pageSize, string specificationFilter)
+        public async Task<List<ComponentDto?>> GetComponentsAsPageAsync(int pageNumber, int pageSize, string specificationFilter, string searchString)
         {
             if (pageSize <= 0 || pageNumber <= 0)
             {
@@ -34,18 +36,15 @@ namespace Aggregator.BusinessLogic.Services
             var componentsSet = await _componentRepo.GetManyEntitiesAsync();
             var filteredComponents = componentsSet;
 
-            if (component.SpecificationDictionary != null &&
-                component.SpecificationDictionary.Count != 0)
+            if (!string.IsNullOrEmpty(component.Specifications))
             {
-                foreach (var filter in component.SpecificationDictionary)
+                var filters = JsonConvert.DeserializeObject<Dictionary<string, string>>(component.Specifications);
+                var expression = BuildExpression(filters);
+                filteredComponents = componentsSet.Where(expression);
+                
+                if (!string.IsNullOrEmpty(searchString) && filteredComponents.Any())
                 {
-                    filteredComponents = componentsSet
-                        .Where(c =>
-                            c.Specifications.Contains(filter.Key) ||
-                            c.Specifications.Contains(filter.Value));
-                    //filteredComponents = filteredComponents
-                    //    .Where(c => c.SpecificationDictionary
-                    //    .ContainsKey(filter.Key) && c.SpecificationDictionary[filter.Key].Contains(filter.Value));
+                    filteredComponents = filteredComponents.Where(x => x.Description.Contains(searchString));
                 }
 
                 if (!filteredComponents.Any())
@@ -57,6 +56,37 @@ namespace Aggregator.BusinessLogic.Services
             var page = await _componentRepo.GetPageAsync(filteredComponents, pageNumber, pageSize);
 
             return _mapper.Map<List<ComponentDto?>>(page);
+        }
+
+        public async Task<int> GetComponentsPageCount(int pageSize, string specificationFilter, string searchString)
+        {
+            if (pageSize <= 0)
+            {
+                throw new PageOptionsValidationException();
+            }
+
+            var component = new Component { Specifications = specificationFilter };
+            var componentsSet = await _componentRepo.GetManyEntitiesAsync();
+            var filteredComponents = componentsSet;
+
+            if (!string.IsNullOrEmpty(component.Specifications))
+            {
+                var filters = JsonConvert.DeserializeObject<Dictionary<string, string>>(component.Specifications);
+                var expression = BuildExpression(filters);
+                filteredComponents = componentsSet.Where(expression);
+
+                if (!string.IsNullOrEmpty(searchString) && filteredComponents.Any())
+                {
+                    filteredComponents = filteredComponents.Where(x => x.Description.Contains(searchString));
+                }
+
+                if (!filteredComponents.Any())
+                {
+                    return 0;
+                }
+            }
+
+            return (int)Math.Ceiling((double)filteredComponents.Count() / pageSize);
         }
 
         public async Task<ComponentDto?> GetComponentByIdAsync(Guid componentId)
@@ -139,6 +169,39 @@ namespace Aggregator.BusinessLogic.Services
             int trueCount = reviews.Count(x => x.Recommended);
             
             return (decimal)trueCount / count * 100;
+        }
+
+        private Expression<Func<Component, bool>> BuildExpression(Dictionary<string, string> filters)
+        {
+            var parameter = Expression.Parameter(typeof(Component), "c");
+            Expression body = Expression.Constant(true); // Default to true
+
+            foreach (var filter in filters)
+            {
+                var key = filter.Key;
+                var value = filter.Value;
+
+                var propertyAccess = Expression.Property(parameter, "Specifications");
+                var containsKey = Expression.Call(
+                    propertyAccess,
+                    "Contains",
+                    Type.EmptyTypes,
+                    Expression.Constant($"\"{key}\":\"")
+                );
+
+                var containsValue = Expression.Call(
+                    propertyAccess,
+                    "Contains",
+                    Type.EmptyTypes,
+                    Expression.Constant($"\"{value}\"")
+                );
+
+                var condition = Expression.AndAlso(containsKey, containsValue);
+                body = Expression.AndAlso(body, condition);
+            }
+
+            var lambda = Expression.Lambda<Func<Component, bool>>(body, parameter);
+            return lambda;
         }
     }
 }

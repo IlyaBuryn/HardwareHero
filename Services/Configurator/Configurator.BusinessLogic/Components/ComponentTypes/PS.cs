@@ -9,7 +9,7 @@ namespace Configurator.BusinessLogic.Components.ComponentTypes
             return new PS()
             {
                 Id = new Guid("23774b9b-9c96-421a-b336-02d687e2396b"),
-                ComponentNames = new[] { "PS", "Power supply", "Power case" },
+                ComponentNames = new[] { "PS", "PSU", "Power supply", "Power case" },
                 Image = "psu-image.jpg",
                 Specifications = new[]
                 {

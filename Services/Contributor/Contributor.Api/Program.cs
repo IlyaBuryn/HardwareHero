@@ -3,8 +3,11 @@ using Contributor.BusinessLogic.Extensions;
 using HardwareHero.Services.Shared.Settings;
 using HardwareHero.Services.Shared.Middlewares;
 using Contributor.Api.Extensions;
+using Microsoft.IdentityModel.Logging;
 
 var builder = WebApplication.CreateBuilder(args);
+
+IdentityModelEventSource.ShowPII = true;
 
 builder.Services.AddCustomControllers();
 

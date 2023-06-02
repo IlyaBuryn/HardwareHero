@@ -1,0 +1,74 @@
+[
+    {
+        "id": "18ea6e49-ffd4-479d-be13-eb83c9ef10dd",
+        "name": "AMD Ryzen 9 7950X3D",
+        "description": "AMD Ryzen 9 7950X3D - Ryzen 9 7000 Series 16-Core 4.2 GHz Socket AM5 120W AMD Radeon Graphics Desktop Processor - 100-100000908WOF",
+        "initialPrice": "699.00",
+        "images": "18ea6e49-ffd4-479d-be13-eb83c9ef10dd_0.jpg,18ea6e49-ffd4-479d-be13-eb83c9ef10dd_1.jpg,18ea6e49-ffd4-479d-be13-eb83c9ef10dd_2.jpg",
+        "specifications": "{\"ComponentType\":\"cpu\",\"Best Seller Ranking\":\"#11 in Processors - Desktops\",\"Brand\":\"AMD\",\"Processors Type\":\"Desktop\",\"Series\":\"Ryzen 9 7000 Series\",\"Name\":\"Ryzen 9 7950X3D\",\"Model\":\"100-100000908WOF\",\"CPU Socket Type\":\"AM5\",\"# of Cores\":\"16-Core\",\"# of Threads\":\"32\",\"Operating Frequency\":\"4.2 GHz\",\"Max Turbo Frequency\":\"Up to 5.7 GHz\",\"L1 Cache\":\"1MB\",\"L2 Cache\":\"16MB\",\"L3 Cache\":\"128MB\",\"Manufacturing Tech\":\"5nm\",\"64-Bit Support\":\"Yes\",\"Memory Types\":\"DDR5 5200\",\"Memory Channel\":\"2\",\"ECC Memory\":\"Supported\",\"Integrated Graphics\":\"AMD Radeon Graphics\",\"Graphics Base Frequency\":\"400 MHz\",\"Graphics Max Dynamic Frequency\":\"2200 MHz\",\"PCI Express Revision\":\"5.0 / 4.0 / 3.0\",\"Thermal Design Power\":\"120W\",\"Cooling Device\":\"Cooling device not included - Processor Only\",\"Windows 11\":\"Supported\",\"Date First Available\":\"February 28, 2023\"}"
+    },
+    {
+        "id": "c23d9f9a-85be-4ab6-9d7b-2d6e806e0290",
+        "name": "Intel Core i7-12700KF",
+        "description": "Intel Core i7-12700KF - Core i7 12th Gen Alder Lake 12-Core (8P+4E) 3.6 GHz LGA 1700 125W Desktop Processor - BX8071512700KF",
+        "initialPrice": "288.99",
+        "images": "c23d9f9a-85be-4ab6-9d7b-2d6e806e0290_0.jpg,c23d9f9a-85be-4ab6-9d7b-2d6e806e0290_1.jpg,c23d9f9a-85be-4ab6-9d7b-2d6e806e0290_2.jpg",
+        "specifications": "{\"ComponentType\":\"cpu\",\"Best Seller Ranking\":\"#18 in Processors - Desktops\",\"Brand\":\"Intel\",\"Processors Type\":\"Desktop\",\"Series\":\"Core i7 12th Gen\",\"Name\":\"Core i7-12700KF\",\"Model\":\"BX8071512700KF\",\"CPU Socket Type\":\"LGA 1700\",\"Core Name\":\"Alder Lake\",\"# of Cores\":\"12-Core (8P+4E)\",\"# of Threads\":\"20\",\"Operating Frequency\":\"P-core Base Frequency: 3.6 GHzE-core Base Frequency: 2.7 GHz\",\"Max Turbo Frequency\":\"Intel Turbo Boost Max Technology 3.0 Frequency: Up to 5.0 GHzSingle P-core Turbo Frequency: Up to 4.9 GHzSingle E-core Turbo Frequency: Up to 3.8 GHz\",\"L2 Cache\":\"12MB\",\"L3 Cache\":\"25MB\",\"Manufacturing Tech\":\"Intel 7\",\"64-Bit Support\":\"Yes\",\"Hyper-Threading Support\":\"Yes\",\"Memory Types\":\"DDR4 3200 / DDR5 4800\",\"Memory Channel\":\"2\",\"Max Memory Size\":\"128 GB\",\"Max Memory Bandwidth\":\"76.8 GB/s\",\"Virtualization Technology Support\":\"Yes\",\"Integrated Graphics\":\"None Integrated Graphics\",\"PCI Express Revision\":\"5.0 / 4.0 / 3.0\",\"Max Number of PCI Express Lanes\":\"20\",\"Thermal Design Power\":\"Processor Base Power: 125WMaximum Turbo Power: 190W\",\"Cooling Device\":\"Cooling device not included - Processor Only\",\"Windows 11\":\"Supported\",\"Date First Available\":\"October 08, 2021\"}"
+    },
+    {
+        "id": "207fd2c4-861b-49cd-992d-85d2477a5d73",
+        "name": "AMD Ryzen 7 7800X3D",
+        "description": "AMD Ryzen 7 7800X3D - Ryzen 7 7000 Series 8-Core Socket AM5 120W AMD Radeon Graphics Desktop Processor - 100-100000910WOF",
+        "initialPrice": "449.00",
+        "images": "207fd2c4-861b-49cd-992d-85d2477a5d73_0.jpg,207fd2c4-861b-49cd-992d-85d2477a5d73_1.jpg,207fd2c4-861b-49cd-992d-85d2477a5d73_2.jpg",
+        "specifications": "{\"ComponentType\":\"cpu\",\"Best Seller Ranking\":\"#5 in Processors - Desktops\",\"Brand\":\"AMD\",\"Processors Type\":\"Desktop\",\"Series\":\"Ryzen 7 7000 Series\",\"Name\":\"Ryzen 7 7800X3D\",\"Model\":\"100-100000910WOF\",\"CPU Socket Type\":\"AM5\",\"# of Cores\":\"8-Core\",\"# of Threads\":\"16\",\"Max Turbo Frequency\":\"Up to 5.0 GHz\",\"L1 Cache\":\"512KB\",\"L2 Cache\":\"8MB\",\"L3 Cache\":\"96MB\",\"Manufacturing Tech\":\"5nm\",\"64-Bit Support\":\"Yes\",\"Memory Types\":\"DDR5 5200\",\"Memory Channel\":\"2\",\"ECC Memory\":\"Supported\",\"Integrated Graphics\":\"AMD Radeon Graphics\",\"Graphics Base Frequency\":\"400 MHz\",\"Graphics Max Dynamic Frequency\":\"2200 MHz\",\"PCI Express Revision\":\"5.0 / 4.0 / 3.0\",\"Thermal Design Power\":\"120W\",\"Cooling Device\":\"Cooling device not included - Processor Only\",\"Windows 11\":\"Supported\",\"Date First Available\":\"April 06, 2023\"}"
+    },
+    {
+        "id": "60092e5d-08e3-4c3a-b27f-537dc0726a3a",
+        "name": "AMD Ryzen 7 5800X",
+        "description": "AMD Ryzen 7 5800X - Ryzen 7 5000 Series Vermeer (Zen 3) 8-Core 3.8 GHz Socket AM4 105W None Integrated Graphics Desktop Processor - 100-100000063WOF",
+        "initialPrice": "238.99",
+        "images": "60092e5d-08e3-4c3a-b27f-537dc0726a3a_0.jpg,60092e5d-08e3-4c3a-b27f-537dc0726a3a_1.jpg,60092e5d-08e3-4c3a-b27f-537dc0726a3a_2.jpg",
+        "specifications": "{\"ComponentType\":\"cpu\",\"Best Seller Ranking\":\"#10 in Processors - Desktops\",\"Brand\":\"AMD\",\"Processors Type\":\"Desktop\",\"Series\":\"Ryzen 7 5000 Series\",\"Name\":\"Ryzen 7 5800X\",\"Model\":\"100-100000063WOF\",\"CPU Socket Type\":\"AM4\",\"Core Name\":\"Vermeer (Zen 3)\",\"# of Cores\":\"8-Core\",\"# of Threads\":\"16\",\"Operating Frequency\":\"3.8 GHz\",\"Max Turbo Frequency\":\"4.7 GHz\",\"L2 Cache\":\"4MB\",\"L3 Cache\":\"32MB\",\"Manufacturing Tech\":\"7nm\",\"64-Bit Support\":\"Yes\",\"Memory Types\":\"DDR4 3200\",\"Virtualization Technology Support\":\"Yes\",\"Integrated Graphics\":\"None Integrated Graphics\",\"PCI Express Revision\":\"4.0 / 3.0\",\"Thermal Design Power\":\"105W\",\"Cooling Device\":\"Cooling device not included - Processor Only\",\"Windows 11\":\"Supported\",\"Date First Available\":\"October 13, 2020\"}"
+    },
+    {
+        "id": "53777784-e82c-4a42-998a-9c54634943bd",
+        "name": "Intel Core i5-12600K",
+        "description": "Intel Core i5-12600K - Core i5 12th Gen Alder Lake 10-Core (6P+4E) 3.7 GHz LGA 1700 125W Intel UHD Graphics 770 Desktop Processor - BX8071512600K",
+        "initialPrice": "249.99",
+        "images": "53777784-e82c-4a42-998a-9c54634943bd_0.jpg,53777784-e82c-4a42-998a-9c54634943bd_1.jpg,53777784-e82c-4a42-998a-9c54634943bd_2.jpg",
+        "specifications": "{\"ComponentType\":\"cpu\",\"Best Seller Ranking\":\"#17 in Processors - Desktops\",\"Brand\":\"Intel\",\"Processors Type\":\"Desktop\",\"Series\":\"Core i5 12th Gen\",\"Name\":\"Core i5-12600K\",\"Model\":\"BX8071512600K\",\"CPU Socket Type\":\"LGA 1700\",\"Core Name\":\"Alder Lake\",\"# of Cores\":\"10-Core (6P+4E)\",\"# of Threads\":\"16\",\"Operating Frequency\":\"P-core Base Frequency: 3.7 GHzE-core Base Frequency: 2.8 GHz\",\"Max Turbo Frequency\":\"Single P-core Turbo Frequency: Up to 4.9 GHzSingle E-core Turbo Frequency: Up to 3.6 GHz\",\"L2 Cache\":\"9.5MB\",\"L3 Cache\":\"20MB\",\"Manufacturing Tech\":\"Intel 7\",\"64-Bit Support\":\"Yes\",\"Hyper-Threading Support\":\"Yes\",\"Memory Types\":\"DDR4 3200 / DDR5 4800\",\"Memory Channel\":\"2\",\"Max Memory Size\":\"128 GB\",\"ECC Memory\":\"Supported\",\"Max Memory Bandwidth\":\"76.8 GB/s\",\"Virtualization Technology Support\":\"Yes\",\"Integrated Graphics\":\"Intel UHD Graphics 770\",\"Graphics Base Frequency\":\"300 MHz\",\"Graphics Max Dynamic Frequency\":\"1.45 GHz\",\"PCI Express Revision\":\"5.0 / 4.0 / 3.0\",\"Max Number of PCI Express Lanes\":\"Up to 1x16+4, 2x8+4\",\"Thermal Design Power\":\"Processor Base Power: 125WMaximum Turbo Power: 150W\",\"Cooling Device\":\"Cooling device not included - Processor Only\",\"Windows 11\":\"Supported\",\"Date First Available\":\"October 08, 2021\"}"
+    },
+    {
+        "id": "dfb7c67f-f325-41b7-9a21-f68a12cb2d03",
+        "name": "AMD Ryzen 9 5950X",
+        "description": "AMD Ryzen 9 5950X - Ryzen 9 5000 Series Vermeer (Zen 3) 16-Core 3.4 GHz Socket AM4 105W None Integrated Graphics Desktop Processor - 100-100000059WOF",
+        "initialPrice": "504.99",
+        "images": "dfb7c67f-f325-41b7-9a21-f68a12cb2d03_0.jpg,dfb7c67f-f325-41b7-9a21-f68a12cb2d03_1.jpg,dfb7c67f-f325-41b7-9a21-f68a12cb2d03_2.jpg",
+        "specifications": "{\"ComponentType\":\"cpu\",\"Best Seller Ranking\":\"#28 in Processors - Desktops\",\"Brand\":\"AMD\",\"Processors Type\":\"Desktop\",\"Series\":\"Ryzen 9 5000 Series\",\"Name\":\"Ryzen 9 5950X\",\"Model\":\"100-100000059WOF\",\"CPU Socket Type\":\"AM4\",\"Core Name\":\"Vermeer (Zen 3)\",\"# of Cores\":\"16-Core\",\"# of Threads\":\"32\",\"Operating Frequency\":\"3.4 GHz\",\"Max Turbo Frequency\":\"4.9 GHz\",\"L2 Cache\":\"8MB\",\"L3 Cache\":\"64MB\",\"Manufacturing Tech\":\"7nm\",\"64-Bit Support\":\"Yes\",\"Memory Types\":\"DDR4 3200\",\"Virtualization Technology Support\":\"Yes\",\"Integrated Graphics\":\"None Integrated Graphics\",\"PCI Express Revision\":\"4.0 / 3.0\",\"Thermal Design Power\":\"105W\",\"Cooling Device\":\"Cooling device not included - Processor Only\",\"Windows 11\":\"Supported\",\"Date First Available\":\"October 13, 2020\"}"
+    },
+    {
+        "id": "6bc9e0fb-16a4-4745-99e4-4c8dda32d635",
+        "name": "Intel Core i7-12700K",
+        "description": "Intel Core i7-12700K - Core i7 12th Gen Alder Lake 12-Core (8P+4E) 3.6 GHz LGA 1700 125W Intel UHD Graphics 770 Desktop Processor - BX8071512700K",
+        "initialPrice": "313.99",
+        "images": "6bc9e0fb-16a4-4745-99e4-4c8dda32d635_0.jpg,6bc9e0fb-16a4-4745-99e4-4c8dda32d635_1.jpg,6bc9e0fb-16a4-4745-99e4-4c8dda32d635_2.jpg",
+        "specifications": "{\"ComponentType\":\"cpu\",\"Best Seller Ranking\":\"#6 in Processors - Desktops\",\"Brand\":\"Intel\",\"Processors Type\":\"Desktop\",\"Series\":\"Core i7 12th Gen\",\"Name\":\"Core i7-12700K\",\"Model\":\"BX8071512700K\",\"CPU Socket Type\":\"LGA 1700\",\"Core Name\":\"Alder Lake\",\"# of Cores\":\"12-Core (8P+4E)\",\"# of Threads\":\"20\",\"Operating Frequency\":\"P-core Base Frequency: 3.6 GHzE-core Base Frequency: 2.7 GHz\",\"Max Turbo Frequency\":\"Intel Turbo Boost Max Technology 3.0 Frequency: Up to 5.0 GHzSingle P-core Turbo Frequency: Up to 4.9 GHzSingle E-core Turbo Frequency: Up to 3.8 GHz\",\"L2 Cache\":\"12MB\",\"L3 Cache\":\"25MB\",\"Manufacturing Tech\":\"Intel 7\",\"64-Bit Support\":\"Yes\",\"Hyper-Threading Support\":\"Yes\",\"Memory Types\":\"DDR4 3200 / DDR5 4800\",\"Memory Channel\":\"2\",\"Max Memory Size\":\"128 GB\",\"ECC Memory\":\"Supported\",\"Max Memory Bandwidth\":\"76.8 GB/s\",\"Virtualization Technology Support\":\"Yes\",\"Integrated Graphics\":\"Intel UHD Graphics 770\",\"Graphics Base Frequency\":\"300 MHz\",\"Graphics Max Dynamic Frequency\":\"1.50 GHz\",\"PCI Express Revision\":\"5.0 / 4.0 / 3.0\",\"Max Number of PCI Express Lanes\":\"Up to 1x16+4, 2x8+4\",\"Thermal Design Power\":\"Processor Base Power: 125WMaximum Turbo Power:\",\"Cooling Device\":\"Cooling device not included - Processor Only\",\"Windows 11\":\"Supported\",\"Date First Available\":\"October 08, 2021\"}"
+    },
+    {
+        "id": "b1c3e4cd-3283-42dd-a6b5-62ac5cbcb595",
+        "name": "AMD Ryzen 7 5800X3D",
+        "description": "AMD Ryzen 7 5800X3D - Ryzen 7 5000 Series 8-Core 3.4 GHz Socket AM4 105W None Integrated Graphics Desktop Processor - 100-100000651WOF",
+        "initialPrice": "339.00",
+        "images": "b1c3e4cd-3283-42dd-a6b5-62ac5cbcb595_0.jpg,b1c3e4cd-3283-42dd-a6b5-62ac5cbcb595_1.jpg,b1c3e4cd-3283-42dd-a6b5-62ac5cbcb595_2.jpg",
+        "specifications": "{\"ComponentType\":\"cpu\",\"Best Seller Ranking\":\"#8 in Processors - Desktops\",\"Brand\":\"AMD\",\"Processors Type\":\"Desktop\",\"Series\":\"Ryzen 7 5000 Series\",\"Name\":\"Ryzen 7 5800X3D\",\"Model\":\"100-100000651WOF\",\"CPU Socket Type\":\"AM4\",\"# of Cores\":\"8-Core\",\"# of Threads\":\"16\",\"Operating Frequency\":\"3.4 GHz\",\"Max Turbo Frequency\":\"4.5 GHz\",\"L1 Cache\":\"512KB\",\"L2 Cache\":\"4MB\",\"L3 Cache\":\"96MB\",\"Manufacturing Tech\":\"7nm\",\"64-Bit Support\":\"Yes\",\"Memory Types\":\"DDR4 2667 / DDR4 2933 / DDR4 3200\",\"Memory Channel\":\"2\",\"Integrated Graphics\":\"None Integrated Graphics\",\"PCI Express Revision\":\"4.0 / 3.0\",\"Thermal Design Power\":\"105W\",\"Cooling Device\":\"Cooling device not included - Processor Only\",\"Windows 11\":\"Supported\",\"Date First Available\":\"April 20, 2022\"}"
+    },
+    {
+        "id": "3dcd56dc-bdc4-4090-9841-e7b1c283957c",
+        "name": "Intel Core i9-12900K",
+        "description": "Intel Core i9-12900K - Core i9 12th Gen Alder Lake 16-Core (8P+8E) 3.2 GHz LGA 1700 125W Intel UHD Graphics 770 Desktop Processor - BX8071512900K",
+        "initialPrice": "426.99",
+        "images": "3dcd56dc-bdc4-4090-9841-e7b1c283957c_0.jpg,3dcd56dc-bdc4-4090-9841-e7b1c283957c_1.jpg,3dcd56dc-bdc4-4090-9841-e7b1c283957c_2.jpg",
+        "specifications": "{\"ComponentType\":\"cpu\",\"Best Seller Ranking\":\"#14 in Processors - Desktops\",\"Brand\":\"Intel\",\"Processors Type\":\"Desktop\",\"Series\":\"Core i9 12th Gen\",\"Name\":\"Core i9-12900K\",\"Model\":\"BX8071512900K\",\"CPU Socket Type\":\"LGA 1700\",\"Core Name\":\"Alder Lake\",\"# of Cores\":\"16-Core (8P+8E)\",\"# of Threads\":\"24\",\"Operating Frequency\":\"P-core Base Frequency: 3.2 GHzE-core Base Frequency: 2.4 GHz\",\"Max Turbo Frequency\":\"Intel Turbo Boost Max Technology 3.0 Frequency: Up to 5.2 GHzSingle P-core Turbo Frequency: Up to 5.1 GHzSingle E-core Turbo Frequency: Up to 3.9 GHz\",\"L2 Cache\":\"14MB\",\"L3 Cache\":\"30MB\",\"Manufacturing Tech\":\"Intel 7\",\"64-Bit Support\":\"Yes\",\"Hyper-Threading Support\":\"Yes\",\"Memory Types\":\"DDR4 3200 / DDR5 4800\",\"Memory Channel\":\"2\",\"Max Memory Size\":\"128 GB\",\"ECC Memory\":\"Supported\",\"Max Memory Bandwidth\":\"76.8 GB/s\",\"Virtualization Technology Support\":\"Yes\",\"Integrated Graphics\":\"Intel UHD Graphics 770\",\"Graphics Base Frequency\":\"300 MHz\",\"Graphics Max Dynamic Frequency\":\"1.55 GHz\",\"PCI Express Revision\":\"5.0 / 4.0 / 3.0\",\"Max Number of PCI Express Lanes\":\"20\",\"Thermal Design Power\":\"Processor Base Power: 125WMaximum Turbo Power: 241W\",\"Cooling Device\":\"Cooling device not included - Processor Only\",\"Windows 11\":\"Supported\",\"Date First Available\":\"October 08, 2021\"}"
+    }
+]

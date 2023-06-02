@@ -1,0 +1,66 @@
+[
+    {
+        "id": "35055e95-fda4-44e5-9181-5be27d1e1588",
+        "name": "OLOy Blade RGB (OLOY) 64GB (2 x 32GB) DDR5 6400",
+        "description": "OLOy Blade RGB (OLOY) 64GB (2 x 32GB) DDR5 6400 (PC5 51200) Desktop Memory Model ND5U3264320IRKDE",
+        "initialPrice": "251.99",
+        "images": "35055e95-fda4-44e5-9181-5be27d1e1588_0.jpg,35055e95-fda4-44e5-9181-5be27d1e1588_1.jpg,35055e95-fda4-44e5-9181-5be27d1e1588_2.jpg",
+        "specifications": "{\"ComponentType\":\"ram\",\"Brand\":\"OLOy\",\"Series\":\"Blade RGB (OLOY)\",\"Model\":\"ND5U3264320IRKDE\",\"Capacity\":\"64GB (2 x 32GB)\",\"Speed\":\"DDR5 6400 (PC5 51200)\",\"CAS Latency\":\"32\",\"Timing\":\"32-38-38-76\",\"Voltage\":\"1.35V\",\"Multi-channel Kit\":\"Dual Channel Kit\",\"Chipset\":\"Intel XMP 3.0\",\"Color\":\"Black Hairline\",\"Recommend Use\":\"High Performance or Gaming Memory / Intel 500 Series / Intel 600 Series / Intel Compatible / Intel Z590 / Intel Z690\",\"LED Color\":\"RGB\",\"Date First Available\":\"February 27, 2023\"}"
+    },
+    {
+        "id": "4cf69ad1-099c-43e8-a5ce-971dd1757f65",
+        "name": "Crucial Pro 64GB (2 x 32GB) DDR4 3200",
+        "description": "Crucial Pro 64GB (2 x 32GB) 288-Pin PC RAM DDR4 3200 (PC4 25600) Desktop Memory Model CP2K32G4DFRA32A",
+        "initialPrice": "141.99",
+        "images": "4cf69ad1-099c-43e8-a5ce-971dd1757f65_0.jpg,4cf69ad1-099c-43e8-a5ce-971dd1757f65_1.jpg,4cf69ad1-099c-43e8-a5ce-971dd1757f65_2.jpg",
+        "specifications": "{\"ComponentType\":\"ram\",\"Brand\":\"Crucial\",\"Series\":\"Crucial Pro\",\"Model\":\"CP2K32G4DFRA32A\",\"Part Number\":\"CP2K32G4DFRA32A\",\"Capacity\":\"64GB (2 x 32GB)\",\"Type\":\"288-Pin PC RAM\",\"Speed\":\"DDR4 3200 (PC4 25600)\",\"CAS Latency\":\"22\",\"Voltage\":\"1.20V\",\"ECC\":\"No\",\"Buffered/Registered\":\"Unbuffered / Unregistered\",\"Multi-channel Kit\":\"Dual Channel Kit\",\"Chipset\":\"Intel XMP 2.0\",\"Color\":\"Black\",\"Heat Spreader\":\"Yes\",\"Features\":\"CP2K32G4DFRA32A is the Crucial DDR4 Pro 64GB kit consisting of two 32GB desktop modules that operate at the speed of 3200MMHz and has a CAS Latency of 22. It is an UDIMM and conforms to the industry standard DDR4 UDIMM layout of 288 pins. It is compatible with systems that can take DDR4-3200 UDIMM memory.\",\"Recommend Use\":\"Compatible with 8th\\u201313th Gen Intel\\u00ae Core and AMD Ryzen\\u2122 1000\\u20135000 Series Desktop CPUs\",\"LED Color\":\"None\",\"Date First Available\":\"May 15, 2023\"}"
+    },
+    {
+        "id": "b3290472-e196-48ee-bd09-5b506510c2b1",
+        "name": "G.SKILL Trident Z5 RGB Series 32GB (2 x 16GB) DDR5 6000",
+        "description": "G.SKILL Trident Z5 RGB Series 32GB (2 x 16GB) 288-Pin PC RAM DDR5 6000 (PC5 48000) Desktop Memory Model F5-6000J3636F16GX2-TZ5RK",
+        "initialPrice": "94.99",
+        "images": "b3290472-e196-48ee-bd09-5b506510c2b1_0.jpg,b3290472-e196-48ee-bd09-5b506510c2b1_1.jpg,b3290472-e196-48ee-bd09-5b506510c2b1_2.jpg",
+        "specifications": "{\"ComponentType\":\"ram\",\"Best Seller Ranking\":\"#3 in Desktop Memory\",\"Brand\":\"G.SKILL\",\"Series\":\"Trident Z5 RGB Series\",\"Model\":\"F5-6000J3636F16GX2-TZ5RK\",\"Capacity\":\"32GB (2 x 16GB)\",\"Type\":\"288-Pin PC RAM\",\"Speed\":\"DDR5 6000 (PC5 48000)\",\"CAS Latency\":\"36\",\"Timing\":\"36-36-36-96\",\"Voltage\":\"1.35V\",\"Multi-channel Kit\":\"Dual Channel Kit\",\"Chipset\":\"Intel XMP 3.0\",\"Color\":\"Black\",\"Heat Spreader\":\"Yes\",\"Features\":\"Extreme performance DDR5 memory designed for gaming and PC enthusiastsCustomizable RGB lighting supportIntel XMP 3.0 SupportDo not mix memory kits. Memory kits are sold in matched kits that are designed to run together as a set. Mixing memory kits will result in stability issues or system failure.Memory kits will boot at the SPD speed at default BIOS settings with compatible hardware.For memory kits with XMP, enable XMP profile in BIOS to reach the rated potential XMP overclock speed of the memory kit, subject to the use of compatible hardware.Reaching the rated XMP overclock speed and system stability will depend on the compatibility and capability of the motherboard and CPU used.Usage in any manner inconsistent with manufacturer specifications, warnings, designs, or recommendations will result lower speeds, system instability, or damage to the system or its components.\",\"Recommend Use\":\"High Performance or Gaming Memory / Intel 600 Series / Intel B660 / Intel Compatible / Intel Z690\",\"LED Color\":\"RGB\",\"Date First Available\":\"January 20, 2022\"}"
+    },
+    {
+        "id": "3f024cb7-73aa-42e3-bbe0-8b798962227e",
+        "name": "Crucial 32GB (2 x 16GB) 260-Pin SO-DIMM DDR4 3200",
+        "description": "Crucial 32GB (2 x 16GB) 260-Pin DDR4 SO-DIMM DDR4 3200 (PC4 25600) Laptop Memory Model CT2K16G4SFRA32A",
+        "initialPrice": "56.99",
+        "images": "3f024cb7-73aa-42e3-bbe0-8b798962227e_0.jpg,3f024cb7-73aa-42e3-bbe0-8b798962227e_1.jpg,3f024cb7-73aa-42e3-bbe0-8b798962227e_2.jpg",
+        "specifications": "{\"ComponentType\":\"ram\",\"Best Seller Ranking\":\"#10 in Laptop Memory\",\"Brand\":\"Crucial\",\"Model\":\"CT2K16G4SFRA32A\",\"Capacity\":\"32GB (2 x 16GB)\",\"Type\":\"260-Pin DDR4 SO-DIMM\",\"Speed\":\"DDR4 3200 (PC4 25600)\",\"CAS Latency\":\"22\",\"Timing\":\"22-22-22\",\"Voltage\":\"1.20V\",\"ECC\":\"No\",\"Buffered/Registered\":\"Unbuffered\",\"Multi-channel Kit\":\"Dual Channel Kit\",\"Heat Spreader\":\"Yes\",\"Features\":\"Speeds up to 3200 MT/s and faster data rates are expected to be available as DDR4 technology maturesIncrease bandwidth by up to 30%Reduce power consumption by up to 40% and extend battery lifeFaster burst access speeds for improved sequential data throughoutOptimized for next generation processors and platforms\",\"Date First Available\":\"August 04, 2020\"}"
+    },
+    {
+        "id": "b7972fd1-bfa3-4aea-8c87-43603406af60",
+        "name": "OLOy Blade RGB 16GB (2 x 8GB) DDR5 5600",
+        "description": "OLOy Blade RGB 16GB (2 x 8GB) DDR5 5600 (PC5 44800) Desktop Memory Model MD5U0856360BRKDE",
+        "initialPrice": "82.99",
+        "images": "b7972fd1-bfa3-4aea-8c87-43603406af60_0.jpg,b7972fd1-bfa3-4aea-8c87-43603406af60_1.jpg,b7972fd1-bfa3-4aea-8c87-43603406af60_2.jpg",
+        "specifications": "{\"ComponentType\":\"ram\",\"Brand\":\"OLOy\",\"Series\":\"Blade RGB (OLOY)\",\"Model\":\"MD5U0856360BRKDE\",\"Capacity\":\"16GB (2 x 8GB)\",\"Type\":\"288-Pin PC RAM\",\"Speed\":\"DDR5 5600 (PC5 44800)\",\"CAS Latency\":\"36\",\"Timing\":\"36-38-38-76\",\"Voltage\":\"1.25V\",\"Multi-channel Kit\":\"Dual Channel Kit\",\"Chipset\":\"Intel XMP 3.0\",\"Color\":\"Black Hairline\",\"Recommend Use\":\"AMD &amp; Intel Compatible / High Performance or Gaming Memory / Intel 500 Series / Intel 600 Series / Intel Compatible / Intel Z590 / Intel Z690\",\"LED Color\":\"RGB\",\"Date First Available\":\"May 24, 2022\"}"
+    },
+    {
+        "id": "3cabc72e-1967-4249-bd9e-31f98fd5107b",
+        "name": "Crucial 64GB (2 x 32GB) 262-Pin SO-DIMM DDR5 4800",
+        "description": "Crucial 64GB (2 x 32GB) 262-Pin DDR5 SO-DIMM DDR5 4800 (PC5 38400) Laptop Memory Model CT2K32G48C40S5",
+        "initialPrice": "154.99",
+        "images": "3cabc72e-1967-4249-bd9e-31f98fd5107b_0.jpg,3cabc72e-1967-4249-bd9e-31f98fd5107b_1.jpg,3cabc72e-1967-4249-bd9e-31f98fd5107b_2.jpg",
+        "specifications": "{\"ComponentType\":\"ram\",\"Best Seller Ranking\":\"#25 in Laptop Memory\",\"Brand\":\"Crucial\",\"Model\":\"CT2K32G48C40S5\",\"Capacity\":\"64GB (2 x 32GB)\",\"Type\":\"262-Pin DDR5 SO-DIMM\",\"Speed\":\"DDR5 4800 (PC5 38400)\",\"CAS Latency\":\"40\",\"Timing\":\"40-39-39\",\"Voltage\":\"1.10V\",\"ECC\":\"No\",\"Buffered/Registered\":\"Unbuffered\",\"Features\":\"Unlock the potential of your 12th Gen Intel Core laptop processorsHarness blazing speeds and massive memory bandwidth Game at higher frame rates, run demanding software, and power through heavy workloadsCompatible only with DDR5-enabled laptop, not DDR4-enabled laptopsECC type = non-ECC, form factor = SODIMM, pin count = 262-pin, PC speed = PC5-38400, voltage = 1.1V, rank and configuration = 2Rx8\",\"Date First Available\":\"March 07, 2022\"}"
+    },
+    {
+        "id": "b8b92837-d6d1-40df-b6fe-eb92c645da72",
+        "name": "CORSAIR Vengeance LPX 64GB (2 x 32GB) DDR4 3200",
+        "description": "CORSAIR Vengeance LPX 64GB (2 x 32GB) 288-Pin PC RAM DDR4 3200 (PC4 25600) Desktop Memory Model CMK64GX4M2E3200C16",
+        "initialPrice": "94.99",
+        "images": "b8b92837-d6d1-40df-b6fe-eb92c645da72_0.jpg,b8b92837-d6d1-40df-b6fe-eb92c645da72_1.jpg,b8b92837-d6d1-40df-b6fe-eb92c645da72_2.jpg",
+        "specifications": "{\"ComponentType\":\"ram\",\"Best Seller Ranking\":\"#31 in Desktop Memory\",\"Brand\":\"CORSAIR\",\"Series\":\"Vengeance LPX\",\"Model\":\"CMK64GX4M2E3200C16\",\"Capacity\":\"64GB (2 x 32GB)\",\"Type\":\"288-Pin PC RAM\",\"Speed\":\"DDR4 3200 (PC4 25600)\",\"CAS Latency\":\"16\",\"Timing\":\"16-20-20-38\",\"Voltage\":\"1.35V\",\"Chipset\":\"Intel XMP 2.0\",\"Color\":\"Black\",\"Heat Spreader\":\"Anodized Aluminum\",\"Features\":\"Designed for high-performance overclocking Each VENGEANCE LPX module is built with a pure aluminum heatspreader for faster heat dissipation and cooler operation; and the custom performance PCB helps manage heat and provides superior overclocking headroom.Each IC is individually screened for performance potential.Designed for great looks Available in multiple colors to match your motherboard, your components, or just your style.Performance and Compatibility VENGEANCE LPX is optimized and compatibility tested for the latest Intel DDR4 motherboards and offers higher frequencies, greater bandwidth, and lower power consumption.Low-profile heatspreader design The VENGEANCE LPX module height is carefully designed to fit smaller spaces.\",\"Recommend Use\":\"AMD 400 Series / AMD 500 Series / AMD X570 / Intel Z390\",\"Date First Available\":\"September 30, 2019\"}"
+    },
+    {
+        "id": "fb269342-7866-4e3a-90b2-3e57a24f016c",
+        "name": "G.SKILL Ripjaws S5 Series 32GB (2 x 16GB) DDR5 5600",
+        "description": "G.SKILL Ripjaws S5 Series 32GB (2 x 16GB) DDR5 5600 Desktop Memory Model F5-5600J3636C16GX2-RS5W",
+        "initialPrice": "94.99",
+        "images": "fb269342-7866-4e3a-90b2-3e57a24f016c_0.jpg,fb269342-7866-4e3a-90b2-3e57a24f016c_1.jpg,fb269342-7866-4e3a-90b2-3e57a24f016c_2.jpg",
+        "specifications": "{\"ComponentType\":\"ram\",\"Brand\":\"G.SKILL\",\"Series\":\"Ripjaws S5 Series\",\"Model\":\"F5-5600J3636C16GX2-RS5W\",\"Capacity\":\"32GB (2 x 16GB)\",\"Speed\":\"DDR5 5600\",\"CAS Latency\":\"36\",\"Timing\":\"36-36-36-89\",\"Voltage\":\"1.20V\",\"ECC\":\"No\",\"Buffered/Registered\":\"Unbuffered\",\"Multi-channel Kit\":\"Dual Channel Kit\",\"Chipset\":\"Intel XMP 3.0\",\"Color\":\"White\",\"Heat Spreader\":\"Yes\",\"Features\":\"Performance DDR5 memory designed for DIY and PC enthusiasts.Intel XMP 3.0 Support.The memory kit will boot at the SPD speed when BIOS settings are at default.For best results, please use memory modules from the same memory kit only. Please do not install memory modules from different kits, as it may result in system stability issues.Enable XMP profile in the BIOS to reach up to the rated XMP overclock speed of the memory kit.Reaching the rated XMP overclock speed and system stability depends on the capability of the motherboard & CPU.Improper usage may damage system hardware components.For more product information, please visit the G.SKILL website.For product related questions, please contact G.SKILL tech support via email.\",\"Recommend Use\":\"Intel 600 Series\",\"Date First Available\":\"January 24, 2022\"}"
+    }
+]

@@ -41,6 +41,19 @@
       "DownstreamPathTemplate": "/api/aggregator/components/{pageNumber}"
     },
     {
+      "UpstreamPathTemplate": "/gateway/aggregator/components/pageCount",
+      "UpstreamHttpMethod": [ "Get" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "aggregator.api",
+          "Port": 80
+        }
+      ],
+      "DownstreamPathTemplate": "/api/aggregator/components/pageCount"
+    },
+    {
       "UpstreamPathTemplate": "/gateway/aggregator/component-mark/{componentId}",
       "UpstreamHttpMethod": [ "Get" ],
 
@@ -107,6 +120,19 @@
       "DownstreamPathTemplate": "/api/contributor/{contributorId}"
     },
     {
+      "UpstreamPathTemplate": "/gateway/contributor/upload-image",
+      "UpstreamHttpMethod": [ "Post" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "contributor.api",
+          "Port": 80
+        }
+      ],
+      "DownstreamPathTemplate": "/api/contributor/upload-image"
+    },
+    {
       "UpstreamPathTemplate": "/gateway/contributor/{name}",
       "UpstreamHttpMethod": [ "Get" ],
 
@@ -118,6 +144,19 @@
         }
       ],
       "DownstreamPathTemplate": "/api/contributor/{name}"
+    },
+    {
+      "UpstreamPathTemplate": "/gateway/contributor/by-user/{userId}",
+      "UpstreamHttpMethod": [ "Get" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "contributor.api",
+          "Port": 80
+        }
+      ],
+      "DownstreamPathTemplate": "/api/contributor/by-user/{userId}"
     },
     {
       "UpstreamPathTemplate": "/gateway/contributor/{contributorId}/review-ref",

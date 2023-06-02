@@ -18,9 +18,16 @@ namespace Contributor.DataAccess.Data.Configurations
 
             builder.Property(c => c.Region).IsRequired().HasMaxLength(128);
 
+            builder.Property(c => c.IsConfirmed).HasDefaultValue(null);
+
             builder.HasOne(a => a.SubscriptionInfo)
                 .WithOne(b => b.Contributor)
                 .HasForeignKey<SubscriptionInfo>(b => b.ContributorId);
+
+            //builder.Property(c => c.SubscriptionInfoId).HasDefaultValue(
+            //    new Guid("cf7a198c-c551-456f-a519-e8679f3d0662"));
+
+            builder.Property(c => c.TimeStamp).HasDefaultValue(DateTime.Now);
 
             builder.HasData
             (
@@ -28,7 +35,8 @@ namespace Contributor.DataAccess.Data.Configurations
                 {
                     Id = new Guid("ef12555d-c912-402d-a045-148091680d9a"),
                     UserId = new Guid("8fe35832-874a-447b-a076-6e030b87d7eb"),
-                    Region = "Poland",
+                    IsConfirmed = true,
+                    Region = "Belarus",
                     SubscriptionInfoId = new Guid("cf7a198c-c551-456f-a519-e8679f3d0662"),
                     ContributorExcellenceId = new Guid("3f46062f-56d8-4897-a37f-ff4e920b2d73"),
                 }

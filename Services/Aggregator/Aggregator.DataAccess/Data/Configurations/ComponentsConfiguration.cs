@@ -24,14 +24,15 @@ namespace Aggregator.DataAccess.Data.Configurations
                     Name = "ASUS TUF Gaming NVIDIA GeForce RTX 3070 Ti",
                     Description = "ASUS TUF Gaming NVIDIA GeForce RTX 3070 Ti OC V2 Graphics Card (PCIe 4.0, 8GB GDDR6X, HDMI 2.1, DisplayPort 1.4a, Military-grade Certification, GPU Tweak III) TUF-RTX3070TI-O8G-V2-GAMING",
                     ImageList = new List<string> { "GPU1.png", "GPU2.png", "GPU3.png" },
-                    SpecificationDictionary = new Dictionary<string, string> { 
+                    SpecificationDictionary = new Dictionary<string, string> {
+                        { "ComponentType", "gpu" },
                         { "Brand", "ASUS" }, { "Series", "TUF Gaming OC" }, { "Model", "TUF-RTX3070TI-O8G-V2-GAMING" },
                         { "Interface", "PCI Express 4.0" }, { "Chipset Manufacturer", "NVIDIA" }, { "GPU Series", "NVIDIA GeForce RTX 30 Series" }, { "GPU", "GeForce RTX 3070 Ti" },
                         { "Boost Clock", "1815 MHz" }, { "CUDA Cores", "6144 Cores" },
                         { "Memory Size", "8GB" }, { "Memory Interface", "256-Bit" }, { "Memory Type", "GDDR6X" },
                         { "DirectX", "DirectX 12" }, { "OpenGL", "OpenGL 4.6" },
                         { "Multi-Monitor Support", "4" }, { "HDMI", "2 x HDMI 2.1" }, { "DisplayPort", "3 x DisplayPort 1.4a" },
-                        { "Max Resolution", "7680 x 4320" }, { "Cooler", "Triple Fans" }, { "Thermal Design Power", "290W" }, { "Recommended PSU Wattage", "750W" }, { "Power Connector", "2 x 8-Pin" },
+                        { "Max Resolution", "7680 x 4320" }, { "Thermal Design Power", "290W" }, { "Recommended PSU Wattage", "750W" }, { "Power Connector", "2 x 8-Pin" },
                         { "Form Factor", "ATX" }, { "Max GPU Length", "300 mm" }, { "Slot Width", "2.7 Slot" } },
                     InitialPrice = 569.99m,
                 },
@@ -41,7 +42,8 @@ namespace Aggregator.DataAccess.Data.Configurations
                     Name = "Intel Core i9-13900K",
                     Description = "Intel Core i9-13900K - Core i9 13th Gen Raptor Lake 24-Core (8P+16E) P-core Base Frequency: 3.0 GHz E-core Base Frequency: 2.2 GHz LGA 1700 125W Intel UHD Graphics 770 Desktop Processor - BX8071513900K",
                     ImageList = new List<string> { "CPU1.png", "CPU2.png", "CPU3.png", "CPU4.png" },
-                    SpecificationDictionary = new Dictionary<string, string> { 
+                    SpecificationDictionary = new Dictionary<string, string> {
+                        { "ComponentType", "cpu" },
                         { "Brand", "Intel" }, { "Processors Type", "Desktop" }, { "Series", "Core i9 13th Gen" }, { "Name", "Core i9-13900K" }, { "Model", "BX8071513900K" },
                         { "CPU Socket Type", "LGA 1700" }, { "Core Name", "Raptor Lake" }, { "# of Cores", "24-Core (8P+16E)" }, { "# of Threads", "32" }, { "Operating Frequency", "P-core Base Frequency: 3.0 GHz\r\nE-core Base Frequency: 2.2 GHz" },
                         { "Max Turbo Frequency", "Intel Turbo Boost Max Technology 3.0 Frequency: Up to 5.7 GHz\r\nSingle P-core Turbo Frequency: Up to 5.4 GHz\r\nSingle E-core Turbo Frequency: Up to 4.3 GHz" },
@@ -57,6 +59,7 @@ namespace Aggregator.DataAccess.Data.Configurations
                     Description  = "GIGABYTE Z590 AORUS PRO AX LGA 1200 Intel Z590 ATX Motherboard with 4 x M.2, PCIe 4.0, USB 3.2 Gen2X2 Type-C, Intel WIFI 6, 2.5GbE LAN",
                     ImageList = new List<string> { "MB1.png", "MB2.png", "MB3.png", "MB4.png", "MB5.png" },
                     SpecificationDictionary = new Dictionary<string, string> {
+                        { "ComponentType", "mb" },
                         { "Brand", "GIGABYTE" }, { "Model", "Z590 AORUS PRO AX" },
                         { "CPU Socket Type", "LGA 1200" },
                         { "Chipset", "Intel Z590" }, { "Onboard Video Chipset", "Supported only by CPU with integrated graphic" },

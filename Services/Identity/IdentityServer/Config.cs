@@ -1,5 +1,6 @@
 ﻿using Duende.IdentityServer.Models;
 using HardwareHero.Services.Shared.Constants;
+using IdentityModel;
 
 namespace IdentityServer;
 
@@ -10,7 +11,7 @@ public static class Config
         {
             new IdentityResources.OpenId(),
             new IdentityResources.Profile(),
-            new IdentityResource("roles", "Your role(s)", new []{"role"}),
+            new IdentityResource("roles", "Your role(s)", new []{ JwtClaimTypes.Role }),
         };
 
     public static IEnumerable<ApiScope> ApiScopes =>
@@ -28,9 +29,9 @@ public static class Config
                 ClientId = "test.client",
                 ClientName = "Test client",
                 ClientSecrets = { new Secret("secret".Sha256()) },
-                
+
                 AllowedGrantTypes = GrantTypes.Code,
-                AllowedScopes = 
+                AllowedScopes =
                 {
                     IdentityClientConstants.ServicesApiScope
                 },
@@ -60,7 +61,4 @@ public static class Config
                 },
             }
         };
-
-    public static Client GetSpaClient =>
-        Clients.Where(x => x.ClientName == "spa").FirstOrDefault();
 }

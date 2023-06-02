@@ -7,6 +7,8 @@ using IdentityModel.Client;
 using HardwareHero.Services.Shared.Options;
 using HardwareHero.Services.Shared.Exceptions;
 using System.Text.RegularExpressions;
+using HardwareHero.Services.Shared.Constants;
+using HardwareHero.Services.Shared.Models.Identity;
 
 namespace UserManagement.Api.Controllers
 {
@@ -35,7 +37,7 @@ namespace UserManagement.Api.Controllers
 
         public record LoginRequestModel(string Username, string Password, string ReturnUrl, bool RememberLogin = false);
         public record SignUpRequestModel(string Username, string FullName, string Password, string Email, string ReturnUrl);
-        public record LoginResponseModel(HardwareHero.Services.Shared.IdentityServer.Token Token, string ReturnUrl, string UserId, string UserName, string FullName);
+        public record LoginResponseModel(HardwareHero.Services.Shared.IdentityServer.Token Token, IList<string> Roles, string ReturnUrl, string UserId, string UserName, string FullName);
 
         [HttpPost("sign-in")]
         public async Task<IActionResult> LoginAsync([FromBody] LoginRequestModel model)
@@ -51,6 +53,8 @@ namespace UserManagement.Api.Controllers
             {
                 model = new LoginRequestModel(accountIsValid.UserName, model.Password, model.ReturnUrl, model.RememberLogin);
             }
+
+            var roles = await GetRolesScope(accountIsValid);
             var tokens = await GetTokens(model);
             var result = new LoginResponseModel(
                 Token: new HardwareHero.Services.Shared.IdentityServer.Token
@@ -59,8 +63,9 @@ namespace UserManagement.Api.Controllers
                     ExpiresIn = tokens.ExpiresIn,
                     IssuedAt = DateTimeOffset.UtcNow.ToUnixTimeSeconds(),
                     TokenType = tokens.TokenType,
-                    Scope = tokens.Scope + await GetRolesScope(accountIsValid),
+                    Scope = tokens.Scope + roles,
                 },
+                Roles: await _userManager.GetRolesAsync(accountIsValid),
                 ReturnUrl: model.ReturnUrl,
                 UserId: accountIsValid.Id,
                 UserName: accountIsValid.UserName,
@@ -84,6 +89,7 @@ namespace UserManagement.Api.Controllers
                     Email = model.Email,
                     EmailConfirmed = true,
                     RegistrationDate = DateTime.Now,
+                    WishList = new WishList(),
                 };
 
                 var result = _userManager.CreateAsync(user, model.Password).Result;
@@ -92,18 +98,22 @@ namespace UserManagement.Api.Controllers
                 {
                     throw new AuthenticationException(result.Errors.First().Description);
                 }
+                else
+                {
+                    var roleResult = await _userManager.AddToRoleAsync(user, IdentityClientConstants.RoleUserScope);
+                }
             }
             else
             {
                 throw new AuthenticationException("This account already exist!");
             }
 
-            return Ok(await LoginAsync(new LoginRequestModel(
+            return await LoginAsync(new LoginRequestModel(
                 Username: model.Username,
                 Password: model.Password,
                 ReturnUrl: model.ReturnUrl,
                 RememberLogin: false
-            )));
+            ));
         }
 
         private async Task<ApplicationUser> AccountIsValid(LoginRequestModel user)
@@ -113,11 +123,21 @@ namespace UserManagement.Api.Controllers
             if (IsValidEmail(user.Username))
             {
                 account = await _userManager.FindByEmailAsync(user.Username);
+                if (account == null)
+                {
+                    throw new AuthenticationException();
+                }
+
                 result = await _signInManager.PasswordSignInAsync(account.UserName, user.Password, user.RememberLogin, false);
             }
             else
             {
                 account = await _userManager.FindByNameAsync(user.Username);
+                if (account == null)
+                {
+                    throw new AuthenticationException();
+                }
+
                 result = await _signInManager.PasswordSignInAsync(user.Username, user.Password, user.RememberLogin, false);
             }
 

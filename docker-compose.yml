@@ -49,6 +49,8 @@ services:
   aggregator.api:
     container_name: Aggregator-api
     image: ${DOCKER_REGISTRY-}aggregatorapi
+    volumes:
+      - ./addfiles:/root/app
     build:
       context: .
       dockerfile: Services/Aggregator/Aggregator.Api/Dockerfile

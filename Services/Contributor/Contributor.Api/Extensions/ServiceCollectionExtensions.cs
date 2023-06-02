@@ -29,6 +29,7 @@ namespace Contributor.Api.Extensions
                 {
                     policy.RequireAuthenticatedUser();
                     policy.RequireClaim("scope", IdentityClientConstants.ServicesApiScope);
+                    //policy.RequireRole("User");
                 });
             });
         }

@@ -57,7 +57,7 @@ namespace Contributor.DataAccess.Data.Migrations
                     b.Property<DateTime>("Timestamp")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2023, 5, 5, 15, 52, 35, 510, DateTimeKind.Local).AddTicks(4601));
+                        .HasDefaultValue(new DateTime(2023, 5, 31, 15, 58, 1, 474, DateTimeKind.Local).AddTicks(534));
 
                     b.HasKey("Id");
 
@@ -123,6 +123,9 @@ namespace Contributor.DataAccess.Data.Migrations
                     b.Property<Guid>("ContributorExcellenceId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<bool?>("IsConfirmed")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Region")
                         .IsRequired()
                         .HasMaxLength(128)
@@ -133,6 +136,11 @@ namespace Contributor.DataAccess.Data.Migrations
 
                     b.Property<Guid>("SubscriptionInfoId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("TimeStamp")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2023, 5, 31, 15, 58, 1, 475, DateTimeKind.Local).AddTicks(4751));
 
                     b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
@@ -155,7 +163,8 @@ namespace Contributor.DataAccess.Data.Migrations
                         {
                             Id = new Guid("ef12555d-c912-402d-a045-148091680d9a"),
                             ContributorExcellenceId = new Guid("3f46062f-56d8-4897-a37f-ff4e920b2d73"),
-                            Region = "Poland",
+                            IsConfirmed = true,
+                            Region = "Belarus",
                             SubscriptionInfoId = new Guid("cf7a198c-c551-456f-a519-e8679f3d0662"),
                             UserId = new Guid("8fe35832-874a-447b-a076-6e030b87d7eb")
                         });
@@ -193,7 +202,7 @@ namespace Contributor.DataAccess.Data.Migrations
                     b.Property<DateTime>("ExpiryDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2023, 6, 4, 15, 52, 35, 512, DateTimeKind.Local).AddTicks(7810));
+                        .HasDefaultValue(new DateTime(2023, 6, 30, 15, 58, 1, 476, DateTimeKind.Local).AddTicks(1607));
 
                     b.Property<Guid>("PlanId")
                         .ValueGeneratedOnAdd()
@@ -203,7 +212,7 @@ namespace Contributor.DataAccess.Data.Migrations
                     b.Property<DateTime>("RenewalDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2023, 5, 5, 15, 52, 35, 512, DateTimeKind.Local).AddTicks(7437));
+                        .HasDefaultValue(new DateTime(2023, 5, 31, 15, 58, 1, 476, DateTimeKind.Local).AddTicks(1341));
 
                     b.HasKey("Id");
 
@@ -219,9 +228,9 @@ namespace Contributor.DataAccess.Data.Migrations
                         {
                             Id = new Guid("cf7a198c-c551-456f-a519-e8679f3d0662"),
                             ContributorId = new Guid("ef12555d-c912-402d-a045-148091680d9a"),
-                            ExpiryDate = new DateTime(2023, 6, 4, 15, 52, 35, 512, DateTimeKind.Local).AddTicks(8040),
+                            ExpiryDate = new DateTime(2023, 6, 30, 15, 58, 1, 476, DateTimeKind.Local).AddTicks(1845),
                             PlanId = new Guid("ca7f44ac-ec3c-4caa-9ee7-dc1c6550a681"),
-                            RenewalDate = new DateTime(2023, 5, 5, 15, 52, 35, 512, DateTimeKind.Local).AddTicks(8039)
+                            RenewalDate = new DateTime(2023, 5, 31, 15, 58, 1, 476, DateTimeKind.Local).AddTicks(1843)
                         });
                 });
 

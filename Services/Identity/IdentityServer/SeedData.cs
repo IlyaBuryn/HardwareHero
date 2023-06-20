@@ -1,119 +1,176 @@
-﻿// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
-// Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
-
-
-using System;
-using System.Linq;
-using System.Security.Claims;
+﻿using Microsoft.EntityFrameworkCore;
+using Serilog;
+using Duende.IdentityServer.EntityFramework.DbContexts;
+using Duende.IdentityServer.EntityFramework.Mappers;
+using Duende.IdentityServer.Models;
 using HardwareHero.Services.Shared.Data;
 using HardwareHero.Services.Shared.Models.Identity;
 using HardwareHero.Services.Shared.Models.UserManagementService;
 using IdentityModel;
+using System.Security.Claims;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using Serilog;
 
-namespace IdentityServer
+namespace IdentityServer;
+
+public class SeedData
 {
-    public class SeedData
+    public static async Task EnsureSeedData(WebApplication app)
     {
-        public static void SetupUserContext(ServiceCollection services, string connectionString)
+        using (var scope = app.Services.GetRequiredService<IServiceScopeFactory>().CreateScope())
         {
-            services.AddLogging();
-            services.AddDbContext<UsersDbContext>(options =>
-               options.UseSqlServer(connectionString));
+            scope.ServiceProvider.GetService<PersistedGrantDbContext>().Database.Migrate();
 
-            services.AddIdentity<ApplicationUser, IdentityRole>()
-                .AddEntityFrameworkStores<UsersDbContext>()
-                .AddDefaultTokenProviders();
+            var configurationContext = scope.ServiceProvider.GetService<ConfigurationDbContext>();
+            configurationContext.Database.Migrate();
+            EnsureSeedData(configurationContext);
+
+            var applicationContext = scope.ServiceProvider.GetService<UsersDbContext>();
+            var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+            var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+            applicationContext.Database.Migrate();
+            await EnsureSeedData(applicationContext, userManager, roleManager);
+        }
+    }
+
+    private static async Task EnsureSeedData(UsersDbContext context, UserManager<ApplicationUser> userMgr, RoleManager<IdentityRole> roleMgr)
+    {
+        context.Database.Migrate();
+
+        foreach (var role in Config.IdentitySeedRoles)
+        {
+            var existRoleResult = await roleMgr.FindByNameAsync(role.Name);
+            if (existRoleResult == null)
+            {
+                var result = await roleMgr.CreateAsync(new IdentityRole() { Name = role.Name, NormalizedName = role.NormalizedName });
+
+                if (!result.Succeeded)
+                {
+                    throw new Exception(result.Errors.First().Description);
+                }
+                Log.Debug($"role: \"{role.Name}\" has been created!");
+            }
         }
 
-        public static void EnsureSeedData(ServiceCollection services)
+        foreach (var user in Config.IdentitySeedUsers)
         {
-            using (var serviceProvider = services.BuildServiceProvider())
+            var existUserResult = userMgr.FindByNameAsync(user.UserName).Result;
+            if (existUserResult == null)
             {
-                using (var scope = serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope())
+                existUserResult = new ApplicationUser
                 {
-                    var context = scope.ServiceProvider.GetService<UsersDbContext>();
-                    context.Database.Migrate();
+                    Id = user.Id,
+                    UserName = user.UserName,
+                    Name = user.Name,
+                    Email = user.Email,
+                    EmailConfirmed = user.EmailConfirmed,
+                    RegistrationDate = DateTime.Now,
+                };
 
-                    var userMgr = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
-                    var isaac = userMgr.FindByNameAsync("isaac").Result;
-                    if (isaac == null)
-                    {
-                        isaac = new ApplicationUser
-                        {
-                            UserName = "isaac",
-                            Name = "Isaac Bishop",
-                            Email = "isaac@email.com",
-                            EmailConfirmed = true,
-                            RegistrationDate = DateTime.Now,
-                            WishList = new WishList()
-                            {
-                                Components = new[]
-                                {
-                                    new WishListComponents()
-                                    {
-                                        ComponentId = new Guid("0712D311-71E5-4C5B-8F80-1B1B08180851"),
-                                    },
-                                    new WishListComponents()
-                                    {
-                                        ComponentId = new Guid("17BB6742-6611-4865-99F4-222610FB1B88"),
-                                    },
-                                }
-                            }                            
-                        };
-
-                        var result = userMgr.CreateAsync(isaac, "Pass_123").Result;
-                        if (!result.Succeeded)
-                        {
-                            throw new Exception(result.Errors.First().Description);
-                        }
-
-                        result = userMgr.AddClaimsAsync(isaac, new Claim[]{
-                            new Claim(JwtClaimTypes.Name, "Isaac Bishop"),
-                            new Claim(JwtClaimTypes.GivenName, "Isaac"),
-                            new Claim(JwtClaimTypes.FamilyName, "Bishop"),
-                            new Claim(JwtClaimTypes.WebSite, "http://isaac-bishop.com"),
-                        }).Result;
-                        if (!result.Succeeded)
-                        {
-                            throw new Exception(result.Errors.First().Description);
-                        }
-                        Log.Debug("Isaac has been created");
-                    }
-                    else
-                    {
-                        Log.Debug("Isaac already exists");
-
-                        if (isaac.WishList == null)
-                        {
-                            isaac.WishList = new WishList()
-                            {
-                                Components = new[]
-                                {
-                                    new WishListComponents()
-                                    {
-                                        ComponentId = new Guid("0712D311-71E5-4C5B-8F80-1B1B08180851"),
-                                    },
-                                    new WishListComponents()
-                                    {
-                                        ComponentId = new Guid("17BB6742-6611-4865-99F4-222610FB1B88"),
-                                    },
-                                }
-                            };
-                        }
-
-                        var result = userMgr.UpdateAsync(isaac).Result;
-                        if (!result.Succeeded)
-                        {
-                            throw new Exception(result.Errors.First().Description);
-                        }
-                        Log.Debug("Isaac has been updated");
-                    }
+                var createUserResult = userMgr.CreateAsync(existUserResult, "Password_123").Result;
+                if (!createUserResult.Succeeded)
+                {
+                    throw new Exception(createUserResult.Errors.First().Description);
                 }
+
+                createUserResult = userMgr.AddClaimsAsync(existUserResult, new Claim[]
+                {
+                    new Claim(JwtClaimTypes.Name, user.Name),
+                    new Claim(JwtClaimTypes.Role, user.Roles.First()),
+                }).Result;
+                if (!createUserResult.Succeeded)
+                {
+                    throw new Exception(createUserResult.Errors.First().Description);
+                }
+                Log.Debug($"{user.Name} has been created!");
             }
+            else
+            {
+                Log.Debug($"{user.Name} already exists!");
+            }
+        }
+
+        foreach (var user in Config.IdentitySeedUsers)
+        {
+            var applicationUser = userMgr.FindByNameAsync(user.UserName).Result;
+
+            if (applicationUser != null && user.Roles != null && user.Roles.Length != 0)
+            {
+                var createUserRoleResult = await userMgr.AddToRolesAsync(
+                    applicationUser, user.Roles);
+                if (!createUserRoleResult.Succeeded)
+                {
+                    throw new Exception(createUserRoleResult.Errors.First().Description);
+                }
+
+                Log.Debug($"Roles added to user: \"{user.UserName}\"!");
+            }
+            else
+            {
+                Log.Debug($"Error, when add roles to user \"{user.UserName}\"!");
+            }
+
+        }
+    }
+
+    private static void EnsureSeedData(ConfigurationDbContext context)
+    {
+        if (!context.Clients.Any())
+        {
+            Log.Debug("Clients being populated");
+            foreach (var client in Config.Clients.ToList())
+            {
+                context.Clients.Add(client.ToEntity());
+            }
+            context.SaveChanges();
+        }
+        else
+        {
+            Log.Debug("Clients already populated");
+        }
+
+        if (!context.IdentityResources.Any())
+        {
+            Log.Debug("IdentityResources being populated");
+            foreach (var resource in Config.IdentityResources.ToList())
+            {
+                context.IdentityResources.Add(resource.ToEntity());
+            }
+            context.SaveChanges();
+        }
+        else
+        {
+            Log.Debug("IdentityResources already populated");
+        }
+
+        if (!context.ApiScopes.Any())
+        {
+            Log.Debug("ApiScopes being populated");
+            foreach (var resource in Config.ApiScopes.ToList())
+            {
+                context.ApiScopes.Add(resource.ToEntity());
+            }
+            context.SaveChanges();
+        }
+        else
+        {
+            Log.Debug("ApiScopes already populated");
+        }
+
+        if (!context.IdentityProviders.Any())
+        {
+            Log.Debug("OIDC IdentityProviders being populated");
+            context.IdentityProviders.Add(new OidcProvider
+            {
+                Scheme = "demoidsrv",
+                DisplayName = "IdentityServer",
+                Authority = "https://demo.duendesoftware.com",
+                ClientId = "login",
+            }.ToEntity());
+            context.SaveChanges();
+        }
+        else
+        {
+            Log.Debug("OIDC IdentityProviders already populated");
         }
     }
 }

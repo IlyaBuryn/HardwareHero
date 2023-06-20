@@ -5,6 +5,6 @@ namespace Mail.BusinessLogic.Contracts
 {
     public interface IMailService
     {
-        Task<bool> SendMessage(MailMessageDto message);
+        Guid SendMessage(MailMessageDto message);
     }
 }

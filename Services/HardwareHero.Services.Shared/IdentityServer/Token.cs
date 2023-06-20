@@ -8,7 +8,10 @@ namespace HardwareHero.Services.Shared.IdentityServer
         public string AccessToken { get; set; }
 
         [JsonProperty("expires_in")]
-        public int ExpiresIn { get; set; } 
+        public int ExpiresIn { get; set; }
+
+        [JsonProperty("issued_at")]
+        public long IssuedAt { get; set; }
 
         [JsonProperty("token_type")]
         public string TokenType { get; set; }

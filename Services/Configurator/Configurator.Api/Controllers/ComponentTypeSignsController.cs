@@ -1,14 +1,14 @@
-﻿using Configurator.BusinessLogic.Components;
-using Configurator.BusinessLogic.Contracts;
+﻿using Configurator.BusinessLogic.Contracts;
 using HardwareHero.Services.Shared.DTOs.Configurator;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Reflection;
 
 namespace Configurator.Api.Controllers
 {
     [ApiController]
     [Produces("application/json")]
     [Route("api/configurator/component-type-signs")]
+    [AllowAnonymous]
     public class ComponentTypeSignsController : ControllerBase
     {
         private readonly IComponentTypesService _componentTypesService;
@@ -16,26 +16,6 @@ namespace Configurator.Api.Controllers
         public ComponentTypeSignsController(IComponentTypesService componentTypesService)
         {
             _componentTypesService = componentTypesService;
-        }
-
-        [HttpPost("configure")]
-        public async Task<IActionResult> SeedDatabaseAsync()
-        {
-            Type baseClass = typeof(ComponentTypeSigns);
-            var components = Assembly.GetAssembly(baseClass).GetTypes().Where(type => type.IsSubclassOf(baseClass));
-
-            var listToSeed = new List<ComponentTypeSigns>();
-
-            foreach (var component in components)
-            {
-                var instance = (ComponentTypeSigns)Activator.CreateInstance(component);
-                var seedToAdd = instance.ConfigureSpecificDescription();
-                listToSeed.Add(seedToAdd);
-            }
-
-            var response = await _componentTypesService.SeedDatabaseAsync(listToSeed);
-
-            return CreatedAtAction(nameof(SeedDatabaseAsync), response);
         }
 
         [HttpPost]

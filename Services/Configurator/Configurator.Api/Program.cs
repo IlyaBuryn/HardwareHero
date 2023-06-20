@@ -3,23 +3,21 @@ using HardwareHero.Services.Shared.Settings;
 using Configurator.BusinessLogic.Extensions;
 using Configurator.Api.Extensions;
 using HardwareHero.Services.Shared.Middlewares;
-using MongoDB.Bson.Serialization.Conventions;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var pack = new ConventionPack
-{
-    new IgnoreIfNullConvention(true)
-};
-ConventionRegistry.Register("IgnoreIfNull", pack, t => true);
+builder.Services.RegisterMongoClassMap();
 
 builder.Services.AddCustomControllers();
+
+builder.Services.AddFluentValidation();
 
 builder.Services.ConfigureOptions<DatabaseSettings>(
     builder.Configuration, 
     ConnectionNames.ConfiguratorConnection);
 
 builder.Services.AddEndpointsApiExplorer();
+
 builder.Services.AddSwaggerGen();
 
 builder.Services.ConfigureBusinessLogicLayer();
@@ -28,9 +26,13 @@ builder.Services.AddIdentityServerAuthentication();
 
 builder.Services.AddApiScopeAuthorization();
 
+builder.Services.ConfigureCustomServices();
+
 builder.Services.AddCors();
 
 var app = builder.Build();
+
+await app.ConfigureDatabaseAsync();
 
 app.UseMiddleware<ExceptionHandlerMiddleware>();
 
@@ -46,9 +48,7 @@ app.UseCors(x => x
     .AllowAnyHeader());
 
 app.UseHttpsRedirection();
-
 app.UseAuthorization();
-
-app.MapControllers();
+app.MapControllers().RequireAuthorization("ApiScope");
 
 app.Run();

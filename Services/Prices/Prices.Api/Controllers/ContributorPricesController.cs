@@ -1,4 +1,5 @@
 ﻿using HardwareHero.Services.Shared.DTOs.Prices;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Prices.BusinessLogic.Contracts;
 
@@ -6,7 +7,8 @@ namespace Prices.Api.Controllers
 {
     [ApiController]
     [Produces("application/json")]
-    [Route("custom-prices")]
+    [Route("api/custom-prices")]
+    [Authorize]
     public class ContributorPricesController : ControllerBase
     {
         private readonly IContributorPricesService _contributorPricesService;

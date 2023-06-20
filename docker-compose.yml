@@ -2,9 +2,20 @@ version: '3.4'
 
 networks:
   backend:
-  frontend:
     
 services:
+  
+  react.client:
+    container_name: React-app
+    image: client
+    build:
+      context: ../HardwareHero.UI/web
+      dockerfile: Dockerfile
+    networks:
+      - backend
+    ports:
+      - 5001:3000
+
   hardwarehero.mssql:
     container_name: HardwareHero-mssql
     image: mcr.microsoft.com/mssql/server:2022-latest
@@ -24,9 +35,22 @@ services:
     networks:
       - backend
 
+  apigateway.ocelot:
+    container_name: HardwareHero-apiGateway
+    image: ${DOCKER_REGISTRY-}apigatewayocelot
+    build:
+      context: .
+      dockerfile: ApiGateway/ApiGateway.Ocelot/Dockerfile
+    ports:
+      - 8070:80
+    networks:
+      - backend
+
   aggregator.api:
     container_name: Aggregator-api
     image: ${DOCKER_REGISTRY-}aggregatorapi
+    volumes:
+      - ./addfiles:/root/app
     build:
       context: .
       dockerfile: Services/Aggregator/Aggregator.Api/Dockerfile
@@ -78,8 +102,6 @@ services:
       - hardwarehero.mongo
     networks:
       - backend
-    ports:
-      - 8011:4011
     environment:
       - DB_HOST=hardwarehero.mongo
       - DB_NAME=Prices
@@ -94,27 +116,9 @@ services:
       - hardwarehero.mongo
     networks:
       - backend
-    ports:
-      - 8013:4013
     environment:
       - DB_HOST=hardwarehero.mongo
       - DB_NAME=Mail
-
-  identityserver:
-    container_name: IdentityServer
-    image: ${DOCKER_REGISTRY-}identityserver
-    build:
-      context: .
-      dockerfile: Services/Identity/IdentityServer/Dockerfile
-    depends_on:
-      - hardwarehero.mssql
-    networks:
-      - backend
-    environment:
-      - DB_HOST=hardwarehero.mssql
-      - DB_NAME=HardwareHero.IdentityServer
-      - DB_SA_PASSWORD=password@#12345
-      - SEED=/seed
 
   usermanagement.api:
     container_name: Users-api
@@ -131,14 +135,27 @@ services:
       - DB_NAME=HardwareHero.Users
       - DB_SA_PASSWORD=password@#12345
 
-  apigateway.ocelot:
-    container_name: HardwareHero-apiGateway
-    image: ${DOCKER_REGISTRY-}apigatewayocelot
+  identityserver:
+    container_name: IdentityServer
+    image: ${DOCKER_REGISTRY-}identityserver
     build:
       context: .
-      dockerfile: ApiGateway/ApiGateway.Ocelot/Dockerfile
-    ports:
-      - 8070:80
+      dockerfile: Services/Identity/IdentityServer/Dockerfile
+    depends_on:
+      - hardwarehero.mssql
+      - usermanagement.api
     networks:
       - backend
+    ports:
+      - 5000:80
+    environment:
+      - DB_HOST=hardwarehero.mssql
+      - DB_NAME=HardwareHero.IdentityServer
       - DB_SA_PASSWORD=password@#12345
+      - SEED=/seed
+
+  proxy:
+    container_name: Nginx-proxy
+    image: nginx:mainline
+    networks:
+      - backend

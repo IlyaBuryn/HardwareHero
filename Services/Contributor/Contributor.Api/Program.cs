@@ -3,12 +3,18 @@ using Contributor.BusinessLogic.Extensions;
 using HardwareHero.Services.Shared.Settings;
 using HardwareHero.Services.Shared.Middlewares;
 using Contributor.Api.Extensions;
+using Microsoft.IdentityModel.Logging;
 
 var builder = WebApplication.CreateBuilder(args);
 
+IdentityModelEventSource.ShowPII = true;
+
 builder.Services.AddCustomControllers();
 
+builder.Services.AddFluentValidation();
+
 builder.Services.AddEndpointsApiExplorer();
+
 builder.Services.AddSwaggerGen();
 
 builder.Services.ConfigureOptions<ChatSettings>(builder.Configuration);
@@ -28,12 +34,9 @@ builder.Services.AddCors();
 var app = builder.Build();
 
 app.DatabaseInitialization();
-
 app.UseMiddleware<ExceptionHandlerMiddleware>();
-
 app.UseHttpsRedirection();
 app.UseRouting();
-app.MapControllers();
 
 if (app.Environment.IsDevelopment())
 {
@@ -48,5 +51,6 @@ app.UseCors(x => x
 
 app.UseAuthentication();
 app.UseAuthorization();
+app.MapControllers().RequireAuthorization("ApiScope");
 
 app.Run();

@@ -39,8 +39,18 @@ namespace Contributor.BusinessLogic.Services
             var excellencesCheck = await _excellenceRepo.GetManyEntitiesAsync();
             var result = new List<string>();
 
+            if (excellencesCheck == null)
+            {
+                throw new NotFoundException(nameof(excellencesCheck));
+            }
+
             foreach (var item in excellencesCheck)
             {
+                if (item == null)
+                {
+                    continue;
+                }
+
                 result.Add(item.Name);
             }
 
@@ -60,7 +70,7 @@ namespace Contributor.BusinessLogic.Services
                 expression: x => x.Name == excellenceToUpdate.Name);
             if (excellenceName != null)
             {
-                throw new DataValidationException($"This company name `{excellenceToUpdate.Name}` is already exist!");
+                throw new AlreadyExistException("company", excellenceToUpdate.Name);
             }
 
             excellenceCheck.Name = excellenceToUpdate.Name;

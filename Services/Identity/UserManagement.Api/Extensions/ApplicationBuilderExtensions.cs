@@ -9,7 +9,7 @@ namespace UserManagement.Api.Extensions
         {
             using (var serviceScope = app.ApplicationServices.CreateScope())
             {
-                serviceScope.ServiceProvider.GetService<UsersDbContext>()
+                serviceScope.ServiceProvider.GetService<UsersDbContext>()!
                     .Database.Migrate();
             }
         }

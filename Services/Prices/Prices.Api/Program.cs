@@ -8,11 +8,14 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddCustomControllers();
 
+builder.Services.AddFluentValidation();
+
 builder.Services.ConfigureOptions<DatabaseSettings>(
     builder.Configuration,
     ConnectionNames.PricesConnection);
 
 builder.Services.AddEndpointsApiExplorer();
+
 builder.Services.AddSwaggerGen();
 
 builder.Services.ConfigureBusinessLogicLayer();
@@ -39,9 +42,7 @@ app.UseCors(x => x
     .AllowAnyHeader());
 
 app.UseHttpsRedirection();
-
 app.UseAuthorization();
-
 app.MapControllers();
 
 app.Run();

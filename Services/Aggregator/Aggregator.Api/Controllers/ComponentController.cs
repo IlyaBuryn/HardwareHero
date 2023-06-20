@@ -24,7 +24,7 @@ namespace Aggregator.Api.Controllers
         }
 
         [HttpPost("component")]
-        //[Authorize("ClientIdPolicy")] //(Roles = "Manager")
+        [Authorize]
         public async Task<IActionResult> AddComponentAsync([FromBody] ComponentDto componentToAdd)
         {
             var response = await _componentService
@@ -35,7 +35,7 @@ namespace Aggregator.Api.Controllers
 
 
         [HttpPut("component")]
-        //[Authorize("ClientIdPolicy")] //(Roles = "Manager")
+        [Authorize]
         public async Task<IActionResult> UpdateComponentAsync([FromBody] ComponentDto componentToUpdate)
         {
             var response = await _componentService
@@ -46,7 +46,7 @@ namespace Aggregator.Api.Controllers
 
 
         [HttpDelete("component/{componentId}")]
-        //[Authorize("ClientIdPolicy")] //(Roles = "Manager")
+        [Authorize]
         public async Task<IActionResult> RemoveComponentAsync([FromRoute] Guid componentId)
         {
             var response = await _componentService
@@ -68,11 +68,11 @@ namespace Aggregator.Api.Controllers
 
 
         [HttpGet("component-mark/{componentId}")]
-        [AllowAnonymous]
+        [Authorize]
         public async Task<IActionResult> GetComponentAvgMark([FromRoute] Guid componentId)
         {
             var response = await _componentService
-                .GetComponentAvgMark(componentId);
+                .GetComponentAvgMarkAsync(componentId);
             
             return Ok(response);
         }
@@ -82,11 +82,36 @@ namespace Aggregator.Api.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> GetComponents(
             [FromRoute] int pageNumber,
-            [FromHeader(Name = "X-Specification-Filter")] string specificationFilter)
+            [FromHeader(Name = "X-Specification-Filter")] string specificationFilter,
+            [FromHeader(Name = "X-Search-String")] string? searchString,
+            [FromHeader(Name = "X-Page-Size")] int? pageSize)
         {
+            if (pageSize == null || pageSize <= 0)
+            {
+                pageSize = _pageSizeSettings.PageSize;
+            }
+
             var response = await _componentService
-                .GetComponentsAsPageAsync(pageNumber, _pageSizeSettings.PageSize, specificationFilter);
+                .GetComponentsAsPageAsync(pageNumber, (int)pageSize, specificationFilter, searchString);
             
+            return Ok(response);
+        }
+
+        [HttpGet("components/pageCount")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetPageCount(
+            [FromHeader(Name = "X-Specification-Filter")] string specificationFilter,
+            [FromHeader(Name = "X-Search-String")] string? searchString,
+            [FromHeader(Name = "X-Page-Size")] int? pageSize)
+        {
+            if (pageSize == null || pageSize <= 0)
+            {
+                pageSize = _pageSizeSettings.PageSize;
+            }
+
+            var response = await _componentService
+                .GetComponentsPageCountAsync((int)pageSize, specificationFilter, searchString);
+
             return Ok(response);
         }
     }

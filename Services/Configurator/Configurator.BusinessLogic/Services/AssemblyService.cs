@@ -34,6 +34,12 @@ namespace Configurator.BusinessLogic.Services
         public async Task<Guid?> AddAssemblyAsync(CustomAssemblyDto assemblyToAdd)
         {
             assemblyToAdd.Id = Guid.NewGuid();
+            assemblyToAdd.CreationDate = DateTime.Now;
+            if (assemblyToAdd.AssemblyCategory == null)
+            {
+                assemblyToAdd.AssemblyCategory = "PC";
+            }
+
             var assembly = _mapper.Map<CustomAssembly>(assemblyToAdd);
             await _assembliesCollection.InsertOneAsync(assembly);
 
@@ -53,7 +59,7 @@ namespace Configurator.BusinessLogic.Services
             return result;
         }
 
-        public async Task<List<CustomAssemblyDto?>> GetAssemblyListByUserIdAsync(Guid userId, string category)
+        public async Task<List<CustomAssemblyDto?>> GetAssemblyListByUserIdAsync(Guid userId, string category = "PC")
         {
             var filter = Builders<CustomAssembly>.Filter.Eq(a => a.UserId, userId);
             if (category != null) 

@@ -8,6 +8,7 @@ namespace Contributor.Api.Controllers
     [ApiController]
     [Produces("application/json")]
     [Route("api/subscription")]
+    [Authorize]
     public class SubscriptionController : ControllerBase
     {
         private readonly ISubscriptionService _subscriptionService;
@@ -18,7 +19,6 @@ namespace Contributor.Api.Controllers
         }
 
         [HttpPost("plan")]
-        [AllowAnonymous]
         public async Task<IActionResult> CreatePlanAsync([FromBody] SubscriptionPlanDto subscriptionPlanToAdd)
         {
             var response = await _subscriptionService
@@ -28,7 +28,6 @@ namespace Contributor.Api.Controllers
         }
 
         [HttpPut("plan")]
-        [AllowAnonymous]
         public async Task<IActionResult> UpdatePlanAsync([FromBody] SubscriptionPlanDto subscriptionPlanToUpdate)
         {
             var response = await _subscriptionService
@@ -38,7 +37,6 @@ namespace Contributor.Api.Controllers
         }
 
         [HttpPut("info")]
-        [AllowAnonymous]
         public async Task<IActionResult> UpdateContributorPlanInfoAsync([FromBody] SubscriptionInfoDto subscriptionInfoToUpdate)
         {
             var response = await _subscriptionService
@@ -48,7 +46,6 @@ namespace Contributor.Api.Controllers
         }
 
         [HttpDelete("plan/{subscriptionPlanId}")]
-        [AllowAnonymous]
         public async Task<IActionResult> DeletePlanAsync([FromRoute] Guid subscriptionPlanId)
         {
             var response = await _subscriptionService
@@ -58,7 +55,6 @@ namespace Contributor.Api.Controllers
         }
 
         [HttpGet]
-        [AllowAnonymous]
         public async Task<IActionResult> GetPlansAsync()
         {
             var response = await _subscriptionService

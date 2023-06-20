@@ -1,6 +1,6 @@
 ﻿using FluentValidation.AspNetCore;
 using HardwareHero.Services.Shared.Constants;
-using IdentityServer4.AccessTokenValidation;
+using Microsoft.IdentityModel.Tokens;
 using System.Text.Json.Serialization;
 
 namespace Contributor.Api.Extensions
@@ -9,11 +9,15 @@ namespace Contributor.Api.Extensions
     {
         public static void AddIdentityServerAuthentication(this IServiceCollection services)
         {
-            services.AddAuthentication(IdentityServerAuthenticationDefaults.AuthenticationScheme)
-                .AddIdentityServerAuthentication(options =>
+            services.AddAuthentication(IdentityServerConstants.AuthenticationScheme)
+                .AddJwtBearer(IdentityServerConstants.AuthenticationScheme, options =>
                 {
-                    options.Authority = "https://localhost:5001";
+                    options.Authority = IdentityServerConstants.IdentityServerAuthority;
                     options.RequireHttpsMetadata = false;
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateAudience = false
+                    };
                 });
         }
 
@@ -25,6 +29,7 @@ namespace Contributor.Api.Extensions
                 {
                     policy.RequireAuthenticatedUser();
                     policy.RequireClaim("scope", IdentityClientConstants.ServicesApiScope);
+                    //policy.RequireRole("User");
                 });
             });
         }
@@ -39,8 +44,13 @@ namespace Contributor.Api.Extensions
             {
                 options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
                 options.JsonSerializerOptions.WriteIndented = true;
-            })
-            .AddFluentValidation();
+            });
+        }
+
+        public static void AddFluentValidation(this IServiceCollection services)
+        {
+            services.AddFluentValidationAutoValidation()
+                .AddFluentValidationClientsideAdapters();
         }
 
         public static void ConfigureOptions<T>(this IServiceCollection services, IConfiguration configuration) where T : class

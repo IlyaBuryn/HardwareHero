@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using HardwareHero.Services.Shared.Models.UserManagementService;
-using HardwareHero.Services.Shared.Data.Configurations;
 using System.Reflection;
 
 namespace HardwareHero.Services.Shared.Data

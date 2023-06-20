@@ -11,18 +11,18 @@ namespace HardwareHero.Services.Shared.Clients.UserManagementService
         public RoleClient(HttpClient httpClient, IOptions<ServiceAddressOptions> options) : base(httpClient, options) { }
 
         public async Task<IdentityResult> AddAsync(IdentityRole role)
-            => await SendPostRequest(role, $"/role/create");
+            => await SendPostRequest(role, $"/gateway/role");
 
         public async Task<UserManagementServiceResponse<IdentityRole>> GetAsync(string name)
-            => await SendGetRequest<IdentityRole>($"role/{name}");
+            => await SendGetRequest<IdentityRole>($"/gateway/role/{name}");
 
         public async Task<UserManagementServiceResponse<IEnumerable<IdentityRole>>> GetAllAsync()
-            => await SendGetRequest<IEnumerable<IdentityRole>>($"/role");
+            => await SendGetRequest<IEnumerable<IdentityRole>>($"/gateway/role");
 
         public async Task<IdentityResult> RemoveAsync(string property)
-            => await SendDeleteRequest(property, $"/role/remove/");
+            => await SendDeleteRequest(property, $"/gateway/role/remove");
 
         public async Task<IdentityResult> UpdateAsync(IdentityRole role)
-            => await SendPutRequest(role, $"/role/update");
+            => await SendPutRequest(role, $"/gateway/role");
     }
 }

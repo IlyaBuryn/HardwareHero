@@ -1,7 +1,8 @@
-﻿using FluentValidation.AspNetCore;
+﻿using Configurator.BusinessLogic.Components.ComponentTypes;
+using FluentValidation.AspNetCore;
 using HardwareHero.Services.Shared.Constants;
-using IdentityServer4.AccessTokenValidation;
-using MongoDB.Bson.Serialization.Conventions;
+using Microsoft.IdentityModel.Tokens;
+using MongoDB.Bson.Serialization;
 
 namespace Configurator.Api.Extensions
 {
@@ -9,12 +10,28 @@ namespace Configurator.Api.Extensions
     {
         public static void AddIdentityServerAuthentication(this IServiceCollection services)
         {
-            services.AddAuthentication(IdentityServerAuthenticationDefaults.AuthenticationScheme)
-                .AddIdentityServerAuthentication(options =>
+            services.AddAuthentication(IdentityServerConstants.AuthenticationScheme)
+                .AddJwtBearer(IdentityServerConstants.AuthenticationScheme, options =>
                 {
-                    options.Authority = "https://localhost:5001";
+                    options.Authority = IdentityServerConstants.IdentityServerAuthority;
                     options.RequireHttpsMetadata = false;
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateAudience = false
+                    };
                 });
+        }
+
+        public static void RegisterMongoClassMap(this IServiceCollection services)
+        {
+            BsonClassMap.RegisterClassMap<CPU>();
+            BsonClassMap.RegisterClassMap<GPU>();
+            BsonClassMap.RegisterClassMap<MB>();
+            BsonClassMap.RegisterClassMap<SD>();
+            BsonClassMap.RegisterClassMap<RAM>();
+            BsonClassMap.RegisterClassMap<PS>();
+            BsonClassMap.RegisterClassMap<Case>();
+            BsonClassMap.RegisterClassMap<Cooler>();
         }
 
         public static void AddApiScopeAuthorization(this IServiceCollection services)
@@ -25,6 +42,7 @@ namespace Configurator.Api.Extensions
                 {
                     policy.RequireAuthenticatedUser();
                     policy.RequireClaim("scope", IdentityClientConstants.ServicesApiScope);
+                    policy.RequireRole("User");
                 });
             });
         }
@@ -34,8 +52,13 @@ namespace Configurator.Api.Extensions
             services.AddControllers(options =>
             {
                 options.SuppressAsyncSuffixInActionNames = false;
-            })
-            .AddFluentValidation();
+            });
+        }
+
+        public static void AddFluentValidation(this IServiceCollection services)
+        {
+            services.AddFluentValidationAutoValidation()
+                .AddFluentValidationClientsideAdapters();
         }
 
         public static void ConfigureOptions<T>(this IServiceCollection services, IConfiguration configuration, string optionName) where T : class
@@ -44,6 +67,11 @@ namespace Configurator.Api.Extensions
             {
                 configuration.GetSection(optionName).Bind(options);
             });
+        }
+
+        public static void ConfigureCustomServices(this IServiceCollection services)
+        {
+            services.AddScoped<Config>();
         }
     }
 }

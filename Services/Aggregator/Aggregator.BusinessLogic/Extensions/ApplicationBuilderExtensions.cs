@@ -5,9 +5,9 @@ namespace Aggregator.BusinessLogic.Extensions
 {
     public static class ApplicationBuilderExtensions
     {
-        public static void DatabaseInitialization(this IApplicationBuilder app)
+        public async static Task DatabaseInitialization(this IApplicationBuilder app)
         {
-            app.MigrationInitialization();
+            await app.MigrationInitialization();
         }
     }
 }

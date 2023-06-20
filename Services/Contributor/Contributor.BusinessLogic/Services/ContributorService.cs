@@ -32,14 +32,14 @@ namespace Contributor.BusinessLogic.Services
                 expression: x => x.UserId == contributorToAdd.UserId);
             if (contributorCheck != null)
             {
-                throw new DataValidationException($"This user is already a contributor!");
+                throw new AlreadyExistException("user", string.Empty, "contributor");
             }
 
             var excellenceCheck = await _excellenceRepo.GetOneEntityAsync(
                 expression: x => x.Name == contributorToAdd.ContributorExcellence.Name);
             if (excellenceCheck != null)
             {
-                throw new DataValidationException($"This company name is already exist!");
+                throw new AlreadyExistException("company name");
             }
 
             var contributor = _mapper.Map<ContributorModel>(contributorToAdd);
@@ -78,7 +78,12 @@ namespace Contributor.BusinessLogic.Services
 
         public async Task<List<ContributorDto?>> GetContributorsAsync()
         {
-            var contributors = await _contributorRepo.GetManyEntitiesAsync();
+            var contributors = await _contributorRepo.GetManyEntitiesAsync(
+                includeProperties: new System.Linq.Expressions.Expression<Func<ContributorModel, object>>[] {
+                    x => x.ContributorExcellence,
+                    x => x.SubscriptionInfo,
+                    x => x.ComponentRef,
+                    x => x.ReviewRef });
             var result = _mapper.Map<List<ContributorDto>>(contributors.ToList());
             
             return result;
@@ -107,13 +112,14 @@ namespace Contributor.BusinessLogic.Services
                 throw new NotFoundException(nameof(contributor));
             }
 
-            var subscriptionPlan = await _subscriptionPlanRepo.GetOneEntityAsync(
-                expression: x => x.Id == contributorToUpdate.SubscriptionInfo.Plan.Id);
-            if (subscriptionPlan == null)
-            {
-                throw new NotFoundException(nameof(subscriptionPlan));
-            }
+            //var subscriptionPlan = await _subscriptionPlanRepo.GetOneEntityAsync(
+            //    expression: x => x.Id == contributorToUpdate.SubscriptionInfo.Plan.Id);
+            //if (subscriptionPlan == null)
+            //{
+            //    throw new NotFoundException(nameof(subscriptionPlan));
+            //}
 
+            contributor.IsConfirmed = contributorToUpdate.IsConfirmed;
             contributor.Region = contributorToUpdate.Region;
             contributor.ReviewRef = _mapper.Map<Reference>(contributorToUpdate.ReviewRef);
             contributor.ComponentRef = _mapper.Map<Reference>(contributorToUpdate.ComponentRef);
@@ -151,6 +157,20 @@ namespace Contributor.BusinessLogic.Services
 
             var result = _mapper.Map<ContributorDto>(contributor);
             
+            return result;
+        }
+
+        public async Task<ContributorDto?> GetContributorByUserIdAsync(Guid userId)
+        {
+            var contributor = await _contributorRepo.GetOneEntityAsync(
+                expression: x => x.UserId == userId);
+            if (contributor == null)
+            {
+                throw new NotFoundException(nameof(contributor));
+            }
+
+            var result = _mapper.Map<ContributorDto>(contributor);
+
             return result;
         }
     }

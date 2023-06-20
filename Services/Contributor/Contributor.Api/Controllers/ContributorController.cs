@@ -2,6 +2,8 @@
 using HardwareHero.Services.Shared.DTOs.Contributor;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.IO.Enumeration;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Contributor.Api.Controllers
 {
@@ -11,6 +13,7 @@ namespace Contributor.Api.Controllers
     public class ContributorController : ControllerBase
     {
         private readonly IContributorService _contributorService;
+        public record ImageDto(string FileName, IFormFile Image);
 
         public ContributorController(IContributorService contributorService)
         {
@@ -18,8 +21,7 @@ namespace Contributor.Api.Controllers
         }
 
         [HttpPost]
-        [AllowAnonymous]
-
+        [Authorize(Roles = "User")]
         public async Task<IActionResult> CreateAsync([FromBody] ContributorDto contributorToAdd)
         {
             var response = await _contributorService
@@ -29,7 +31,7 @@ namespace Contributor.Api.Controllers
         }
 
         [HttpPut]
-        [AllowAnonymous]
+        [Authorize(Roles = "Contributor")]
         public async Task<IActionResult> UpdateAsync([FromBody] ContributorDto contributorToUpdate)
         {
             var response = await _contributorService
@@ -39,7 +41,7 @@ namespace Contributor.Api.Controllers
         }
 
         [HttpDelete("{contributorId}")]
-        [AllowAnonymous]
+        [Authorize(Roles = "User")]
         public async Task<IActionResult> DeleteAsync([FromRoute] Guid contributorId)
         {
             var response = await _contributorService
@@ -49,7 +51,6 @@ namespace Contributor.Api.Controllers
         }
 
         [HttpGet("{name}")]
-        [AllowAnonymous]
         public async Task<IActionResult> GetByNameAsync([FromRoute] string name)
         {
             var response = await _contributorService
@@ -59,7 +60,6 @@ namespace Contributor.Api.Controllers
         }
 
         [HttpGet]
-        [AllowAnonymous]
         public async Task<IActionResult> GetAsync()
         {
             var response = await _contributorService
@@ -69,7 +69,6 @@ namespace Contributor.Api.Controllers
         }
 
         [HttpGet("{contributorId}/review-ref")]
-        [AllowAnonymous]
         public async Task<IActionResult> GetReviewReferencesByContributorIdAsync([FromRoute] Guid contributorId)
         {
             var response = await _contributorService
@@ -79,7 +78,6 @@ namespace Contributor.Api.Controllers
         }
 
         [HttpGet("{contributorId}/component-ref")]
-        [AllowAnonymous]
         public async Task<IActionResult> GetComponentReferencesByContributorIdAsync([FromRoute] Guid contributorId)
         {
             var response = await _contributorService
@@ -89,13 +87,51 @@ namespace Contributor.Api.Controllers
         }
 
         [HttpGet("{contributorId}/excellence")]
-        [AllowAnonymous]
         public async Task<IActionResult> GetExcellenceByContributorIdAsync([FromRoute] Guid contributorId)
         {
             var response = await _contributorService
                 .GetExcellenceByContributorIdAsync(contributorId);
             
             return Ok(response);
+        }
+
+        [HttpGet("by-user/{userId}")]
+        [Authorize(Roles = "User")]
+        public async Task<IActionResult> GetContributorByUserIdAsync([FromRoute] Guid userId)
+        {
+            var response = await _contributorService
+                .GetContributorByUserIdAsync(userId);
+
+            return Ok(response);
+        }
+
+        [HttpPost("upload-image")]
+        [Authorize(Roles = "User")]
+        public async Task<IActionResult> UploadImage()
+        {
+            try
+            {
+                var file = Request.Form.Files[0];
+
+                if (file != null && file.Length > 0)
+                {
+                    string filePath = Path.Combine("uploads", file.FileName);
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await file.CopyToAsync(stream);
+                    }
+
+                    return Ok();
+                }
+                else
+                {
+                    return BadRequest("No file uploaded.");
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error: {ex.Message}");
+            }
         }
     }
 }

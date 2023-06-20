@@ -4,11 +4,12 @@ namespace Aggregator.BusinessLogic.Contracts
 {
     public interface IComponentService
     {
-        Task<List<ComponentDto?>> GetComponentsAsPageAsync(int pageNumber, int pageSize, string specificationFilter);
+        Task<List<ComponentDto?>> GetComponentsAsPageAsync(int pageNumber, int pageSize, string specificationFilter, string searchString);
+        Task<int> GetComponentsPageCountAsync(int pageSize, string specificationFilter, string searchString);
         Task<ComponentDto?> GetComponentByIdAsync(Guid componentId);
         Task<Guid?> AddComponentAsync(ComponentDto componentToAdd);
         Task<bool> UpdateComponentAsync(ComponentDto componentToUpdate);
         Task<bool> RemoveComponentAsync(Guid componentId);
-        Task<decimal> GetComponentAvgMark(Guid componentId);
+        Task<decimal> GetComponentAvgMarkAsync(Guid componentId);
     }
 }

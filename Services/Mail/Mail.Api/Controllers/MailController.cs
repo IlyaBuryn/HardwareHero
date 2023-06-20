@@ -1,11 +1,14 @@
-﻿using Mail.BusinessLogic.Contracts;
+﻿using HardwareHero.Services.Shared.DTOs.Mail;
+using Mail.BusinessLogic.Contracts;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Mail.Api.Controllers
 {
     [ApiController]
     [Produces("application/json")]
-    [Route("mail")]
+    [Route("api/mail")]
+    [Authorize]
     public class MailController : ControllerBase
     {
         private readonly IMailService _mailService;
@@ -15,10 +18,12 @@ namespace Mail.Api.Controllers
             _mailService = mailService;
         }
 
-        [HttpPost]
-        public async Task<IActionResult> SendMessageAsync()
+        [HttpPost("send")]
+        public IActionResult SendMessage([FromBody] MailMessageDto message)
         {
-            return Ok();
+            var response = _mailService.SendMessage(message);
+
+            return Ok(response);
         }
     }
 }

@@ -1,5 +1,4 @@
 ﻿using Aggregator.BusinessLogic.Contracts;
-<<<<<<< HEAD
 using Aggregator.BusinessLogic.Services;
 using AutoMapper;
 using FluentAssertions;
@@ -9,8 +8,6 @@ using HardwareHero.Services.Shared.Models.Aggregator;
 using HardwareHero.Services.Shared.Repositories.Contracts;
 using Moq;
 using System.Linq.Expressions;
-=======
->>>>>>> 6b38c6b318f9e8ea2478d3e914f7535c735db017
 
 namespace Aggregator.Tests
 {
@@ -19,16 +16,10 @@ namespace Aggregator.Tests
         private readonly IComponentReviewService _componentReviewService;
 
         public ComponentReviewServiceTests()
-        {
-<<<<<<< HEAD
-=======
-            // Инициализация сервиса отзывов о компонентах перед каждым тестом (если необходимо)
->>>>>>> 6b38c6b318f9e8ea2478d3e914f7535c735db017
-            
+        {            
         }
 
         [Fact]
-<<<<<<< HEAD
         public async Task AddComponentReviewAsync_ReturnNotNullValue()
         {
             // Arrange
@@ -108,60 +99,6 @@ namespace Aggregator.Tests
 
             // Assert
             result.Should().BeEmpty();
-=======
-        public void AddComponentReviewAsync_ReturnNotNullValue()
-        {
-            Task.Delay(35).Wait();
-            // Позитивный тест для метода GetComponentReviewsAsPageByComponentIdAsync
-            // Проверяет, что возвращается ожидаемый список отзывов по идентификатору компонента
-            // Arrange
-
-            // Act
-
-            // Assert
-        }
-
-        [Fact]
-        public void GetComponentReviewsAsPageByComponentIdAsync_ReturnNotEmptyList()
-        {
-            Task.Delay(78).Wait();
-
-            // Негативный тест для метода GetComponentReviewsAsPageByComponentIdAsync
-            // Проверяет, что возвращается ошибка при некорректных входных данных
-            // Arrange
-
-            // Act
-
-            // Assert
-        }
-
-        [Fact]
-        public void GetComponentReviewsAsPageByComponentIdAsync_ThrowPageOptionsException()
-        {
-            Task.Delay(34).Wait();
-
-            // Позитивный тест для метода AddComponentReviewAsync
-            // Проверяет, что отзыв о компоненте успешно добавляется
-            // Arrange
-
-            // Act
-
-            // Assert
-        }
-
-        [Fact]
-        public void GetComponentReviewsAsPageByComponentIdAsync_ReturnEmptyList()
-        {
-            Task.Delay(36).Wait();
-
-            // Негативный тест для метода AddComponentReviewAsync
-            // Проверяет, что возвращается ошибка при некорректных входных данных
-            // Arrange
-
-            // Act
-
-            // Assert
->>>>>>> 6b38c6b318f9e8ea2478d3e914f7535c735db017
         }
     }
 }

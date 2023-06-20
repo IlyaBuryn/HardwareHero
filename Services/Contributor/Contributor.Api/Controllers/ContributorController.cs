@@ -100,7 +100,7 @@ namespace Contributor.Api.Controllers
         public async Task<IActionResult> GetContributorByUserIdAsync([FromRoute] Guid userId)
         {
             var response = await _contributorService
-                .GetContributorByUserId(userId);
+                .GetContributorByUserIdAsync(userId);
 
             return Ok(response);
         }

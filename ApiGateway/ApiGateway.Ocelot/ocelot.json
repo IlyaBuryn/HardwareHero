@@ -501,6 +501,19 @@
       "DownstreamPathTemplate": "/ids/account/sign-in"
     },
     {
+      "UpstreamPathTemplate": "/gateway/user/{userId}",
+      "UpstreamHttpMethod": [ "Get" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "identityserver",
+          "Port": 80
+        }
+      ],
+      "DownstreamPathTemplate": "/ids/account/user/{userId}"
+    },
+    {
       "UpstreamPathTemplate": "/gateway/sign-up",
       "UpstreamHttpMethod": [ "Post" ],
 

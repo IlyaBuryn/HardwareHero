@@ -1,4 +1,5 @@
-﻿using Mail.BusinessLogic.Contracts;
+﻿using HardwareHero.Services.Shared.DTOs.Mail;
+using Mail.BusinessLogic.Contracts;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -18,9 +19,11 @@ namespace Mail.Api.Controllers
         }
 
         [HttpPost("send")]
-        public async Task<IActionResult> SendMessageAsync()
+        public IActionResult SendMessage([FromBody] MailMessageDto message)
         {
-            return Ok();
+            var response = _mailService.SendMessage(message);
+
+            return Ok(response);
         }
     }
 }

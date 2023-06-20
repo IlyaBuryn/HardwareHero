@@ -9,6 +9,7 @@ namespace Configurator.BusinessLogic.Components.ComponentTypes
             return new CPU()
             {
                 Id = new Guid("ed0ce5e4-7b63-4e94-a579-070a2e5ec6de"),
+                Description = "The processor (CPU, CPU) is the \"brain\" of the computer. It consists of several million transistors grouped into cores. Each CPU core is capable of processing a separate task, so their number and clock speed directly affect the overall speed of operations.",
                 ComponentNames = new[] { "Processor", "CPU" },
                 Image = "cpu-image.jpg",
                 Specifications = new[]

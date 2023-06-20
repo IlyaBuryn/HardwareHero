@@ -58,7 +58,7 @@ namespace Aggregator.BusinessLogic.Services
             return _mapper.Map<List<ComponentDto?>>(page);
         }
 
-        public async Task<int> GetComponentsPageCount(int pageSize, string specificationFilter, string searchString)
+        public async Task<int> GetComponentsPageCountAsync(int pageSize, string specificationFilter, string searchString)
         {
             if (pageSize <= 0)
             {

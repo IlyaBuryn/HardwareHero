@@ -37,7 +37,7 @@ namespace UserManagement.Api.Controllers
 
         public record LoginRequestModel(string Username, string Password, string ReturnUrl, bool RememberLogin = false);
         public record SignUpRequestModel(string Username, string FullName, string Password, string Email, string ReturnUrl);
-        public record LoginResponseModel(HardwareHero.Services.Shared.IdentityServer.Token Token, IList<string> Roles, string ReturnUrl, string UserId, string UserName, string FullName);
+        public record LoginResponseModel(HardwareHero.Services.Shared.IdentityServer.Token Token, IList<string> Roles, string ReturnUrl, string UserId, string UserName, string FullName, string Email);
 
         [HttpPost("sign-in")]
         public async Task<IActionResult> LoginAsync([FromBody] LoginRequestModel model)
@@ -69,7 +69,8 @@ namespace UserManagement.Api.Controllers
                 ReturnUrl: model.ReturnUrl,
                 UserId: accountIsValid.Id,
                 UserName: accountIsValid.UserName,
-                FullName: accountIsValid.Name);
+                FullName: accountIsValid.Name, 
+                Email: accountIsValid.Email);
 
             return Ok(result);
         }
@@ -114,6 +115,13 @@ namespace UserManagement.Api.Controllers
                 ReturnUrl: model.ReturnUrl,
                 RememberLogin: false
             ));
+        }
+
+        [HttpGet("user/{userId}")]
+        public Task<ApplicationUser> GetUserByIdAsync([FromRoute] string userId)
+        {
+            var result = _userManager.FindByIdAsync(userId);
+            return result;
         }
 
         private async Task<ApplicationUser> AccountIsValid(LoginRequestModel user)

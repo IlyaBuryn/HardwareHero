@@ -36,122 +36,79 @@ public class SeedData
     {
         context.Database.Migrate();
 
-        var roles = new List<IdentityRole>() {
-                new IdentityRole() { Name = "User", NormalizedName = "User" },
-                new IdentityRole() { Name = "Admin", NormalizedName = "Administrator" },
-                new IdentityRole() { Name = "Manager", NormalizedName = "Manager" },
-                new IdentityRole() { Name = "Contributor", NormalizedName = "Contributor" } };
-
-        foreach (var role in roles)
+        foreach (var role in Config.IdentitySeedRoles)
         {
-            var roleCheck = await roleMgr.FindByNameAsync(role.Name);
-            if (roleCheck == null)
+            var existRoleResult = await roleMgr.FindByNameAsync(role.Name);
+            if (existRoleResult == null)
             {
-                var result = await roleMgr.CreateAsync(role);
+                var result = await roleMgr.CreateAsync(new IdentityRole() { Name = role.Name, NormalizedName = role.NormalizedName });
 
                 if (!result.Succeeded)
                 {
                     throw new Exception(result.Errors.First().Description);
                 }
-                Log.Debug($"role: \"{role.Name}\" has been created");
+                Log.Debug($"role: \"{role.Name}\" has been created!");
             }
         }
 
-        var isaac = userMgr.FindByNameAsync("isaac").Result;
-        if (isaac == null)
+        foreach (var user in Config.IdentitySeedUsers)
         {
-            isaac = new ApplicationUser
+            var existUserResult = userMgr.FindByNameAsync(user.UserName).Result;
+            if (existUserResult == null)
             {
-                UserName = "isaac",
-                Name = "Isaac Bishop",
-                Email = "isaac@email.com",
-                EmailConfirmed = true,
-                RegistrationDate = DateTime.Now
-            };
-
-            var result = userMgr.CreateAsync(isaac, "Isaac_0").Result;
-            if (!result.Succeeded)
-            {
-                throw new Exception(result.Errors.First().Description);
-            }
-
-            result = userMgr.AddClaimsAsync(isaac, new Claim[]{
-                    new Claim(JwtClaimTypes.Name, "Isaac Bishop"),
-                    new Claim(JwtClaimTypes.GivenName, "Isaac"),
-                    new Claim(JwtClaimTypes.FamilyName, "Bishop"),
-                    new Claim(JwtClaimTypes.WebSite, "http://isaac-bishop.com"),
-                    new Claim(JwtClaimTypes.Role, "Admin"),
-                }).Result;
-            if (!result.Succeeded)
-            {
-                throw new Exception(result.Errors.First().Description);
-            }
-            Log.Debug("Isaac has been created");
-        }
-        else
-        {
-            Log.Debug("Isaac already exists");
-        }
-
-        var ilya = userMgr.FindByNameAsync("ilya").Result;
-        if (ilya == null)
-        {
-            ilya = new ApplicationUser
-            {
-                UserName = "ilya",
-                Name = "Ilya Buryn",
-                Email = "ilya@m.com",
-                EmailConfirmed = true,
-                RegistrationDate = DateTime.Now,
-                WishList = new WishList(),
-            };
-
-            var result = userMgr.CreateAsync(ilya, "Isaac_0").Result;
-            if (!result.Succeeded)
-            {
-                throw new Exception(result.Errors.First().Description);
-            }
-
-            result = userMgr.AddClaimsAsync(isaac, new Claim[]{
-                    new Claim(JwtClaimTypes.Name, "Ilya Buryn"),
-                    new Claim(JwtClaimTypes.GivenName, "Ilya"),
-                    new Claim(JwtClaimTypes.FamilyName, "Buryn"),
-                    new Claim(JwtClaimTypes.WebSite, "http://ilya-buryn.com"),
-                    new Claim(JwtClaimTypes.Role, "User"),
-                }).Result;
-            if (!result.Succeeded)
-            {
-                throw new Exception(result.Errors.First().Description);
-            }
-            Log.Debug("Ilya has been created");
-        }
-        else
-        {
-            Log.Debug("Ilya already exists");
-        }
-
-        foreach (var role in roles)
-        {
-            var roleCheck = await userMgr.IsInRoleAsync(isaac, role.Name);
-            if (!roleCheck)
-            {
-                if (role.Name == "User")
+                existUserResult = new ApplicationUser
                 {
-                    var resultIlya = await userMgr.AddToRoleAsync(ilya, role.Name);
-                    if (!resultIlya.Succeeded)
-                    {
-                        throw new Exception(resultIlya.Errors.First().Description);
-                    }
-                    Log.Debug($"Role \"{role.Name}\" added to user: \"{ilya}\"");
+                    Id = user.Id,
+                    UserName = user.UserName,
+                    Name = user.Name,
+                    Email = user.Email,
+                    EmailConfirmed = user.EmailConfirmed,
+                    RegistrationDate = DateTime.Now,
+                };
+
+                var createUserResult = userMgr.CreateAsync(existUserResult, "Password_123").Result;
+                if (!createUserResult.Succeeded)
+                {
+                    throw new Exception(createUserResult.Errors.First().Description);
                 }
 
-                var resultIsaac = await userMgr.AddToRoleAsync(isaac, role.Name);
-                if (!resultIsaac.Succeeded)
+                createUserResult = userMgr.AddClaimsAsync(existUserResult, new Claim[]
                 {
-                    throw new Exception(resultIsaac.Errors.First().Description);
+                    new Claim(JwtClaimTypes.Name, user.Name),
+                    new Claim(JwtClaimTypes.Role, user.Roles.First()),
+                }).Result;
+                if (!createUserResult.Succeeded)
+                {
+                    throw new Exception(createUserResult.Errors.First().Description);
                 }
-                Log.Debug($"Role \"{role.Name}\" added to user: \"{isaac}\"");
+                Log.Debug($"{user.Name} has been created!");
             }
+            else
+            {
+                Log.Debug($"{user.Name} already exists!");
+            }
+        }
+
+        foreach (var user in Config.IdentitySeedUsers)
+        {
+            var applicationUser = userMgr.FindByNameAsync(user.UserName).Result;
+
+            if (applicationUser != null && user.Roles != null && user.Roles.Length != 0)
+            {
+                var createUserRoleResult = await userMgr.AddToRolesAsync(
+                    applicationUser, user.Roles);
+                if (!createUserRoleResult.Succeeded)
+                {
+                    throw new Exception(createUserRoleResult.Errors.First().Description);
+                }
+
+                Log.Debug($"Roles added to user: \"{user.UserName}\"!");
+            }
+            else
+            {
+                Log.Debug($"Error, when add roles to user \"{user.UserName}\"!");
+            }
+
         }
     }
 

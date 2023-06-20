@@ -112,13 +112,14 @@ namespace Contributor.BusinessLogic.Services
                 throw new NotFoundException(nameof(contributor));
             }
 
-            var subscriptionPlan = await _subscriptionPlanRepo.GetOneEntityAsync(
-                expression: x => x.Id == contributorToUpdate.SubscriptionInfo.Plan.Id);
-            if (subscriptionPlan == null)
-            {
-                throw new NotFoundException(nameof(subscriptionPlan));
-            }
+            //var subscriptionPlan = await _subscriptionPlanRepo.GetOneEntityAsync(
+            //    expression: x => x.Id == contributorToUpdate.SubscriptionInfo.Plan.Id);
+            //if (subscriptionPlan == null)
+            //{
+            //    throw new NotFoundException(nameof(subscriptionPlan));
+            //}
 
+            contributor.IsConfirmed = contributorToUpdate.IsConfirmed;
             contributor.Region = contributorToUpdate.Region;
             contributor.ReviewRef = _mapper.Map<Reference>(contributorToUpdate.ReviewRef);
             contributor.ComponentRef = _mapper.Map<Reference>(contributorToUpdate.ComponentRef);
@@ -159,7 +160,7 @@ namespace Contributor.BusinessLogic.Services
             return result;
         }
 
-        public async Task<ContributorDto?> GetContributorByUserId(Guid userId)
+        public async Task<ContributorDto?> GetContributorByUserIdAsync(Guid userId)
         {
             var contributor = await _contributorRepo.GetOneEntityAsync(
                 expression: x => x.UserId == userId);

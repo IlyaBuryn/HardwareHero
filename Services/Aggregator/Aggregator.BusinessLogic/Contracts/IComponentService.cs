@@ -5,7 +5,7 @@ namespace Aggregator.BusinessLogic.Contracts
     public interface IComponentService
     {
         Task<List<ComponentDto?>> GetComponentsAsPageAsync(int pageNumber, int pageSize, string specificationFilter, string searchString);
-        Task<int> GetComponentsPageCount(int pageSize, string specificationFilter, string searchString);
+        Task<int> GetComponentsPageCountAsync(int pageSize, string specificationFilter, string searchString);
         Task<ComponentDto?> GetComponentByIdAsync(Guid componentId);
         Task<Guid?> AddComponentAsync(ComponentDto componentToAdd);
         Task<bool> UpdateComponentAsync(ComponentDto componentToUpdate);

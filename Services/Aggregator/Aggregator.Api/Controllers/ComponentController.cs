@@ -110,7 +110,7 @@ namespace Aggregator.Api.Controllers
             }
 
             var response = await _componentService
-                .GetComponentsPageCount((int)pageSize, specificationFilter, searchString);
+                .GetComponentsPageCountAsync((int)pageSize, specificationFilter, searchString);
 
             return Ok(response);
         }

@@ -1,6 +1,6 @@
 using HardwareHero.Services.Shared.Constants;
 using Contributor.BusinessLogic.Extensions;
-using HardwareHero.Services.Shared.Settings;
+using HardwareHero.Services.Shared.Options;
 using HardwareHero.Services.Shared.Middlewares;
 using Contributor.Api.Extensions;
 using Microsoft.IdentityModel.Logging;

@@ -2,8 +2,6 @@
 using HardwareHero.Services.Shared.DTOs.Contributor;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.IO.Enumeration;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace Contributor.Api.Controllers
 {

@@ -1,6 +1,6 @@
 ﻿using Aggregator.BusinessLogic.Contracts;
 using HardwareHero.Services.Shared.DTOs;
-using HardwareHero.Services.Shared.Settings;
+using HardwareHero.Services.Shared.Options;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;

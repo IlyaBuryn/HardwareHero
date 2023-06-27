@@ -2,7 +2,7 @@ using Aggregator.Api.Extensions;
 using Aggregator.BusinessLogic.Extensions;
 using HardwareHero.Services.Shared.Constants;
 using HardwareHero.Services.Shared.Middlewares;
-using HardwareHero.Services.Shared.Settings;
+using HardwareHero.Services.Shared.Options;
 using Microsoft.IdentityModel.Logging;
 
 var builder = WebApplication.CreateBuilder(args);

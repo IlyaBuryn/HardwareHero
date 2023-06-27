@@ -1,5 +1,5 @@
 using HardwareHero.Services.Shared.Constants;
-using HardwareHero.Services.Shared.Settings;
+using HardwareHero.Services.Shared.Options;
 using Configurator.BusinessLogic.Extensions;
 using Configurator.Api.Extensions;
 using HardwareHero.Services.Shared.Middlewares;

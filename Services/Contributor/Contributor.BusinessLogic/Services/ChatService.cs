@@ -5,7 +5,7 @@ using HardwareHero.Services.Shared.DTOs.Contributor;
 using HardwareHero.Services.Shared.Exceptions;
 using HardwareHero.Services.Shared.Models.Contributor;
 using HardwareHero.Services.Shared.Repositories.Contracts;
-using HardwareHero.Services.Shared.Settings;
+using HardwareHero.Services.Shared.Options;
 using Microsoft.Extensions.Options;
 
 namespace Contributor.BusinessLogic.Services

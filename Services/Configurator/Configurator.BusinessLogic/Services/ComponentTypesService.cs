@@ -4,7 +4,7 @@ using Configurator.BusinessLogic.Contracts;
 using HardwareHero.Services.Shared.Constants;
 using HardwareHero.Services.Shared.DTOs.Configurator;
 using HardwareHero.Services.Shared.Exceptions;
-using HardwareHero.Services.Shared.Settings;
+using HardwareHero.Services.Shared.Options;
 using Microsoft.Extensions.Options;
 using MongoDB.Bson;
 using MongoDB.Driver;

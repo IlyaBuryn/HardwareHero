@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using HardwareHero.Services.Shared.Constants;
 using HardwareHero.Services.Shared.DTOs.Mail;
-using HardwareHero.Services.Shared.Settings;
+using HardwareHero.Services.Shared.Options;
 using Mail.BusinessLogic.Contracts;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;

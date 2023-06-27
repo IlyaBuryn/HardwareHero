@@ -1,5 +1,4 @@
 ﻿using HardwareHero.Services.Shared.Constants;
-using HardwareHero.Services.Shared.Settings;
 
 namespace HardwareHero.Services.Shared.Options
 {

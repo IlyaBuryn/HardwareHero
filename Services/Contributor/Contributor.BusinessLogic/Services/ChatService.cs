@@ -14,14 +14,14 @@ namespace Contributor.BusinessLogic.Services
     {
         private readonly ICrudRepositoryAsync<ChatRoom> _chatRoomRepo;
         private readonly ICrudRepositoryAsync<ContributorModel> _contributorRepo;
-        private readonly ChatSettings _chatSettings;
+        private readonly ChatOptions _chatSettings;
         private readonly IMapper _mapper;
 
         public ChatService(
             ICrudRepositoryAsync<ChatRoom> chatRoomRepo,
             ICrudRepositoryAsync<ContributorModel> contributorRepo,
             IMapper mapper,
-            IOptions<ChatSettings> chatSettings)
+            IOptions<ChatOptions> chatSettings)
         {
             _chatRoomRepo = chatRoomRepo;
             _contributorRepo = contributorRepo;

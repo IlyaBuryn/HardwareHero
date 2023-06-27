@@ -10,7 +10,7 @@ builder.Services.AddCustomControllers();
 
 builder.Services.AddFluentValidation();
 
-builder.Services.ConfigureOptions<DatabaseSettings>(
+builder.Services.ConfigureOptions<DatabaseOptions>(
     builder.Configuration,
     ConnectionNames.PricesConnection);
 

@@ -1,4 +1,4 @@
-﻿namespace HardwareHero.Services.Shared.Settings
+﻿namespace HardwareHero.Services.Shared.Options
 {
     public class ChatSettings
     {

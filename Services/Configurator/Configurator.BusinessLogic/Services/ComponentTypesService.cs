@@ -15,11 +15,11 @@ namespace Configurator.BusinessLogic.Services
     {
         private readonly IMongoCollection<ComponentTypeSigns> _componentTypeCollection;
         private readonly IMapper _mapper;
-        private readonly DatabaseSettings _databaseSettings;
+        private readonly DatabaseOptions _databaseSettings;
 
         public ComponentTypesService(
             IMapper mapper,
-            IOptions<DatabaseSettings> databaseSettings)
+            IOptions<DatabaseOptions> databaseSettings)
         {
             _databaseSettings = databaseSettings.Value;
             var mongoClient = new MongoClient(_databaseSettings.ConnectionString);

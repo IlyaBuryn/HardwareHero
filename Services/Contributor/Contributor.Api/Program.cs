@@ -17,7 +17,7 @@ builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddSwaggerGen();
 
-builder.Services.ConfigureOptions<ChatSettings>(builder.Configuration);
+builder.Services.ConfigureOptions<ChatOptions>(builder.Configuration);
 
 var connectionString = builder.Configuration.GetConnectionString(ConnectionNames.ContributorsConnection);
 if (connectionString != null)

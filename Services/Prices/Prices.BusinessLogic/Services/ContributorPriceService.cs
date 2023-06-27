@@ -15,10 +15,10 @@ namespace Prices.BusinessLogic.Services
     {
         private readonly IMongoCollection<ContributorPrice> _pricesCollection;
         private readonly IMapper _mapper;
-        private readonly DatabaseSettings _databaseSettings;
+        private readonly DatabaseOptions _databaseSettings;
 
         public ContributorPriceService(
-            IOptions<DatabaseSettings> databaseSettings,
+            IOptions<DatabaseOptions> databaseSettings,
             IMapper mapper)
         {
             _databaseSettings = databaseSettings.Value;

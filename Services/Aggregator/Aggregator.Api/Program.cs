@@ -21,7 +21,7 @@ if (connectionString != null)
     builder.Services.ConfigureBusinessLogicLayer(connectionString);
 }
 
-builder.Services.ConfigureOptions<PageSizeSettings>(builder.Configuration);
+builder.Services.ConfigureOptions<PageSizeOptions>(builder.Configuration);
 
 builder.Services.AddIdentityServerAuthentication();
 

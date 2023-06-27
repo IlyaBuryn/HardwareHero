@@ -14,10 +14,10 @@ namespace Configurator.BusinessLogic.Services
     {
         private readonly IMongoCollection<CustomAssembly> _assembliesCollection;
         private readonly IMapper _mapper;
-        private readonly DatabaseSettings _databaseSettings;
+        private readonly DatabaseOptions _databaseSettings;
 
         public AssemblyService(
-            IOptions<DatabaseSettings> databaseSettings,
+            IOptions<DatabaseOptions> databaseSettings,
             IMapper mapper)
         {
             _databaseSettings = databaseSettings.Value;

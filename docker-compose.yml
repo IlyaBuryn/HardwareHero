@@ -16,8 +16,10 @@ services:
     volumes:
       - "../HardwareHero.UI/web:/app:delegated"
       - /app/node_modules/
+    environment:
+      - CHOKIDAR_USEPOLLING=true
     ports:
-      - 3000:3000
+      - 5173:5173
     networks:
       - frontend
 

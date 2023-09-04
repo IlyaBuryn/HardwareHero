@@ -1,6 +1,6 @@
-﻿namespace HardwareHero.Services.Shared.Settings
+﻿namespace HardwareHero.Services.Shared.Options
 {
-    public class DatabaseSettings
+    public class DatabaseOptions
     {
         public string ConnectionString { get; set; } = null!;
         public string DatabaseName { get; set; } = null!;

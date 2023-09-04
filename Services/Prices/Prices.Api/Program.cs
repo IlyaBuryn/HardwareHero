@@ -1,6 +1,6 @@
 using HardwareHero.Services.Shared.Constants;
 using HardwareHero.Services.Shared.Middlewares;
-using HardwareHero.Services.Shared.Settings;
+using HardwareHero.Services.Shared.Options;
 using Prices.BusinessLogic.Extensions;
 using Prices.Api.Extensions;
 
@@ -10,7 +10,7 @@ builder.Services.AddCustomControllers();
 
 builder.Services.AddFluentValidation();
 
-builder.Services.ConfigureOptions<DatabaseSettings>(
+builder.Services.ConfigureOptions<DatabaseOptions>(
     builder.Configuration,
     ConnectionNames.PricesConnection);
 

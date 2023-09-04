@@ -2,19 +2,26 @@ version: '3.4'
 
 networks:
   backend:
+  frontend:
     
 services:
   
   react.client:
     container_name: React-app
     image: client
+    stdin_open: true
     build:
       context: ../HardwareHero.UI/web
       dockerfile: Dockerfile
-    networks:
-      - backend
+    volumes:
+      - "../HardwareHero.UI/web:/app:delegated"
+      - /app/node_modules/
+    environment:
+      - CHOKIDAR_USEPOLLING=true
     ports:
-      - 5001:3000
+      - 5173:5173
+    networks:
+      - frontend
 
   hardwarehero.mssql:
     container_name: HardwareHero-mssql
@@ -159,3 +166,4 @@ services:
     image: nginx:mainline
     networks:
       - backend
+      - frontend

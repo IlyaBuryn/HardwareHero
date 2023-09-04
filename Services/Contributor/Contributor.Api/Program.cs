@@ -1,6 +1,6 @@
 using HardwareHero.Services.Shared.Constants;
 using Contributor.BusinessLogic.Extensions;
-using HardwareHero.Services.Shared.Settings;
+using HardwareHero.Services.Shared.Options;
 using HardwareHero.Services.Shared.Middlewares;
 using Contributor.Api.Extensions;
 using Microsoft.IdentityModel.Logging;
@@ -17,7 +17,7 @@ builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddSwaggerGen();
 
-builder.Services.ConfigureOptions<ChatSettings>(builder.Configuration);
+builder.Services.ConfigureOptions<ChatOptions>(builder.Configuration);
 
 var connectionString = builder.Configuration.GetConnectionString(ConnectionNames.ContributorsConnection);
 if (connectionString != null)

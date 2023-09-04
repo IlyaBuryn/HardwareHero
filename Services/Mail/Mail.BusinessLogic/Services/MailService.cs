@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using HardwareHero.Services.Shared.Constants;
 using HardwareHero.Services.Shared.DTOs.Mail;
-using HardwareHero.Services.Shared.Settings;
+using HardwareHero.Services.Shared.Options;
 using Mail.BusinessLogic.Contracts;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
@@ -16,11 +16,11 @@ namespace Mail.BusinessLogic.Services
     {
         private readonly IMongoCollection<HardwareHero.Services.Shared.Models.Mail.MailMessage> _mailCollection;
         private readonly IMapper _mapper;
-        private readonly DatabaseSettings _databaseSettings;
+        private readonly DatabaseOptions _databaseSettings;
         private readonly string senderEmailAddress = "issaac.bishop@gmail.com";
 
         public MailService(
-            IOptions<DatabaseSettings> databaseSettings,
+            IOptions<DatabaseOptions> databaseSettings,
             IMapper mapper)
         {
             _databaseSettings = databaseSettings.Value;

@@ -1,6 +1,6 @@
 ﻿using Aggregator.BusinessLogic.Contracts;
 using HardwareHero.Services.Shared.DTOs;
-using HardwareHero.Services.Shared.Settings;
+using HardwareHero.Services.Shared.Options;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -14,11 +14,11 @@ namespace Aggregator.Api.Controllers
     public class ComponentReviewController : ControllerBase
     {
         private readonly IComponentReviewService _componentReviewService;
-        private readonly PageSizeSettings _pageSizeSettings;
+        private readonly PageSizeOptions _pageSizeSettings;
 
         public ComponentReviewController(
             IComponentReviewService componentReviewService,
-            IOptions<PageSizeSettings> pageSizeSettings)
+            IOptions<PageSizeOptions> pageSizeSettings)
         {
             _componentReviewService = componentReviewService;
             _pageSizeSettings = pageSizeSettings.Value;

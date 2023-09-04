@@ -1,6 +1,5 @@
 ﻿using FluentValidation.AspNetCore;
 using HardwareHero.Services.Shared.Constants;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text.Json.Serialization;
 

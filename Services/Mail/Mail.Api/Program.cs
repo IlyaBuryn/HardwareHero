@@ -1,5 +1,5 @@
 using HardwareHero.Services.Shared.Constants;
-using HardwareHero.Services.Shared.Settings;
+using HardwareHero.Services.Shared.Options;
 using Mail.BusinessLogic.Extensions;
 using Mail.Api.Extensions;
 using HardwareHero.Services.Shared.Middlewares;
@@ -10,7 +10,7 @@ builder.Services.AddCustomControllers();
 
 builder.Services.AddFluentValidation();
 
-builder.Services.ConfigureOptions<DatabaseSettings>(
+builder.Services.ConfigureOptions<DatabaseOptions>(
     builder.Configuration,
     ConnectionNames.MailConnection);
 

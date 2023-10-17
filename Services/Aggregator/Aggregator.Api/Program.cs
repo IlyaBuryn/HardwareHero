@@ -22,6 +22,7 @@ if (connectionString != null)
 }
 
 builder.Services.ConfigureOptions<PageSizeOptions>(builder.Configuration);
+builder.Services.ConfigureOptions<DataSaveOptions>(builder.Configuration);
 
 builder.Services.AddIdentityServerAuthentication();
 

@@ -1,43 +1,13 @@
-﻿using HardwareHero.Services.Shared.Models;
-using Newtonsoft.Json;
-using System.ComponentModel.DataAnnotations.Schema;
-
-namespace HardwareHero.Services.Shared.Models.Aggregator
+﻿namespace HardwareHero.Services.Shared.Models.Aggregator
 {
     public class Component : BaseEntity
     {
         public string Name { get; set; }
         public string Description { get; set; }
-        public string Images { get; set; }
-        public string Specifications { get; set; }
-        public decimal InitialPrice { get; set; }
+        public Guid ComponentTypeId { get; set; }
 
-
-        [NotMapped]
-        public Dictionary<string, string> SpecificationDictionary
-        {
-            get
-            {
-                var result = new Dictionary<string, string>();
-                try
-                {
-                    result = JsonConvert.DeserializeObject<Dictionary<string, string>>(Specifications);
-                }
-                catch
-                {
-                    return null;
-                }
-                return result;
-                
-            }
-            set => Specifications = JsonConvert.SerializeObject(value);
-        }
-
-        [NotMapped]
-        public virtual IList<string> ImageList
-        {
-            get => Images.Split(',');
-            set => Images = string.Join(",", value);
-        }
+        public virtual ComponentType? ComponentType { get; set; }
+        public virtual ICollection<ComponentImages>? ComponentImages { get; set; }
+        public virtual ICollection<ComponentAttributes>? ComponentAttributes { get; set; }
     }
 }

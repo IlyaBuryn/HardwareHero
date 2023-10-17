@@ -25,6 +25,158 @@ namespace Aggregator.DataAccess.Data.Migrations
             modelBuilder.Entity("HardwareHero.Services.Shared.Models.Aggregator.Component", b =>
                 {
                     b.Property<Guid>("Id")
+                        .HasDefaultValueSql("NEWID()")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("ComponentTypeId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(1024)
+                        .HasColumnType("nvarchar(1024)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ComponentTypeId");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.ToTable("Components");
+                });
+
+            modelBuilder.Entity("HardwareHero.Services.Shared.Models.Aggregator.ComponentAttributes", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasDefaultValueSql("NEWID()")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("AttributeName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("AttributeValue")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("ComponentId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ComponentId");
+
+                    b.ToTable("ComponentAttributes");
+                });
+
+            modelBuilder.Entity("HardwareHero.Services.Shared.Models.Aggregator.ComponentGlobalReview", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasDefaultValueSql("NEWID()")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("AuthorName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("ComponentId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("ContributorId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool?>("IsRecommended")
+                        .HasColumnType("bit");
+
+                    b.Property<int?>("Rating")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Text")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("Timestamp")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2023, 9, 7, 18, 2, 25, 351, DateTimeKind.Local).AddTicks(7447));
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ComponentId");
+
+                    b.ToTable("ComponentGlobalReviews");
+                });
+
+            modelBuilder.Entity("HardwareHero.Services.Shared.Models.Aggregator.ComponentImages", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasDefaultValueSql("NEWID()")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("ComponentId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Image")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ComponentId");
+
+                    b.ToTable("ComponentImages");
+                });
+
+            modelBuilder.Entity("HardwareHero.Services.Shared.Models.Aggregator.ComponentLocalReview", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasDefaultValueSql("NEWID()")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("ComponentId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool?>("IsRecommended")
+                        .HasColumnType("bit");
+
+                    b.Property<int?>("Rating")
+                        .HasMaxLength(5)
+                        .HasColumnType("int");
+
+                    b.Property<string>("Text")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("Timestamp")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2023, 9, 7, 18, 2, 25, 352, DateTimeKind.Local).AddTicks(2379));
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ComponentId");
+
+                    b.ToTable("ComponentLocalReviews");
+                });
+
+            modelBuilder.Entity("HardwareHero.Services.Shared.Models.Aggregator.ComponentType", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasDefaultValueSql("NEWID()")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
@@ -33,110 +185,171 @@ namespace Aggregator.DataAccess.Data.Migrations
                         .HasMaxLength(1024)
                         .HasColumnType("nvarchar(1024)");
 
-                    b.Property<string>("Images")
+                    b.Property<string>("FullName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal>("InitialPrice")
-                        .HasColumnType("decimal(18,2)");
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
-
-                    b.Property<string>("Specifications")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(32)
+                        .HasColumnType("nvarchar(32)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("Name")
                         .IsUnique();
 
-                    b.ToTable("Components");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("0712d311-71e5-4c5b-8f80-1b1b08180851"),
-                            Description = "ASUS TUF Gaming NVIDIA GeForce RTX 3070 Ti OC V2 Graphics Card (PCIe 4.0, 8GB GDDR6X, HDMI 2.1, DisplayPort 1.4a, Military-grade Certification, GPU Tweak III) TUF-RTX3070TI-O8G-V2-GAMING",
-                            Images = "GPU1.png,GPU2.png,GPU3.png",
-                            InitialPrice = 569.99m,
-                            Name = "ASUS TUF Gaming NVIDIA GeForce RTX 3070 Ti",
-                            Specifications = "{\"ComponentType\":\"gpu\",\"Brand\":\"ASUS\",\"Series\":\"TUF Gaming OC\",\"Model\":\"TUF-RTX3070TI-O8G-V2-GAMING\",\"Interface\":\"PCI Express 4.0\",\"Chipset Manufacturer\":\"NVIDIA\",\"GPU Series\":\"NVIDIA GeForce RTX 30 Series\",\"GPU\":\"GeForce RTX 3070 Ti\",\"Boost Clock\":\"1815 MHz\",\"CUDA Cores\":\"6144 Cores\",\"Memory Size\":\"8GB\",\"Memory Interface\":\"256-Bit\",\"Memory Type\":\"GDDR6X\",\"DirectX\":\"DirectX 12\",\"OpenGL\":\"OpenGL 4.6\",\"Multi-Monitor Support\":\"4\",\"HDMI\":\"2 x HDMI 2.1\",\"DisplayPort\":\"3 x DisplayPort 1.4a\",\"Max Resolution\":\"7680 x 4320\",\"Thermal Design Power\":\"290W\",\"Recommended PSU Wattage\":\"750W\",\"Power Connector\":\"2 x 8-Pin\",\"Form Factor\":\"ATX\",\"Max GPU Length\":\"300 mm\",\"Slot Width\":\"2.7 Slot\"}"
-                        },
-                        new
-                        {
-                            Id = new Guid("17bb6742-6611-4865-99f4-222610fb1b88"),
-                            Description = "Intel Core i9-13900K - Core i9 13th Gen Raptor Lake 24-Core (8P+16E) P-core Base Frequency: 3.0 GHz E-core Base Frequency: 2.2 GHz LGA 1700 125W Intel UHD Graphics 770 Desktop Processor - BX8071513900K",
-                            Images = "CPU1.png,CPU2.png,CPU3.png,CPU4.png",
-                            InitialPrice = 569.97m,
-                            Name = "Intel Core i9-13900K",
-                            Specifications = "{\"ComponentType\":\"cpu\",\"Brand\":\"Intel\",\"Processors Type\":\"Desktop\",\"Series\":\"Core i9 13th Gen\",\"Name\":\"Core i9-13900K\",\"Model\":\"BX8071513900K\",\"CPU Socket Type\":\"LGA 1700\",\"Core Name\":\"Raptor Lake\",\"# of Cores\":\"24-Core (8P+16E)\",\"# of Threads\":\"32\",\"Operating Frequency\":\"P-core Base Frequency: 3.0 GHz\\r\\nE-core Base Frequency: 2.2 GHz\",\"Max Turbo Frequency\":\"Intel Turbo Boost Max Technology 3.0 Frequency: Up to 5.7 GHz\\r\\nSingle P-core Turbo Frequency: Up to 5.4 GHz\\r\\nSingle E-core Turbo Frequency: Up to 4.3 GHz\",\"L2 Cache\":\"32MB\",\"L3 Cache\":\"36MB\",\"64-Bit Support\":\"Yes\",\"Hyper-Threading Support\":\"Yes\",\"Memory Types\":\"DDR4 3200 / DDR5 5600\",\"Memory Channel\":\"2\",\"Max Memory Size\":\"128 GB\",\"ECC Memory\":\"Supported\",\"Integrated Graphics\":\"Intel UHD Graphics 770\",\"Thermal Design Power\":\"125W\",\"Windows 11\":\"Supported\"}"
-                        },
-                        new
-                        {
-                            Id = new Guid("aca946fc-6165-4bc6-94cd-c1cf43b46f42"),
-                            Description = "GIGABYTE Z590 AORUS PRO AX LGA 1200 Intel Z590 ATX Motherboard with 4 x M.2, PCIe 4.0, USB 3.2 Gen2X2 Type-C, Intel WIFI 6, 2.5GbE LAN",
-                            Images = "MB1.png,MB2.png,MB3.png,MB4.png,MB5.png",
-                            InitialPrice = 289.99m,
-                            Name = "GIGABYTE Z590 AORUS PRO",
-                            Specifications = "{\"ComponentType\":\"mb\",\"Brand\":\"GIGABYTE\",\"Model\":\"Z590 AORUS PRO AX\",\"CPU Socket Type\":\"LGA 1200\",\"Chipset\":\"Intel Z590\",\"Onboard Video Chipset\":\"Supported only by CPU with integrated graphic\",\"Number of Memory Slots\":\"4x288pin (DDR4)\",\"Memory Standard\":\"DDR4 5400\",\"Maximum Memory Supported\":\"128GB\",\"Channel Supported\":\"Dual Channel\",\"PCI Express 4.0 x16\":\"1 x PCI Express 4.0 x16\",\"PCI Express 3.0 x16\":\"2 x PCI Express 3.0 x16\",\"SATA 6Gb/s\":\"6 x SATA 6Gb/s\",\"Intel Optane Ready\":\"Yes\",\"SATA RAID\":\"0/1/5/10\",\"M.2\":\"1\",\"Audio Chipset\":\"Realtek ALC4080\",\"Audio Channels\":\"7.1 Channels\",\"LAN Chipset\":\"Intel 2.5GbE LAN chip\",\"Max LAN Speed\":\"2.5Gbps\",\"Wireless LAN\":\"ntel Wi-Fi 6 AX200\\r\\nWIFI a/b/g/n/ac/ax\",\"Bluetooth\":\"Bluetooth 5.1\",\"Form Factor\":\"ATX\",\"LED Lighting\":\"RGB\",\"Dimensions (W x L)\":\"12.0\\\" x 9.6\\\"\",\"Power Pin\":\"1 x 24-pin ATX main power connector\\r\\n1 x 8-pin ATX 12V power connector\\r\\n1 x 4-pin ATX 12V power connector\",\"Windows 11\":\"Supported\"}"
-                        });
+                    b.ToTable("ComponentTypes");
                 });
 
-            modelBuilder.Entity("HardwareHero.Services.Shared.Models.Aggregator.ComponentReview", b =>
+            modelBuilder.Entity("HardwareHero.Services.Shared.Models.Aggregator.Maintenance", b =>
                 {
                     b.Property<Guid>("Id")
+                        .HasDefaultValueSql("NEWID()")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("ComponentId")
+                    b.Property<Guid>("ContributorId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("ContributorLogo")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(1024)
+                        .HasColumnType("nvarchar(1024)");
 
-                    b.Property<string>("ContributorName")
-                        .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
-
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("datetime2");
+                    b.Property<Guid>("MaintenanceTypeId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(128)
                         .HasColumnType("nvarchar(128)");
 
-                    b.Property<bool>("Recommended")
+                    b.HasKey("Id");
+
+                    b.HasIndex("MaintenanceTypeId");
+
+                    b.ToTable("Maintenances");
+                });
+
+            modelBuilder.Entity("HardwareHero.Services.Shared.Models.Aggregator.MaintenanceGlobalReview", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasDefaultValueSql("NEWID()")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("AuthorName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("ContributorId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool?>("IsRecommended")
                         .HasColumnType("bit");
+
+                    b.Property<Guid>("MaintenanceId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int?>("Rating")
+                        .HasColumnType("int");
 
                     b.Property<string>("Text")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime>("Timestamp")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2023, 9, 7, 18, 2, 25, 353, DateTimeKind.Local).AddTicks(831));
+
                     b.HasKey("Id");
 
-                    b.HasIndex("ComponentId");
+                    b.HasIndex("MaintenanceId");
 
-                    b.ToTable("ComponentReviews");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("665cba20-d56b-47ba-be57-4672014a91f6"),
-                            ComponentId = new Guid("0712d311-71e5-4c5b-8f80-1b1b08180851"),
-                            ContributorName = "Amazon",
-                            Date = new DateTime(2023, 6, 27, 13, 5, 40, 240, DateTimeKind.Local).AddTicks(9330),
-                            Name = "Bob",
-                            Recommended = true,
-                            Text = "Very good, very nice!"
-                        });
+                    b.ToTable("MaintenanceGlobalReviews");
                 });
 
-            modelBuilder.Entity("HardwareHero.Services.Shared.Models.Aggregator.ComponentReview", b =>
+            modelBuilder.Entity("HardwareHero.Services.Shared.Models.Aggregator.MaintenanceLocalReview", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasDefaultValueSql("NEWID()")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool?>("IsRecommended")
+                        .HasColumnType("bit");
+
+                    b.Property<Guid>("MaintenanceId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int?>("Rating")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Text")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("Timestamp")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2023, 9, 7, 18, 2, 25, 353, DateTimeKind.Local).AddTicks(2936));
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MaintenanceId");
+
+                    b.ToTable("MaintenanceLocalReviews");
+                });
+
+            modelBuilder.Entity("HardwareHero.Services.Shared.Models.Aggregator.MaintenanceType", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasDefaultValueSql("NEWID()")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.ToTable("MaintenanceTypes");
+                });
+
+            modelBuilder.Entity("HardwareHero.Services.Shared.Models.Aggregator.Component", b =>
+                {
+                    b.HasOne("HardwareHero.Services.Shared.Models.Aggregator.ComponentType", "ComponentType")
+                        .WithMany()
+                        .HasForeignKey("ComponentTypeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("ComponentType");
+                });
+
+            modelBuilder.Entity("HardwareHero.Services.Shared.Models.Aggregator.ComponentAttributes", b =>
+                {
+                    b.HasOne("HardwareHero.Services.Shared.Models.Aggregator.Component", "Component")
+                        .WithMany("ComponentAttributes")
+                        .HasForeignKey("ComponentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Component");
+                });
+
+            modelBuilder.Entity("HardwareHero.Services.Shared.Models.Aggregator.ComponentGlobalReview", b =>
                 {
                     b.HasOne("HardwareHero.Services.Shared.Models.Aggregator.Component", "Component")
                         .WithMany()
@@ -145,6 +358,68 @@ namespace Aggregator.DataAccess.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("Component");
+                });
+
+            modelBuilder.Entity("HardwareHero.Services.Shared.Models.Aggregator.ComponentImages", b =>
+                {
+                    b.HasOne("HardwareHero.Services.Shared.Models.Aggregator.Component", "Component")
+                        .WithMany("ComponentImages")
+                        .HasForeignKey("ComponentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Component");
+                });
+
+            modelBuilder.Entity("HardwareHero.Services.Shared.Models.Aggregator.ComponentLocalReview", b =>
+                {
+                    b.HasOne("HardwareHero.Services.Shared.Models.Aggregator.Component", "Component")
+                        .WithMany()
+                        .HasForeignKey("ComponentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Component");
+                });
+
+            modelBuilder.Entity("HardwareHero.Services.Shared.Models.Aggregator.Maintenance", b =>
+                {
+                    b.HasOne("HardwareHero.Services.Shared.Models.Aggregator.MaintenanceType", "MaintenanceType")
+                        .WithMany()
+                        .HasForeignKey("MaintenanceTypeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("MaintenanceType");
+                });
+
+            modelBuilder.Entity("HardwareHero.Services.Shared.Models.Aggregator.MaintenanceGlobalReview", b =>
+                {
+                    b.HasOne("HardwareHero.Services.Shared.Models.Aggregator.Maintenance", "Maintenance")
+                        .WithMany()
+                        .HasForeignKey("MaintenanceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Maintenance");
+                });
+
+            modelBuilder.Entity("HardwareHero.Services.Shared.Models.Aggregator.MaintenanceLocalReview", b =>
+                {
+                    b.HasOne("HardwareHero.Services.Shared.Models.Aggregator.Maintenance", "Maintenance")
+                        .WithMany()
+                        .HasForeignKey("MaintenanceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Maintenance");
+                });
+
+            modelBuilder.Entity("HardwareHero.Services.Shared.Models.Aggregator.Component", b =>
+                {
+                    b.Navigation("ComponentAttributes");
+
+                    b.Navigation("ComponentImages");
                 });
 #pragma warning restore 612, 618
         }

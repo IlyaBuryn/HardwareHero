@@ -15,8 +15,8 @@ namespace HardwareHero.Services.Shared.DTOs.Validation.Aggregator
             RuleFor(c => c.Description).MaximumLength(1024)
                 .WithMessage("{PropertyName} must be less than {MaxLength} characters!");
 
-            RuleFor(c => c.InitialPrice).GreaterThanOrEqualTo(0m)
-                .WithMessage("{PropertyName} must be greater than or equal to {ComparisonValue}.");
+            RuleFor(c => c.ComponentTypeId).NotEmpty()
+                .WithMessage("{PropertyName} is required!");
         }
     }
 }

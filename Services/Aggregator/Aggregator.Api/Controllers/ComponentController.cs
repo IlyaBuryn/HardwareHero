@@ -1,5 +1,6 @@
 ﻿using Aggregator.BusinessLogic.Contracts;
 using HardwareHero.Services.Shared.DTOs;
+using HardwareHero.Services.Shared.Models;
 using HardwareHero.Services.Shared.Options;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -24,19 +25,21 @@ namespace Aggregator.Api.Controllers
         }
 
         [HttpPost("component")]
-        [Authorize]
-        public async Task<IActionResult> AddComponentAsync([FromBody] ComponentDto componentToAdd)
+        [AllowAnonymous]
+        //[Authorize(Roles = "Manager")]
+        public async Task<IActionResult> CreateAsync([FromBody] ComponentDto componentToAdd)
         {
             var response = await _componentService
                 .AddComponentAsync(componentToAdd);
 
-            return CreatedAtAction(nameof(AddComponentAsync), response);
+            return CreatedAtAction(nameof(CreateAsync), response);
         }
 
 
         [HttpPut("component")]
-        [Authorize]
-        public async Task<IActionResult> UpdateComponentAsync([FromBody] ComponentDto componentToUpdate)
+        [AllowAnonymous]
+        //[Authorize(Roles = "Manager")]
+        public async Task<IActionResult> UpdateAsync([FromBody] ComponentDto componentToUpdate)
         {
             var response = await _componentService
                 .UpdateComponentAsync(componentToUpdate);
@@ -46,8 +49,9 @@ namespace Aggregator.Api.Controllers
 
 
         [HttpDelete("component/{componentId}")]
-        [Authorize]
-        public async Task<IActionResult> RemoveComponentAsync([FromRoute] Guid componentId)
+        [AllowAnonymous]
+        //[Authorize(Roles = "Manager")]
+        public async Task<IActionResult> DeleteAsync([FromRoute] Guid componentId)
         {
             var response = await _componentService
                 .RemoveComponentAsync(componentId);
@@ -56,9 +60,21 @@ namespace Aggregator.Api.Controllers
         }
 
 
+        [HttpPost("components/json")]
+        [AllowAnonymous]
+        //[Authorize(Roles = "Admin")]
+        public async Task<IActionResult> CreateFromJsonAsync([FromBody] string jsonData)
+        {
+            var response = await _componentService
+                .AddComponentsFromJsonAsync(jsonData);
+
+            return Ok(response);
+        }
+
+
         [HttpGet("component/{componentId}")]
         [AllowAnonymous]
-        public async Task<IActionResult> GetComponentById([FromRoute] Guid componentId)
+        public async Task<IActionResult> GetById([FromRoute] Guid componentId)
         {
             var response = await _componentService
                 .GetComponentByIdAsync(componentId);
@@ -66,52 +82,28 @@ namespace Aggregator.Api.Controllers
             return Ok(response);
         }
 
-
-        [HttpGet("component-mark/{componentId}")]
-        [Authorize]
-        public async Task<IActionResult> GetComponentAvgMark([FromRoute] Guid componentId)
+        [HttpPost("components/ids")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetByIds([FromBody] Guid[] componentsIds)
         {
             var response = await _componentService
-                .GetComponentAvgMarkAsync(componentId);
-            
+                .GetComponentsByIdsAsync(componentsIds);
+
             return Ok(response);
         }
 
 
-        [HttpGet("components/{pageNumber}")]
+        [HttpPost("components/page")]
         [AllowAnonymous]
-        public async Task<IActionResult> GetComponents(
-            [FromRoute] int pageNumber,
-            [FromHeader(Name = "X-Specification-Filter")] string specificationFilter,
-            [FromHeader(Name = "X-Search-String")] string? searchString,
-            [FromHeader(Name = "X-Page-Size")] int? pageSize)
+        public async Task<IActionResult> GetComponents([FromBody] AggregatorFilter filter)
         {
-            if (pageSize == null || pageSize <= 0)
+            if (filter.paginationInfo.PageSize <= 0)
             {
-                pageSize = _pageSizeSettings.PageSize;
+                filter.paginationInfo.PageSize = _pageSizeSettings.PageSize;
             }
 
-            var response = await _componentService
-                .GetComponentsAsPageAsync(pageNumber, (int)pageSize, specificationFilter, searchString);
+            var response = await _componentService.GetComponentsAsPageAsync(filter);
             
-            return Ok(response);
-        }
-
-        [HttpGet("components/pageCount")]
-        [AllowAnonymous]
-        public async Task<IActionResult> GetPageCount(
-            [FromHeader(Name = "X-Specification-Filter")] string specificationFilter,
-            [FromHeader(Name = "X-Search-String")] string? searchString,
-            [FromHeader(Name = "X-Page-Size")] int? pageSize)
-        {
-            if (pageSize == null || pageSize <= 0)
-            {
-                pageSize = _pageSizeSettings.PageSize;
-            }
-
-            var response = await _componentService
-                .GetComponentsPageCountAsync((int)pageSize, specificationFilter, searchString);
-
             return Ok(response);
         }
     }

@@ -1,207 +1,201 @@
 ﻿using Aggregator.BusinessLogic.Contracts;
 using AutoMapper;
 using HardwareHero.Services.Shared.DTOs;
+using HardwareHero.Services.Shared.DTOs.Aggregator;
 using HardwareHero.Services.Shared.Exceptions;
+using HardwareHero.Services.Shared.Models;
 using HardwareHero.Services.Shared.Models.Aggregator;
+using HardwareHero.Services.Shared.Repositories;
 using HardwareHero.Services.Shared.Repositories.Contracts;
+using HardwareHero.Services.Shared.Responses;
+using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
-using System.Linq.Expressions;
 
 namespace Aggregator.BusinessLogic.Services
 {
     public class ComponentService : IComponentService
     {
-        private readonly IPageRepositoryAsync<Component> _componentRepo;
-        private readonly IPageRepositoryAsync<ComponentReview> _componentReviewRepo;
+        private readonly ICollectionRepositoryAsync<Component> _componentRepo;
+        private readonly IValidationRepository<Component> _componentValidationRepo;
+        private readonly IValidationRepository<ComponentType> _componentTypeValidationRepo;
+        private readonly IIMagesRepositoryAsync<ComponentImages> _imagesRepo;
         private readonly IMapper _mapper;
 
         public ComponentService(
-            IPageRepositoryAsync<Component> componentRepo,
-            IPageRepositoryAsync<ComponentReview> componentReviewRepo,
-            IMapper mapper)
+            ICollectionRepositoryAsync<Component> componentRepo,
+            IValidationRepository<Component> componentValidationRepo,
+            IValidationRepository<ComponentType> componentTypeValidationRepo,
+            IMapper mapper,
+            IIMagesRepositoryAsync<ComponentImages> imagesRepo)
         {
             _componentRepo = componentRepo;
-            _componentReviewRepo = componentReviewRepo;
+            _componentValidationRepo = componentValidationRepo;
+            _componentTypeValidationRepo = componentTypeValidationRepo;
             _mapper = mapper;
-        }
-
-        public async Task<List<ComponentDto?>> GetComponentsAsPageAsync(int pageNumber, int pageSize, string specificationFilter, string searchString)
-        {
-            if (pageSize <= 0 || pageNumber <= 0)
-            {
-                throw new PageOptionsValidationException();
-            }
-
-            var component = new Component { Specifications = specificationFilter };
-            var componentsSet = await _componentRepo.GetManyEntitiesAsync();
-            var filteredComponents = componentsSet;
-
-            if (!string.IsNullOrEmpty(component.Specifications))
-            {
-                var filters = JsonConvert.DeserializeObject<Dictionary<string, string>>(component.Specifications);
-                var expression = BuildExpression(filters);
-                filteredComponents = componentsSet.Where(expression);
-                
-                if (!string.IsNullOrEmpty(searchString) && filteredComponents.Any())
-                {
-                    filteredComponents = filteredComponents.Where(x => x.Description.Contains(searchString));
-                }
-
-                if (!filteredComponents.Any())
-                {
-                    return new List<ComponentDto?>();
-                }
-            }
-
-            var page = await _componentRepo.GetPageAsync(filteredComponents, pageNumber, pageSize);
-
-            return _mapper.Map<List<ComponentDto?>>(page);
-        }
-
-        public async Task<int> GetComponentsPageCountAsync(int pageSize, string specificationFilter, string searchString)
-        {
-            if (pageSize <= 0)
-            {
-                throw new PageOptionsValidationException();
-            }
-
-            var component = new Component { Specifications = specificationFilter };
-            var componentsSet = await _componentRepo.GetManyEntitiesAsync();
-            var filteredComponents = componentsSet;
-
-            if (!string.IsNullOrEmpty(component.Specifications))
-            {
-                var filters = JsonConvert.DeserializeObject<Dictionary<string, string>>(component.Specifications);
-                var expression = BuildExpression(filters);
-                filteredComponents = componentsSet.Where(expression);
-
-                if (!string.IsNullOrEmpty(searchString) && filteredComponents.Any())
-                {
-                    filteredComponents = filteredComponents.Where(x => x.Description.Contains(searchString));
-                }
-
-                if (!filteredComponents.Any())
-                {
-                    return 0;
-                }
-            }
-
-            return (int)Math.Ceiling((double)filteredComponents.Count() / pageSize);
-        }
-
-        public async Task<ComponentDto?> GetComponentByIdAsync(Guid componentId)
-        {
-            var component = await _componentRepo.GetOneEntityAsync(
-                expression: x => x.Id == componentId);
-
-            return _mapper.Map<ComponentDto?>(component);
+            _imagesRepo = imagesRepo;
         }
 
         public async Task<Guid?> AddComponentAsync(ComponentDto componentToAdd)
         {
-            var componentName = await _componentRepo.GetOneEntityAsync(
-                expression: x => x.Name == componentToAdd.Name);
-            if (componentName != null)
+            componentToAdd.Id = Guid.NewGuid();
+            _componentValidationRepo.CheckIsAlreadyExist(x => x.Name == componentToAdd.Name,
+                new AlreadyExistException(nameof(componentToAdd), componentToAdd.Name));
+            _componentTypeValidationRepo.CheckIsNotFound(x => x.Id == componentToAdd.ComponentTypeId,
+                new NotFoundException(nameof(ComponentType)));
+
+            if (!componentToAdd.ComponentImages.IsNullOrEmpty())
             {
-                throw new AlreadyExistException(nameof(componentToAdd), componentToAdd.Name);
+                foreach (var image in componentToAdd.ComponentImages)
+                {
+                    await _imagesRepo.SaveImageAsync(_mapper.Map<ComponentImages>(image), 
+                        image.ImageData, ComponentImagesDto.GetFileNameExpression());
+                }
             }
 
             var component = _mapper.Map<Component>(componentToAdd);
             var result = await _componentRepo.CreateEntityAsync(component);
-            
+
             return result;
         }
 
-        public async Task<bool> RemoveComponentAsync(Guid componentId)
-        {
-            var component = await _componentRepo.GetOneEntityAsync(
-                expression: x => x.Id == componentId);
-            if (component == null)
-            {
-                throw new NotFoundException(nameof(component));
-            }
-
-            return await _componentRepo.RemoveEntityAsync(componentId);
-        }
 
         public async Task<bool> UpdateComponentAsync(ComponentDto componentToUpdate)
         {
-            var component = await _componentRepo.GetOneEntityAsync(
-                expression: x => x.Id == componentToUpdate.Id);
-            if (component == null)
-            {
-                throw new NotFoundException(nameof(component));
-            }
+            _componentValidationRepo.CheckIsNotFound(x => x.Id == componentToUpdate.Id,
+                new NotFoundException(nameof(Component)));
+            _componentValidationRepo.CheckIsAlreadyExist(
+                x => x.Name == componentToUpdate.Name && x.Id != componentToUpdate.Id,
+                new AlreadyExistException(nameof(componentToUpdate), componentToUpdate.Name));
 
-            var componentName = await _componentRepo.GetOneEntityAsync(
-                expression: x => x.Name == componentToUpdate.Name);
-            if (componentName != null)
-            {
-                throw new AlreadyExistException(nameof(componentToUpdate), componentToUpdate.Name);
-            }
+            var component = await _componentRepo.GetOneEntityAsync(componentToUpdate.Id,
+                new IncludeProperties<Component> { IsAllIncludes = true });
 
             component.Name = componentToUpdate.Name;
             component.Description = componentToUpdate.Description;
-            component.Images = componentToUpdate.Images;
-            component.Specifications = componentToUpdate.Specifications;
-            component.InitialPrice = componentToUpdate.InitialPrice;
+            component.ComponentTypeId = componentToUpdate.ComponentTypeId;
 
-            return await _componentRepo.UpdateEntityAsync(component);
+            var result = await _componentRepo.UpdateEntityAsync(component);
+
+            return result;
         }
 
-        public async Task<decimal> GetComponentAvgMarkAsync(Guid componentId)
+
+        public async Task<bool> RemoveComponentAsync(Guid componentId)
         {
-            var component = await _componentRepo.GetOneEntityAsync(
-                expression: x => x.Id == componentId);
+            var component = await _componentRepo.GetOneEntityAsync(componentId,
+                new IncludeProperties<Component> { IsAllIncludes = true });
             if (component == null)
             {
-                throw new NotFoundException(nameof(component));
+                throw new NotFoundException(nameof(Component));
             }
 
-            var reviews = await _componentReviewRepo.GetManyEntitiesAsync(
-                expression: x => x.ComponentId == componentId);
-            if (reviews == null || reviews.Count() == 0)
+            if (!component.ComponentImages.IsNullOrEmpty())
             {
-                return 0;
+                foreach (var image in component.ComponentImages)
+                {
+                    await _imagesRepo.DeleteImageAsync(image,
+                        ComponentImagesDto.GetFileNameExpression());
+                }
             }
 
-            int count = reviews.Count();
-            int trueCount = reviews.Count(x => x.Recommended);
-            
-            return (decimal)trueCount / count * 100;
+            var result = await _componentRepo.RemoveEntityAsync(componentId);
+
+            return result;
         }
 
-        private Expression<Func<Component, bool>> BuildExpression(Dictionary<string, string> filters)
+
+        public async Task<Guid[]> AddComponentsFromJsonAsync(string jsonData)
         {
-            var parameter = Expression.Parameter(typeof(Component), "c");
-            Expression body = Expression.Constant(true); // Default to true
+            var componentsToAdd = JsonConvert.DeserializeObject<List<ComponentDto>>(jsonData);
 
-            foreach (var filter in filters)
+            if (componentsToAdd == null || !componentsToAdd.Any())
             {
-                var key = filter.Key;
-                var value = filter.Value;
-
-                var propertyAccess = Expression.Property(parameter, "Specifications");
-                var containsKey = Expression.Call(
-                    propertyAccess,
-                    "Contains",
-                    Type.EmptyTypes,
-                    Expression.Constant($"\"{key}\":\"")
-                );
-
-                var containsValue = Expression.Call(
-                    propertyAccess,
-                    "Contains",
-                    Type.EmptyTypes,
-                    Expression.Constant($"\"{value}\"")
-                );
-
-                var condition = Expression.AndAlso(containsKey, containsValue);
-                body = Expression.AndAlso(body, condition);
+                return new Guid[0];
             }
 
-            var lambda = Expression.Lambda<Func<Component, bool>>(body, parameter);
-            return lambda;
+            var addedComponentIds = new List<Guid>();
+
+            foreach (var componentToAdd in componentsToAdd)
+            {
+                var componentId = await AddComponentAsync(componentToAdd);
+                if (componentId.HasValue)
+                {
+                    addedComponentIds.Add(componentId.Value);
+                }
+            }
+
+            return addedComponentIds.ToArray();
+        }
+
+
+        public async Task<ComponentDto?> GetComponentByIdAsync(Guid componentId)
+        {
+            var component = await _componentRepo.GetOneEntityAsync(componentId,
+                new IncludeProperties<Component> { IsAllIncludes = true });
+
+            return _mapper.Map<ComponentDto?>(component);
+        }
+
+
+        public async Task<List<ComponentDto?>> GetComponentsByIdsAsync(Guid[] componentsIds)
+        {
+            var result = new List<ComponentDto?>();
+
+            foreach (var componentId in componentsIds)
+            {
+                var component = await GetComponentByIdAsync(componentId);
+                result.Add(component);
+            }
+
+            return result;
+        }
+
+
+        public async Task<PageResponse<ComponentDto?>> GetComponentsAsPageAsync(AggregatorFilter filter)
+        {
+            _componentValidationRepo.CheckPaginationOptions(filter.paginationInfo,
+                new PageOptionsValidationException());
+
+            var query = await _componentRepo.GetManyEntitiesAsync(new IncludeProperties<Component> { IsAllIncludes = true });
+
+            if (!string.IsNullOrEmpty(filter.SearchString))
+            {
+                query = query.Where(x => x.Name.Contains(filter.SearchString) ||
+                    x.Description.Contains(filter.SearchString));
+            }
+
+            if (!filter.Type.IsNullOrEmpty())
+            {
+                query = query.Where(x => x.ComponentType.Name == filter.Type ||
+                    x.ComponentType.FullName == filter.Type);
+            }
+
+            if (!filter.AttributeFilters.IsNullOrEmpty())
+            {
+                foreach (var attributeFilter in filter.AttributeFilters)
+                {
+                    query = query.Where(x => x.ComponentAttributes
+                        .Any(a => a.AttributeName == attributeFilter.Key &&
+                            a.AttributeValue.Contains(attributeFilter.Value)));
+                }
+            }
+
+            query = query.Select(item => new Component
+            {
+                Id = item.Id,
+                Name = item.Name,
+                Description = item.Description,
+                ComponentTypeId = item.ComponentTypeId,
+                ComponentType = item.ComponentType,
+                ComponentImages = item.ComponentImages,
+            });
+
+            var aggregatedQuery = query.OrderBy(x => x.Name);
+
+            var result = await _componentRepo.GetMappedPageAsync<ComponentDto>(
+                aggregatedQuery, filter.paginationInfo, _mapper);
+
+            return result;
         }
     }
 }

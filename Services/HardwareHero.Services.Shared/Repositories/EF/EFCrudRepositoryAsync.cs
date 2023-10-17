@@ -1,6 +1,8 @@
 ﻿using HardwareHero.Services.Shared.Models;
 using HardwareHero.Services.Shared.Repositories.Contracts;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
 
 namespace HardwareHero.Services.Shared.Repositories.EF
@@ -11,105 +13,112 @@ namespace HardwareHero.Services.Shared.Repositories.EF
         private readonly DbContext _dbContext;
         private readonly DbSet<T> _dbSet;
 
+        public DbContext GetDbContext() => _dbContext;
+
         public EFCrudRepositoryAsync(DbContext dbContext)
         {
             _dbContext = dbContext;
             _dbSet = dbContext.Set<T>();
         }
 
-        public async Task<Guid> CreateEntityAsync(T entityToCreate)
+        public async Task<Guid> CreateEntityAsync([NotNull] T entityToCreate)
         {
             await _dbSet.AddAsync(entityToCreate);
             await _dbContext.SaveChangesAsync();
+
             return entityToCreate.Id;
         }
 
-        public async Task<bool> UpdateEntityAsync(T entityToUpdate)
+        public async Task<bool> UpdateEntityAsync([NotNull] T entityToUpdate)
         {
             _dbContext.Update(entityToUpdate);
-            if (entityToUpdate != null)
-            {
-                await _dbContext.SaveChangesAsync();
-                return true;
-            }
+            var result = await _dbContext.SaveChangesAsync();
 
-            return false;
+            return result > 0;
         }
 
-        public async Task<bool> RemoveEntityAsync(Guid entityId)
+        public async Task<bool> RemoveEntityAsync([NotNull] Guid entityId)
         {
             T? entity = await _dbContext.FindAsync<T>(new object[] { entityId });
             if (entity != null)
             {
                 _dbContext.Remove(entity);
                 await _dbContext.SaveChangesAsync();
+
                 return true;
             }
 
             return false;
         }
 
-        public async Task<T?> GetOneEntityAsync(params Expression<Func<T, object>>[]? includeProperties)
+        public async Task<T?> GetOneEntityAsync([NotNull] Guid entityId)
+        {
+            return await _dbSet.FirstOrDefaultAsync(x => x.Id == entityId);
+        }
+
+        public async Task<T?> GetOneEntityAsync([NotNull] Guid entityId, IncludeProperties<T> includeProperties)
         {
             IQueryable<T> query = GetIncludeProperties(includeProperties);
+
+            return await query.FirstOrDefaultAsync(x => x.Id == entityId);
+        }
+
+        public async Task<T?> GetOneEntityAsync([NotNull] Expression<Func<T, bool>> expression )
+        {
+            return await _dbSet.FirstOrDefaultAsync(expression);
+        }
+
+        public async Task<T?> GetOneEntityAsync([NotNull] Expression<Func<T, bool>> expression, IncludeProperties<T> includeProperties)
+        {
+
+            IQueryable<T> query = GetIncludeProperties(includeProperties);
+            query = query.Where(expression);
+
             return await query.FirstOrDefaultAsync();
         }
 
-        public async Task<T?> GetOneEntityAsync(Expression<Func<T, bool>> expression,
-            params Expression<Func<T, object>>[]? includeProperties)
+        public async Task<IQueryable<T?>> GetManyEntitiesAsync(IncludeProperties<T> includeProperties = null)
         {
             IQueryable<T> query = GetIncludeProperties(includeProperties);
-            if (expression != null)
-            {
-                query = query.Where(expression);
-            }
-
-            return await query.FirstOrDefaultAsync();
-        }
-
-        public async Task<IQueryable<T?>> GetManyEntitiesAsync(params Expression<Func<T, object>>[]? includeProperties)
-        {
-            IQueryable<T> query = GetIncludeProperties(includeProperties);
-            return await Task.FromResult(query);
-        }
-
-        public async Task<IQueryable<T?>> GetManyEntitiesAsync(Expression<Func<T, bool>> expression,
-            params Expression<Func<T, object>>[]? includeProperties)
-        {
-            IQueryable<T> query = GetIncludeProperties(includeProperties);
-            if (expression != null)
-            {
-                query = query.Where(expression);
-            }
 
             return await Task.FromResult(query);
         }
 
-        public async Task<IQueryable<T?>> GetManyEntitiesAsync(Func<T, object>? orderBy,
-            Expression<Func<T, bool>> expression,
-            params Expression<Func<T, object>>[]? includeProperties)
+        public async Task<IQueryable<T?>> GetManyEntitiesAsync([NotNull] Expression<Func<T, bool>> expression)
         {
-            IQueryable<T> query = GetIncludeProperties(includeProperties);
-            if (expression != null)
-            {
-                query = query.Where(expression);
-            }
-
-            if (orderBy != null)
-            {
-                query = query.OrderBy(orderBy).AsQueryable();
-            }
+            IQueryable<T> query = _dbSet;
+            query = query.Where(expression);
 
             return await Task.FromResult(query);
         }
 
-        protected IQueryable<T> GetIncludeProperties(params Expression<Func<T, object>>[]? includeProperties)
+        public async Task<IQueryable<T?>> GetManyEntitiesAsync([NotNull] Expression<Func<T, bool>> expression, IncludeProperties<T> includeProperties)
+        {
+            IQueryable<T> query = GetIncludeProperties(includeProperties);
+            query = query.Where(expression);
+
+            return await Task.FromResult(query);
+        }
+
+        protected IQueryable<T> GetIncludeProperties(IncludeProperties<T> includeProperties)
         {
             IQueryable<T> query = _dbSet;
 
-            if (includeProperties != null)
+            if (includeProperties == null)
             {
-                foreach (var includeProperty in includeProperties)
+                return query;
+            }
+
+            if (includeProperties.IsAllIncludes)
+            {
+                foreach (var navigationProperty in _dbContext.Model.FindEntityType(typeof(T)).GetNavigations())
+                {
+                    query = query.Include(navigationProperty.Name);
+                }
+            }
+            else if (!includeProperties.IncludeExpressions.IsNullOrEmpty())
+            {
+                foreach (var includeProperty in includeProperties.IncludeExpressions)
                 {
                     query = query.Include(includeProperty);
                 }

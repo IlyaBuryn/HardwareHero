@@ -22,7 +22,14 @@ namespace Aggregator.BusinessLogic.Extensions
         private static void ConfigureServices(IServiceCollection service)
         {
             service.AddScoped<IComponentService, ComponentService>();
+            service.AddScoped<IComponentTypeService, ComponentTypeService>();
+            service.AddScoped<IComponentAttributesService, ComponentAttributesService>();
             service.AddScoped<IComponentReviewService, ComponentReviewService>();
+            service.AddScoped<IComponentImagesService, ComponentImagesService>();
+
+            service.AddScoped<IMaintenanceService, MaintenanceService>();
+            service.AddScoped<IMaintenanceTypeService, MaintenanceTypeService>();
+            service.AddScoped<IMaintenanceReviewService, MaintenanceReviewService>();
         }
 
         private static void ConfigureMapProfiles(IServiceCollection service)

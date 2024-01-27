@@ -1,6 +1,7 @@
 ﻿using Contributor.DataAccess.Data;
-using Contributor.DataAccess.Repositories;
 using HardwareHero.Services.Shared.Repositories.Contracts;
+using HardwareHero.Services.Shared.Repositories.EF;
+using HardwareHero.Services.Shared.Repositories.Others;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -13,7 +14,11 @@ namespace Contributor.DataAccess.Extensions
             builder.AddDbContext<ContributorDbContext>(options =>
                 options.UseSqlServer(connectionString));
 
-            builder.AddScoped(typeof(ICrudRepositoryAsync<>), typeof(ContributorEFRepository<>));
+            builder.AddScoped(typeof(ICollectionRepositoryAsync<>), typeof(EFCollectionRepositoryAsync<>));
+            builder.AddScoped(typeof(ICrudRepositoryAsync<>), typeof(EFCrudRepositoryAsync<>));
+            builder.AddScoped(typeof(IValidationRepository<>), typeof(EFValidationRepository<>));
+            builder.AddScoped(typeof(IObjectImageRepositoryAsync<>), typeof(ObjectImageRepositoryAsync<>));
+            builder.AddScoped(typeof(IImageRepositoryAsync), typeof(ImageRepositoryAsync));
 
             builder.AddScoped<DbContext, ContributorDbContext>();
         }

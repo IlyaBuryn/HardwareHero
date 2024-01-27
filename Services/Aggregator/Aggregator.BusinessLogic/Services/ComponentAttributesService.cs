@@ -1,21 +1,25 @@
 ﻿using Aggregator.BusinessLogic.Contracts;
+using Aggregator.BusinessLogic.Filters;
 using AutoMapper;
 using HardwareHero.Services.Shared.DTOs.Aggregator;
 using HardwareHero.Services.Shared.Exceptions;
-using HardwareHero.Services.Shared.Models;
+using HardwareHero.Services.Shared.Extensions;
+using HardwareHero.Services.Shared.Filters;
 using HardwareHero.Services.Shared.Models.Aggregator;
 using HardwareHero.Services.Shared.Repositories;
 using HardwareHero.Services.Shared.Repositories.Contracts;
 using HardwareHero.Services.Shared.Responses;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using System.Linq.Expressions;
 
 namespace Aggregator.BusinessLogic.Services
 {
     public class ComponentAttributesService : IComponentAttributesService
     {
         private readonly ICollectionRepositoryAsync<ComponentAttributes> _componentAttributesRepo;
+
         private readonly IValidationRepository<ComponentAttributes> _componentAttributesValidationRepo;
+
         private readonly IMapper _mapper;
 
         public ComponentAttributesService(
@@ -31,9 +35,10 @@ namespace Aggregator.BusinessLogic.Services
         public async Task<Guid?> AddComponentAttributeAsync(ComponentAttributesDto attributeToAdd)
         {
             attributeToAdd.Id = Guid.NewGuid();
+
             _componentAttributesValidationRepo.CheckIsAlreadyExist(
                 x => x.ComponentId == attributeToAdd.ComponentId && x.AttributeName == attributeToAdd.AttributeName,
-                new AlreadyExistException(nameof(attributeToAdd), $"{attributeToAdd.ComponentId} & {attributeToAdd.AttributeName}"));
+                new AlreadyExistException<ComponentAttributesDto>($"{attributeToAdd.ComponentId} & {attributeToAdd.AttributeName}"));
 
             var componentAttributes = _mapper.Map<ComponentAttributes>(attributeToAdd);
             var result = await _componentAttributesRepo.CreateEntityAsync(componentAttributes);
@@ -41,17 +46,21 @@ namespace Aggregator.BusinessLogic.Services
             return result;
         }
 
-        // Not working: An error occurred while saving the entity changes. See the inner exception for details.
-        // ---> System.InvalidOperationException: There is already an open DataReader associated with this Connection which must be closed first.
         public async Task<List<Guid>> ReplaceComponentAttributesAsync(Guid componentId, Dictionary<string, string> attributesToAdd)
         {
             var result = new List<Guid>();
-            var attributes = await _componentAttributesRepo.GetManyEntitiesAsync(
+
+            var attributesSet = await _componentAttributesRepo.GetManyWithDefaultOrEmptyCheckAsync(
                 x => x.ComponentId == componentId);
 
-            foreach (var pair in attributes)
+            var attributesList = await attributesSet.ToListAsync();
+
+            foreach (var pair in attributesList)
             {
-                await _componentAttributesRepo.RemoveEntityAsync(pair.Id);
+                if (pair != null && pair.Id != Guid.Empty)
+                {
+                    await _componentAttributesRepo.RemoveEntityAsync(pair.Id);
+                }
             }
 
             foreach (var pair in attributesToAdd)
@@ -68,17 +77,11 @@ namespace Aggregator.BusinessLogic.Services
             return result;
         }
 
-
         public async Task<bool> UpdateComponentAttributeValueAsync(ComponentAttributesDto attributeToUpdate)
         {
-            var componentAttribute = await _componentAttributesRepo.GetOneEntityAsync(
+            var componentAttribute = await _componentAttributesRepo.GetOneWithNotFoundCheck(
                 x => x.ComponentId == attributeToUpdate.ComponentId &&
                 x.AttributeName == attributeToUpdate.AttributeName);
-
-            if (componentAttribute == null)
-            {
-                throw new NotFoundException(nameof(ComponentAttributes));
-            }
 
             componentAttribute.AttributeValue = attributeToUpdate.AttributeValue;
 
@@ -90,44 +93,28 @@ namespace Aggregator.BusinessLogic.Services
 
         public async Task<bool> RemoveComponentAttributeAsync(Guid componentId, string attributeKey)
         {
-            var componentAttribute = await _componentAttributesRepo.GetOneEntityAsync(
+            var componentAttribute = await _componentAttributesRepo.GetOneWithNotFoundCheck(
                 x => x.ComponentId == componentId &&
                 x.AttributeName == attributeKey);
-
-            if (componentAttribute == null)
-            {
-                throw new NotFoundException(nameof(ComponentAttributes));
-            }
 
             var result = await _componentAttributesRepo.RemoveEntityAsync(componentAttribute.Id);
 
             return result;
         }
 
-        // Not Working:"The source 'IQueryable' doesn't implement 'IAsyncEnumerable<HardwareHero.Services.Shared.Models.Aggregator.ComponentAttributes>'. Only sources that implement 'IAsyncEnumerable' can be used for Entity Framework asynchronous operations."
-        public async Task<PageResponse<ComponentAttributesDto?>> GetAllUniqueComponentAttributesAsPageAsync(AggregatorFilter aggregatorFilter)
+        public async Task<PageResponse<ComponentAttributesDto?>> GetAllUniqueComponentAttributesAsPageAsync(ComponentAttributesFilter filter)
         {
-            _componentAttributesValidationRepo.CheckPaginationOptions(aggregatorFilter.paginationInfo,
-                new PageOptionsValidationException());
+            _componentAttributesValidationRepo.CheckPaginationOptions(filter.PaginationInfo);
 
-            var attributes = await _componentAttributesRepo.GetManyEntitiesAsync(
-                new IncludeProperties<ComponentAttributes> {
-                    IncludeExpressions = new Expression<Func<ComponentAttributes, object>>[]
-                    {
-                        x => x.Component,
-                        x => x.Component.ComponentType
-                    }
-                });
+            var query = await _componentAttributesRepo.GetManyEntitiesAsync(
+                new IncludeProperties<ComponentAttributes>(x => x.Component, x => x.Component.ComponentType));
 
-            if (!aggregatorFilter.Type.IsNullOrEmpty())
-            {
-                attributes = attributes.Where(x => x.Component.ComponentType.Name == aggregatorFilter.Type);
-            }
-
-            var attributesGroup = _componentAttributesRepo.GetGroupedBySet(attributes, x => x.AttributeName);
+            query = query
+                .ApplyFilter(filter)
+                .ApplyGroupBy(filter);
 
             var result = await _componentAttributesRepo.GetMappedPageAsync<ComponentAttributesDto>(
-                attributesGroup, aggregatorFilter.paginationInfo, _mapper);
+                query, filter.PaginationInfo, _mapper);
 
             return result;
         }

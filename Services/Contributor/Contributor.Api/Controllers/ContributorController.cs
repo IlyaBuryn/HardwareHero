@@ -1,7 +1,11 @@
 ﻿using Contributor.BusinessLogic.Contracts;
+using Contributor.BusinessLogic.Filters;
 using HardwareHero.Services.Shared.DTOs.Contributor;
+using HardwareHero.Services.Shared.Extensions;
+using HardwareHero.Services.Shared.Options;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 
 namespace Contributor.Api.Controllers
 {
@@ -11,35 +15,30 @@ namespace Contributor.Api.Controllers
     public class ContributorController : ControllerBase
     {
         private readonly IContributorService _contributorService;
-        public record ImageDto(string FileName, IFormFile Image);
+        private readonly PageSizeOptions _pageSizeSettings;
 
-        public ContributorController(IContributorService contributorService)
+        public ContributorController(
+            IContributorService contributorService,
+            IOptions<PageSizeOptions> pageSizeSettings)
         {
             _contributorService = contributorService;
+            _pageSizeSettings = pageSizeSettings.Value;
         }
 
-        [HttpPost]
-        [Authorize(Roles = "User")]
-        public async Task<IActionResult> CreateAsync([FromBody] ContributorDto contributorToAdd)
+        [HttpPost("sign-up")]
+        [AllowAnonymous]
+        //[Authorize(Roles = Roles.User)]
+        public async Task<IActionResult> SignUpAsync([FromBody] ContributorModelDto contributorToAdd)
         {
             var response = await _contributorService
-                .AddContributorAsync(contributorToAdd);
+                .SignUpContributorAsync(contributorToAdd);
             
-            return CreatedAtAction(nameof(CreateAsync), response);
-        }
-
-        [HttpPut]
-        [Authorize(Roles = "Contributor")]
-        public async Task<IActionResult> UpdateAsync([FromBody] ContributorDto contributorToUpdate)
-        {
-            var response = await _contributorService
-                .UpdateContributorAsync(contributorToUpdate);
-            
-            return Ok(response);
+            return CreatedAtAction(nameof(SignUpAsync), response);
         }
 
         [HttpDelete("{contributorId}")]
-        [Authorize(Roles = "User")]
+        [AllowAnonymous]
+        //[Authorize(Roles = Roles.User)]
         public async Task<IActionResult> DeleteAsync([FromRoute] Guid contributorId)
         {
             var response = await _contributorService
@@ -48,88 +47,55 @@ namespace Contributor.Api.Controllers
             return Ok(response);
         }
 
-        [HttpGet("{name}")]
-        public async Task<IActionResult> GetByNameAsync([FromRoute] string name)
+        [HttpGet("{param}")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetByParamAsync([FromRoute] string param)
         {
-            var response = await _contributorService
-                .GetContributorByNameAsync(name);
-            
-            return Ok(response);
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> GetAsync()
-        {
-            var response = await _contributorService
-                .GetContributorsAsync();
-            
-            return Ok(response);
-        }
-
-        [HttpGet("{contributorId}/review-ref")]
-        public async Task<IActionResult> GetReviewReferencesByContributorIdAsync([FromRoute] Guid contributorId)
-        {
-            var response = await _contributorService
-                .GetReviewReferencesByContributorIdAsync(contributorId);
-            
-            return Ok(response);
-        }
-
-        [HttpGet("{contributorId}/component-ref")]
-        public async Task<IActionResult> GetComponentReferencesByContributorIdAsync([FromRoute] Guid contributorId)
-        {
-            var response = await _contributorService
-                .GetComponentReferencesByContributorIdAsync(contributorId);
-            
-            return Ok(response);
-        }
-
-        [HttpGet("{contributorId}/excellence")]
-        public async Task<IActionResult> GetExcellenceByContributorIdAsync([FromRoute] Guid contributorId)
-        {
-            var response = await _contributorService
-                .GetExcellenceByContributorIdAsync(contributorId);
-            
-            return Ok(response);
-        }
-
-        [HttpGet("by-user/{userId}")]
-        [Authorize(Roles = "User")]
-        public async Task<IActionResult> GetContributorByUserIdAsync([FromRoute] Guid userId)
-        {
-            var response = await _contributorService
-                .GetContributorByUserIdAsync(userId);
-
-            return Ok(response);
-        }
-
-        [HttpPost("upload-image")]
-        [Authorize(Roles = "User")]
-        public async Task<IActionResult> UploadImage()
-        {
-            try
+            if (Guid.TryParse(param, out Guid userId))
             {
-                var file = Request.Form.Files[0];
-
-                if (file != null && file.Length > 0)
-                {
-                    string filePath = Path.Combine("uploads", file.FileName);
-                    using (var stream = new FileStream(filePath, FileMode.Create))
-                    {
-                        await file.CopyToAsync(stream);
-                    }
-
-                    return Ok();
-                }
-                else
-                {
-                    return BadRequest("No file uploaded.");
-                }
+                var response = await _contributorService.GetContributorByUserIdAsync(userId);
+                return Ok(response);
             }
-            catch (Exception ex)
+            else
             {
-                return StatusCode(500, $"Error: {ex.Message}");
+                var response = await _contributorService.GetContributorByExcNameAsync(param);
+                return Ok(response);
             }
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        //[Authorize(Roles = Roles.Manager)]
+        public async Task<IActionResult> GetAsPageAsync([FromBody] ContributorsFilter filter)
+        {
+            filter.ApplyPageSizeOptions(_pageSizeSettings);
+
+            var response = await _contributorService
+                .GetContributorsAsPageAsync(filter);
+            
+            return Ok(response);
+        }
+
+        [HttpGet("{contributorId}/confirm-info")]
+        [AllowAnonymous]
+        //[Authorize(Roles = Roles.Manager)]
+        public async Task<IActionResult> GetConfirmInfoAsync([FromRoute] Guid contributorId)
+        {
+            var response = await _contributorService
+                .GetConfirmInfoByContributorIdAsync(contributorId);
+
+            return Ok(response);
+        }
+
+        [HttpPut("{contributorId}/confirm-info")]
+        [AllowAnonymous]
+        //[Authorize(Roles = Roles.Manager)]
+        public async Task<IActionResult> ChangeConfirmInfoAsync([FromRoute] Guid contributorId, [FromBody] ContributorConfirmInfoDto info)
+        {
+            var response = await _contributorService
+                .ChangeConfirmInfoForContributorAsync(contributorId, info);
+
+            return Ok(response);
         }
     }
 }

@@ -25,9 +25,9 @@ namespace Aggregator.DataAccess.Data.Migrations
             modelBuilder.Entity("HardwareHero.Services.Shared.Models.Aggregator.Component", b =>
                 {
                     b.Property<Guid>("Id")
-                        .HasDefaultValueSql("NEWID()")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWID()");
 
                     b.Property<Guid>("ComponentTypeId")
                         .HasColumnType("uniqueidentifier");
@@ -55,9 +55,9 @@ namespace Aggregator.DataAccess.Data.Migrations
             modelBuilder.Entity("HardwareHero.Services.Shared.Models.Aggregator.ComponentAttributes", b =>
                 {
                     b.Property<Guid>("Id")
-                        .HasDefaultValueSql("NEWID()")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWID()");
 
                     b.Property<string>("AttributeName")
                         .IsRequired()
@@ -80,9 +80,9 @@ namespace Aggregator.DataAccess.Data.Migrations
             modelBuilder.Entity("HardwareHero.Services.Shared.Models.Aggregator.ComponentGlobalReview", b =>
                 {
                     b.Property<Guid>("Id")
-                        .HasDefaultValueSql("NEWID()")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWID()");
 
                     b.Property<string>("AuthorName")
                         .IsRequired()
@@ -107,7 +107,7 @@ namespace Aggregator.DataAccess.Data.Migrations
                     b.Property<DateTime>("Timestamp")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2023, 9, 7, 18, 2, 25, 351, DateTimeKind.Local).AddTicks(7447));
+                        .HasDefaultValue(new DateTime(2023, 11, 1, 21, 41, 44, 677, DateTimeKind.Local).AddTicks(2287));
 
                     b.HasKey("Id");
 
@@ -119,9 +119,9 @@ namespace Aggregator.DataAccess.Data.Migrations
             modelBuilder.Entity("HardwareHero.Services.Shared.Models.Aggregator.ComponentImages", b =>
                 {
                     b.Property<Guid>("Id")
-                        .HasDefaultValueSql("NEWID()")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWID()");
 
                     b.Property<Guid>("ComponentId")
                         .HasColumnType("uniqueidentifier");
@@ -140,9 +140,9 @@ namespace Aggregator.DataAccess.Data.Migrations
             modelBuilder.Entity("HardwareHero.Services.Shared.Models.Aggregator.ComponentLocalReview", b =>
                 {
                     b.Property<Guid>("Id")
-                        .HasDefaultValueSql("NEWID()")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWID()");
 
                     b.Property<Guid>("ComponentId")
                         .HasColumnType("uniqueidentifier");
@@ -161,7 +161,7 @@ namespace Aggregator.DataAccess.Data.Migrations
                     b.Property<DateTime>("Timestamp")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2023, 9, 7, 18, 2, 25, 352, DateTimeKind.Local).AddTicks(2379));
+                        .HasDefaultValue(new DateTime(2023, 11, 1, 21, 41, 44, 678, DateTimeKind.Local).AddTicks(2327));
 
                     b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
@@ -176,9 +176,9 @@ namespace Aggregator.DataAccess.Data.Migrations
             modelBuilder.Entity("HardwareHero.Services.Shared.Models.Aggregator.ComponentType", b =>
                 {
                     b.Property<Guid>("Id")
-                        .HasDefaultValueSql("NEWID()")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWID()");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -203,12 +203,31 @@ namespace Aggregator.DataAccess.Data.Migrations
                     b.ToTable("ComponentTypes");
                 });
 
+            modelBuilder.Entity("HardwareHero.Services.Shared.Models.Aggregator.ComponentViews", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("ComponentId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("ViewsCount")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ComponentId");
+
+                    b.ToTable("ComponentViews");
+                });
+
             modelBuilder.Entity("HardwareHero.Services.Shared.Models.Aggregator.Maintenance", b =>
                 {
                     b.Property<Guid>("Id")
-                        .HasDefaultValueSql("NEWID()")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWID()");
 
                     b.Property<Guid>("ContributorId")
                         .HasColumnType("uniqueidentifier");
@@ -236,9 +255,9 @@ namespace Aggregator.DataAccess.Data.Migrations
             modelBuilder.Entity("HardwareHero.Services.Shared.Models.Aggregator.MaintenanceGlobalReview", b =>
                 {
                     b.Property<Guid>("Id")
-                        .HasDefaultValueSql("NEWID()")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWID()");
 
                     b.Property<string>("AuthorName")
                         .IsRequired()
@@ -263,7 +282,7 @@ namespace Aggregator.DataAccess.Data.Migrations
                     b.Property<DateTime>("Timestamp")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2023, 9, 7, 18, 2, 25, 353, DateTimeKind.Local).AddTicks(831));
+                        .HasDefaultValue(new DateTime(2023, 11, 1, 21, 41, 44, 679, DateTimeKind.Local).AddTicks(9334));
 
                     b.HasKey("Id");
 
@@ -275,9 +294,9 @@ namespace Aggregator.DataAccess.Data.Migrations
             modelBuilder.Entity("HardwareHero.Services.Shared.Models.Aggregator.MaintenanceLocalReview", b =>
                 {
                     b.Property<Guid>("Id")
-                        .HasDefaultValueSql("NEWID()")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWID()");
 
                     b.Property<bool?>("IsRecommended")
                         .HasColumnType("bit");
@@ -295,7 +314,7 @@ namespace Aggregator.DataAccess.Data.Migrations
                     b.Property<DateTime>("Timestamp")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2023, 9, 7, 18, 2, 25, 353, DateTimeKind.Local).AddTicks(2936));
+                        .HasDefaultValue(new DateTime(2023, 11, 1, 21, 41, 44, 680, DateTimeKind.Local).AddTicks(3808));
 
                     b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
@@ -310,9 +329,9 @@ namespace Aggregator.DataAccess.Data.Migrations
             modelBuilder.Entity("HardwareHero.Services.Shared.Models.Aggregator.MaintenanceType", b =>
                 {
                     b.Property<Guid>("Id")
-                        .HasDefaultValueSql("NEWID()")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWID()");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -372,6 +391,17 @@ namespace Aggregator.DataAccess.Data.Migrations
                 });
 
             modelBuilder.Entity("HardwareHero.Services.Shared.Models.Aggregator.ComponentLocalReview", b =>
+                {
+                    b.HasOne("HardwareHero.Services.Shared.Models.Aggregator.Component", "Component")
+                        .WithMany()
+                        .HasForeignKey("ComponentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Component");
+                });
+
+            modelBuilder.Entity("HardwareHero.Services.Shared.Models.Aggregator.ComponentViews", b =>
                 {
                     b.HasOne("HardwareHero.Services.Shared.Models.Aggregator.Component", "Component")
                         .WithMany()

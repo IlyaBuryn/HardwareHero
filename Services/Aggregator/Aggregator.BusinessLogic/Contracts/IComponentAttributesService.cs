@@ -1,5 +1,6 @@
-﻿using HardwareHero.Services.Shared.DTOs.Aggregator;
-using HardwareHero.Services.Shared.Models;
+﻿using Aggregator.BusinessLogic.Filters;
+using HardwareHero.Services.Shared.DTOs.Aggregator;
+using HardwareHero.Services.Shared.Filters;
 using HardwareHero.Services.Shared.Models.Aggregator;
 using HardwareHero.Services.Shared.Responses;
 
@@ -13,6 +14,6 @@ namespace Aggregator.BusinessLogic.Contracts
 
         Task<List<Guid>> ReplaceComponentAttributesAsync(Guid componentId, Dictionary<string, string> attributesToAdd);
 
-        Task<PageResponse<ComponentAttributesDto?>> GetAllUniqueComponentAttributesAsPageAsync(AggregatorFilter aggregatorFilter);
+        Task<PageResponse<ComponentAttributesDto?>> GetAllUniqueComponentAttributesAsPageAsync(ComponentAttributesFilter filter);
     }
 }

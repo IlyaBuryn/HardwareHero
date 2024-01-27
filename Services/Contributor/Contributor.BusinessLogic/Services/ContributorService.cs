@@ -1,176 +1,167 @@
 ﻿using AutoMapper;
 using Contributor.BusinessLogic.Contracts;
 using HardwareHero.Services.Shared.DTOs.Contributor;
-using HardwareHero.Services.Shared.Exceptions;
+using HardwareHero.Services.Shared.Filters;
 using HardwareHero.Services.Shared.Models.Contributor;
+using HardwareHero.Services.Shared.Repositories;
 using HardwareHero.Services.Shared.Repositories.Contracts;
+using HardwareHero.Services.Shared.Responses;
+using HardwareHero.Services.Shared.Extensions;
+using Contributor.BusinessLogic.Filters;
 
 namespace Contributor.BusinessLogic.Services
 {
     public class ContributorService : IContributorService
     {
-        private readonly ICrudRepositoryAsync<ContributorModel> _contributorRepo;
+        private readonly ICollectionRepositoryAsync<ContributorModel> _contributorRepo;
+
+        private readonly IValidationRepository<ContributorModel> _contributorValidationRepo;
+        private readonly IValidationRepository<ContributorExcellence> _contributorExcValidationRepo;
+
+        private readonly ICrudRepositoryAsync<ContributorConfirmInfo> _contributorConfirmInfoRepo;
         private readonly ICrudRepositoryAsync<SubscriptionPlan> _subscriptionPlanRepo;
         private readonly ICrudRepositoryAsync<ContributorExcellence> _excellenceRepo;
+        
+        private readonly IImageRepositoryAsync _imagesRepo;
+
         private readonly IMapper _mapper;
 
         public ContributorService(
-            ICrudRepositoryAsync<ContributorModel> contributorRepo,
+            ICollectionRepositoryAsync<ContributorModel> contributorRepo,
+            IValidationRepository<ContributorModel> contributorValidationRepo,
+            IValidationRepository<ContributorExcellence> contributorExcValidationRepo,
+            ICrudRepositoryAsync<ContributorConfirmInfo> contributorConfirmInfoRepo,
             ICrudRepositoryAsync<SubscriptionPlan> subscriptionPlanRepo,
             ICrudRepositoryAsync<ContributorExcellence> excellenceRepo,
+            IImageRepositoryAsync imagesRepo,
             IMapper mapper)
         {
             _contributorRepo = contributorRepo;
+            _contributorValidationRepo = contributorValidationRepo;
+            _contributorExcValidationRepo = contributorExcValidationRepo;
+            _contributorConfirmInfoRepo = contributorConfirmInfoRepo;
             _subscriptionPlanRepo = subscriptionPlanRepo;
             _excellenceRepo = excellenceRepo;
+            _imagesRepo = imagesRepo;
             _mapper = mapper;
         }
 
-        public async Task<Guid?> AddContributorAsync(ContributorDto contributorToAdd)
+        public async Task<Guid?> SignUpContributorAsync(ContributorModelDto contributorToAdd)
         {
-            var contributorCheck = await _contributorRepo.GetOneEntityAsync(
-                expression: x => x.UserId == contributorToAdd.UserId);
-            if (contributorCheck != null)
-            {
-                throw new AlreadyExistException("user", string.Empty, "contributor");
-            }
+            contributorToAdd.Id = Guid.NewGuid();
 
-            var excellenceCheck = await _excellenceRepo.GetOneEntityAsync(
-                expression: x => x.Name == contributorToAdd.ContributorExcellence.Name);
-            if (excellenceCheck != null)
-            {
-                throw new AlreadyExistException("company name");
-            }
+            _contributorValidationRepo
+                .CheckIfObjectAlreadyExist(x => x.UserId == contributorToAdd.UserId);
+
+            _contributorExcValidationRepo
+                .CheckIfObjectAlreadyExist(x => x.Name == contributorToAdd.ContributorExcellence.Name);
+
+            await _imagesRepo.SaveImageAsync(
+                contributorToAdd.ContributorExcellence.ImageData,
+                contributorToAdd.ContributorExcellence.Logo, null);
 
             var contributor = _mapper.Map<ContributorModel>(contributorToAdd);
-            var result = await _contributorRepo.CreateEntityAsync(contributor);
-            
-            return result;
-        }
+            var contributorResult = await _contributorRepo.CreateEntityAsync(contributor);
 
-        public async Task<ReferenceDto?> GetComponentReferencesByContributorIdAsync(Guid contributorId)
-        {
-            var contributor = await _contributorRepo.GetOneEntityAsync(
-                expression: x => x.Id == contributorId);
-            if (contributor == null)
-            {
-                throw new NotFoundException(nameof(contributor));
-            }
-
-            var result = _mapper.Map<ReferenceDto>(contributor.ComponentRef);
-            
-            return result;
-        }
-
-        public async Task<ReferenceDto?> GetReviewReferencesByContributorIdAsync(Guid contributorId)
-        {
-            var contributor = await _contributorRepo.GetOneEntityAsync(
-                expression: x => x.Id == contributorId);
-            if (contributor == null)
-            {
-                throw new NotFoundException(nameof(contributor));
-            }
-
-            var result = _mapper.Map<ReferenceDto>(contributor.ReviewRef);
-            
-            return result;
-        }
-
-        public async Task<List<ContributorDto?>> GetContributorsAsync()
-        {
-            var contributors = await _contributorRepo.GetManyEntitiesAsync(
-                includeProperties: new System.Linq.Expressions.Expression<Func<ContributorModel, object>>[] {
-                    x => x.ContributorExcellence,
-                    x => x.SubscriptionInfo,
-                    x => x.ComponentRef,
-                    x => x.ReviewRef });
-            var result = _mapper.Map<List<ContributorDto>>(contributors.ToList());
-            
-            return result;
+            return contributorResult;
         }
 
         public async Task<bool> RemoveContributorAsync(Guid contributorId)
         {
-            var contributor = await _contributorRepo.GetOneEntityAsync(
-                expression: x => x.Id == contributorId);
-            if (contributor == null)
-            {
-                throw new NotFoundException(nameof(contributor));
-            }
-            
+            var contributor = await _contributorRepo
+                .GetOneWithNotFoundCheck(x => x.Id == contributorId, false);
+
+            _imagesRepo.DeleteImage(contributor!.ContributorExcellence.Logo, null);
+
             var result = await _contributorRepo.RemoveEntityAsync(contributorId);
-            
+
             return result;
         }
 
-        public async Task<bool> UpdateContributorAsync(ContributorDto contributorToUpdate)
+        public async Task<ContributorModelDto?> GetContributorByExcNameAsync(string name)
         {
-            var contributor = await _contributorRepo.GetOneEntityAsync(
-                expression: x => x.Id == contributorToUpdate.Id);
-            if (contributor == null)
-            {
-                throw new NotFoundException(nameof(contributor));
-            }
+            var contributor = await _contributorRepo
+                .GetOneWithNotFoundCheck(x => x.ContributorExcellence.Name == name);
 
-            //var subscriptionPlan = await _subscriptionPlanRepo.GetOneEntityAsync(
-            //    expression: x => x.Id == contributorToUpdate.SubscriptionInfo.Plan.Id);
-            //if (subscriptionPlan == null)
-            //{
-            //    throw new NotFoundException(nameof(subscriptionPlan));
-            //}
-
-            contributor.IsConfirmed = contributorToUpdate.IsConfirmed;
-            contributor.Region = contributorToUpdate.Region;
-            contributor.ReviewRef = _mapper.Map<Reference>(contributorToUpdate.ReviewRef);
-            contributor.ComponentRef = _mapper.Map<Reference>(contributorToUpdate.ComponentRef);
-            contributor.SubscriptionInfo = _mapper.Map<SubscriptionInfo>(contributorToUpdate.SubscriptionInfo);
-
-            var result = await _contributorRepo.UpdateEntityAsync(contributor);
-            
+            var result = _mapper.Map<ContributorModelDto>(contributor);
             return result;
         }
 
-        public async Task<ContributorExcellenceDto?> GetExcellenceByContributorIdAsync(Guid contributorId)
+        public async Task<ContributorModelDto?> GetContributorByUserIdAsync(Guid userId)
         {
-            var contributor = await _contributorRepo.GetOneEntityAsync(
-                expression: x => x.Id == contributorId);
-            if (contributor == null)
-            {
-                throw new NotFoundException(nameof(contributor));
-            }
+            var contributor = await _contributorRepo
+                .GetOneWithNotFoundCheck(x => x.UserId == userId);
 
-            var result = _mapper.Map<ContributorExcellenceDto>(contributor.ContributorExcellence);
-            
+            var result = _mapper.Map<ContributorModelDto>(contributor);
             return result;
         }
 
-        public async Task<ContributorDto?> GetContributorByNameAsync(string name)
+        public async Task<PageResponse<ContributorModelDto?>> GetContributorsAsPageAsync(ContributorsFilter filter)
         {
-            // TODO: check for functionality;
-            var contributor = await _contributorRepo.GetOneEntityAsync(
-                includeProperties: x => x.ContributorExcellence,
-                expression: x => x.ContributorExcellence.Name == name);
-            if (contributor == null)
-            {
-                throw new NotFoundException(nameof(contributor));
-            }
+            _contributorValidationRepo.CheckPaginationOptions(filter.PaginationInfo);
 
-            var result = _mapper.Map<ContributorDto>(contributor);
-            
+            var includesFilter = filter.ShowOnlyExcellences ? 
+                new IncludeProperties<ContributorModel>(x => x.ContributorExcellence)
+                : new IncludeProperties<ContributorModel>();
+
+            var query = await _contributorRepo.GetManyEntitiesAsync(includesFilter);
+
+            query = query
+                .ApplyFilter(filter)
+                .ApplyOrderBy(filter);
+
+            var result = await _contributorRepo.GetMappedPageAsync<ContributorModelDto>(
+                query, filter.PaginationInfo, _mapper);
+
             return result;
         }
 
-        public async Task<ContributorDto?> GetContributorByUserIdAsync(Guid userId)
+        public async Task<ContributorConfirmInfoDto?> GetConfirmInfoByContributorIdAsync(Guid contributorId)
         {
-            var contributor = await _contributorRepo.GetOneEntityAsync(
-                expression: x => x.UserId == userId);
-            if (contributor == null)
+            var contributor = await _contributorRepo
+                .GetOneWithNotFoundCheck(x => x.Id == contributorId);
+            
+            if (contributor.ContributorConfirmInfo == null)
             {
-                throw new NotFoundException(nameof(contributor));
+                return null;
             }
 
-            var result = _mapper.Map<ContributorDto>(contributor);
+            var result = _mapper.Map<ContributorConfirmInfoDto>(contributor.ContributorConfirmInfo);
 
+            return result;
+        }
+
+        public async Task<bool> ChangeConfirmInfoForContributorAsync(Guid contributorId, ContributorConfirmInfoDto info)
+        {
+            var contributor = await _contributorRepo
+                .GetOneWithNotFoundCheck(x => x.Id == contributorId);
+
+            if (contributor.ContributorConfirmInfo == null)
+            {
+                var createResult = await CreateConfirmInfForContributorAsync(info);
+                return createResult.HasValue;
+            }
+
+            var contributorInfo = contributor.ContributorConfirmInfo;
+
+            contributorInfo.IsConfirmed = info.IsConfirmed;
+            contributorInfo.TimeStamp = DateTime.Now;
+
+            var result = await _contributorConfirmInfoRepo.UpdateEntityAsync(contributorInfo);
+            return result;
+
+        }
+
+        private async Task<Guid?> CreateConfirmInfForContributorAsync(ContributorConfirmInfoDto info)
+        {
+            var contributorInfo = new ContributorConfirmInfo
+            {
+                Id = Guid.NewGuid(),
+                TimeStamp = DateTime.Now,
+                IsConfirmed = info.IsConfirmed,
+            };
+
+            var result = await _contributorConfirmInfoRepo.CreateEntityAsync(contributorInfo);
             return result;
         }
     }

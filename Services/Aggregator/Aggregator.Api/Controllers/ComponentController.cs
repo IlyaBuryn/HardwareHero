@@ -1,6 +1,7 @@
 ﻿using Aggregator.BusinessLogic.Contracts;
+using Aggregator.BusinessLogic.Filters;
 using HardwareHero.Services.Shared.DTOs;
-using HardwareHero.Services.Shared.Models;
+using HardwareHero.Services.Shared.Extensions;
 using HardwareHero.Services.Shared.Options;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -26,7 +27,7 @@ namespace Aggregator.Api.Controllers
 
         [HttpPost("component")]
         [AllowAnonymous]
-        //[Authorize(Roles = "Manager")]
+        //[Authorize(Roles = Roles.Manager)]
         public async Task<IActionResult> CreateAsync([FromBody] ComponentDto componentToAdd)
         {
             var response = await _componentService
@@ -38,7 +39,7 @@ namespace Aggregator.Api.Controllers
 
         [HttpPut("component")]
         [AllowAnonymous]
-        //[Authorize(Roles = "Manager")]
+        //[Authorize(Roles = Roles.Manager)]
         public async Task<IActionResult> UpdateAsync([FromBody] ComponentDto componentToUpdate)
         {
             var response = await _componentService
@@ -50,7 +51,7 @@ namespace Aggregator.Api.Controllers
 
         [HttpDelete("component/{componentId}")]
         [AllowAnonymous]
-        //[Authorize(Roles = "Manager")]
+        //[Authorize(Roles = Roles.Manager)]
         public async Task<IActionResult> DeleteAsync([FromRoute] Guid componentId)
         {
             var response = await _componentService
@@ -60,13 +61,13 @@ namespace Aggregator.Api.Controllers
         }
 
 
-        [HttpPost("components/json")]
+        [HttpPost("components")]
         [AllowAnonymous]
-        //[Authorize(Roles = "Admin")]
-        public async Task<IActionResult> CreateFromJsonAsync([FromBody] string jsonData)
+        //[Authorize(Roles = Roles.Admin)]
+        public async Task<IActionResult> CreateFromJsonAsync([FromBody] List<ComponentDto> componentsToAdd)
         {
             var response = await _componentService
-                .AddComponentsFromJsonAsync(jsonData);
+                .AddComponentsAsync(componentsToAdd);
 
             return Ok(response);
         }
@@ -84,7 +85,7 @@ namespace Aggregator.Api.Controllers
 
         [HttpPost("components/ids")]
         [AllowAnonymous]
-        public async Task<IActionResult> GetByIds([FromBody] Guid[] componentsIds)
+        public async Task<IActionResult> GetByIds([FromBody] List<Guid> componentsIds)
         {
             var response = await _componentService
                 .GetComponentsByIdsAsync(componentsIds);
@@ -95,12 +96,9 @@ namespace Aggregator.Api.Controllers
 
         [HttpPost("components/page")]
         [AllowAnonymous]
-        public async Task<IActionResult> GetComponents([FromBody] AggregatorFilter filter)
+        public async Task<IActionResult> GetComponents([FromBody] ComponentsFilter filter)
         {
-            if (filter.paginationInfo.PageSize <= 0)
-            {
-                filter.paginationInfo.PageSize = _pageSizeSettings.PageSize;
-            }
+            filter.ApplyPageSizeOptions(_pageSizeSettings);
 
             var response = await _componentService.GetComponentsAsPageAsync(filter);
             

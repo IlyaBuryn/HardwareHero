@@ -2,87 +2,45 @@
 using Contributor.BusinessLogic.Contracts;
 using HardwareHero.Services.Shared.DTOs.Contributor;
 using HardwareHero.Services.Shared.Exceptions;
+using HardwareHero.Services.Shared.Extensions;
 using HardwareHero.Services.Shared.Models.Contributor;
 using HardwareHero.Services.Shared.Repositories.Contracts;
+using System.Data.Entity;
 
 namespace Contributor.BusinessLogic.Services
 {
     public class SubscriptionService : ISubscriptionService
     {
-        private readonly ICrudRepositoryAsync<SubscriptionInfo> _subscriptionInfoRepo;
+        private readonly ICrudRepositoryAsync<SubscriptionPlanInfo> _subscriptionPlanInfoRepo;
         private readonly ICrudRepositoryAsync<SubscriptionPlan> _subscriptionPlanRepo;
+        private readonly ICrudRepositoryAsync<ContributorModel> _contributorRepo;
+
         private readonly IMapper _mapper;
 
         public SubscriptionService(
-            ICrudRepositoryAsync<SubscriptionInfo> subscriptionInfoRepo,
+            ICrudRepositoryAsync<SubscriptionPlanInfo> subscriptionPlanInfoRepo,
             ICrudRepositoryAsync<SubscriptionPlan> subscriptionPlanRepo,
+            ICrudRepositoryAsync<ContributorModel> contributorRepo,
             IMapper mapper)
         {
-            _subscriptionInfoRepo = subscriptionInfoRepo;
+            _subscriptionPlanInfoRepo = subscriptionPlanInfoRepo;
             _subscriptionPlanRepo = subscriptionPlanRepo;
+            _contributorRepo = contributorRepo;
             _mapper = mapper;
-        }
-
-        public async Task<bool> UpdateSubscriptionInfoAsync(SubscriptionInfoDto subscriptionInfoToUpdate)
-        {
-            var subscriptionInfo = await _subscriptionInfoRepo.GetOneEntityAsync(
-                expression: x => x.Id == subscriptionInfoToUpdate.Id);
-            if (subscriptionInfo == null)
-            {
-                throw new NotFoundException(nameof(subscriptionInfo));
-            }
-
-            var subscriptionPlan = await _subscriptionPlanRepo.GetOneEntityAsync(
-                expression: x => x.Id == subscriptionInfoToUpdate.Plan.Id);
-            if (subscriptionPlan == null)
-            {
-                throw new NotFoundException(nameof(subscriptionPlan));
-            }
-
-            subscriptionInfo.RenewalDate = subscriptionInfoToUpdate.RenewalDate;
-            subscriptionInfo.ExpiryDate = subscriptionInfo.RenewalDate.AddDays(subscriptionPlan.DaysCount);
-            subscriptionInfo.Plan = subscriptionPlan;
-
-            var result = await _subscriptionInfoRepo.UpdateEntityAsync(subscriptionInfo);
-            
-            return result;
         }
 
         public async Task<Guid?> AddSubscriptionPlanAsync(SubscriptionPlanDto subscriptionPlanToAdd)
         {
             var subscriptionPlan = _mapper.Map<SubscriptionPlan>(subscriptionPlanToAdd);
             var result = await _subscriptionPlanRepo.CreateEntityAsync(subscriptionPlan);
-            
-            return result;
-        }
 
-        public async Task<bool> RemoveSubscriptionPlanAsync(Guid subscriptionPlanId)
-        {
-            var subscriptionPlan = await _subscriptionPlanRepo.GetOneEntityAsync(
-                expression: x => x.Id == subscriptionPlanId);
-            if (subscriptionPlan == null)
-            {
-                throw new NotFoundException(nameof(subscriptionPlan));
-            }
-
-            if (!await ThisPlanHaveZeroSubscribers(subscriptionPlan.Id))
-            {
-                throw new DataValidationException("You can't change subscription plan that has subscribers!");
-            }
-
-            var result = await _subscriptionPlanRepo.RemoveEntityAsync(subscriptionPlan.Id);
-            
             return result;
         }
 
         public async Task<bool> UpdateSubscriptionPlanAsync(SubscriptionPlanDto subscriptionPlanToUpdate)
         {
-            var subscriptionPlan = await _subscriptionPlanRepo.GetOneEntityAsync(
-                expression: x => x.Id == subscriptionPlanToUpdate.Id);
-            if (subscriptionPlan == null)
-            {
-                throw new NotFoundException(nameof(subscriptionPlan));
-            }
+            var subscriptionPlan = await _subscriptionPlanRepo
+                .GetOneWithNotFoundCheck(x => x.Id == subscriptionPlanToUpdate.Id, false);
 
             if (!await ThisPlanHaveZeroSubscribers(subscriptionPlan.Id))
             {
@@ -94,24 +52,89 @@ namespace Contributor.BusinessLogic.Services
             subscriptionPlan.PriorityLevel = subscriptionPlanToUpdate.PriorityLevel;
 
             var result = await _subscriptionPlanRepo.UpdateEntityAsync(subscriptionPlan);
-            
+
+            return result;
+        }
+
+        public async Task<bool> RemoveSubscriptionPlanAsync(Guid subscriptionPlanId)
+        {
+            var subscriptionPlan = await _subscriptionPlanRepo
+                .GetOneWithNotFoundCheck(x => x.Id == subscriptionPlanId, false);
+
+            if (!await ThisPlanHaveZeroSubscribers(subscriptionPlan.Id))
+            {
+                throw new DataValidationException("You can't change subscription plan that has subscribers!");
+            }
+
+            var result = await _subscriptionPlanRepo.RemoveEntityAsync(subscriptionPlan.Id);
+
+            return result;
+        }
+
+        public async Task<IEnumerable<SubscriptionPlanDto?>?> GetSubscriptionPlansAsync()
+        {
+            var plansSet = await _subscriptionPlanRepo.GetManyEntitiesAsync();
+
+            var plansList = await plansSet.ToListAsync();
+
+            var result = _mapper.Map<List<SubscriptionPlanDto>>(plansList);
+
+            return result;
+        }
+
+        public async Task<Guid?> SubscribeContributorAsync(Guid contributorId, Guid subscriptionPlanId)
+        {
+            var contributor = await _contributorRepo
+                .GetOneWithNotFoundCheck(x => x.Id == contributorId);
+
+            contributor.SubscriptionPlanInfo.CheckIfObjectAlreadyExist();
+
+            var plan = await _subscriptionPlanRepo
+                .GetOneWithNotFoundCheck(x => x.Id == subscriptionPlanId);
+
+            var planInfo = new SubscriptionPlanInfo()
+            {
+                Id = Guid.NewGuid(),
+                ExpiryDate = DateTime.Now,
+                RenewalDate = DateTime.Now.AddDays(plan.DaysCount),
+                SubscriptionPlan = plan,
+                PlanId = plan.Id
+            };
+
+            contributor.SubscriptionPlanInfo = planInfo;
+            contributor.SubscriptionPlanInfoId = planInfo.Id;
+
+            var result = await _contributorRepo.UpdateEntityAsync(contributor);
+
+            return result ? planInfo.Id : Guid.Empty;
+        }
+
+        public async Task<bool> UnsubscribeContributorAsync(Guid contributorId)
+        {
+            var contributor = await _contributorRepo
+                .GetOneWithNotFoundCheck(x => x.Id == contributorId);
+
+            contributor.SubscriptionPlanInfo.CheckIfObjectNotFound();
+
+            var planInfo = await _subscriptionPlanInfoRepo
+                .GetOneWithNotFoundCheck(x => x.Id == contributor.SubscriptionPlanInfo!.Id);
+
+            var result = await _subscriptionPlanInfoRepo.RemoveEntityAsync(planInfo.Id);
+
             return result;
         }
 
         private async Task<bool> ThisPlanHaveZeroSubscribers(Guid subscriptionPlanId)
         {
-            var subscribers = await _subscriptionInfoRepo.GetManyEntitiesAsync(
-                expression: x => x.PlanId == subscriptionPlanId);
-            var subscribersCount = subscribers.Count();
-            return subscribersCount == 0;
-        }
+            var subscribers = await _subscriptionPlanInfoRepo
+                .GetManyEntitiesAsync(x => x.PlanId == subscriptionPlanId);
 
-        public async Task<List<SubscriptionPlanDto?>> GetSubscriptionPlansAsync()
-        {
-            var plans = await _subscriptionPlanRepo.GetManyEntitiesAsync();
-            var result = _mapper.Map<List<SubscriptionPlanDto>>(plans.ToList());
-            
-            return result;
+            if (subscribers == null || subscribers.Count() == 0)
+            {
+                return true;
+            }
+
+            return subscribers.Count() == 0;
         }
     }
 }

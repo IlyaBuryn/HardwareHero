@@ -1,5 +1,5 @@
 ﻿using HardwareHero.Services.Shared.DTOs.Aggregator;
-using HardwareHero.Services.Shared.Models;
+using HardwareHero.Services.Shared.Infrastructure;
 
 namespace Aggregator.BusinessLogic.Contracts
 {

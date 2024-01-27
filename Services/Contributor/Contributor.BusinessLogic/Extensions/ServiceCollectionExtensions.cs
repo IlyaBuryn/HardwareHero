@@ -25,6 +25,7 @@ namespace Contributor.BusinessLogic.Extensions
             service.AddScoped<IChatService, ChatService>();
             service.AddScoped<IContributorExcellenceService, ContributorExcellenceService>();
             service.AddScoped<ISubscriptionService, SubscriptionService>();
+            service.AddScoped<IReferencesDataService, ReferencesDataService>();
         }
 
         private static void ConfigureMapProfiles(IServiceCollection service)

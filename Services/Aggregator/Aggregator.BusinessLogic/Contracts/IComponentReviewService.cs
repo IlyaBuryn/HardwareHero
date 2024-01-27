@@ -1,5 +1,6 @@
-﻿using HardwareHero.Services.Shared.DTOs.Aggregator;
-using HardwareHero.Services.Shared.Models;
+﻿using Aggregator.BusinessLogic.Filters;
+using HardwareHero.Services.Shared.DTOs.Aggregator;
+using HardwareHero.Services.Shared.Infrastructure;
 using HardwareHero.Services.Shared.Responses;
 
 namespace Aggregator.BusinessLogic.Contracts
@@ -14,10 +15,12 @@ namespace Aggregator.BusinessLogic.Contracts
         Task<bool> UpdateGlobalReviewAsync(ComponentGlobalReviewDto reviewToAdd);
         Task<bool> RemoveGlobalReviewAsync(Guid reviewId);
 
-        Task<Guid[]> AddGlobalReviewsFromJsonAsync(string jsonData);
+        Task<ComplexResponse> AddGlobalReviewsAsync(List<ComponentGlobalReviewDto> reviews);
 
-        Task<PageResponse<ComponentLocalReviewDto?>> GetComponentLocalReviewsAsPageByComponentIdAsync(PaginationInfo paginationInfo, Guid componentId);
-        Task<PageResponse<ComponentGlobalReviewDto?>> GetComponentGlobalReviewsAsPageByComponentIdAsync(PaginationInfo paginationInfo, Guid componentId);
+        Task<PageResponse<ComponentLocalReviewDto?>> GetComponentLocalReviewsAsPageByComponentIdAsync(
+            ComponentLocalReviewFilter filter, Guid componentId);
+        Task<PageResponse<ComponentGlobalReviewDto?>> GetComponentGlobalReviewsAsPageByComponentIdAsync(
+            ComponentGlobalReviewFilter filter, Guid componentId);
         Task<AvgReviewsMarksResponse> GetComponentAvgMarkAsync(Guid componentId);
     }
 }

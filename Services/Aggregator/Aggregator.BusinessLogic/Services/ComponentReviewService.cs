@@ -1,12 +1,12 @@
 ﻿using Aggregator.BusinessLogic.Contracts;
+using Aggregator.BusinessLogic.Filters;
 using AutoMapper;
 using HardwareHero.Services.Shared.DTOs.Aggregator;
-using HardwareHero.Services.Shared.Exceptions;
-using HardwareHero.Services.Shared.Models;
+using HardwareHero.Services.Shared.Extensions;
+using HardwareHero.Services.Shared.Infrastructure.Reviews;
 using HardwareHero.Services.Shared.Models.Aggregator;
 using HardwareHero.Services.Shared.Repositories.Contracts;
 using HardwareHero.Services.Shared.Responses;
-using Newtonsoft.Json;
 
 namespace Aggregator.BusinessLogic.Services
 {
@@ -14,8 +14,10 @@ namespace Aggregator.BusinessLogic.Services
     {
         private readonly ICollectionRepositoryAsync<ComponentLocalReview> _localReviewRepo;
         private readonly ICollectionRepositoryAsync<ComponentGlobalReview> _globalReviewRepo;
+
         private readonly IValidationRepository<ComponentLocalReview> _localReviewValidationRepo;
         private readonly IValidationRepository<ComponentGlobalReview> _globalReviewValidationRepo;
+
         private readonly IMapper _mapper;
 
         public ComponentReviewService(
@@ -35,10 +37,10 @@ namespace Aggregator.BusinessLogic.Services
         public async Task<Guid?> AddLocalReviewAsync(ComponentLocalReviewDto reviewToAdd)
         {
             reviewToAdd.Id = Guid.NewGuid();
-            _localReviewValidationRepo.CheckIsAlreadyExist(
-                x => x.ComponentId == reviewToAdd.ComponentId &&
-                x.UserId == reviewToAdd.UserId,
-                new AlreadyExistException(nameof(reviewToAdd), reviewToAdd.UserId.ToString()));
+
+            _localReviewValidationRepo.CheckIfObjectAlreadyExist(
+                x => x.ComponentId == reviewToAdd.ComponentId && x.UserId == reviewToAdd.UserId,
+                reviewToAdd.UserId.ToString());
 
             var review = _mapper.Map<ComponentLocalReview>(reviewToAdd);
             var result = await _localReviewRepo.CreateEntityAsync(review);
@@ -49,13 +51,12 @@ namespace Aggregator.BusinessLogic.Services
 
         public async Task<bool> UpdateLocalReviewAsync(ComponentLocalReviewDto reviewToAdd)
         {
-            _localReviewValidationRepo.CheckIsNotFound(
+            _localReviewValidationRepo.CheckIfObjectNotFound(
                 x => x.Id ==reviewToAdd.Id &&
                 x.ComponentId == reviewToAdd.ComponentId &&
-                x.UserId == reviewToAdd.UserId,
-                new NotFoundException(nameof(reviewToAdd)));
+                x.UserId == reviewToAdd.UserId);
 
-            var review = await _localReviewRepo.GetOneEntityAsync(reviewToAdd.Id);
+            var review = await _localReviewRepo.GetOneWithNotFoundCheck(x => x.Id == reviewToAdd.Id);
 
             review.Text = reviewToAdd.Text;
             review.Rating = reviewToAdd.Rating;
@@ -69,11 +70,7 @@ namespace Aggregator.BusinessLogic.Services
 
         public async Task<bool> RemoveLocalReviewAsync(Guid reviewId)
         {
-            var review = await _localReviewRepo.GetOneEntityAsync(reviewId);
-            if (review == null)
-            {
-                throw new NotFoundException(nameof(review));
-            }
+            var review = await _localReviewRepo.GetOneWithNotFoundCheck(x => x.Id == reviewId);
 
             var result = await _localReviewRepo.RemoveEntityAsync(reviewId);
 
@@ -84,10 +81,10 @@ namespace Aggregator.BusinessLogic.Services
         public async Task<Guid?> AddGlobalReviewAsync(ComponentGlobalReviewDto reviewToAdd)
         {
             reviewToAdd.Id = Guid.NewGuid();
-            _globalReviewValidationRepo.CheckIsAlreadyExist(
-                x => x.ComponentId == reviewToAdd.ComponentId &&
-                x.AuthorName == reviewToAdd.AuthorName,
-                new AlreadyExistException(nameof(reviewToAdd), reviewToAdd.AuthorName));
+
+            _globalReviewValidationRepo.CheckIfObjectAlreadyExist(
+                x => x.ComponentId == reviewToAdd.ComponentId && x.AuthorName == reviewToAdd.AuthorName,
+                reviewToAdd.AuthorName);
 
             var review = _mapper.Map<ComponentGlobalReview>(reviewToAdd);
             var result = await _globalReviewRepo.CreateEntityAsync(review);
@@ -98,13 +95,12 @@ namespace Aggregator.BusinessLogic.Services
 
         public async Task<bool> UpdateGlobalReviewAsync(ComponentGlobalReviewDto reviewToAdd)
         {
-            _globalReviewValidationRepo.CheckIsNotFound(
+            _globalReviewValidationRepo.CheckIfObjectNotFound(
                 x => x.Id == reviewToAdd.Id &&
                 x.ComponentId == reviewToAdd.ComponentId &&
-                x.AuthorName == reviewToAdd.AuthorName,
-                new NotFoundException(nameof(reviewToAdd)));
+                x.AuthorName == reviewToAdd.AuthorName);
 
-            var review = await _globalReviewRepo.GetOneEntityAsync(reviewToAdd.Id);
+            var review = await _globalReviewRepo.GetOneWithNotFoundCheck(x => x.Id == reviewToAdd.Id);
 
             review.Text = reviewToAdd.Text;
             review.Rating = reviewToAdd.Rating;
@@ -118,11 +114,7 @@ namespace Aggregator.BusinessLogic.Services
 
         public async Task<bool> RemoveGlobalReviewAsync(Guid reviewId)
         {
-            var review = await _globalReviewRepo.GetOneEntityAsync(reviewId);
-            if (review == null)
-            {
-                throw new NotFoundException(nameof(review));
-            }
+            var review = await _globalReviewRepo.GetOneWithNotFoundCheck(x => x.Id == reviewId);
 
             var result = await _globalReviewRepo.RemoveEntityAsync(reviewId);
 
@@ -130,53 +122,56 @@ namespace Aggregator.BusinessLogic.Services
         }
 
 
-        public async Task<Guid[]> AddGlobalReviewsFromJsonAsync(string jsonData)
+        public async Task<ComplexResponse> AddGlobalReviewsAsync(List<ComponentGlobalReviewDto> reviews)
         {
-            var reviewsToAdd = JsonConvert.DeserializeObject<List<ComponentGlobalReviewDto>>(jsonData);
+            var result = new ComplexResponse();
 
-            if (reviewsToAdd == null || !reviewsToAdd.Any())
+            foreach (var review in reviews)
             {
-                return new Guid[0];
-            }
-
-            var resultTotal = new List<Guid>();
-
-            foreach (var review in reviewsToAdd)
-            {
-                var reviewId = await AddGlobalReviewAsync(review);
-                if (reviewId.HasValue)
+                try
                 {
-                    resultTotal.Add(reviewId.Value);
+                    await AddGlobalReviewAsync(review);
+                    result.Responses.Add(new ComplexResponse.TupleResponse(review.AuthorName, true.ToString()));
+                }
+                catch (Exception ex)
+                {
+                    result.Responses.Add(new ComplexResponse.TupleResponse(review.AuthorName, ex.Message));
                 }
             }
 
-            return resultTotal.ToArray();
+            return result;
         }
 
 
         public async Task<PageResponse<ComponentLocalReviewDto?>> GetComponentLocalReviewsAsPageByComponentIdAsync(
-            PaginationInfo paginationInfo, Guid componentId)
+            ComponentLocalReviewFilter filter, Guid componentId)
         {
-            _localReviewValidationRepo.CheckPaginationOptions(paginationInfo, new PageOptionsValidationException());
+            _localReviewValidationRepo.CheckPaginationOptions(filter.PaginationInfo);
 
             var reviews = await _localReviewRepo.GetManyEntitiesAsync(x => x.ComponentId == componentId);
 
+            reviews = reviews
+                .ApplySelection(filter);
+
             var result = await _localReviewRepo.GetMappedPageAsync<ComponentLocalReviewDto>(
-                reviews, paginationInfo, _mapper);
+                reviews, filter.PaginationInfo, _mapper);
 
             return result;
         }
 
 
         public async Task<PageResponse<ComponentGlobalReviewDto?>> GetComponentGlobalReviewsAsPageByComponentIdAsync(
-            PaginationInfo paginationInfo, Guid componentId)
+            ComponentGlobalReviewFilter filter, Guid componentId)
         {
-            _globalReviewValidationRepo.CheckPaginationOptions(paginationInfo, new PageOptionsValidationException());
+            _globalReviewValidationRepo.CheckPaginationOptions(filter.PaginationInfo);
 
             var reviews = await _globalReviewRepo.GetManyEntitiesAsync(x => x.ComponentId == componentId);
 
+            reviews = reviews
+                .ApplySelection(filter);
+
             var result = await _globalReviewRepo.GetMappedPageAsync<ComponentGlobalReviewDto>(
-                reviews, paginationInfo, _mapper);
+                reviews, filter.PaginationInfo, _mapper);
 
             return result;
         }
@@ -192,7 +187,9 @@ namespace Aggregator.BusinessLogic.Services
 
             var AvgGlobalReviewMark = CalculateAvgMark(componentGlobalReviews);
             var AvgLocalReviewMark = CalculateAvgMark(componentLocalReviews);
-            var AvgReviewMark = (AvgGlobalReviewMark + AvgLocalReviewMark) / 2;
+            var AvgReviewMark = AvgGlobalReviewMark == 0 ? 
+                (AvgLocalReviewMark == 0 ? 0 : AvgLocalReviewMark) :
+                (AvgGlobalReviewMark + AvgLocalReviewMark) / 2;
 
             var LocalReviewRecommendations = CalculateRecommendations(componentLocalReviews);
             var LocalReviewRatings = CalculateRatings(componentLocalReviews);
@@ -215,17 +212,20 @@ namespace Aggregator.BusinessLogic.Services
         }
 
 
-        protected decimal CalculateAvgMark(IEnumerable<ReviewBase?> reviews)
+        protected decimal CalculateAvgMark(IQueryable<ReviewBase?> reviews)
         {
             if (reviews.Count() == 0)
+            {
                 return 0;
+            }
 
-            var totalRecommended = reviews.Count(x => x != null && x.IsRecommended == true);
-            return (decimal)totalRecommended / reviews.Count() * 100;
+            var totalRecommended = reviews.Where(x => x != null && x.IsRecommended != null);
+            var totalTrueRecommended = totalRecommended.Count(x => x.IsRecommended == true);
+            return (decimal)totalTrueRecommended / totalRecommended.Count() * 100;
         }
 
 
-        protected Dictionary<bool, int> CalculateRecommendations(IEnumerable<ReviewBase?> reviews)
+        protected Dictionary<bool, int> CalculateRecommendations(IQueryable<ReviewBase?> reviews)
         {
             return new Dictionary<bool, int>
             {
@@ -235,7 +235,7 @@ namespace Aggregator.BusinessLogic.Services
         }
 
 
-        protected Dictionary<int, int> CalculateRatings(IEnumerable<ReviewBase?> reviews)
+        protected Dictionary<int, int> CalculateRatings(IQueryable<ReviewBase?> reviews)
         {
             var ratings = Enumerable.Range(1, 5);
             return ratings.ToDictionary(rating => rating, rating => reviews.Count(x => x != null && x.Rating == rating));

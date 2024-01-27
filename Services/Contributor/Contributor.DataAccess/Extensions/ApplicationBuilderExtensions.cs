@@ -1,19 +1,15 @@
 ﻿using Contributor.DataAccess.Data;
+using HardwareHero.Services.Shared.Helpers;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace Contributor.DataAccess.Extensions
 {
     public static class ApplicationBuilderExtensions
     {
-        public static void MigrationInitialization(this IApplicationBuilder app)
+        public static async Task DatabaseInitialization(this IApplicationBuilder app)
         {
-            using (var serviceScope = app.ApplicationServices.CreateScope())
-            {
-                serviceScope.ServiceProvider.GetService<ContributorDbContext>()!
-                    .Database.Migrate();
-            }
+            string scriptPath = "/src/Services/Contributor/Contributor.DataAccess/Scripts";
+            await ScriptHelper.InitDatabaseWithSqlScript<ContributorDbContext>(app, scriptPath);
         }
     }
 }

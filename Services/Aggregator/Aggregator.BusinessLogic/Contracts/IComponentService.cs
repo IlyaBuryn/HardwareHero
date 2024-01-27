@@ -1,5 +1,5 @@
-﻿using HardwareHero.Services.Shared.DTOs;
-using HardwareHero.Services.Shared.Models;
+﻿using Aggregator.BusinessLogic.Filters;
+using HardwareHero.Services.Shared.DTOs;
 using HardwareHero.Services.Shared.Responses;
 
 namespace Aggregator.BusinessLogic.Contracts
@@ -10,10 +10,10 @@ namespace Aggregator.BusinessLogic.Contracts
         Task<bool> UpdateComponentAsync(ComponentDto componentToUpdate);
         Task<bool> RemoveComponentAsync(Guid componentId);
 
-        Task<Guid[]> AddComponentsFromJsonAsync(string jsonData);
+        Task<ComplexResponse> AddComponentsAsync(IEnumerable<ComponentDto> componentsToAdd);
 
         Task<ComponentDto?> GetComponentByIdAsync(Guid componentId);
-        Task<List<ComponentDto?>> GetComponentsByIdsAsync(Guid[] componentsIds);
-        Task<PageResponse<ComponentDto?>> GetComponentsAsPageAsync(AggregatorFilter filter);
+        Task<List<ComponentDto?>> GetComponentsByIdsAsync(List<Guid> componentsIds);
+        Task<PageResponse<ComponentDto?>> GetComponentsAsPageAsync(ComponentsFilter filter);
     }
 }

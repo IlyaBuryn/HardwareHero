@@ -1,14 +1,23 @@
 ﻿using HardwareHero.Services.Shared.DTOs.Contributor;
+using HardwareHero.Services.Shared.Infrastructure;
+using HardwareHero.Services.Shared.Responses;
 
 namespace Contributor.BusinessLogic.Contracts
 {
     public interface IChatService
     {
-        Task<bool> ManageMessageAsync(ChatMessageDto messageToSend);
-        Task<Guid?> AddChatRoomAsync(ChatRoomDto chatToAdd);
-        Task<bool> UpdateChatRoomAsync(ChatRoomDto chatToUpdate);
+        Task<Guid?> CreateChatRoomAsync(ChatRoomDto chatRoomToAdd);
+        Task<bool> UpdateChatRoomAsync(ChatRoomDto chatRoomToUpdate);
         Task<bool> DeleteChatRoomAsync(Guid chatRoomId);
         Task<ChatRoomDto?> GetChatByIdAsync(Guid chatRoomId);
-        Task<List<ChatRoomDto?>> GetChatsByContributorIdAsync(Guid contributorId);
+        Task<PageResponse<ChatRoomDto?>?> GetChatsByContributorIdAsync(Guid contributorId, PaginationInfo paginationInfo);
+
+        Task<Guid?> SendMessageAsync(ChatMessageDto messageToSend);
+        Task<bool> UpdateMessageAsync(ChatMessageDto messageToSend);
+
+        Task<PageResponse<ChatMessageDto?>?> GetMessagesByChatIdAsync(Guid chatRoomId, PaginationInfo paginationInfo);
+
+        
+
     }
 }

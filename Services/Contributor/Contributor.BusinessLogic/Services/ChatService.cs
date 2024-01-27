@@ -1,42 +1,48 @@
 ﻿using AutoMapper;
 using Contributor.BusinessLogic.Contracts;
-using HardwareHero.Services.Shared.Comparers;
 using HardwareHero.Services.Shared.DTOs.Contributor;
 using HardwareHero.Services.Shared.Exceptions;
 using HardwareHero.Services.Shared.Models.Contributor;
 using HardwareHero.Services.Shared.Repositories.Contracts;
-using HardwareHero.Services.Shared.Options;
-using Microsoft.Extensions.Options;
+using Contributor.BusinessLogic.Extensions;
+using HardwareHero.Services.Shared.Extensions;
+using HardwareHero.Services.Shared.Responses;
+using HardwareHero.Services.Shared.Infrastructure;
 
 namespace Contributor.BusinessLogic.Services
 {
     public class ChatService : IChatService
     {
-        private readonly ICrudRepositoryAsync<ChatRoom> _chatRoomRepo;
-        private readonly ICrudRepositoryAsync<ContributorModel> _contributorRepo;
-        private readonly ChatOptions _chatSettings;
+        private readonly ICollectionRepositoryAsync<ChatRoom> _chatRoomRepo;
+        private readonly ICollectionRepositoryAsync<ContributorModel> _contributorRepo;
+        private readonly ICollectionRepositoryAsync<ChatMessage> _chatMessageRepo;
+
+        private readonly IValidationRepository<ChatRoom> _chatRoomValidationRepo;
+        private readonly IValidationRepository<ContributorModel> _contributorValidationRepo;
+
         private readonly IMapper _mapper;
 
         public ChatService(
-            ICrudRepositoryAsync<ChatRoom> chatRoomRepo,
-            ICrudRepositoryAsync<ContributorModel> contributorRepo,
-            IMapper mapper,
-            IOptions<ChatOptions> chatSettings)
+            ICollectionRepositoryAsync<ChatRoom> chatRoomRepo,
+            ICollectionRepositoryAsync<ContributorModel> contributorRepo,
+            ICollectionRepositoryAsync<ChatMessage> chatMessageRepo,
+            IValidationRepository<ChatRoom> chatRoomValidationRepo,
+            IValidationRepository<ContributorModel> contributorValidationRepo,
+            IMapper mapper)
         {
             _chatRoomRepo = chatRoomRepo;
             _contributorRepo = contributorRepo;
+            _chatMessageRepo = chatMessageRepo;
+            _chatRoomValidationRepo = chatRoomValidationRepo;
+            _contributorValidationRepo = contributorValidationRepo;
             _mapper = mapper;
-            _chatSettings = chatSettings.Value;
         }
 
-        public async Task<Guid?> AddChatRoomAsync(ChatRoomDto chatToAdd)
+        public async Task<Guid?> CreateChatRoomAsync(ChatRoomDto chatToAdd)
         {
-            if (chatToAdd.Contributors.Count() > _chatSettings.ContributorsInChatMaxCount)
-            {
-                throw new DataValidationException("Too many chat users!");
-            }
+            chatToAdd.Id = Guid.NewGuid();
 
-            if (!await AllTheseContributorsExist(chatToAdd.Contributors))
+            if (!await AllTheseContributorsExist(chatToAdd.Participants))
             {
                 throw new NotFoundException("One or more users not found!");
             }
@@ -49,25 +55,17 @@ namespace Contributor.BusinessLogic.Services
 
         public async Task<bool> UpdateChatRoomAsync(ChatRoomDto chatToUpdate)
         {
-            if (chatToUpdate.Contributors.Count() > _chatSettings.ContributorsInChatMaxCount)
-            {
-                throw new DataValidationException("Too many chat users!");
-            }
-
-            if (!await AllTheseContributorsExist(chatToUpdate.Contributors))
+            if (!await AllTheseContributorsExist(chatToUpdate.Participants))
             {
                 throw new NotFoundException("One or more users not found!");
             }
 
-            var chat = await _chatRoomRepo.GetOneEntityAsync(
-                expression: x => x.Id == chatToUpdate.Id);
-            if (chat == null)
-            {
-                throw new NotFoundException(nameof(chat));
-            }
+            var chat = await _chatRoomRepo
+                .GetOneWithNotFoundCheck(x => x.Id == chatToUpdate.Id);
 
-            chat.Contributors = _mapper
-                .Map<ICollection<ContributorModel>>(chatToUpdate.Contributors);
+            chat.Subject = chatToUpdate.Subject;
+            chat.Participants = _mapper.Map<ICollection<ContributorModel>>(chatToUpdate.Participants);
+            
             var result = await _chatRoomRepo.UpdateEntityAsync(chat);
             
             return result;
@@ -75,12 +73,8 @@ namespace Contributor.BusinessLogic.Services
 
         public async Task<bool> DeleteChatRoomAsync(Guid chatRoomId)
         {
-            var chat = await _chatRoomRepo.GetOneEntityAsync(
-                expression: x => x.Id == chatRoomId);
-            if (chat == null)
-            {
-                throw new NotFoundException(nameof(chat));
-            }
+            var chat = await _chatRoomRepo
+                .GetOneWithNotFoundCheck(x => x.Id == chatRoomId);
 
             var result = await _chatRoomRepo.RemoveEntityAsync(chatRoomId);
             
@@ -89,57 +83,78 @@ namespace Contributor.BusinessLogic.Services
 
         public async Task<ChatRoomDto?> GetChatByIdAsync(Guid chatRoomId)
         {
-            var chat = await _chatRoomRepo.GetOneEntityAsync(
-                expression: x => x.Id == chatRoomId,
-                includeProperties: x => x.ChatMessages);
-            if (chat == null )
-            {
-                throw new NotFoundException(nameof(chat));
-            }
+            var chat = await _chatRoomRepo
+                .GetManyWithDefaultOrEmptyCheckAsync(x => x.Id == chatRoomId, true);
 
             var result = _mapper.Map<ChatRoomDto>(chat);
             
             return result;
         }
 
-        public async Task<List<ChatRoomDto?>> GetChatsByContributorIdAsync(Guid contributorId)
+        public async Task<PageResponse<ChatRoomDto?>?> GetChatsByContributorIdAsync(Guid contributorId, PaginationInfo paginationInfo)
         {
-            // TODO: check for functionality;
-            var chats = await _chatRoomRepo.GetManyEntitiesAsync();
-            var result = new List<ChatRoomDto>();
+            _chatRoomValidationRepo.CheckPaginationOptions(paginationInfo);
 
-            foreach (var chat in chats)
-            {
-                if (chat.Contributors.Contains(
-                    new ContributorModel() { Id = contributorId },
-                    new ContributorModelComparer()))
-                {
-                    result.Add(_mapper.Map<ChatRoomDto>(chat));
-                }
-            }
+            var chats = await _chatRoomRepo
+                .GetManyWithDefaultOrEmptyCheckAsync(x => x.Participants.Any(x => x.Id == contributorId));
+
+            var result = await _chatRoomRepo.GetMappedPageAsync<ChatRoomDto>(
+                chats, paginationInfo, _mapper);
 
             return result;
         }
 
-        public async Task<bool> ManageMessageAsync(ChatMessageDto messageToSend)
+        public async Task<Guid?> SendMessageAsync(ChatMessageDto messageToSend)
         {
-            // TODO: check for functionality;
-            var chatRoom = await _chatRoomRepo.GetOneEntityAsync(
-                expression: x => x.Id == messageToSend.ChatRoom.Id);
-            if (chatRoom == null)
-            {
-                throw new NotFoundException(nameof(chatRoom));
-            }
+            _chatRoomValidationRepo.CheckIfObjectNotFound(x => x.Id == messageToSend.ChatRoomId);
+            _contributorValidationRepo.CheckIfObjectNotFound(x => x.Id == messageToSend.SenderId);
+
+            var chatRoom = await _chatRoomRepo
+                .GetOneWithNotFoundCheck(x => x.Id == messageToSend.ChatRoomId);
 
             var message = _mapper.Map<ChatMessage>(messageToSend);
+            message.Id = Guid.NewGuid();
             chatRoom.ChatMessages.Add(message);
 
             var result = await _chatRoomRepo.UpdateEntityAsync(chatRoom);
             
+            return result ? message.Id : Guid.Empty;
+        }
+
+        public async Task<bool> UpdateMessageAsync(ChatMessageDto messageToSend)
+        {
+            _chatRoomValidationRepo.CheckIfObjectNotFound(x => x.Id == messageToSend.ChatRoomId);
+            _contributorValidationRepo.CheckIfObjectNotFound(x => x.Id == messageToSend.SenderId);
+
+            var chatRoom = await _chatRoomRepo
+                .GetOneWithNotFoundCheck(x => x.Id == messageToSend.ChatRoomId);
+
+            var message = await _chatMessageRepo
+                .GetOneWithNotFoundCheck(x => x.Id == messageToSend.Id);
+
+            message.Text = messageToSend.Text;
+            message.Timestamp = DateTime.Now;
+            message.IsEdited = true;
+
+            var result = await _chatMessageRepo.UpdateEntityAsync(message);
+
             return result;
         }
 
-        private async Task<bool> AllTheseContributorsExist(ICollection<ContributorDto> contributors)
+        public async Task<PageResponse<ChatMessageDto?>?> GetMessagesByChatIdAsync(Guid chatRoomId, PaginationInfo paginationInfo)
+        {
+            _chatRoomValidationRepo.CheckPaginationOptions(paginationInfo);
+
+            var messages = await _chatMessageRepo
+                .GetManyWithDefaultOrEmptyCheckAsync(x => x.ChatRoomId == chatRoomId);
+
+            var result = await _chatMessageRepo.GetMappedPageAsync<ChatMessageDto>(
+                messages.Reverse(), paginationInfo, _mapper);
+
+            return result;
+        }
+
+        private async Task<bool> AllTheseContributorsExist(ICollection<ContributorModelDto>? contributors)
         {
             foreach (var contributor in contributors)
             {

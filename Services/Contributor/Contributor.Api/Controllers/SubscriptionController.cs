@@ -1,4 +1,5 @@
 ﻿using Contributor.BusinessLogic.Contracts;
+using HardwareHero.Services.Shared.Constants;
 using HardwareHero.Services.Shared.DTOs.Contributor;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -7,7 +8,7 @@ namespace Contributor.Api.Controllers
 {
     [ApiController]
     [Produces("application/json")]
-    [Route("api/subscription")]
+    [Route("api/subscription-plan")]
     [Authorize]
     public class SubscriptionController : ControllerBase
     {
@@ -18,7 +19,9 @@ namespace Contributor.Api.Controllers
             _subscriptionService = subscriptionService;
         }
 
-        [HttpPost("plan")]
+        [HttpPost]
+        [AllowAnonymous]
+        //[Authorize(Roles = Roles.Manager)]
         public async Task<IActionResult> CreatePlanAsync([FromBody] SubscriptionPlanDto subscriptionPlanToAdd)
         {
             var response = await _subscriptionService
@@ -27,7 +30,9 @@ namespace Contributor.Api.Controllers
             return CreatedAtAction(nameof(CreatePlanAsync), response);
         }
 
-        [HttpPut("plan")]
+        [HttpPut]
+        [AllowAnonymous]
+        //[Authorize(Roles = Roles.Manager)]
         public async Task<IActionResult> UpdatePlanAsync([FromBody] SubscriptionPlanDto subscriptionPlanToUpdate)
         {
             var response = await _subscriptionService
@@ -36,29 +41,46 @@ namespace Contributor.Api.Controllers
             return Ok(response);
         }
 
-        [HttpPut("info")]
-        public async Task<IActionResult> UpdateContributorPlanInfoAsync([FromBody] SubscriptionInfoDto subscriptionInfoToUpdate)
-        {
-            var response = await _subscriptionService
-                .UpdateSubscriptionInfoAsync(subscriptionInfoToUpdate);
-            
-            return Ok(response);
-        }
-
-        [HttpDelete("plan/{subscriptionPlanId}")]
+        [HttpDelete("{subscriptionPlanId}")]
+        [AllowAnonymous]
+        //[Authorize(Roles = Roles.Manager)]
         public async Task<IActionResult> DeletePlanAsync([FromRoute] Guid subscriptionPlanId)
         {
             var response = await _subscriptionService
                 .RemoveSubscriptionPlanAsync(subscriptionPlanId);
-            
+
             return Ok(response);
         }
 
         [HttpGet]
+        [AllowAnonymous]
+        //[Authorize(Roles = Roles.Contributor)]
         public async Task<IActionResult> GetPlansAsync()
         {
             var response = await _subscriptionService
                 .GetSubscriptionPlansAsync();
+
+            return Ok(response);
+        }
+
+        [HttpPost("contributor/{contributorId}/subscribe/{subscriptionPlanId}")]
+        [AllowAnonymous]
+        //[Authorize(Roles = Roles.Contributor)]
+        public async Task<IActionResult> SubscribeAsync([FromRoute] Guid contributorId, [FromRoute] Guid subscriptionPlanId)
+        {
+            var response = await _subscriptionService
+                .SubscribeContributorAsync(contributorId, subscriptionPlanId);
+
+            return CreatedAtAction(nameof(SubscribeAsync), response);
+        }
+
+        [HttpPut("contributor/{contributorId}/unsubscribe")]
+        [AllowAnonymous]
+        //[Authorize(Roles = Roles.Contributor)]
+        public async Task<IActionResult> UnubscribeAsync([FromRoute] Guid contributorId)
+        {
+            var response = await _subscriptionService
+                .UnsubscribeContributorAsync(contributorId);
             
             return Ok(response);
         }

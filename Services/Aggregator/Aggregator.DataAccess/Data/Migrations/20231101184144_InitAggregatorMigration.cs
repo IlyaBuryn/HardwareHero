@@ -15,7 +15,7 @@ namespace Aggregator.DataAccess.Data.Migrations
                 name: "ComponentTypes",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "NEWID()"),
                     Name = table.Column<string>(type: "nvarchar(32)", maxLength: 32, nullable: false),
                     FullName = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
                     Description = table.Column<string>(type: "nvarchar(1024)", maxLength: 1024, nullable: false)
@@ -29,7 +29,7 @@ namespace Aggregator.DataAccess.Data.Migrations
                 name: "MaintenanceTypes",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "NEWID()"),
                     Name = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false)
                 },
                 constraints: table =>
@@ -41,7 +41,7 @@ namespace Aggregator.DataAccess.Data.Migrations
                 name: "Components",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "NEWID()"),
                     Name = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
                     Description = table.Column<string>(type: "nvarchar(1024)", maxLength: 1024, nullable: false),
                     ComponentTypeId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
@@ -61,7 +61,7 @@ namespace Aggregator.DataAccess.Data.Migrations
                 name: "Maintenances",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "NEWID()"),
                     Name = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
                     Description = table.Column<string>(type: "nvarchar(1024)", maxLength: 1024, nullable: false),
                     MaintenanceTypeId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -82,7 +82,7 @@ namespace Aggregator.DataAccess.Data.Migrations
                 name: "ComponentAttributes",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "NEWID()"),
                     ComponentId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     AttributeName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     AttributeValue = table.Column<string>(type: "nvarchar(max)", nullable: false)
@@ -102,14 +102,14 @@ namespace Aggregator.DataAccess.Data.Migrations
                 name: "ComponentGlobalReviews",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    AuthorName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ComponentId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "NEWID()"),
                     ContributorId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Timestamp = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValue: new DateTime(2023, 9, 7, 18, 2, 25, 351, DateTimeKind.Local).AddTicks(7447)),
+                    ComponentId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Timestamp = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValue: new DateTime(2023, 11, 1, 21, 41, 44, 677, DateTimeKind.Local).AddTicks(2287)),
                     Rating = table.Column<int>(type: "int", nullable: true),
                     IsRecommended = table.Column<bool>(type: "bit", nullable: true),
-                    Text = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Text = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    AuthorName = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -126,7 +126,7 @@ namespace Aggregator.DataAccess.Data.Migrations
                 name: "ComponentImages",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "NEWID()"),
                     ComponentId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Image = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
@@ -145,13 +145,13 @@ namespace Aggregator.DataAccess.Data.Migrations
                 name: "ComponentLocalReviews",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "NEWID()"),
                     ComponentId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Timestamp = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValue: new DateTime(2023, 9, 7, 18, 2, 25, 352, DateTimeKind.Local).AddTicks(2379)),
+                    Timestamp = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValue: new DateTime(2023, 11, 1, 21, 41, 44, 678, DateTimeKind.Local).AddTicks(2327)),
                     Rating = table.Column<int>(type: "int", maxLength: 5, nullable: true),
                     IsRecommended = table.Column<bool>(type: "bit", nullable: true),
-                    Text = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Text = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -165,17 +165,36 @@ namespace Aggregator.DataAccess.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "MaintenanceGlobalReviews",
+                name: "ComponentViews",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    AuthorName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    MaintenanceId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ComponentId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ViewsCount = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ComponentViews", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ComponentViews_Components_ComponentId",
+                        column: x => x.ComponentId,
+                        principalTable: "Components",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "MaintenanceGlobalReviews",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "NEWID()"),
                     ContributorId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Timestamp = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValue: new DateTime(2023, 9, 7, 18, 2, 25, 353, DateTimeKind.Local).AddTicks(831)),
+                    MaintenanceId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Timestamp = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValue: new DateTime(2023, 11, 1, 21, 41, 44, 679, DateTimeKind.Local).AddTicks(9334)),
                     Rating = table.Column<int>(type: "int", nullable: true),
                     IsRecommended = table.Column<bool>(type: "bit", nullable: true),
-                    Text = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Text = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    AuthorName = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -192,13 +211,13 @@ namespace Aggregator.DataAccess.Data.Migrations
                 name: "MaintenanceLocalReviews",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "NEWID()"),
                     MaintenanceId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Timestamp = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValue: new DateTime(2023, 9, 7, 18, 2, 25, 353, DateTimeKind.Local).AddTicks(2936)),
+                    Timestamp = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValue: new DateTime(2023, 11, 1, 21, 41, 44, 680, DateTimeKind.Local).AddTicks(3808)),
                     Rating = table.Column<int>(type: "int", nullable: true),
                     IsRecommended = table.Column<bool>(type: "bit", nullable: true),
-                    Text = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Text = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -249,6 +268,11 @@ namespace Aggregator.DataAccess.Data.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_ComponentViews_ComponentId",
+                table: "ComponentViews",
+                column: "ComponentId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_MaintenanceGlobalReviews_MaintenanceId",
                 table: "MaintenanceGlobalReviews",
                 column: "MaintenanceId");
@@ -284,6 +308,9 @@ namespace Aggregator.DataAccess.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "ComponentLocalReviews");
+
+            migrationBuilder.DropTable(
+                name: "ComponentViews");
 
             migrationBuilder.DropTable(
                 name: "MaintenanceGlobalReviews");

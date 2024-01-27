@@ -1,6 +1,7 @@
 ﻿using Aggregator.BusinessLogic.Contracts;
 using HardwareHero.Services.Shared.DTOs.Aggregator;
-using HardwareHero.Services.Shared.Models;
+using HardwareHero.Services.Shared.Filters;
+using HardwareHero.Services.Shared.Models.Aggregator;
 
 namespace Aggregator.BusinessLogic.Services
 {
@@ -21,7 +22,7 @@ namespace Aggregator.BusinessLogic.Services
             throw new NotImplementedException();
         }
 
-        public Task<List<MaintenanceDto?>> GetMaintenancesAsPageAsync(AggregatorFilter filter)
+        public Task<List<MaintenanceDto?>> GetMaintenancesAsPageAsync(Filter<Maintenance> filter)
         {
             throw new NotImplementedException();
         }

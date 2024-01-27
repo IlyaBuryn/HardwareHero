@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace HardwareHero.Services.Shared.Models
+namespace HardwareHero.Services.Shared.Infrastructure
 {
     public class BaseEntity
     {

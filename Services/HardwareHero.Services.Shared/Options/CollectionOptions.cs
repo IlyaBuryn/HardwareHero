@@ -2,6 +2,6 @@
 {
     public class CollectionOptions
     {
-        public string CollectionName { get; set; }
+        public string? CollectionName { get; set; }
     }
 }

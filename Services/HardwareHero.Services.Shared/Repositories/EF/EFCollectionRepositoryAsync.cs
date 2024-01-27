@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using HardwareHero.Services.Shared.Models;
+using HardwareHero.Services.Shared.Infrastructure;
 using HardwareHero.Services.Shared.Repositories.Contracts;
 using HardwareHero.Services.Shared.Responses;
 using Microsoft.EntityFrameworkCore;
@@ -18,26 +18,28 @@ namespace HardwareHero.Services.Shared.Repositories.EF
             _dbSet = dbContext.Set<T>();
         }
 
-        public async Task<IEnumerable<T?>> GetPageAsync(int pageNumber, int pageSize)
+        public async Task<IEnumerable<T?>> GetPageAsync(IQueryable<T?>? query, PaginationInfo paginationInfo)
         {
-            int skip = (pageNumber - 1) * pageSize;
-            var result = _dbSet.Skip(skip).Take(pageSize);
+            if (query == null)
+            {
+                query = Enumerable.Empty<T?>().AsQueryable();
+            }
 
-            return await result.ToListAsync();
-        }
-
-        public async Task<IEnumerable<T?>> GetPageAsync(IQueryable<T?> set, PaginationInfo paginationInfo)
-        {
             int skip = (paginationInfo.PageNumber - 1) * paginationInfo.PageSize;
-            IQueryable<T?> result = set.Skip(skip).Take(paginationInfo.PageSize);
+            IQueryable<T?> result = query.Skip(skip).Take(paginationInfo.PageSize);
 
             return await result.ToListAsync();
         }
 
-        public async Task<PageResponse<MapType?>> GetMappedPageAsync<MapType>(IQueryable<T?> set, PaginationInfo paginationInfo, IMapper mapper)
+        public async Task<PageResponse<MapType?>> GetMappedPageAsync<MapType>(IQueryable<T?>? query, PaginationInfo paginationInfo, IMapper mapper)
         {
-            var items = await GetPageAsync(set, paginationInfo);
-            var pageTotal = GetTotalPageCount(set, paginationInfo);
+            if (query == null)
+            {
+                query = Enumerable.Empty<T?>().AsQueryable();
+            }
+
+            var items = await GetPageAsync(query, paginationInfo);
+            var pageTotal = GetTotalPageCount(query, paginationInfo);
 
             var pageItems = new List<MapType?>();
             if (mapper != null)
@@ -49,18 +51,20 @@ namespace HardwareHero.Services.Shared.Repositories.EF
             {
                 Items = pageItems,
                 TotalPages = pageTotal,
+                CurrentPaginationInfo = paginationInfo,
             };
         }
 
-        public int GetTotalPageCount(IQueryable<T?> set, PaginationInfo paginationInfo)
+        public int GetTotalPageCount(IQueryable<T?>? query, PaginationInfo paginationInfo)
         {
-            return (int)Math.Ceiling((double)set.Count() / paginationInfo.PageSize);
-        }
+            if (query == null)
+            {
+                query = Enumerable.Empty<T?>().AsQueryable();
+            }
 
-        public IQueryable<T?> GetGroupedBySet(IQueryable<T?> set, Func<T, object> groupBy)
-        {
-            var groupedData = set.GroupBy(groupBy);
-            return groupedData.SelectMany(x => x).AsQueryable();
+            var result = (int)Math.Ceiling((double)query.Count() / paginationInfo.PageSize);
+            
+            return result;
         }
     }
 }

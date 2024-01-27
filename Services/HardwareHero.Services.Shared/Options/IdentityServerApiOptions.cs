@@ -2,6 +2,7 @@
 
 namespace HardwareHero.Services.Shared.Options
 {
+    // TODO: ?
     public class IdentityServerApiOptions
     {
         public const string SectionName = nameof(IdentityServerApiOptions);

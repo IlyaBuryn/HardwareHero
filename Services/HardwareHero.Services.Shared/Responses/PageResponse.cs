@@ -1,9 +1,11 @@
-﻿namespace HardwareHero.Services.Shared.Responses
+﻿using HardwareHero.Services.Shared.Infrastructure;
+
+namespace HardwareHero.Services.Shared.Responses
 {
     public class PageResponse<T>
     {
-        public List<T> Items { get; set; }
+        public List<T>? Items { get; set; }
         public int TotalPages { get; set; }
-        // public int CurrentPage { get; set; }
+        public PaginationInfo? CurrentPaginationInfo { get; set; }
     }
 }

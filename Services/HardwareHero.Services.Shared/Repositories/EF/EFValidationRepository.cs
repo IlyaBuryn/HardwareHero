@@ -1,5 +1,4 @@
-﻿using HardwareHero.Services.Shared.Exceptions;
-using HardwareHero.Services.Shared.Models;
+﻿using HardwareHero.Services.Shared.Infrastructure;
 using HardwareHero.Services.Shared.Repositories.Contracts;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;

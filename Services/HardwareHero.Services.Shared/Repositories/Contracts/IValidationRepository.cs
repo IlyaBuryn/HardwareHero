@@ -1,4 +1,4 @@
-﻿using HardwareHero.Services.Shared.Models;
+﻿using HardwareHero.Services.Shared.Infrastructure;
 using System.Linq.Expressions;
 
 namespace HardwareHero.Services.Shared.Repositories.Contracts

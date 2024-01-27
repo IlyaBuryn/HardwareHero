@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace HardwareHero.Services.Shared.IdentityServer
+namespace HardwareHero.Services.Shared.Infrastructure
 {
     public class Token
     {

@@ -1,7 +1,6 @@
-﻿using HardwareHero.Services.Shared.Models;
+﻿using HardwareHero.Services.Shared.Infrastructure;
 using HardwareHero.Services.Shared.Repositories.Contracts;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
 
@@ -51,24 +50,19 @@ namespace HardwareHero.Services.Shared.Repositories.EF
             return false;
         }
 
-        public async Task<T?> GetOneEntityAsync([NotNull] Guid entityId)
-        {
-            return await _dbSet.FirstOrDefaultAsync(x => x.Id == entityId);
-        }
-
-        public async Task<T?> GetOneEntityAsync([NotNull] Guid entityId, IncludeProperties<T> includeProperties)
+        public virtual async Task<T?> GetOneEntityAsync([NotNull] Guid entityId, IncludeProperties<T>? includeProperties = null)
         {
             IQueryable<T> query = GetIncludeProperties(includeProperties);
 
             return await query.FirstOrDefaultAsync(x => x.Id == entityId);
         }
 
-        public async Task<T?> GetOneEntityAsync([NotNull] Expression<Func<T, bool>> expression )
+        public virtual async Task<T?> GetOneEntityAsync([NotNull] Expression<Func<T, bool>> expression )
         {
             return await _dbSet.FirstOrDefaultAsync(expression);
         }
 
-        public async Task<T?> GetOneEntityAsync([NotNull] Expression<Func<T, bool>> expression, IncludeProperties<T> includeProperties)
+        public virtual async Task<T?> GetOneEntityAsync([NotNull] Expression<Func<T, bool>> expression, IncludeProperties<T> includeProperties)
         {
 
             IQueryable<T> query = GetIncludeProperties(includeProperties);
@@ -77,14 +71,15 @@ namespace HardwareHero.Services.Shared.Repositories.EF
             return await query.FirstOrDefaultAsync();
         }
 
-        public async Task<IQueryable<T?>> GetManyEntitiesAsync(IncludeProperties<T> includeProperties = null)
+
+        public virtual async Task<IQueryable<T?>> GetManyEntitiesAsync(IncludeProperties<T>? includeProperties = null)
         {
             IQueryable<T> query = GetIncludeProperties(includeProperties);
 
             return await Task.FromResult(query);
         }
 
-        public async Task<IQueryable<T?>> GetManyEntitiesAsync([NotNull] Expression<Func<T, bool>> expression)
+        public virtual async Task<IQueryable<T?>> GetManyEntitiesAsync([NotNull] Expression<Func<T, bool>> expression)
         {
             IQueryable<T> query = _dbSet;
             query = query.Where(expression);
@@ -92,7 +87,7 @@ namespace HardwareHero.Services.Shared.Repositories.EF
             return await Task.FromResult(query);
         }
 
-        public async Task<IQueryable<T?>> GetManyEntitiesAsync([NotNull] Expression<Func<T, bool>> expression, IncludeProperties<T> includeProperties)
+        public virtual async Task<IQueryable<T?>> GetManyEntitiesAsync([NotNull] Expression<Func<T, bool>> expression, IncludeProperties<T> includeProperties)
         {
             IQueryable<T> query = GetIncludeProperties(includeProperties);
             query = query.Where(expression);
@@ -100,7 +95,7 @@ namespace HardwareHero.Services.Shared.Repositories.EF
             return await Task.FromResult(query);
         }
 
-        protected IQueryable<T> GetIncludeProperties(IncludeProperties<T> includeProperties)
+        protected IQueryable<T> GetIncludeProperties(IncludeProperties<T>? includeProperties)
         {
             IQueryable<T> query = _dbSet;
 
@@ -111,12 +106,16 @@ namespace HardwareHero.Services.Shared.Repositories.EF
 
             if (includeProperties.IsAllIncludes)
             {
-                foreach (var navigationProperty in _dbContext.Model.FindEntityType(typeof(T)).GetNavigations())
+                var entityType = _dbContext.Model.FindEntityType(typeof(T));
+                if (entityType != null)
                 {
-                    query = query.Include(navigationProperty.Name);
+                    foreach (var navigationProperty in entityType.GetNavigations())
+                    {
+                        query = query.Include(navigationProperty.Name);
+                    }
                 }
             }
-            else if (!includeProperties.IncludeExpressions.IsNullOrEmpty())
+            else if (includeProperties.IncludeExpressions != null && includeProperties.IncludeExpressions.Count() != 0)
             {
                 foreach (var includeProperty in includeProperties.IncludeExpressions)
                 {

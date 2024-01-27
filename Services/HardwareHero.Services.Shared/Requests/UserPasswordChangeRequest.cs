@@ -1,5 +1,6 @@
 ﻿namespace HardwareHero.Services.Shared.Requests
 {
+    // TODO: ?
     public class UserPasswordChangeRequest
     {
         public string UserName { get; set; }

@@ -1,23 +1,18 @@
 ﻿using FluentValidation;
+using HardwareHero.Services.Shared.Constants;
 using HardwareHero.Services.Shared.DTOs.Contributor;
 
 namespace HardwareHero.Services.Shared.DTOs.Validation.Contributor
 {
-    public class ContributorValidator : AbstractValidator<ContributorDto>
+    public class ContributorValidator : AbstractValidator<ContributorModelDto>
     {
         public ContributorValidator()
         {
             RuleFor(c => c.UserId).NotEmpty()
-                .WithMessage("{PropertyName} is required.");
-
-            RuleFor(c => c.Region).NotEmpty()
-                .WithMessage("{PropertyName} is required.");
-
-            RuleFor(c => c.Region).MaximumLength(128)
-                .WithMessage("{PropertyName} must be less than {MaxLength} characters!");
+                .WithMessage(ValidationMessages.IsRequired);
 
             RuleFor(c => c.ContributorExcellence).NotEmpty()
-                .WithMessage("{PropertyName} is required.");
+                .WithMessage(ValidationMessages.IsRequired);
         }
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace HardwareHero.Services.Shared.Models.Contributor
+﻿using HardwareHero.Services.Shared.Infrastructure;
+
+namespace HardwareHero.Services.Shared.Models.Contributor
 {
     public class SubscriptionPlan : BaseEntity
     {

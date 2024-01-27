@@ -1,4 +1,6 @@
-﻿namespace HardwareHero.Services.Shared.Models.Aggregator
+﻿using HardwareHero.Services.Shared.Infrastructure;
+
+namespace HardwareHero.Services.Shared.Models.Aggregator
 {
     public class ComponentAttributes : BaseEntity
     {

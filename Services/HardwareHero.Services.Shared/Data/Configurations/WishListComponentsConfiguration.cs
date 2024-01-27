@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace HardwareHero.Services.Shared.Data.Configurations
 {
+    // TODO: ?
     internal class WishListComponentsConfiguration : IEntityTypeConfiguration<WishListComponents>
     {
         public void Configure(EntityTypeBuilder<WishListComponents> builder)

@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using HardwareHero.Services.Shared.Constants;
 using HardwareHero.Services.Shared.DTOs.Mail;
 
 namespace HardwareHero.Services.Shared.DTOs.Validation.Mail
@@ -8,16 +9,16 @@ namespace HardwareHero.Services.Shared.DTOs.Validation.Mail
         public MailMessageValidator()
         {
             RuleFor(x => x.MessageContent).NotEmpty()
-                .WithMessage("{PropertyName} is required!");
+                .WithMessage(ValidationMessages.IsRequired);
 
             RuleFor(x => x.MessageTitle).NotEmpty()
-                .WithMessage("{PropertyName} is required!");
+                .WithMessage(ValidationMessages.IsRequired);
 
             RuleFor(x => x.SenderId).NotEmpty()
-                .WithMessage("{PropertyName} is required!");
+                .WithMessage(ValidationMessages.IsRequired);
 
             RuleFor(x => x.RecipientsEmailAddress).NotEmpty()
-                .WithMessage("{PropertyName} is required!");
+                .WithMessage(ValidationMessages.IsRequired);
         }
     }
 }

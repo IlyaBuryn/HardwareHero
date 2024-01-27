@@ -3,7 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Aggregator.DataAccess.Data;
 using HardwareHero.Services.Shared.Repositories.Contracts;
 using HardwareHero.Services.Shared.Repositories.EF;
-using HardwareHero.Services.Shared.Repositories.Generic;
+using HardwareHero.Services.Shared.Repositories.Others;
 
 namespace Aggregator.DataAccess.Extensions
 {
@@ -17,7 +17,7 @@ namespace Aggregator.DataAccess.Extensions
             builder.AddScoped(typeof(ICollectionRepositoryAsync<>), typeof(EFCollectionRepositoryAsync<>));
             builder.AddScoped(typeof(ICrudRepositoryAsync<>), typeof(EFCrudRepositoryAsync<>));
             builder.AddScoped(typeof(IValidationRepository<>), typeof(EFValidationRepository<>));
-            builder.AddScoped(typeof(IIMagesRepositoryAsync<>), typeof(ImagesRepositoryAsync<>));
+            builder.AddScoped(typeof(IObjectImageRepositoryAsync<>), typeof(ObjectImageRepositoryAsync<>));
 
             builder.AddScoped<DbContext, AggregatorDbContext>();
         }

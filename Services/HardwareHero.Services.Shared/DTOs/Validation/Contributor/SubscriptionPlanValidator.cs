@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using HardwareHero.Services.Shared.Constants;
 using HardwareHero.Services.Shared.DTOs.Contributor;
 
 namespace HardwareHero.Services.Shared.DTOs.Validation.Contributor
@@ -8,13 +9,13 @@ namespace HardwareHero.Services.Shared.DTOs.Validation.Contributor
         public SubscriptionPlanValidator()
         {
             RuleFor(c => c.Price).NotEmpty()
-                .WithMessage("{PropertyName} is required.");
+                .WithMessage(ValidationMessages.IsRequired);
 
             RuleFor(c => c.DaysCount).NotEmpty()
-                .WithMessage("{PropertyName} is required.");
+                .WithMessage(ValidationMessages.IsRequired);
 
             RuleFor(c => c.PriorityLevel).NotEmpty()
-                .WithMessage("{PropertyName} is required.");
+                .WithMessage(ValidationMessages.IsRequired);
         }
     }
 }

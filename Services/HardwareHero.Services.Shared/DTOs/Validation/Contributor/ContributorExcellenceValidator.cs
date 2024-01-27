@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using HardwareHero.Services.Shared.Constants;
 using HardwareHero.Services.Shared.DTOs.Contributor;
 
 namespace HardwareHero.Services.Shared.DTOs.Validation.Contributor
@@ -8,16 +9,28 @@ namespace HardwareHero.Services.Shared.DTOs.Validation.Contributor
         public ContributorExcellenceValidator()
         {
             RuleFor(c => c.Name).NotEmpty()
-                .WithMessage("{PropertyName} is required.");
+                .WithMessage(ValidationMessages.IsRequired);
 
-            RuleFor(c => c.Name).MaximumLength(128)
-                .WithMessage("{PropertyName} must be less than {MaxLength} characters!");
+            RuleFor(c => c.Name).MaximumLength(ValidationValues.NameMaxLength)
+                .WithMessage(ValidationMessages.MaximumLength);
 
             RuleFor(c => c.Logo).NotEmpty()
-                .WithMessage("{PropertyName} is required.");
+                .WithMessage(ValidationMessages.IsRequired);
 
-            RuleFor(c => c.Logo).MaximumLength(512)
-                .WithMessage("{PropertyName} must be less than {MaxLength} characters!");
+            RuleFor(c => c.ImageData).NotEmpty()
+                .WithMessage(ValidationMessages.IsRequired);
+
+            RuleFor(c => c.Description).MaximumLength(ValidationValues.ContributorDescriptionMaxLength)
+                .WithMessage(ValidationMessages.MaximumLength);
+
+            RuleFor(c => c.Phone).NotEmpty()
+                .WithMessage(ValidationMessages.IsRequired);
+
+            RuleFor(c => c.Phone).MaximumLength(ValidationValues.PhoneMaxLength)
+                .WithMessage(ValidationMessages.MaximumLength);
+
+            RuleFor(c => c.Region).NotEmpty()
+                .WithMessage(ValidationMessages.IsRequired);
         }
     }
 }

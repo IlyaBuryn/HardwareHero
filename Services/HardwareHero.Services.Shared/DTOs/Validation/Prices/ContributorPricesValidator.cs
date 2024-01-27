@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using HardwareHero.Services.Shared.Constants;
 using HardwareHero.Services.Shared.DTOs.Prices;
 
 namespace HardwareHero.Services.Shared.DTOs.Validation.Prices
@@ -8,16 +9,16 @@ namespace HardwareHero.Services.Shared.DTOs.Validation.Prices
         public ContributorPricesValidator()
         {
             RuleFor(c => c.ComponentId).NotEmpty()
-                .WithMessage("{PropertyName} is required!");
+                .WithMessage(ValidationMessages.IsRequired);
 
             RuleFor(c => c.ContributorId).NotEmpty()
-                .WithMessage("{PropertyName} is required!");
+                .WithMessage(ValidationMessages.IsRequired);
 
             RuleFor(c => c.Pricestamp).NotEmpty()
-                .WithMessage("{PropertyName} is required!");
+                .WithMessage(ValidationMessages.IsRequired);
 
-            RuleFor(c => c.Pricestamp).GreaterThan(0)
-                .WithMessage("{PropertyName} should be more than {ComparisonValue}!");
+            RuleFor(c => c.Pricestamp).GreaterThan(ValidationValues.PriceFromNotIncluding)
+                .WithMessage(ValidationMessages.GreaterThan);
         }
     }
 }

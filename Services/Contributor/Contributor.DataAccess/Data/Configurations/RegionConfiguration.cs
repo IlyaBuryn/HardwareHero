@@ -4,12 +4,14 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Contributor.DataAccess.Data.Configurations
 {
-    internal class ReferencesConfiguration : IEntityTypeConfiguration<Reference>
+    public class RegionConfiguration : IEntityTypeConfiguration<Region>
     {
-        public void Configure(EntityTypeBuilder<Reference> builder)
+        public void Configure(EntityTypeBuilder<Region> builder)
         {
             builder.HasKey(c => c.Id);
             builder.Property(c => c.Id).ValueGeneratedOnAdd();
+
+            builder.Property(c => c.Country).IsRequired();
         }
     }
 }

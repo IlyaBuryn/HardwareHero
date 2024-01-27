@@ -57,6 +57,9 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentityServer", "Services\Identity\IdentityServer\IdentityServer.csproj", "{C1C5549C-1275-4787-9CD6-CC510466D9EE}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Aggregator.Tests", "Services\Aggregator\Aggregator.Tests\Aggregator.Tests.csproj", "{71F27994-8AA6-48EF-9F2E-F874E926A45D}"
+	ProjectSection(ProjectDependencies) = postProject
+		{A49597DB-561D-46E6-A215-FF666A5A0FFF} = {A49597DB-561D-46E6-A215-FF666A5A0FFF}
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Configurator.Tests", "Services\Configurator\Configurator.Tests\Configurator.Tests.csproj", "{76CAB4CB-C5C9-4542-8BF0-DE8C19C294B2}"
 EndProject
@@ -65,12 +68,6 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mail.Tests", "Services\Mail\Mail.Tests\Mail.Tests.csproj", "{E2401498-BFDC-4D70-B7EB-B4E9C1A1547B}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Prices.Tests", "Services\Prices\Prices.Tests\Prices.Tests.csproj", "{94705971-5AA6-444B-8BDE-4FDF9D3D0BC4}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "EventBus", "EventBus", "{F888CA68-1D5D-4942-B720-F8F0B8624E9C}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventBus.Abstract", "EventBus\EventBus.Abstract\EventBus.Abstract.csproj", "{FDB59CF1-5550-4998-AB6C-D447BF0BCFB1}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventBus.RabbitMQ", "EventBus\EventBus.RabbitMQ\EventBus.RabbitMQ.csproj", "{911C7BC0-6DAF-4594-9713-0CDF526FC351}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -166,14 +163,6 @@ Global
 		{94705971-5AA6-444B-8BDE-4FDF9D3D0BC4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{94705971-5AA6-444B-8BDE-4FDF9D3D0BC4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{94705971-5AA6-444B-8BDE-4FDF9D3D0BC4}.Release|Any CPU.Build.0 = Release|Any CPU
-		{FDB59CF1-5550-4998-AB6C-D447BF0BCFB1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FDB59CF1-5550-4998-AB6C-D447BF0BCFB1}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FDB59CF1-5550-4998-AB6C-D447BF0BCFB1}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FDB59CF1-5550-4998-AB6C-D447BF0BCFB1}.Release|Any CPU.Build.0 = Release|Any CPU
-		{911C7BC0-6DAF-4594-9713-0CDF526FC351}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{911C7BC0-6DAF-4594-9713-0CDF526FC351}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{911C7BC0-6DAF-4594-9713-0CDF526FC351}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{911C7BC0-6DAF-4594-9713-0CDF526FC351}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -206,8 +195,6 @@ Global
 		{A52ADAC3-8494-4DA3-9AE3-68921B157C8E} = {522919DA-AF76-4D76-B06B-5F9821931A19}
 		{E2401498-BFDC-4D70-B7EB-B4E9C1A1547B} = {4509CA0C-E2CF-42AB-882E-CEB5A8F366B4}
 		{94705971-5AA6-444B-8BDE-4FDF9D3D0BC4} = {5FE2FF60-6312-44A2-9B2E-FFA9A138310F}
-		{FDB59CF1-5550-4998-AB6C-D447BF0BCFB1} = {F888CA68-1D5D-4942-B720-F8F0B8624E9C}
-		{911C7BC0-6DAF-4594-9713-0CDF526FC351} = {F888CA68-1D5D-4942-B720-F8F0B8624E9C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A91C9261-8774-4C8D-A9AB-7E5C97CD9804}

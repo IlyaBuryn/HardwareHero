@@ -22,6 +22,8 @@ namespace Aggregator.DataAccess.Data
         public DbSet<MaintenanceGlobalReview> MaintenanceGlobalReviews { get; set; }
         public DbSet<MaintenanceLocalReview> MaintenanceLocalReviews { get; set; }
 
+        public DbSet<ComponentViews> ComponentViews { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

@@ -1,6 +1,6 @@
 ﻿namespace HardwareHero.Services.Shared.Constants
 {
-    public class ConnectionNames
+    public static class ConnectionNames
     {
         public const string UsersConnection = "UsersDatabaseConnection";
         public const string IdentityServerConnection = "IdentityServerDatabaseConnection";

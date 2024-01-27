@@ -1,6 +1,8 @@
-﻿namespace HardwareHero.Services.Shared.DTOs.Aggregator
+﻿using HardwareHero.Services.Shared.Infrastructure.Reviews;
+
+namespace HardwareHero.Services.Shared.DTOs.Aggregator
 {
-    public class ComponentLocalReviewDto : LocalReviewDto
+    public class ComponentLocalReviewDto : LocalReviewBase
     {
         public Guid Id { get; set; }
         public Guid ComponentId { get; set; }

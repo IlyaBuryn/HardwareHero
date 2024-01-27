@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using HardwareHero.Services.Shared.Constants;
 using HardwareHero.Services.Shared.DTOs.Aggregator;
 
 namespace HardwareHero.Services.Shared.DTOs.Validation.Aggregator
@@ -8,13 +9,13 @@ namespace HardwareHero.Services.Shared.DTOs.Validation.Aggregator
         public ComponentAttributesValidator()
         {
             RuleFor(c => c.ComponentId).NotEmpty()
-                .WithMessage("{PropertyName} is required!");
+                .WithMessage(ValidationMessages.IsRequired);
 
             RuleFor(c => c.AttributeName).NotEmpty()
-                .WithMessage("{PropertyName} is required!");
+                .WithMessage(ValidationMessages.IsRequired);
 
             RuleFor(c => c.AttributeValue).NotEmpty()
-                .WithMessage("{PropertyName} is required!");
+                .WithMessage(ValidationMessages.IsRequired);
         }
     }
 }

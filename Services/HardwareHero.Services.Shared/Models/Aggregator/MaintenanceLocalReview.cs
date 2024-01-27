@@ -1,8 +1,9 @@
-﻿namespace HardwareHero.Services.Shared.Models.Aggregator
+﻿using HardwareHero.Services.Shared.Infrastructure.Reviews;
+
+namespace HardwareHero.Services.Shared.Models.Aggregator
 {
-    public class MaintenanceLocalReview : ReviewBase
+    public class MaintenanceLocalReview : LocalReviewBase
     {
-        public Guid UserId { get; set; }
         public Guid MaintenanceId { get; set; }
 
         public virtual Maintenance? Maintenance { get; set; }

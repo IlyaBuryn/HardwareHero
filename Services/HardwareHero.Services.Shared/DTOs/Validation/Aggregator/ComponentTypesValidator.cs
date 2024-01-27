@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using HardwareHero.Services.Shared.Constants;
 
 namespace HardwareHero.Services.Shared.DTOs.Validation.Aggregator
 {
@@ -7,22 +8,22 @@ namespace HardwareHero.Services.Shared.DTOs.Validation.Aggregator
         public ComponentTypesValidator()
         {
             RuleFor(c => c.Name).NotEmpty()
-                .WithMessage("{PropertyName} is required!");
+                .WithMessage(ValidationMessages.IsRequired);
 
-            RuleFor(c => c.Name).MaximumLength(32)
-                .WithMessage("{PropertyName} must be less than {MaxLength} characters!");
+            RuleFor(c => c.Name).MaximumLength(ValidationValues.NameMaxLength)
+                .WithMessage(ValidationMessages.MaximumLength);
 
             RuleFor(c => c.FullName).NotEmpty()
-                .WithMessage("{PropertyName} is required!");
+                .WithMessage(ValidationMessages.IsRequired);
 
-            RuleFor(c => c.FullName).MaximumLength(128)
-                .WithMessage("{PropertyName} must be less than {MaxLength} characters!");
+            RuleFor(c => c.FullName).MaximumLength(ValidationValues.NameMaxLength)
+                .WithMessage(ValidationMessages.MaximumLength);
 
             RuleFor(c => c.Description).NotEmpty()
-                .WithMessage("{PropertyName} is required!");
+                .WithMessage(ValidationMessages.IsRequired);
 
-            RuleFor(c => c.Description).MaximumLength(1024)
-                .WithMessage("{PropertyName} must be less than {MaxLength} characters!");
+            RuleFor(c => c.Description).MaximumLength(ValidationValues.DescriptionMaxLength)
+                .WithMessage(ValidationMessages.MaximumLength);
         }
     }
 }

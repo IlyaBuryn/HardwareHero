@@ -1,11 +1,11 @@
-﻿
+﻿using HardwareHero.Services.Shared.Infrastructure.Reviews;
+
 namespace HardwareHero.Services.Shared.Models.Aggregator
 {
-    public class MaintenanceGlobalReview : ReviewBase
+    public class MaintenanceGlobalReview : GlobalReviewBase
     {
-        public string AuthorName { get; set; }
-        public Guid MaintenanceId { get; set; }
         public Guid ContributorId { get; set; }
+        public Guid MaintenanceId { get; set; }
 
         public virtual Maintenance? Maintenance { get; set; }
     }

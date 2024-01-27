@@ -10,13 +10,6 @@ namespace HardwareHero.Services.Shared.DTOs.Aggregator
         public string Image { get; set; }
         public ComponentDto? Component { get; set; }
 
-        public byte[] ImageData { get; set; }
-
-        public static Expression<Func<ComponentImages, string>>[] GetFileNameExpression() =>
-            new Expression<Func<ComponentImages, string>>[]
-                {
-                    x => x.ComponentId.ToString(),
-                    x => x.Image
-                };
+        public byte[] ImageData { get; set; } // base64
     }
 }

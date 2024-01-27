@@ -24,6 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\HardwareHero.Services.Shared\HardwareHero.Services.Shared.csproj" />
     <ProjectReference Include="..\Aggregator.BusinessLogic\Aggregator.BusinessLogic.csproj" />
   </ItemGroup>
 

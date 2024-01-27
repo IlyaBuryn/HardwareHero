@@ -3,6 +3,7 @@ using HardwareHero.Services.Shared.Options;
 using Configurator.BusinessLogic.Extensions;
 using Configurator.Api.Extensions;
 using HardwareHero.Services.Shared.Middlewares;
+using HardwareHero.Services.Shared.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -34,7 +35,7 @@ var app = builder.Build();
 
 await app.ConfigureDatabaseAsync();
 
-app.UseMiddleware<ExceptionHandlerMiddleware>();
+app.UseMiddleware<ExceptionHandlerMiddleware<BaseEntity>>();
 
 if (app.Environment.IsDevelopment())
 {

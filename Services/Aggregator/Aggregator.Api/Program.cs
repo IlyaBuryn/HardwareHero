@@ -1,6 +1,7 @@
 using Aggregator.Api.Extensions;
 using Aggregator.BusinessLogic.Extensions;
 using HardwareHero.Services.Shared.Constants;
+using HardwareHero.Services.Shared.Infrastructure;
 using HardwareHero.Services.Shared.Middlewares;
 using HardwareHero.Services.Shared.Options;
 using Microsoft.IdentityModel.Logging;
@@ -22,7 +23,7 @@ if (connectionString != null)
 }
 
 builder.Services.ConfigureOptions<PageSizeOptions>(builder.Configuration);
-builder.Services.ConfigureOptions<DataSaveOptions>(builder.Configuration);
+builder.Services.ConfigureOptions<ImagesSaveOptions>(builder.Configuration);
 
 builder.Services.AddIdentityServerAuthentication();
 
@@ -35,7 +36,7 @@ IdentityModelEventSource.ShowPII = true;
 var app = builder.Build();
 
 await app.DatabaseInitialization();
-app.UseMiddleware<ExceptionHandlerMiddleware>();
+app.UseMiddleware<ExceptionHandlerMiddleware<BaseEntity>>();
 app.UseHttpsRedirection();
 app.UseRouting();
 

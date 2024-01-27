@@ -3,6 +3,7 @@ using HardwareHero.Services.Shared.Options;
 using Mail.BusinessLogic.Extensions;
 using Mail.Api.Extensions;
 using HardwareHero.Services.Shared.Middlewares;
+using HardwareHero.Services.Shared.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,7 +29,7 @@ builder.Services.AddCors();
 
 var app = builder.Build();
 
-app.UseMiddleware<ExceptionHandlerMiddleware>();
+app.UseMiddleware<ExceptionHandlerMiddleware<BaseEntity>>();
 
 if (app.Environment.IsDevelopment())
 {

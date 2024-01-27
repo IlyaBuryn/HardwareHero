@@ -1,19 +1,17 @@
 {
   "profiles": {
-
     "Prices": {
       "commandName": "Project",
-      "launchBrowser": false,
-      //"launchUrl": "swagger",
+      "launchUrl": "swagger",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
       "dotnetRunMessages": true,
-      "applicationUrl": "https://localhost:5009"
+      "useSSL": true,
+      "applicationUrl": "https://localhost:5012;https://localhost:5013"
     },
     "Docker": {
       "commandName": "Docker",
-      "launchBrowser": false,
       "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}/swagger",
       "publishAllPorts": true,
       "useSSL": true

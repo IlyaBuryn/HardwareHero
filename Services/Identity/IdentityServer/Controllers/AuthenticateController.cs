@@ -37,7 +37,7 @@ namespace UserManagement.Api.Controllers
 
         public record LoginRequestModel(string Username, string Password, string ReturnUrl, bool RememberLogin = false);
         public record SignUpRequestModel(string Username, string FullName, string Password, string Email, string ReturnUrl);
-        public record LoginResponseModel(HardwareHero.Services.Shared.IdentityServer.Token Token, IList<string> Roles, string ReturnUrl, string UserId, string UserName, string FullName, string Email);
+        public record LoginResponseModel(HardwareHero.Services.Shared.Infrastructure.Token Token, IList<string> Roles, string ReturnUrl, string UserId, string UserName, string FullName, string Email);
 
         [HttpPost("sign-in")]
         public async Task<IActionResult> LoginAsync([FromBody] LoginRequestModel model)
@@ -57,7 +57,7 @@ namespace UserManagement.Api.Controllers
             var roles = await GetRolesScope(accountIsValid);
             var tokens = await GetTokens(model);
             var result = new LoginResponseModel(
-                Token: new HardwareHero.Services.Shared.IdentityServer.Token
+                Token: new HardwareHero.Services.Shared.Infrastructure.Token
                 {
                     AccessToken = tokens.AccessToken,
                     ExpiresIn = tokens.ExpiresIn,

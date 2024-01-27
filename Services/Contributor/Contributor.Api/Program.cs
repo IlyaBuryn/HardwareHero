@@ -4,6 +4,7 @@ using HardwareHero.Services.Shared.Options;
 using HardwareHero.Services.Shared.Middlewares;
 using Contributor.Api.Extensions;
 using Microsoft.IdentityModel.Logging;
+using HardwareHero.Services.Shared.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,7 +18,8 @@ builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddSwaggerGen();
 
-builder.Services.ConfigureOptions<ChatOptions>(builder.Configuration);
+builder.Services.ConfigureOptions<PageSizeOptions>(builder.Configuration);
+builder.Services.ConfigureOptions<ImagesSaveOptions>(builder.Configuration);
 
 var connectionString = builder.Configuration.GetConnectionString(ConnectionNames.ContributorsConnection);
 if (connectionString != null)
@@ -33,8 +35,8 @@ builder.Services.AddCors();
 
 var app = builder.Build();
 
-app.DatabaseInitialization();
-app.UseMiddleware<ExceptionHandlerMiddleware>();
+await app.DatabaseInitialization();
+app.UseMiddleware<ExceptionHandlerMiddleware<BaseEntity>>();
 app.UseHttpsRedirection();
 app.UseRouting();
 

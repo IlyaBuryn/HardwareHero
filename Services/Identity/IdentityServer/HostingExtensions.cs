@@ -1,4 +1,5 @@
 using HardwareHero.Services.Shared.Constants;
+using HardwareHero.Services.Shared.Infrastructure;
 using HardwareHero.Services.Shared.Middlewares;
 using IdentityServer.Extensions;
 using Microsoft.EntityFrameworkCore;
@@ -35,7 +36,7 @@ internal static class HostingExtensions
     {
         app.UseSerilogRequestLogging();
         app.MigrationInitialization();
-        app.UseMiddleware<ExceptionHandlerMiddleware>();
+        app.UseMiddleware<ExceptionHandlerMiddleware<BaseEntity>>();
 
         app.UseCors("default");
 

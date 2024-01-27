@@ -1,5 +1,7 @@
 
 /Services/**/Scripts/
+/images/
+/uploads/
 
 # Images
 *.png

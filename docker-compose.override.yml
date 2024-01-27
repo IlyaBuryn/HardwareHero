@@ -5,100 +5,109 @@ services:
   aggregator.api:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=http://+:80
+      - ASPNETCORE_URLS=https://+:443;http://+:80
     ports:
-      - "80"
+      - "5007:80"
+      - "5006:443"
     volumes:
       - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
       - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
-
+      - ./images:/app/uploads/images
+    
   contributor.api:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=http://+:80
+      - ASPNETCORE_URLS=https://+:443;http://+:80
     ports:
-      - "80"
-    volumes:
-      - ./uploads:/app/uploads
-      - shared_volume:/app/uploads
-      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
-      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
-
-  configurator.api:
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=http://+:80
-    ports:
-      - "80"
+      - "5005:80"
+      - "5004:443"
     volumes:
       - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
       - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+      - ./images:/app/uploads/images
 
-  usermanagement.api:
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=http://+:80
-    ports:
-      - "80"
-    volumes:
-      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
-      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+  #configurator.api:
+  #  environment:
+  #    - ASPNETCORE_ENVIRONMENT=Development
+  #    - ASPNETCORE_URLS=https://+:443;http://+:80
+  #  ports:
+  #    - "5009:80"
+  #    - "5008:443"
+  #  volumes:
+  #    - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+  #    - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
 
-  apigateway.ocelot:
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=http://+:80
-    ports:
-      - "80"
-    volumes:
-      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
-      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+  #usermanagement.api:
+  #  environment:
+  #    - ASPNETCORE_ENVIRONMENT=Development
+  #     - ASPNETCORE_URLS=https://+:443;http://+:80
+  #  ports:
+  #    - "5003:80"
+  #    - "5002:443"
+  #  volumes:
+  #    - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+  #    - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
 
-  prices.api:
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=http://+:80
-    ports:
-      - "80"
-    volumes:
-      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
-      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+  #apigateway.ocelot:
+  #  environment:
+  #    - ASPNETCORE_ENVIRONMENT=Development
+  #    - ASPNETCORE_URLS=https://+:443;http://+:80
+  #  ports:
+  #    - "80"
+  #    - "443"
+  #  volumes:
+  #    - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+  #    - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
 
-  mail.api:
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=http://+:80
-    ports:
-      - "80"
-    volumes:
-      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
-      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+  #prices.api:
+  #  environment:
+  #    - ASPNETCORE_ENVIRONMENT=Development
+  #    - ASPNETCORE_URLS=https://+:443;http://+:80
+  #  ports:
+  #    - "5013:80"
+  #    - "5012:443"
+  #  volumes:
+  #    - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+  #    - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
 
-  identityserver:
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=http://+:80
-      - ASPNETCORE_CORS__DefaultPolicy__Origins=http://localhost:5173
-    ports:
-      - "80"
-    volumes:
-      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
-      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+  #mail.api:
+  #  environment:
+  #    - ASPNETCORE_ENVIRONMENT=Development
+  #    - ASPNETCORE_URLS=https://+:443;http://+:80
+  #  ports:
+  #    - "5011:80"
+  #    - "5010:443"
+  #  volumes:
+  #    - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+  #    - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
 
-  proxy:
-    volumes_from:
-      - contributor.api
-    #volumes:
-    #  - ./nginx.conf:/etc/nginx/nginx.conf
-    #  - shared_volume:/app/uploads
-    #  - shared_volume:/usr/share/nginx/html/images
-    #  - ./images:/usr/share/nginx/html/images
-    volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf
-      - ./uploads:/app/uploads
-      - ./images:/usr/share/nginx/html/images
-    ports:
-      - "80:80"
+  #identityserver:
+  #  environment:
+  #    - ASPNETCORE_ENVIRONMENT=Development
+  #    - ASPNETCORE_URLS=https://+:443;http://+:80
+  #    - ASPNETCORE_CORS__DefaultPolicy__Origins=http://localhost:5173
+  #  ports:
+  #    - "5001:80"
+  #    - "5000:443"
+  #  volumes:
+  #    - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+  #    - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+
+  #proxy:
+  #  volumes_from:
+  #    - contributor.api
+  #  #volumes:
+  #  #  - ./nginx.conf:/etc/nginx/nginx.conf
+  #  #  - shared_volume:/app/uploads
+  #  #  - shared_volume:/usr/share/nginx/html/images
+  #  #  - ./images:/usr/share/nginx/html/images
+  #  volumes:
+  #    - ./nginx.conf:/etc/nginx/nginx.conf
+  #    - ./uploads:/app/uploads
+  #    - ./images:/usr/share/nginx/html/images
+  #  ports:
+  #    - "80:80"
+  #    - "443:443"
 
 volumes:
   shared_volume:

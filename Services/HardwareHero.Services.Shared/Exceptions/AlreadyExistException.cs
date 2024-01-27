@@ -1,18 +1,14 @@
 ﻿namespace HardwareHero.Services.Shared.Exceptions
 {
     [Serializable]
-    public class AlreadyExistException : Exception
+    public class AlreadyExistException<T> : Exception
     {
+        public AlreadyExistException()
+            : base($"This {nameof(T)} is already exist!")
+        { }
+
         public AlreadyExistException(string entity)
-            : base($"This {entity} is already exist!")
-        { }
-
-        public AlreadyExistException(string entityType, string entity)
-            : base($"This {entityType}: \\\"{entity}\\\" is already exist!")
-        { }
-
-        public AlreadyExistException(string entityType, string entity, string state)
-            : base($"This {entityType} {entity} is already {state}!")
+            : base($"This {nameof(T)}: \\\"{entity}\\\" is already exist!")
         { }
     }
 }

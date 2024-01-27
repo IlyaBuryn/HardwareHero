@@ -5,7 +5,7 @@ using Newtonsoft.Json;
 
 namespace HardwareHero.Services.Shared.Middlewares
 {
-    public class ExceptionHandlerMiddleware
+    public class ExceptionHandlerMiddleware<T>
     {
         private readonly RequestDelegate _next;
 
@@ -32,7 +32,7 @@ namespace HardwareHero.Services.Shared.Middlewares
             {
                 await HandleExceptionAsync(context, HttpStatusCode.Forbidden, ex.Message);
             }
-            catch (AlreadyExistException ex)
+            catch (AlreadyExistException<T> ex)
             {
                 await HandleExceptionAsync(context, HttpStatusCode.Conflict, ex.Message);
             }

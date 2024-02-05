@@ -1,13 +1,8 @@
 ﻿using Aggregator.BusinessLogic.Contracts;
 using Aggregator.BusinessLogic.Filters;
+using HardwareHero.Filter.Extensions;
 using HardwareHero.Services.Shared.DTOs.Aggregator;
-using HardwareHero.Services.Shared.Extensions;
-using HardwareHero.Services.Shared.Filters;
-using HardwareHero.Services.Shared.Infrastructure;
-using HardwareHero.Services.Shared.Infrastructure.Reviews;
-using HardwareHero.Services.Shared.Models;
 using HardwareHero.Services.Shared.Options;
-using HardwareHero.Services.Shared.Responses;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;

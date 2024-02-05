@@ -1,7 +1,5 @@
 ﻿using Aggregator.BusinessLogic.Filters;
 using HardwareHero.Services.Shared.DTOs.Aggregator;
-using HardwareHero.Services.Shared.Filters;
-using HardwareHero.Services.Shared.Models.Aggregator;
 using HardwareHero.Services.Shared.Responses;
 
 namespace Aggregator.BusinessLogic.Contracts

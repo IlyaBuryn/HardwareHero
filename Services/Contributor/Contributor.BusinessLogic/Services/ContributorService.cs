@@ -1,13 +1,14 @@
 ﻿using AutoMapper;
 using Contributor.BusinessLogic.Contracts;
 using HardwareHero.Services.Shared.DTOs.Contributor;
-using HardwareHero.Services.Shared.Filters;
 using HardwareHero.Services.Shared.Models.Contributor;
 using HardwareHero.Services.Shared.Repositories;
 using HardwareHero.Services.Shared.Repositories.Contracts;
 using HardwareHero.Services.Shared.Responses;
 using HardwareHero.Services.Shared.Extensions;
 using Contributor.BusinessLogic.Filters;
+using HardwareHero.Services.Shared.Infrastructure;
+using HardwareHero.Filter.Extensions;
 
 namespace Contributor.BusinessLogic.Services
 {
@@ -98,7 +99,8 @@ namespace Contributor.BusinessLogic.Services
 
         public async Task<PageResponse<ContributorModelDto?>> GetContributorsAsPageAsync(ContributorsFilter filter)
         {
-            _contributorValidationRepo.CheckPaginationOptions(filter.PaginationInfo);
+            var paginationInfo = PaginationInfo.ConvertFromFilterPagination(filter.PageRequestInfo);
+            _contributorValidationRepo.CheckPaginationOptions(paginationInfo);
 
             var includesFilter = filter.ShowOnlyExcellences ? 
                 new IncludeProperties<ContributorModel>(x => x.ContributorExcellence)
@@ -106,12 +108,11 @@ namespace Contributor.BusinessLogic.Services
 
             var query = await _contributorRepo.GetManyEntitiesAsync(includesFilter);
 
-            query = query
-                .ApplyFilter(filter)
-                .ApplyOrderBy(filter);
+            query = query.ApplyFilter(filter).Query;
+            query = query.ApplyOrderBy(filter).Query;
 
             var result = await _contributorRepo.GetMappedPageAsync<ContributorModelDto>(
-                query, filter.PaginationInfo, _mapper);
+                query, paginationInfo, _mapper);
 
             return result;
         }

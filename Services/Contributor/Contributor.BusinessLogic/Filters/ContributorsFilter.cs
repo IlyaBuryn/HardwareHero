@@ -1,27 +1,33 @@
-﻿using HardwareHero.Services.Shared.Filters;
+﻿using HardwareHero.Filter.RequestsModels;
 using HardwareHero.Services.Shared.Models.Contributor;
 
 namespace Contributor.BusinessLogic.Filters
 {
-    public class ContributorsFilter : Filter<ContributorModel>
+    public class ContributorsFilter : FilterRequestDomain<ContributorModel>
     {
-        [FilterProperty("ContributorExcellence.Name", FilterOperation.Contains)]
-        public string? CompanyName { get; set; }
-        [FilterProperty("ContributorExcellence.Phone", FilterOperation.Contains)]
-        public string? Phone { get; set; }
-        [FilterProperty("ContributorExcellence.Region.Country", FilterOperation.Contains)]
-        public string? Country { get; set; }
-        [FilterProperty("ContributorExcellence.Currency.Name", FilterOperation.Contains)]
-        public string? Currency { get; set; }
-        [FilterProperty("SubscriptionPlanInfo.SubscriptionPlan.PriorityLevel", FilterOperation.Equal)]
-        public int? PriorityLevel { get; set; }
-        [FilterProperty("SubscriptionPlanInfo.RenewalDate", FilterOperation.GreaterThanCurrentTime)]
-        public bool? IsActiveSubscriber { get; set; }
-        [FilterProperty("ContributorConfirmInfo.IsConfirmed", FilterOperation.Equal)]
-        public bool? IsConfirmed { get; set; }
-        [FilterProperty("ContributorConfirmInfo", FilterOperation.IsNull)]
-        public bool? IsWithoutConfirmedStatus { get; set; }
+        public ContributorsFilter()
+            : base()
+        {
+            AddExpression(x => x.ContributorExcellence.Name.Contains(CompanyName));
+            AddExpression(x => x.ContributorExcellence.Phone.Contains(Phone));
+            AddExpression(x => x.ContributorExcellence.Region != null ? x.ContributorExcellence.Region.Country.Contains(Country) : true);
+            AddExpression(x => x.ContributorExcellence.Currency != null ? x.ContributorExcellence.Currency.Name.Contains(Currency) : true);
 
+            AddExpression(x => PriorityLevel != null ? x.SubscriptionPlanInfo.SubscriptionPlan.PriorityLevel == PriorityLevel : true);
+            AddExpression(x => IsActiveSubscriber != null ? x.SubscriptionPlanInfo.RenewalDate > DateTime.UtcNow : true);
+            AddExpression(x => IsConfirmed != null ? x.ContributorConfirmInfo.IsConfirmed == IsConfirmed : true);
+
+            AddExpression(x => IsWithoutConfirmedStatus == true ? x.ContributorConfirmInfo == null : true);
+        }
+
+        public string? CompanyName { get; set; } = string.Empty;
+        public string? Phone { get; set; } = string.Empty;
+        public string? Country { get; set; } = string.Empty;
+        public string? Currency { get; set; } = string.Empty;
+        public int? PriorityLevel { get; set; }
+        public bool? IsActiveSubscriber { get; set; }
+        public bool? IsConfirmed { get; set; }
+        public bool? IsWithoutConfirmedStatus { get; set; }
 
         public bool ShowOnlyExcellences { get; set; } = false;
     }

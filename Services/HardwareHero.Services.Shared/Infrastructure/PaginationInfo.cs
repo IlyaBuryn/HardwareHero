@@ -1,4 +1,6 @@
-﻿namespace HardwareHero.Services.Shared.Infrastructure
+﻿using HardwareHero.Filter.RequestsModels;
+
+namespace HardwareHero.Services.Shared.Infrastructure
 {
     public class PaginationInfo
     {
@@ -11,6 +13,15 @@
         {
             PageSize = pageSize;
             PageNumber = pageNumber;
+        }
+
+        public static PaginationInfo ConvertFromFilterPagination(PageRequestInfo pageRequestInfo)
+        {
+            return new()
+            {
+                PageSize = pageRequestInfo.PageSize,
+                PageNumber = pageRequestInfo.PageNumber
+            };
         }
     }
 }

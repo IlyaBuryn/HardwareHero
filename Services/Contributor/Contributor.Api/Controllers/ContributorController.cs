@@ -1,7 +1,7 @@
 ﻿using Contributor.BusinessLogic.Contracts;
 using Contributor.BusinessLogic.Filters;
+using HardwareHero.Filter.Extensions;
 using HardwareHero.Services.Shared.DTOs.Contributor;
-using HardwareHero.Services.Shared.Extensions;
 using HardwareHero.Services.Shared.Options;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

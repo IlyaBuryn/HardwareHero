@@ -1,9 +1,9 @@
-﻿using HardwareHero.Services.Shared.Filters;
+﻿using HardwareHero.Filter.RequestsModels;
 using HardwareHero.Services.Shared.Models.Aggregator;
 
 namespace Aggregator.BusinessLogic.Filters
 {
-    public class ComponentGlobalReviewFilter : Filter<ComponentGlobalReview>
+    public class ComponentGlobalReviewFilter : FilterRequestDomain<ComponentGlobalReview>
     {
         public override ComponentGlobalReview SelectionPattern(ComponentGlobalReview refItem)
         {

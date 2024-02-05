@@ -1,17 +1,19 @@
-﻿using HardwareHero.Services.Shared.Filters;
+﻿using HardwareHero.Filter.RequestsModels;
 using HardwareHero.Services.Shared.Models.Aggregator;
 
 namespace Aggregator.BusinessLogic.Filters
 {
-    public class ComponentsFilter : Filter<Component>
+    public class ComponentsFilter : FilterRequestDomain<Component>
     {
-        [FilterProperty("Name", FilterOperation.Contains)]
-        [OrFilterProperty("Description", FilterOperation.Contains)]
-        public string? SearchString { get; set; }
-        [FilterProperty("ComponentType.Name", FilterOperation.Equal)]
-        [OrFilterProperty("ComponentType.FullName", FilterOperation.Equal)]
-        public string? Type { get; set; }
+        public ComponentsFilter()
+            : base()
+        {
+            AddExpression(x => x.Name.Contains(SearchString) || x.Description.Contains(SearchString));
+            AddExpression(x => x.ComponentType != null ? x.ComponentType.Name == Type || x.ComponentType.FullName == Type : true);
+        }
 
+        public string? SearchString { get; set; } = string.Empty;
+        public string? Type { get; set; } = string.Empty;
         public Dictionary<string, string>? AttributeFilters { get; set; }
 
 

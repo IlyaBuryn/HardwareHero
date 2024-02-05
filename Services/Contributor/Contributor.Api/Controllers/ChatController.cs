@@ -1,8 +1,8 @@
 ﻿using Contributor.BusinessLogic.Contracts;
-using Contributor.BusinessLogic.Filters;
+using HardwareHero.Filter.Extensions;
+using HardwareHero.Filter.RequestsModels;
 using HardwareHero.Services.Shared.DTOs.Contributor;
-using HardwareHero.Services.Shared.Extensions;
-using HardwareHero.Services.Shared.Filters;
+using HardwareHero.Services.Shared.Infrastructure;
 using HardwareHero.Services.Shared.Models.Contributor;
 using HardwareHero.Services.Shared.Options;
 using Microsoft.AspNetCore.Authorization;
@@ -75,12 +75,13 @@ namespace Contributor.Api.Controllers
         [HttpPost("contributor/{contributorId}")]
         [AllowAnonymous]
         //[Authorize(Roles = Roles.Contributor)]
-        public async Task<IActionResult> GetAsPageAsync([FromRoute] Guid contributorId, [FromBody] Filter<ChatRoom> filter)
+        public async Task<IActionResult> GetAsPageAsync([FromRoute] Guid contributorId, [FromBody] FilterRequestDomain<ChatRoom> filter)
         {
             filter.ApplyPageSizeOptions(_pageSizeOptions);
 
+            var paginationInfo = PaginationInfo.ConvertFromFilterPagination(filter.PageRequestInfo);
             var response = await _chatService
-                .GetChatsByContributorIdAsync(contributorId, filter.PaginationInfo);
+                .GetChatsByContributorIdAsync(contributorId, paginationInfo);
 
             return Ok(response);
         }
@@ -111,12 +112,13 @@ namespace Contributor.Api.Controllers
         [HttpPost("{chatRoomId}")]
         [AllowAnonymous]
         //[Authorize(Roles = Roles.Contributor)]
-        public async Task<IActionResult> GetMessagesAsync([FromRoute] Guid chatRoomId, [FromBody] Filter<ChatMessage> filter)
+        public async Task<IActionResult> GetMessagesAsync([FromRoute] Guid chatRoomId, [FromBody] FilterRequestDomain<ChatMessage> filter)
         {
             filter.ApplyPageSizeOptions(_pageSizeOptions);
 
+            var paginationInfo = PaginationInfo.ConvertFromFilterPagination(filter.PageRequestInfo);
             var response = await _chatService
-                .GetMessagesByChatIdAsync(chatRoomId, filter.PaginationInfo);
+                .GetMessagesByChatIdAsync(chatRoomId, paginationInfo);
 
             return Ok(response);
         }

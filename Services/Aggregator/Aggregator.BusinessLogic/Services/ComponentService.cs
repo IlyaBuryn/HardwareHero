@@ -1,8 +1,10 @@
 ﻿using Aggregator.BusinessLogic.Contracts;
 using Aggregator.BusinessLogic.Filters;
 using AutoMapper;
+using HardwareHero.Filter.Extensions;
 using HardwareHero.Services.Shared.DTOs;
 using HardwareHero.Services.Shared.Extensions;
+using HardwareHero.Services.Shared.Infrastructure;
 using HardwareHero.Services.Shared.Models.Aggregator;
 using HardwareHero.Services.Shared.Options;
 using HardwareHero.Services.Shared.Repositories;
@@ -160,13 +162,14 @@ namespace Aggregator.BusinessLogic.Services
 
         public async Task<PageResponse<ComponentDto?>> GetComponentsAsPageAsync(ComponentsFilter filter)
         {
-            _componentValidationRepo.CheckPaginationOptions(filter.PaginationInfo);
+            var paginationInfo = PaginationInfo.ConvertFromFilterPagination(filter.PageRequestInfo);
+            _componentValidationRepo.CheckPaginationOptions(paginationInfo);
 
             var query = await _componentRepo.GetManyEntitiesAsync(new IncludeProperties<Component>());
 
-            query = query
-                .ApplyFilter(filter);
+            query = query.ApplyFilter(filter).Query;
 
+            // TODO: To big to put into AddExpression method
             if (filter.AttributeFilters != null && filter.AttributeFilters.Count() != 0)
             {
                 foreach (var attributeFilter in filter.AttributeFilters)
@@ -177,12 +180,25 @@ namespace Aggregator.BusinessLogic.Services
                 }
             }
 
-            query = query
-                .ApplyOrderBy(filter)
-                .ApplySelection(filter);
+            query = query.ApplyOrderBy(filter).Query;
+            query = query.ApplySelection(filter).Query;
+            //var pageResult = query.ApplyPagination(filter);
+
+            //var pageItems = new List<ComponentDto?>();
+            //if (_mapper != null)
+            //{
+            //    pageItems = _mapper.Map<List<ComponentDto?>>(pageResult.Item1);
+            //}
+
+            //return new PageResponse<ComponentDto?>
+            //{
+            //    Items = pageItems,
+            //    TotalPages = pageResult.Item2,
+            //    CurrentPaginationInfo = paginationInfo,
+            //};
 
             var result = await _componentRepo.GetMappedPageAsync<ComponentDto>(
-                query, filter.PaginationInfo, _mapper);
+                query, paginationInfo, _mapper);
 
             return result;
         }

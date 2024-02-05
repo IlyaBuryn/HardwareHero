@@ -1,14 +1,22 @@
-﻿using HardwareHero.Services.Shared.Filters;
+﻿using HardwareHero.Filter.RequestsModels;
 using HardwareHero.Services.Shared.Models.Aggregator;
 
 namespace Aggregator.BusinessLogic.Filters
 {
-    public class ComponentAttributesFilter : Filter<ComponentAttributes>
+    public class ComponentAttributesFilter : FilterRequestDomain<ComponentAttributes>
     {
-        [FilterProperty("Component.ComponentType.Name", FilterOperation.Equal)]
-        [OrFilterProperty("Component.ComponentType.FullName", FilterOperation.Equal)]
-        public string? Type { get; set; }
-        public override string? GroupBy { get; set; } = "AttributeName";
+        public ComponentAttributesFilter()
+            : base()
+        {
+            GroupByRequestInfo = new()
+            {
+                PropertyName = nameof(ComponentAttributes.AttributeName)
+            };
+
+            AddExpression(x => x.Component != null && x.Component.ComponentType != null ? x.Component.ComponentType.Name == Type || x.Component.ComponentType.FullName == Type : true);
+        }
+
+        public string? Type { get; set; } = string.Empty;
 
         public override IQueryable<ComponentAttributes?>? GroupedPattern(IQueryable<IGrouping<object, ComponentAttributes?>> groups)
         {

@@ -1,5 +1,5 @@
-﻿using HardwareHero.Services.Shared.DTOs.Aggregator;
-using HardwareHero.Services.Shared.Filters;
+﻿using HardwareHero.Filter.RequestsModels;
+using HardwareHero.Services.Shared.DTOs.Aggregator;
 using HardwareHero.Services.Shared.Models.Aggregator;
 
 namespace Aggregator.BusinessLogic.Contracts
@@ -13,6 +13,6 @@ namespace Aggregator.BusinessLogic.Contracts
         Task<Guid[]> AddMaintenancesFromJsonAsync(string jsonData);
 
         Task<MaintenanceDto?> GetMaintenanceByIdAsync(Guid maintenanceId);
-        Task<List<MaintenanceDto?>> GetMaintenancesAsPageAsync(Filter<Maintenance> filter);
+        Task<List<MaintenanceDto?>> GetMaintenancesAsPageAsync(FilterRequestDomain<Maintenance> filter);
     }
 }

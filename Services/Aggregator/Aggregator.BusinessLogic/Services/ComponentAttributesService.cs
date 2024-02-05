@@ -1,16 +1,16 @@
 ﻿using Aggregator.BusinessLogic.Contracts;
 using Aggregator.BusinessLogic.Filters;
 using AutoMapper;
+using HardwareHero.Filter.Extensions;
 using HardwareHero.Services.Shared.DTOs.Aggregator;
 using HardwareHero.Services.Shared.Exceptions;
 using HardwareHero.Services.Shared.Extensions;
-using HardwareHero.Services.Shared.Filters;
+using HardwareHero.Services.Shared.Infrastructure;
 using HardwareHero.Services.Shared.Models.Aggregator;
 using HardwareHero.Services.Shared.Repositories;
 using HardwareHero.Services.Shared.Repositories.Contracts;
 using HardwareHero.Services.Shared.Responses;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
 
 namespace Aggregator.BusinessLogic.Services
 {
@@ -104,17 +104,18 @@ namespace Aggregator.BusinessLogic.Services
 
         public async Task<PageResponse<ComponentAttributesDto?>> GetAllUniqueComponentAttributesAsPageAsync(ComponentAttributesFilter filter)
         {
-            _componentAttributesValidationRepo.CheckPaginationOptions(filter.PaginationInfo);
+            var paginationInfo = PaginationInfo.ConvertFromFilterPagination(filter.PageRequestInfo);
+            _componentAttributesValidationRepo.CheckPaginationOptions(paginationInfo);
 
             var query = await _componentAttributesRepo.GetManyEntitiesAsync(
                 new IncludeProperties<ComponentAttributes>(x => x.Component, x => x.Component.ComponentType));
 
-            query = query
-                .ApplyFilter(filter)
-                .ApplyGroupBy(filter);
+            query = query.ApplyFilter(filter).Query;
+            query = query.ApplyOrderBy(filter).Query;
+            query = query.ApplyGroupBy(filter).Query;
 
             var result = await _componentAttributesRepo.GetMappedPageAsync<ComponentAttributesDto>(
-                query, filter.PaginationInfo, _mapper);
+                query, paginationInfo, _mapper);
 
             return result;
         }

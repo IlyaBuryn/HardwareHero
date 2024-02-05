@@ -1,7 +1,5 @@
 ﻿using Contributor.BusinessLogic.Filters;
 using HardwareHero.Services.Shared.DTOs.Contributor;
-using HardwareHero.Services.Shared.Filters;
-using HardwareHero.Services.Shared.Models.Contributor;
 using HardwareHero.Services.Shared.Responses;
 
 namespace Contributor.BusinessLogic.Contracts

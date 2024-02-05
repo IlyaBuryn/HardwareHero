@@ -1,8 +1,10 @@
 ﻿using Aggregator.BusinessLogic.Contracts;
 using Aggregator.BusinessLogic.Filters;
 using AutoMapper;
+using HardwareHero.Filter.Extensions;
 using HardwareHero.Services.Shared.DTOs.Aggregator;
 using HardwareHero.Services.Shared.Extensions;
+using HardwareHero.Services.Shared.Infrastructure;
 using HardwareHero.Services.Shared.Infrastructure.Reviews;
 using HardwareHero.Services.Shared.Models.Aggregator;
 using HardwareHero.Services.Shared.Repositories.Contracts;
@@ -146,15 +148,15 @@ namespace Aggregator.BusinessLogic.Services
         public async Task<PageResponse<ComponentLocalReviewDto?>> GetComponentLocalReviewsAsPageByComponentIdAsync(
             ComponentLocalReviewFilter filter, Guid componentId)
         {
-            _localReviewValidationRepo.CheckPaginationOptions(filter.PaginationInfo);
+            var paginationInfo = PaginationInfo.ConvertFromFilterPagination(filter.PageRequestInfo);
+            _localReviewValidationRepo.CheckPaginationOptions(paginationInfo);
 
             var reviews = await _localReviewRepo.GetManyEntitiesAsync(x => x.ComponentId == componentId);
 
-            reviews = reviews
-                .ApplySelection(filter);
+            reviews = reviews.ApplySelection(filter).Query;
 
             var result = await _localReviewRepo.GetMappedPageAsync<ComponentLocalReviewDto>(
-                reviews, filter.PaginationInfo, _mapper);
+                reviews, paginationInfo, _mapper);
 
             return result;
         }
@@ -163,15 +165,15 @@ namespace Aggregator.BusinessLogic.Services
         public async Task<PageResponse<ComponentGlobalReviewDto?>> GetComponentGlobalReviewsAsPageByComponentIdAsync(
             ComponentGlobalReviewFilter filter, Guid componentId)
         {
-            _globalReviewValidationRepo.CheckPaginationOptions(filter.PaginationInfo);
+            var paginationInfo = PaginationInfo.ConvertFromFilterPagination(filter.PageRequestInfo);
+            _globalReviewValidationRepo.CheckPaginationOptions(paginationInfo);
 
             var reviews = await _globalReviewRepo.GetManyEntitiesAsync(x => x.ComponentId == componentId);
 
-            reviews = reviews
-                .ApplySelection(filter);
+            reviews = reviews.ApplySelection(filter).Query;
 
             var result = await _globalReviewRepo.GetMappedPageAsync<ComponentGlobalReviewDto>(
-                reviews, filter.PaginationInfo, _mapper);
+                reviews, paginationInfo, _mapper);
 
             return result;
         }

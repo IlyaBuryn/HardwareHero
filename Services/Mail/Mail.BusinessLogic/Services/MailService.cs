@@ -1,9 +1,4 @@
-﻿using AutoMapper;
-using HardwareHero.Services.Shared.Constants;
-using HardwareHero.Services.Shared.DTOs.Mail;
-using HardwareHero.Services.Shared.Options;
-using Mail.BusinessLogic.Contracts;
-using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 
 using MailKit.Net.Smtp;
@@ -14,7 +9,7 @@ namespace Mail.BusinessLogic.Services
 {
     public class MailService : IMailService
     {
-        private readonly IMongoCollection<HardwareHero.Services.Shared.Models.Mail.MailMessage> _mailCollection;
+        private readonly IMongoCollection<HardwareHero.Shared.Models.Mail.MailMessage> _mailCollection;
         private readonly IMapper _mapper;
         private readonly DatabaseOptions _databaseSettings;
         private readonly string senderEmailAddress = "issaac.bishop@gmail.com";
@@ -28,7 +23,7 @@ namespace Mail.BusinessLogic.Services
             var mongoDb = mongoClient.GetDatabase(_databaseSettings.DatabaseName);
 
             _mailCollection = mongoDb
-                .GetCollection<HardwareHero.Services.Shared.Models.Mail.MailMessage>(
+                .GetCollection<HardwareHero.Shared.Models.Mail.MailMessage>(
                 _databaseSettings.Collections[ConfiguratorCollectionNames.MailCollection].CollectionName);
 
             _mapper = mapper;

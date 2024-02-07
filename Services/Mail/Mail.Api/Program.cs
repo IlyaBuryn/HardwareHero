@@ -1,10 +1,3 @@
-using HardwareHero.Services.Shared.Constants;
-using HardwareHero.Services.Shared.Options;
-using Mail.BusinessLogic.Extensions;
-using Mail.Api.Extensions;
-using HardwareHero.Services.Shared.Middlewares;
-using HardwareHero.Services.Shared.Infrastructure;
-
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddCustomControllers();

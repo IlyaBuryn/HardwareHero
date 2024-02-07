@@ -1,6 +1,6 @@
-﻿using HardwareHero.Services.Shared.Constants;
-using HardwareHero.Services.Shared.Data;
-using HardwareHero.Services.Shared.Models.UserManagementService;
+﻿using HardwareHero.Shared.Constants;
+using HardwareHero.Shared.Data;
+using HardwareHero.Shared.Models.Users;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;

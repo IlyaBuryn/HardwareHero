@@ -1,16 +1,16 @@
-﻿using HardwareHero.Services.Shared.Models.UserManagementService;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
 using Duende.IdentityServer.Models;
 using IdentityModel.Client;
-using HardwareHero.Services.Shared.Options;
-using HardwareHero.Services.Shared.Exceptions;
 using System.Text.RegularExpressions;
-using HardwareHero.Services.Shared.Constants;
-using HardwareHero.Services.Shared.Models.Identity;
+using HardwareHero.Shared.Models.Users;
+using System.Security.Authentication;
+using HardwareHero.Shared.Models.Identity;
+using HardwareHero.Shared.Constants;
+using HardwareHero.Shared.Options;
 
-namespace UserManagement.Api.Controllers
+namespace IdentityServer.Controllers
 {
     [Route("ids/account")]
     [Produces("application/json")]
@@ -37,7 +37,7 @@ namespace UserManagement.Api.Controllers
 
         public record LoginRequestModel(string Username, string Password, string ReturnUrl, bool RememberLogin = false);
         public record SignUpRequestModel(string Username, string FullName, string Password, string Email, string ReturnUrl);
-        public record LoginResponseModel(HardwareHero.Services.Shared.Infrastructure.Token Token, IList<string> Roles, string ReturnUrl, string UserId, string UserName, string FullName, string Email);
+        public record LoginResponseModel(HardwareHero.Shared.Models.Token Token, IList<string> Roles, string ReturnUrl, string UserId, string UserName, string FullName, string Email);
 
         [HttpPost("sign-in")]
         public async Task<IActionResult> LoginAsync([FromBody] LoginRequestModel model)
@@ -57,7 +57,7 @@ namespace UserManagement.Api.Controllers
             var roles = await GetRolesScope(accountIsValid);
             var tokens = await GetTokens(model);
             var result = new LoginResponseModel(
-                Token: new HardwareHero.Services.Shared.Infrastructure.Token
+                Token: new HardwareHero.Shared.Models.Token
                 {
                     AccessToken = tokens.AccessToken,
                     ExpiresIn = tokens.ExpiresIn,
@@ -69,7 +69,7 @@ namespace UserManagement.Api.Controllers
                 ReturnUrl: model.ReturnUrl,
                 UserId: accountIsValid.Id,
                 UserName: accountIsValid.UserName,
-                FullName: accountIsValid.Name, 
+                FullName: accountIsValid.Name,
                 Email: accountIsValid.Email);
 
             return Ok(result);

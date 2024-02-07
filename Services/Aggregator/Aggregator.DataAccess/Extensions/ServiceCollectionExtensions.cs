@@ -1,9 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using Aggregator.DataAccess.Data;
-using HardwareHero.Services.Shared.Repositories.Contracts;
-using HardwareHero.Services.Shared.Repositories.EF;
-using HardwareHero.Services.Shared.Repositories.Others;
+﻿using Microsoft.Extensions.DependencyInjection;
 
 namespace Aggregator.DataAccess.Extensions
 {

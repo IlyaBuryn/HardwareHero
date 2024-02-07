@@ -7,18 +7,16 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{5D
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Aggregator", "Aggregator", "{72740FED-F70B-4C38-B3AA-13D97984035A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HardwareHero.Services.Shared", "Services\HardwareHero.Services.Shared\HardwareHero.Services.Shared.csproj", "{A49597DB-561D-46E6-A215-FF666A5A0FFF}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Contributor", "Contributor", "{522919DA-AF76-4D76-B06B-5F9821931A19}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Identity", "Identity", "{FFEEF48E-40B4-42EB-B6E5-988FCCA35921}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Aggregator.DataAccess", "Services\Aggregator\Aggregator.DataAccess\Aggregator.DataAccess.csproj", "{310C1152-0997-4CEF-9348-498C396BE9D3}"
-	ProjectSection(ProjectDependencies) = postProject
-		{A49597DB-561D-46E6-A215-FF666A5A0FFF} = {A49597DB-561D-46E6-A215-FF666A5A0FFF}
-	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Aggregator.Api", "Services\Aggregator\Aggregator.Api\Aggregator.Api.csproj", "{1DF4D34B-2389-435E-BB04-F8C21235F985}"
+	ProjectSection(ProjectDependencies) = postProject
+		{3460D653-16F9-4115-97AE-4698CEA07467} = {3460D653-16F9-4115-97AE-4698CEA07467}
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Aggregator.BusinessLogic", "Services\Aggregator\Aggregator.BusinessLogic\Aggregator.BusinessLogic.csproj", "{E3426F51-33A1-4DD8-B016-76788EAB52B4}"
 EndProject
@@ -57,9 +55,6 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentityServer", "Services\Identity\IdentityServer\IdentityServer.csproj", "{C1C5549C-1275-4787-9CD6-CC510466D9EE}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Aggregator.Tests", "Services\Aggregator\Aggregator.Tests\Aggregator.Tests.csproj", "{71F27994-8AA6-48EF-9F2E-F874E926A45D}"
-	ProjectSection(ProjectDependencies) = postProject
-		{A49597DB-561D-46E6-A215-FF666A5A0FFF} = {A49597DB-561D-46E6-A215-FF666A5A0FFF}
-	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Configurator.Tests", "Services\Configurator\Configurator.Tests\Configurator.Tests.csproj", "{76CAB4CB-C5C9-4542-8BF0-DE8C19C294B2}"
 EndProject
@@ -69,16 +64,16 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mail.Tests", "Services\Mail
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Prices.Tests", "Services\Prices\Prices.Tests\Prices.Tests.csproj", "{94705971-5AA6-444B-8BDE-4FDF9D3D0BC4}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{142BA8F5-95B5-4606-9E0C-AAB8889CB8CA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HardwareHero.Shared", "Tools\HardwareHero.Shared\HardwareHero.Shared.csproj", "{3460D653-16F9-4115-97AE-4698CEA07467}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{A49597DB-561D-46E6-A215-FF666A5A0FFF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A49597DB-561D-46E6-A215-FF666A5A0FFF}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A49597DB-561D-46E6-A215-FF666A5A0FFF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A49597DB-561D-46E6-A215-FF666A5A0FFF}.Release|Any CPU.Build.0 = Release|Any CPU
 		{310C1152-0997-4CEF-9348-498C396BE9D3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{310C1152-0997-4CEF-9348-498C396BE9D3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{310C1152-0997-4CEF-9348-498C396BE9D3}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -163,13 +158,16 @@ Global
 		{94705971-5AA6-444B-8BDE-4FDF9D3D0BC4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{94705971-5AA6-444B-8BDE-4FDF9D3D0BC4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{94705971-5AA6-444B-8BDE-4FDF9D3D0BC4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3460D653-16F9-4115-97AE-4698CEA07467}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3460D653-16F9-4115-97AE-4698CEA07467}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3460D653-16F9-4115-97AE-4698CEA07467}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3460D653-16F9-4115-97AE-4698CEA07467}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{72740FED-F70B-4C38-B3AA-13D97984035A} = {5DB83572-6DDD-4B74-A338-4711FFF43E9F}
-		{A49597DB-561D-46E6-A215-FF666A5A0FFF} = {5DB83572-6DDD-4B74-A338-4711FFF43E9F}
 		{522919DA-AF76-4D76-B06B-5F9821931A19} = {5DB83572-6DDD-4B74-A338-4711FFF43E9F}
 		{FFEEF48E-40B4-42EB-B6E5-988FCCA35921} = {5DB83572-6DDD-4B74-A338-4711FFF43E9F}
 		{310C1152-0997-4CEF-9348-498C396BE9D3} = {72740FED-F70B-4C38-B3AA-13D97984035A}
@@ -195,6 +193,7 @@ Global
 		{A52ADAC3-8494-4DA3-9AE3-68921B157C8E} = {522919DA-AF76-4D76-B06B-5F9821931A19}
 		{E2401498-BFDC-4D70-B7EB-B4E9C1A1547B} = {4509CA0C-E2CF-42AB-882E-CEB5A8F366B4}
 		{94705971-5AA6-444B-8BDE-4FDF9D3D0BC4} = {5FE2FF60-6312-44A2-9B2E-FFA9A138310F}
+		{3460D653-16F9-4115-97AE-4698CEA07467} = {142BA8F5-95B5-4606-9E0C-AAB8889CB8CA}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A91C9261-8774-4C8D-A9AB-7E5C97CD9804}

@@ -1,8 +1,4 @@
-﻿using Contributor.BusinessLogic.Filters;
-using HardwareHero.Services.Shared.DTOs.Contributor;
-using HardwareHero.Services.Shared.Responses;
-
-namespace Contributor.BusinessLogic.Contracts
+﻿namespace Contributor.BusinessLogic.Contracts
 {
     public interface IContributorService
     {

@@ -1,8 +1,4 @@
-﻿using AutoMapper;
-using HardwareHero.Services.Shared.DTOs.Contributor;
-using HardwareHero.Services.Shared.Models.Contributor;
-
-namespace Contributor.BusinessLogic.MappingProfiles
+﻿namespace Contributor.BusinessLogic.MappingProfiles
 {
     public class ContributorMapProfile : Profile
     {

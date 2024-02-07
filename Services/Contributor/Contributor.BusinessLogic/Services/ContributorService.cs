@@ -1,16 +1,4 @@
-﻿using AutoMapper;
-using Contributor.BusinessLogic.Contracts;
-using HardwareHero.Services.Shared.DTOs.Contributor;
-using HardwareHero.Services.Shared.Models.Contributor;
-using HardwareHero.Services.Shared.Repositories;
-using HardwareHero.Services.Shared.Repositories.Contracts;
-using HardwareHero.Services.Shared.Responses;
-using HardwareHero.Services.Shared.Extensions;
-using Contributor.BusinessLogic.Filters;
-using HardwareHero.Services.Shared.Infrastructure;
-using HardwareHero.Filter.Extensions;
-
-namespace Contributor.BusinessLogic.Services
+﻿namespace Contributor.BusinessLogic.Services
 {
     public class ContributorService : IContributorService
     {

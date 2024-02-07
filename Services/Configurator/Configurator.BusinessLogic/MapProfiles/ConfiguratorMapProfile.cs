@@ -1,9 +1,4 @@
-﻿using AutoMapper;
-using Configurator.BusinessLogic.Components;
-using HardwareHero.Services.Shared.DTOs.Configurator;
-using HardwareHero.Services.Shared.Models.Configurator;
-
-namespace Configurator.BusinessLogic.MapProfiles
+﻿namespace Configurator.BusinessLogic.MapProfiles
 {
     public class ConfiguratorMapProfile : Profile
     {

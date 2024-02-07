@@ -1,5 +1,5 @@
 ﻿using Duende.IdentityServer.Models;
-using HardwareHero.Services.Shared.Constants;
+using HardwareHero.Shared.Constants;
 using IdentityModel;
 
 namespace IdentityServer;

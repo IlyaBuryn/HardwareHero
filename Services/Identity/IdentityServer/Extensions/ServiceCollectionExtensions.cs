@@ -1,14 +1,8 @@
-﻿using HardwareHero.Services.Shared.Data;
-using HardwareHero.Services.Shared.Models.UserManagementService;
+﻿using HardwareHero.Shared.Data;
+using HardwareHero.Shared.Models.Users;
 using IdentityServer.Validators;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Migrations.Internal;
-using Microsoft.IdentityModel.Tokens;
-using Duende.IdentityServer;
-using System.IdentityModel.Tokens.Jwt;
-using HardwareHero.Services.Shared.Constants;
-using Duende.IdentityServer.AspNetIdentity;
 
 namespace IdentityServer.Extensions
 {

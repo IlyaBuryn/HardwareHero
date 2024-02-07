@@ -1,16 +1,4 @@
-﻿using Aggregator.BusinessLogic.Contracts;
-using Aggregator.BusinessLogic.Filters;
-using AutoMapper;
-using HardwareHero.Filter.Extensions;
-using HardwareHero.Services.Shared.DTOs.Aggregator;
-using HardwareHero.Services.Shared.Exceptions;
-using HardwareHero.Services.Shared.Extensions;
-using HardwareHero.Services.Shared.Infrastructure;
-using HardwareHero.Services.Shared.Models.Aggregator;
-using HardwareHero.Services.Shared.Repositories;
-using HardwareHero.Services.Shared.Repositories.Contracts;
-using HardwareHero.Services.Shared.Responses;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 
 namespace Aggregator.BusinessLogic.Services
 {

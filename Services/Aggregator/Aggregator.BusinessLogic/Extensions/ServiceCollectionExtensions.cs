@@ -1,10 +1,6 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using FluentValidation;
+using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
-using FluentValidation;
-using Aggregator.BusinessLogic.Contracts;
-using Aggregator.BusinessLogic.MappingProfiles;
-using Aggregator.BusinessLogic.Services;
-using Aggregator.DataAccess.Extensions;
 
 namespace Aggregator.BusinessLogic.Extensions
 {
@@ -42,7 +38,7 @@ namespace Aggregator.BusinessLogic.Extensions
 
         private static void ConfigureDtoValidators(IServiceCollection services)
         {
-            var assembly = Assembly.Load(new AssemblyName("HardwareHero.Services.Shared"));
+            var assembly = Assembly.Load(new AssemblyName("HardwareHero.Shared"));
             services.AddValidatorsFromAssembly(assembly);
         }
     }

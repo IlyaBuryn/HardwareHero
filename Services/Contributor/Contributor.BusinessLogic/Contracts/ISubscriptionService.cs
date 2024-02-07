@@ -1,6 +1,4 @@
-﻿using HardwareHero.Services.Shared.DTOs.Contributor;
-
-namespace Contributor.BusinessLogic.Contracts
+﻿namespace Contributor.BusinessLogic.Contracts
 {
     public interface ISubscriptionService
     {

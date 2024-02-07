@@ -1,16 +1,11 @@
-﻿using AutoMapper;
-using HardwareHero.Services.Shared.DTOs;
-using HardwareHero.Services.Shared.DTOs.Aggregator;
-using HardwareHero.Services.Shared.Models.Aggregator;
-
-namespace Aggregator.BusinessLogic.MappingProfiles
+﻿namespace Aggregator.BusinessLogic.MappingProfiles
 {
     public class AggregatorMapProfile : Profile
     {
         public AggregatorMapProfile()
         {
             CreateMap<ComponentLocalReview, ComponentLocalReviewDto>()
-                .ForMember(dto => dto.Component,  opt => opt.MapFrom(ent => ent.Component))
+                .ForMember(dto => dto.Component, opt => opt.MapFrom(ent => ent.Component))
                 .ReverseMap();
 
             CreateMap<ComponentGlobalReview, ComponentGlobalReviewDto>()

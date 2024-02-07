@@ -1,15 +1,4 @@
-﻿using AutoMapper;
-using Contributor.BusinessLogic.Contracts;
-using HardwareHero.Services.Shared.DTOs.Contributor;
-using HardwareHero.Services.Shared.Exceptions;
-using HardwareHero.Services.Shared.Models.Contributor;
-using HardwareHero.Services.Shared.Repositories.Contracts;
-using Contributor.BusinessLogic.Extensions;
-using HardwareHero.Services.Shared.Extensions;
-using HardwareHero.Services.Shared.Responses;
-using HardwareHero.Services.Shared.Infrastructure;
-
-namespace Contributor.BusinessLogic.Services
+﻿namespace Contributor.BusinessLogic.Services
 {
     public class ChatService : IChatService
     {

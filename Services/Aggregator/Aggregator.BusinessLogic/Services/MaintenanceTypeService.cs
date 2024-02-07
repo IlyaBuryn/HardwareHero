@@ -1,7 +1,4 @@
-﻿using Aggregator.BusinessLogic.Contracts;
-using HardwareHero.Services.Shared.DTOs.Aggregator;
-
-namespace Aggregator.BusinessLogic.Services
+﻿namespace Aggregator.BusinessLogic.Services
 {
     public class MaintenanceTypeService : IMaintenanceTypeService
     {

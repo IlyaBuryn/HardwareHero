@@ -2,7 +2,7 @@ using System.Security.Claims;
 using Duende.IdentityServer;
 using Duende.IdentityServer.Events;
 using Duende.IdentityServer.Services;
-using HardwareHero.Services.Shared.Models.UserManagementService;
+using HardwareHero.Shared.Models.Users;
 using IdentityModel;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;

@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Builder;
-using Contributor.DataAccess.Extensions;
 
 namespace Contributor.BusinessLogic.Extensions
 {

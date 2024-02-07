@@ -1,11 +1,4 @@
-﻿using AutoMapper;
-using Contributor.BusinessLogic.Contracts;
-using HardwareHero.Services.Shared.DTOs.Contributor;
-using HardwareHero.Services.Shared.Exceptions;
-using HardwareHero.Services.Shared.Extensions;
-using HardwareHero.Services.Shared.Models.Contributor;
-using HardwareHero.Services.Shared.Repositories.Contracts;
-using System.Data.Entity;
+﻿using Microsoft.EntityFrameworkCore;
 
 namespace Contributor.BusinessLogic.Services
 {

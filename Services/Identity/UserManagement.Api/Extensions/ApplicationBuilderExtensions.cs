@@ -1,4 +1,4 @@
-﻿using HardwareHero.Services.Shared.Data;
+﻿using HardwareHero.Shared.Data;
 using Microsoft.EntityFrameworkCore;
 
 namespace UserManagement.Api.Extensions

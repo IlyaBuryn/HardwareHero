@@ -1,6 +1,4 @@
-﻿using HardwareHero.Services.Shared.DTOs.Prices;
-
-namespace Prices.BusinessLogic.Contracts
+﻿namespace Prices.BusinessLogic.Contracts
 {
     public interface IContributorPricesService
     {

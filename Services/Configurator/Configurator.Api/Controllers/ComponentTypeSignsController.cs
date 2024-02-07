@@ -1,6 +1,4 @@
-﻿using Configurator.BusinessLogic.Contracts;
-using HardwareHero.Services.Shared.DTOs.Configurator;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Configurator.Api.Controllers

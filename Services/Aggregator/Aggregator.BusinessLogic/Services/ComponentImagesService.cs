@@ -1,11 +1,4 @@
-﻿using Aggregator.BusinessLogic.Contracts;
-using AutoMapper;
-using HardwareHero.Services.Shared.DTOs.Aggregator;
-using HardwareHero.Services.Shared.Extensions;
-using HardwareHero.Services.Shared.Models.Aggregator;
-using HardwareHero.Services.Shared.Options;
-using HardwareHero.Services.Shared.Repositories.Contracts;
-using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Options;
 
 namespace Aggregator.BusinessLogic.Services
 {
@@ -45,7 +38,7 @@ namespace Aggregator.BusinessLogic.Services
                 componentImageToAdd.Image);
 
             var componentImage = _mapper.Map<ComponentImages>(componentImageToAdd);
-            var imageSaveResult = await _imagesRepo.SaveImageAsync(componentImage, 
+            var imageSaveResult = await _imagesRepo.SaveImageAsync(componentImage,
                 componentImageToAdd.ImageData, componentImage.ComponentId + _fileNameDivider + componentImage.Image);
 
             Guid result = Guid.Empty;
@@ -57,7 +50,7 @@ namespace Aggregator.BusinessLogic.Services
             return result;
         }
 
-        
+
         public async Task<bool> RemoveComponentImageAsync(Guid componentImageId)
         {
             var image = await _componentImagesRepo.GetOneWithNotFoundCheck(x => x.Id == componentImageId);

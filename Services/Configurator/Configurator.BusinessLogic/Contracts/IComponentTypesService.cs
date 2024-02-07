@@ -1,7 +1,4 @@
-﻿using Configurator.BusinessLogic.Components;
-using HardwareHero.Services.Shared.DTOs.Configurator;
-
-namespace Configurator.BusinessLogic.Contracts
+﻿namespace Configurator.BusinessLogic.Contracts
 {
     public interface IComponentTypesService
     {

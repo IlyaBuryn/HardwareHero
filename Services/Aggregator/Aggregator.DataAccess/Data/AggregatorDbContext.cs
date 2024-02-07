@@ -1,6 +1,4 @@
-﻿using HardwareHero.Services.Shared.Models.Aggregator;
-using Microsoft.EntityFrameworkCore;
-using System.Reflection;
+﻿using System.Reflection;
 
 namespace Aggregator.DataAccess.Data
 {

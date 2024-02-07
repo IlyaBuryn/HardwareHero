@@ -1,6 +1,6 @@
-using HardwareHero.Services.Shared.Constants;
-using HardwareHero.Services.Shared.Infrastructure;
-using HardwareHero.Services.Shared.Middlewares;
+using HardwareHero.Shared.Constants;
+using HardwareHero.Shared.Middlewares;
+using HardwareHero.Shared.Models;
 using IdentityServer.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Serilog;

@@ -1,6 +1,4 @@
-﻿    using MongoDB.Bson.Serialization.Attributes;
-
-namespace Configurator.BusinessLogic.Components.ComponentTypes
+﻿namespace Configurator.BusinessLogic.Components.ComponentTypes
 {
     public class MB : ComponentTypeSigns
     {

@@ -1,6 +1,4 @@
-﻿using Aggregator.DataAccess.Data;
-using HardwareHero.Services.Shared.Helpers;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 
 namespace Aggregator.DataAccess.Extensions
 {

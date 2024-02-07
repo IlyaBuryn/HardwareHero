@@ -1,8 +1,4 @@
-﻿using Aggregator.BusinessLogic.Filters;
-using HardwareHero.Services.Shared.DTOs;
-using HardwareHero.Services.Shared.Responses;
-
-namespace Aggregator.BusinessLogic.Contracts
+﻿namespace Aggregator.BusinessLogic.Contracts
 {
     public interface IComponentService
     {

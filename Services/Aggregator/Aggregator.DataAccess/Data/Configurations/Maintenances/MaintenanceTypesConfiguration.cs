@@ -1,8 +1,4 @@
-﻿using HardwareHero.Services.Shared.Models.Aggregator;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
-
-namespace Aggregator.DataAccess.Data.Configurations.Maintenances
+﻿namespace Aggregator.DataAccess.Data.Configurations.Maintenances
 {
     internal class MaintenanceTypesConfiguration : IEntityTypeConfiguration<MaintenanceType>
     {

@@ -1,6 +1,4 @@
-﻿using HardwareHero.Services.Shared.DTOs.Mail;
-using Mail.BusinessLogic.Contracts;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Mail.Api.Controllers

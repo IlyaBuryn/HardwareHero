@@ -1,5 +1,5 @@
-﻿using HardwareHero.Services.Shared.Models.UserManagementService;
-using HardwareHero.Services.Shared.Requests;
+﻿using HardwareHero.Shared.Models.Users;
+using HardwareHero.Shared.Requests;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;

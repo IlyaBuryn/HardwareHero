@@ -1,11 +1,4 @@
-﻿using Contributor.BusinessLogic.Contracts;
-using HardwareHero.Filter.Extensions;
-using HardwareHero.Filter.RequestsModels;
-using HardwareHero.Services.Shared.DTOs.Contributor;
-using HardwareHero.Services.Shared.Infrastructure;
-using HardwareHero.Services.Shared.Models.Contributor;
-using HardwareHero.Services.Shared.Options;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 

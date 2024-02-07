@@ -1,6 +1,4 @@
-﻿using Configurator.BusinessLogic.Components.ComponentTypes;
-using FluentValidation.AspNetCore;
-using HardwareHero.Services.Shared.Constants;
+﻿using FluentValidation.AspNetCore;
 using Microsoft.IdentityModel.Tokens;
 using MongoDB.Bson.Serialization;
 

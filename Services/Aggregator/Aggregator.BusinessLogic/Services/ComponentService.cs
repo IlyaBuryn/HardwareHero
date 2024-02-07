@@ -1,16 +1,4 @@
-﻿using Aggregator.BusinessLogic.Contracts;
-using Aggregator.BusinessLogic.Filters;
-using AutoMapper;
-using HardwareHero.Filter.Extensions;
-using HardwareHero.Services.Shared.DTOs;
-using HardwareHero.Services.Shared.Extensions;
-using HardwareHero.Services.Shared.Infrastructure;
-using HardwareHero.Services.Shared.Models.Aggregator;
-using HardwareHero.Services.Shared.Options;
-using HardwareHero.Services.Shared.Repositories;
-using HardwareHero.Services.Shared.Repositories.Contracts;
-using HardwareHero.Services.Shared.Responses;
-using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Options;
 
 namespace Aggregator.BusinessLogic.Services
 {
@@ -61,7 +49,7 @@ namespace Aggregator.BusinessLogic.Services
             {
                 foreach (var image in componentToAdd.ComponentImages)
                 {
-                    await _imagesRepo.SaveImageAsync(_mapper.Map<ComponentImages>(image), 
+                    await _imagesRepo.SaveImageAsync(_mapper.Map<ComponentImages>(image),
                         image.ImageData, image.ComponentId + _fileNameDivider + image.Image);
                 }
             }
@@ -126,13 +114,13 @@ namespace Aggregator.BusinessLogic.Services
                     await AddComponentAsync(componentDto);
                     result.Responses.Add(new ComplexResponse.TupleResponse(componentDto.Name, true.ToString()));
                 }
-                catch (Exception ex) 
+                catch (Exception ex)
                 {
                     result.Responses.Add(new ComplexResponse.TupleResponse(componentDto.Name, ex.Message));
                 }
             }
 
-            return result;   
+            return result;
         }
 
 

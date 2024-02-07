@@ -1,6 +1,4 @@
-﻿using HardwareHero.Services.Shared.DTOs;
-
-namespace Aggregator.BusinessLogic.Contracts
+﻿namespace Aggregator.BusinessLogic.Contracts
 {
     public interface IComponentTypeService
     {

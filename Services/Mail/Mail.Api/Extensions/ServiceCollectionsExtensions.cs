@@ -1,5 +1,4 @@
 ﻿using FluentValidation.AspNetCore;
-using HardwareHero.Services.Shared.Constants;
 using Microsoft.IdentityModel.Tokens;
 
 namespace Mail.Api.Extensions

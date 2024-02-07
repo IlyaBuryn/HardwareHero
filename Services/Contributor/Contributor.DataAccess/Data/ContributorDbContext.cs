@@ -1,6 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using HardwareHero.Services.Shared.Models.Contributor;
-using System.Reflection;
+﻿using System.Reflection;
 
 namespace Contributor.DataAccess.Data
 {

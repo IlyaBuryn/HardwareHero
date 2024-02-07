@@ -1,7 +1,4 @@
 ﻿using FluentValidation;
-using Mail.BusinessLogic.Contracts;
-using Mail.BusinessLogic.MapProfiles;
-using Mail.BusinessLogic.Services;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 
@@ -31,7 +28,7 @@ namespace Mail.BusinessLogic.Extensions
 
         private static void ConfigureDtoValidators(IServiceCollection service)
         {
-            var assembly = Assembly.Load(new AssemblyName("HardwareHero.Services.Shared"));
+            var assembly = Assembly.Load(new AssemblyName("HardwareHero.Shared"));
             service.AddValidatorsFromAssembly(assembly);
         }
     }

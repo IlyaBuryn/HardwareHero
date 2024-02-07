@@ -1,16 +1,4 @@
-﻿using Aggregator.BusinessLogic.Contracts;
-using Aggregator.BusinessLogic.Filters;
-using AutoMapper;
-using HardwareHero.Filter.Extensions;
-using HardwareHero.Services.Shared.DTOs.Aggregator;
-using HardwareHero.Services.Shared.Extensions;
-using HardwareHero.Services.Shared.Infrastructure;
-using HardwareHero.Services.Shared.Infrastructure.Reviews;
-using HardwareHero.Services.Shared.Models.Aggregator;
-using HardwareHero.Services.Shared.Repositories.Contracts;
-using HardwareHero.Services.Shared.Responses;
-
-namespace Aggregator.BusinessLogic.Services
+﻿namespace Aggregator.BusinessLogic.Services
 {
     public class ComponentReviewService : IComponentReviewService
     {
@@ -54,7 +42,7 @@ namespace Aggregator.BusinessLogic.Services
         public async Task<bool> UpdateLocalReviewAsync(ComponentLocalReviewDto reviewToAdd)
         {
             _localReviewValidationRepo.CheckIfObjectNotFound(
-                x => x.Id ==reviewToAdd.Id &&
+                x => x.Id == reviewToAdd.Id &&
                 x.ComponentId == reviewToAdd.ComponentId &&
                 x.UserId == reviewToAdd.UserId);
 
@@ -189,7 +177,7 @@ namespace Aggregator.BusinessLogic.Services
 
             var AvgGlobalReviewMark = CalculateAvgMark(componentGlobalReviews);
             var AvgLocalReviewMark = CalculateAvgMark(componentLocalReviews);
-            var AvgReviewMark = AvgGlobalReviewMark == 0 ? 
+            var AvgReviewMark = AvgGlobalReviewMark == 0 ?
                 (AvgLocalReviewMark == 0 ? 0 : AvgLocalReviewMark) :
                 (AvgGlobalReviewMark + AvgLocalReviewMark) / 2;
 

@@ -1,9 +1,4 @@
-﻿using Contributor.DataAccess.Data;
-using HardwareHero.Services.Shared.Repositories.Contracts;
-using HardwareHero.Services.Shared.Repositories.EF;
-using HardwareHero.Services.Shared.Repositories.Others;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 
 namespace Contributor.DataAccess.Extensions
 {

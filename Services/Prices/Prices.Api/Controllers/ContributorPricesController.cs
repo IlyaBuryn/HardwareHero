@@ -1,7 +1,5 @@
-﻿using HardwareHero.Services.Shared.DTOs.Prices;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Prices.BusinessLogic.Contracts;
 
 namespace Prices.Api.Controllers
 {

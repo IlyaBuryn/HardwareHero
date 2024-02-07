@@ -1,12 +1,4 @@
-﻿using Aggregator.BusinessLogic.Contracts;
-using AutoMapper;
-using HardwareHero.Services.Shared.DTOs;
-using HardwareHero.Services.Shared.Exceptions;
-using HardwareHero.Services.Shared.Extensions;
-using HardwareHero.Services.Shared.Models.Aggregator;
-using HardwareHero.Services.Shared.Repositories.Contracts;
-
-namespace Aggregator.BusinessLogic.Services
+﻿namespace Aggregator.BusinessLogic.Services
 {
     public class ComponentTypeService : IComponentTypeService
     {

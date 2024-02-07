@@ -1,6 +1,4 @@
-﻿using Contributor.DataAccess.Data;
-using HardwareHero.Services.Shared.Helpers;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 
 namespace Contributor.DataAccess.Extensions
 {

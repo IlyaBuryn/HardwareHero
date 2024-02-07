@@ -1,6 +1,6 @@
 ﻿using Duende.IdentityServer.Models;
 using Duende.IdentityServer.Validation;
-using HardwareHero.Services.Shared.Models.UserManagementService;
+using HardwareHero.Shared.Models.Users;
 using Microsoft.AspNetCore.Identity;
 using static IdentityModel.OidcConstants;
 

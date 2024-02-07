@@ -1,6 +1,4 @@
-﻿using Configurator.BusinessLogic.Components;
-using Configurator.BusinessLogic.Contracts;
-using MongoDB.Bson.Serialization.Conventions;
+﻿using MongoDB.Bson.Serialization.Conventions;
 using System.Reflection;
 
 namespace Configurator.Api

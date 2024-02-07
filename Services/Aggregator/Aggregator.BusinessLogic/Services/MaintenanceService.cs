@@ -1,9 +1,4 @@
-﻿using Aggregator.BusinessLogic.Contracts;
-using HardwareHero.Filter.RequestsModels;
-using HardwareHero.Services.Shared.DTOs.Aggregator;
-using HardwareHero.Services.Shared.Models.Aggregator;
-
-namespace Aggregator.BusinessLogic.Services
+﻿namespace Aggregator.BusinessLogic.Services
 {
     public class MaintenanceService : IMaintenanceService
     {

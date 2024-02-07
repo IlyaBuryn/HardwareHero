@@ -1,7 +1,4 @@
-﻿using HardwareHero.Filter.RequestsModels;
-using HardwareHero.Services.Shared.Models.Contributor;
-
-namespace Contributor.BusinessLogic.Filters
+﻿namespace Contributor.BusinessLogic.Filters
 {
     public class ContributorsFilter : FilterRequestDomain<ContributorModel>
     {

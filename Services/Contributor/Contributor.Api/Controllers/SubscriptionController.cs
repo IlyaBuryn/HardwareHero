@@ -1,6 +1,4 @@
-﻿using Contributor.BusinessLogic.Contracts;
-using HardwareHero.Services.Shared.DTOs.Contributor;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Contributor.Api.Controllers

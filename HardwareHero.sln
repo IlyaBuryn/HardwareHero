@@ -66,7 +66,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Prices.Tests", "Services\Pr
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{142BA8F5-95B5-4606-9E0C-AAB8889CB8CA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HardwareHero.Shared", "Tools\HardwareHero.Shared\HardwareHero.Shared.csproj", "{3460D653-16F9-4115-97AE-4698CEA07467}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HardwareHero.Shared", "Tools\HardwareHero.Shared\HardwareHero.Shared.csproj", "{3460D653-16F9-4115-97AE-4698CEA07467}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{4123D220-AAB9-4832-8306-0BA81FB13F0E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "EventStream", "EventStream", "{AB6539AA-F8BB-4B65-BC10-0AA083D95AF8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KafkaEventStream", "EventStream\KafkaEventStream\KafkaEventStream.csproj", "{29A6006C-99A4-42F0-B2C4-B580993DBCA1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -162,6 +168,10 @@ Global
 		{3460D653-16F9-4115-97AE-4698CEA07467}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3460D653-16F9-4115-97AE-4698CEA07467}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3460D653-16F9-4115-97AE-4698CEA07467}.Release|Any CPU.Build.0 = Release|Any CPU
+		{29A6006C-99A4-42F0-B2C4-B580993DBCA1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{29A6006C-99A4-42F0-B2C4-B580993DBCA1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{29A6006C-99A4-42F0-B2C4-B580993DBCA1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{29A6006C-99A4-42F0-B2C4-B580993DBCA1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -194,6 +204,7 @@ Global
 		{E2401498-BFDC-4D70-B7EB-B4E9C1A1547B} = {4509CA0C-E2CF-42AB-882E-CEB5A8F366B4}
 		{94705971-5AA6-444B-8BDE-4FDF9D3D0BC4} = {5FE2FF60-6312-44A2-9B2E-FFA9A138310F}
 		{3460D653-16F9-4115-97AE-4698CEA07467} = {142BA8F5-95B5-4606-9E0C-AAB8889CB8CA}
+		{29A6006C-99A4-42F0-B2C4-B580993DBCA1} = {AB6539AA-F8BB-4B65-BC10-0AA083D95AF8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A91C9261-8774-4C8D-A9AB-7E5C97CD9804}

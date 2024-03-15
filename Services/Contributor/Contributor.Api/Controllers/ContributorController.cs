@@ -1,4 +1,8 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using HardwareHero.Shared.DTOs.Aggregator;
+using HardwareHero.Shared.Responses;
+using KafkaEventStream;
+using KafkaEventStream.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 
@@ -18,6 +22,16 @@ namespace Contributor.Api.Controllers
         {
             _contributorService = contributorService;
             _pageSizeSettings = pageSizeSettings.Value;
+        }
+
+        [HttpGet("report")]
+        [AllowAnonymous]
+        public async Task<IActionResult> Report()
+        {
+            var response = await RequestService.FullRequest<List<ComponentTypeDto?>?>(
+                new Topics.ContributorTopics(), "component/types");
+
+            return Ok(response);
         }
 
         [HttpPost("sign-up")]

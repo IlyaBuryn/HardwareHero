@@ -1,4 +1,6 @@
+using KafkaEventStream.Extensions;
 using Microsoft.IdentityModel.Logging;
+using static KafkaEventStream.Topics;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,6 +17,8 @@ builder.Services.AddSwaggerGen();
 builder.Services.ConfigureOptions<PageSizeOptions>(builder.Configuration);
 builder.Services.ConfigureOptions<ImagesSaveOptions>(builder.Configuration);
 
+builder.Services.StartRequestsWorker(new ContributorTopics());
+
 var connectionString = builder.Configuration.GetConnectionString(ConnectionNames.ContributorsConnection);
 if (connectionString != null)
 {
@@ -22,7 +26,6 @@ if (connectionString != null)
 }
 
 builder.Services.AddIdentityServerAuthentication();
-
 builder.Services.AddApiScopeAuthorization();
 
 builder.Services.AddCors();

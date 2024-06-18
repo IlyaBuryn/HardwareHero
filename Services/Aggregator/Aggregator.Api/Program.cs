@@ -1,7 +1,7 @@
 using Aggregator.Api;
 using KafkaEventStream.Extensions;
+using KafkaEventStream.Topics;
 using Microsoft.IdentityModel.Logging;
-using static KafkaEventStream.Topics;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,11 +13,7 @@ builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddScoped<AggregatorServiceInvokeHandler>(provider =>
-{
-    return new AggregatorServiceInvokeHandler(provider);
-});
-builder.Services.StartResponseWorker<AggregatorServiceInvokeHandler>(new ContributorTopics());
+builder.Services.StartMediatorBackgroundWorker<AggregatorServiceInvokeHandler>(new ContributorTopics());
 
 var connectionString = builder.Configuration.GetConnectionString(ConnectionNames.AggregatorConnection);
 if (connectionString != null)

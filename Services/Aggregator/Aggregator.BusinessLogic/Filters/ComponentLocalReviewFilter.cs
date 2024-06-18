@@ -2,10 +2,16 @@
 {
     public class ComponentLocalReviewFilter : FilterRequestDomain<ComponentLocalReview>
     {
-        public override ComponentLocalReview SelectionPattern(ComponentLocalReview refItem)
+        public ComponentLocalReviewFilter()
+            : base() 
         {
-            refItem.Component = null;
-            return refItem;
+            AddTransformationPattern(SelectionPattern);
+        }
+
+        public static ComponentLocalReview? SelectionPattern(ComponentLocalReview? item)
+        {
+            item.Component = null;
+            return item;
         }
     }
 }

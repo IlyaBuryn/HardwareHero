@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Options;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 
 namespace Aggregator.BusinessLogic.Services
 {
@@ -156,39 +157,20 @@ namespace Aggregator.BusinessLogic.Services
             var query = await _componentRepo.GetManyEntitiesAsync(new IncludeProperties<Component>());
 
             query = query.ApplyFilter(filter).Query;
-
-            // TODO: To big to put into AddExpression method
-            if (filter.AttributeFilters != null && filter.AttributeFilters.Count() != 0)
-            {
-                foreach (var attributeFilter in filter.AttributeFilters)
-                {
-                    query = query.Where(x => x.ComponentAttributes
-                        .Any(a => a.AttributeName == attributeFilter.Key &&
-                            a.AttributeValue.Contains(attributeFilter.Value)));
-                }
-            }
-
             query = query.ApplyOrderBy(filter).Query;
             query = query.ApplySelection(filter).Query;
-            //var pageResult = query.ApplyPagination(filter);
-
-            //var pageItems = new List<ComponentDto?>();
-            //if (_mapper != null)
-            //{
-            //    pageItems = _mapper.Map<List<ComponentDto?>>(pageResult.Item1);
-            //}
-
-            //return new PageResponse<ComponentDto?>
-            //{
-            //    Items = pageItems,
-            //    TotalPages = pageResult.Item2,
-            //    CurrentPaginationInfo = paginationInfo,
-            //};
 
             var result = await _componentRepo.GetMappedPageAsync<ComponentDto>(
                 query, paginationInfo, _mapper);
 
             return result;
+        }
+
+        private static Component? TryX(Component? item)
+        {
+            item.ComponentImages = null;
+            item.ComponentAttributes = null;
+            return item;
         }
 
         private async Task IncrementComponentView(Guid componentId)

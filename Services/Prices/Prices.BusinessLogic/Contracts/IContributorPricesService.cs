@@ -1,9 +1,15 @@
-﻿namespace Prices.BusinessLogic.Contracts
+﻿using HardwareHero.Filter.RequestsModels;
+using HardwareHero.Shared.Models;
+using HardwareHero.Shared.Requests;
+using HardwareHero.Shared.Responses;
+
+namespace Prices.BusinessLogic.Contracts
 {
     public interface IContributorPricesService
     {
-        Task<Guid?> AddContributorPriceAsync(ContributorPriceDto priceToAdd);
-        Task<ContributorPriceDto?> GetLastPriceAsync(Guid componentId);
-        Task<List<ContributorPriceDto?>> GetContributorPricesByComponentIdAsync(Guid componentId);
+        Task<Guid?> ChangePriceAsync(ChangePriceRequest priceToAdd);
+        Task<List<ContributorComponentPricesDto?>> GetComponentPricesAsync(Guid componentId);
+
+        //Task<PageResponse<ContributorComponentPricesDto?>> GetPricesToDiscreetlyUpdate(PaginationInfo pageInfo);
     }
 }

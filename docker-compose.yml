@@ -36,6 +36,28 @@ services:
       - DB_NAME=HardwareHero.ContributorDb
       - DB_SA_PASSWORD=password@#12345
 
+  prices.api:
+    container_name: Prices-api
+    image: ${DOCKER_REGISTRY-}pricesapi
+    build:
+      context: .
+      dockerfile: Services/Prices/Prices.Api/Dockerfile
+    depends_on:
+      - hardwarehero.mongo
+    networks:
+      - backend
+    environment:
+      - DB_HOST=hardwarehero.mongo
+      - DB_NAME=Prices
+
+  hardwarehero.mongo:
+    container_name: HardwareHero-mongo
+    image: mongo
+    ports:
+      - 8090:27017
+    networks:
+      - backend
+
   hardwarehero.mssql:
     container_name: HardwareHero-mssql
     image: mcr.microsoft.com/mssql/server:2022-latest
@@ -107,15 +129,6 @@ services:
   #  networks:
   #    - frontend
 
-
-  #hardwarehero.mongo:
-  #  container_name: HardwareHero-mongo
-  #  image: mongo
-  #  ports:
-  #    - 8090:27017
-  #  networks:
-  #    - backend
-
   #apigateway.ocelot:
   #  container_name: HardwareHero-apiGateway
   #  image: ${DOCKER_REGISTRY-}apigatewayocelot
@@ -141,20 +154,6 @@ services:
   #  environment:
   #    - DB_HOST=hardwarehero.mongo
   #    - DB_NAME=Configurator
-
-  #prices.api:
-  #  container_name: Prices-api
-  #  image: ${DOCKER_REGISTRY-}pricesapi
-  #  build:
-  #    context: .
-  #    dockerfile: Services/Prices/Prices.Api/Dockerfile
-  #  depends_on:
-  #    - hardwarehero.mongo
-  #  networks:
-  #    - backend
-  #  environment:
-  #    - DB_HOST=hardwarehero.mongo
-  #    - DB_NAME=Prices
 
   #mail.api:
   #  container_name: Mail-api

@@ -1,12 +1,19 @@
-﻿using KafkaEventStream.Services;
+﻿using KafkaEventStream.BackgroundServices;
+using KafkaEventStream.Topics;
 using Microsoft.Extensions.DependencyInjection;
-using static KafkaEventStream.Topics;
 
 namespace KafkaEventStream.Extensions
 {
     public static class ServiceCollectionExtensions
     {
-        public static void StartRequestsWorker(this IServiceCollection services, ITopicHandler requestFrom)
+        /// <summary>
+        /// The method creates a background service that will give requests to the mediator. 1/2
+        /// </summary>
+        /// <param name="services">DI service collection</param>
+        /// <param name="requestFrom">A generic class that contains the names of the topics. 
+        ///                           Only the name of the topic with requests for
+        ///                           a mediator is required.</param>
+        public static void StartRequestsBackgroundWorker(this IServiceCollection services, IServiceTopics requestFrom)
         {
             requestFrom?.CreateTopics();
 
@@ -16,19 +23,30 @@ namespace KafkaEventStream.Extensions
             });
         }
 
-        public static void StartResponseWorker<T>(this IServiceCollection services, ITopicHandler responseTo) where T : class, IServiceInvokeHandler
+        /// <summary>
+        /// The method creates a background service that will receive responses from the mediator. 2/2
+        /// </summary>
+        /// <typeparam name="T">Endpoint manager type.</typeparam>
+        /// <param name="services">DI service collection</param>
+        /// <param name="responseTo">A generic class that contains the names of the topics. 
+        ///                          Only the name of the topic with responses for
+        ///                          a mediator is required.</param>
+        public static void StartMediatorBackgroundWorker<T>(this IServiceCollection services, IServiceTopics responseTo) where T : class, IEventEndpointManager
         {
-            services.AddHostedService<ResponseService>(provider =>
+            services.AddScoped<T>(provider =>
             {
-                var groupId = responseTo.ResponseTopic.Split('-')[0];
+                return ActivatorUtilities.CreateInstance<T>(provider);
+            });
 
+            services.AddHostedService<MediatorService>(provider =>
+            {
                 var scopeFactory = provider.GetRequiredService<IServiceScopeFactory>();
 
                 var scope = scopeFactory.CreateScope();
                 var scopedProvider = scope.ServiceProvider;
                 var serviceInvokeHandler = scopedProvider.GetService<T>();
 
-                return new ResponseService(responseTo, serviceInvokeHandler);
+                return new MediatorService(responseTo, serviceInvokeHandler);
             });
         }
     }

@@ -4,7 +4,13 @@
     {
         public ContributorPricesMapProfile()
         {
-            CreateMap<ContributorPrice, ContributorPriceDto>()
+            CreateMap<ContributorComponentPrices, ContributorComponentPricesDto>()
+                .ReverseMap();
+
+            CreateMap<ComponentReferences, ComponentReferencesDto>()
+                .ReverseMap();
+
+            CreateMap<MaintenanceReferences, MaintenanceReferencesDto>()
                 .ReverseMap();
         }
     }

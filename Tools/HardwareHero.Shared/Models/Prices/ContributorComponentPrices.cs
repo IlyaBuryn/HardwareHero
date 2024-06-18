@@ -2,15 +2,12 @@
 
 namespace HardwareHero.Shared.Models.Prices
 {
-    public class ContributorPrice
+    public class ContributorComponentPrices
     {
         [BsonId]
         public Guid Id { get; set; }
-        [BsonElement("Component")]
         public Guid ComponentId { get; set; }
-        [BsonElement("Contributor")]
         public Guid ContributorId { get; set; }
-        public DateTime Timestamp { get; set; }
-        public decimal Pricestamp { get; set; }
+        public List<PriceStamp> Prices { get; set; } = new();
     }
 }

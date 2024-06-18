@@ -5,35 +5,66 @@
         public ComponentsFilter()
             : base()
         {
-            AddExpression(x => x.Name.Contains(SearchString) || x.Description.Contains(SearchString));
-            AddExpression(x => x.ComponentType != null ? x.ComponentType.Name == Type || x.ComponentType.FullName == Type : true);
+            AddTransformationPattern(SelectionPattern);
         }
 
-        public string? SearchString { get; set; } = string.Empty;
-        public string? Type { get; set; } = string.Empty;
-        public Dictionary<string, string>? AttributeFilters { get; set; }
-
-
-        public override Component SelectionPattern(Component refItem)
+        public override void SetFilterExpression()
         {
-            if (refItem.ComponentImages != null)
+            base.SetFilterExpression();
+
+            if (SearchString != null)
+                AddFilterCondition(x => x.Name.Contains(SearchString) || x.Description.Contains(SearchString));
+
+            if (Type != null)
+                AddFilterCondition(x => x.ComponentType != null ? x.ComponentType.Name == Type || x.ComponentType.FullName == Type : true);
+
+            if (AttributeFilters != null && AttributeFilters.Count() != 0)
             {
-                refItem.ComponentImages = refItem.ComponentImages.Select(ci => new ComponentImages
+                foreach (var attributeFilter in AttributeFilters)
                 {
-                    Id = ci.Id,
-                    Image = ci.Image,
-                    Component = null
-                }).ToList();
+                    AddFilterCondition(x => x.ComponentAttributes
+                        .Any(a => a.AttributeName == attributeFilter.Key &&
+                                  a.AttributeValue.Contains(attributeFilter.Value)));
+                }
             }
 
-            return new Component
-            {
-                Id = refItem.Id,
-                Name = refItem.Name,
-                Description = refItem.Description,
-                ComponentTypeId = refItem.ComponentTypeId,
-                ComponentImages = refItem.ComponentImages,
-            };
+            
+        }
+
+        public string? SearchString { get; set; }
+        public string? Type { get; set; }
+        public Dictionary<string, string>? AttributeFilters { get; set; }
+
+        
+
+        public static Component? SelectionPattern(Component? refItem)
+        {
+            //if (refItem.ComponentImages != null)
+            //{
+            //    refItem.ComponentImages = refItem.ComponentImages.Select(ci => new ComponentImages
+            //    {
+            //        Id = ci.Id,
+            //        Image = ci.Image,
+            //        Component = null
+            //    }).ToList();
+            //}
+
+            refItem.ComponentImages = null;
+            refItem.ComponentAttributes = null;
+
+            return refItem;
+
+            //return new Component
+            //{
+            //    Id = refItem.Id,
+            //    Name = refItem.Name,
+            //    Description = refItem.Description,
+            //    ComponentType = refItem.ComponentType,
+
+            //    ComponentAttributes = null,
+            //    ComponentTypeId = Guid.Empty,
+            //    ComponentImages = null,
+            //};
         }
     }
 }

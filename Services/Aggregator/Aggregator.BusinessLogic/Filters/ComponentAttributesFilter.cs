@@ -1,4 +1,6 @@
-﻿namespace Aggregator.BusinessLogic.Filters
+﻿using System.Text.RegularExpressions;
+
+namespace Aggregator.BusinessLogic.Filters
 {
     public class ComponentAttributesFilter : FilterRequestDomain<ComponentAttributes>
     {
@@ -10,12 +12,20 @@
                 PropertyName = nameof(ComponentAttributes.AttributeName)
             };
 
-            AddExpression(x => x.Component != null && x.Component.ComponentType != null ? x.Component.ComponentType.Name == Type || x.Component.ComponentType.FullName == Type : true);
+            AddGroupByTransformationPattern(GroupedPattern);
         }
 
-        public string? Type { get; set; } = string.Empty;
+        public override void SetFilterExpression()
+        {
+            base.SetFilterExpression();
 
-        public override IQueryable<ComponentAttributes?>? GroupedPattern(IQueryable<IGrouping<object, ComponentAttributes?>> groups)
+            if (Type != null)
+                AddFilterCondition(x => x.Component != null && x.Component.ComponentType != null ? x.Component.ComponentType.Name == Type || x.Component.ComponentType.FullName == Type : true);
+        }
+
+        public string? Type { get; set; }
+
+        public static IQueryable<ComponentAttributes?>? GroupedPattern(IQueryable<IGrouping<object, ComponentAttributes?>>? groups)
         {
             var query = groups.Select(group => new ComponentAttributes
             {

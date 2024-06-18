@@ -1,4 +1,5 @@
 ﻿using System.Net;
+using HardwareHero.Filter.Exceptions;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 
@@ -42,6 +43,10 @@ namespace HardwareHero.Shared.Middlewares
             catch (AuthenticationException ex)
             {
                 await HandleExceptionAsync(context, HttpStatusCode.Unauthorized, ex.Message);
+            }
+            catch (FilterException)
+            {
+                await HandleExceptionAsync(context, HttpStatusCode.BadRequest, "Filter error!");
             }
             catch (Exception ex)
             {

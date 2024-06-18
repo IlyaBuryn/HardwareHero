@@ -4,17 +4,17 @@ using HardwareHero.Shared.DTOs.Prices;
 
 namespace HardwareHero.Shared.DTOs.Validation.Prices
 {
-    public class ContributorPricesValidator : AbstractValidator<ContributorComponentPricesDto>
+    public class MaintenanceReferencesValidator : AbstractValidator<MaintenanceReferencesDto>
     {
-        public ContributorPricesValidator()
+        public MaintenanceReferencesValidator()
         {
-            RuleFor(c => c.ComponentId).NotEmpty()
-                .WithMessage(ValidationMessages.IsRequired);
-
             RuleFor(c => c.ContributorId).NotEmpty()
                 .WithMessage(ValidationMessages.IsRequired);
 
-            RuleFor(c => c.Prices).NotEmpty()
+            RuleFor(c => c.MaintenanceId).NotEmpty()
+                .WithMessage(ValidationMessages.IsRequired);
+
+            RuleFor(c => c.Link).NotEmpty()
                 .WithMessage(ValidationMessages.IsRequired);
         }
     }

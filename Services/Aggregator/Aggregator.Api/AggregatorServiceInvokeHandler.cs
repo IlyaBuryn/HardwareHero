@@ -3,7 +3,7 @@ using System.Text.Json;
 
 namespace Aggregator.Api
 {
-    public class AggregatorServiceInvokeHandler : IServiceInvokeHandler
+    public class AggregatorServiceInvokeHandler : IEventEndpointManager
     {
         private readonly IServiceProvider _serviceProvider;
         private readonly IComponentTypeService _componentTypeService;
@@ -14,7 +14,7 @@ namespace Aggregator.Api
             _componentTypeService = _serviceProvider.GetService<IComponentTypeService>();
         }
 
-        public async Task<string> InvokeMethodFromMessage(string requestDest)
+        public async Task<string> InvokeByEndpoint(string requestDest)
         {
             if (requestDest == "component/types")
             {

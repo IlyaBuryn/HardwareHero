@@ -2,10 +2,16 @@
 {
     public class ComponentGlobalReviewFilter : FilterRequestDomain<ComponentGlobalReview>
     {
-        public override ComponentGlobalReview SelectionPattern(ComponentGlobalReview refItem)
+        public ComponentGlobalReviewFilter()
+            : base()
         {
-            refItem.Component = null;
-            return refItem;
+            AddTransformationPattern(SelectionPattern);
+        }
+
+        public static ComponentGlobalReview? SelectionPattern(ComponentGlobalReview? item)
+        {
+            item.Component = null;
+            return item;
         }
     }
 }

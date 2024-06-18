@@ -26,6 +26,17 @@ services:
       - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
       - ./images:/app/uploads/images
 
+  prices.api:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=https://+:443;http://+:80
+    ports:
+      - "5011:80"
+      - "5010:443"
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+
   #configurator.api:
   #  environment:
   #    - ASPNETCORE_ENVIRONMENT=Development
@@ -55,17 +66,6 @@ services:
   #  ports:
   #    - "80"
   #    - "443"
-  #  volumes:
-  #    - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
-  #    - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
-
-  #prices.api:
-  #  environment:
-  #    - ASPNETCORE_ENVIRONMENT=Development
-  #    - ASPNETCORE_URLS=https://+:443;http://+:80
-  #  ports:
-  #    - "5013:80"
-  #    - "5012:443"
   #  volumes:
   #    - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
   #    - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro

@@ -1,10 +1,11 @@
 ﻿using HardwareHero.Shared.DTOs.Aggregator;
-using HardwareHero.Shared.Responses;
 using KafkaEventStream;
-using KafkaEventStream.Services;
+using KafkaEventStream.BackgroundServices;
+using KafkaEventStream.Topics;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using System.Text.Json;
 
 namespace Contributor.Api.Controllers
 {
@@ -28,10 +29,10 @@ namespace Contributor.Api.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Report()
         {
-            var response = await RequestService.FullRequest<List<ComponentTypeDto?>?>(
-                new Topics.ContributorTopics(), "component/types");
+            var response = await RequestService.CallAndWaitServiceAsync(
+                new ContributorTopics(), "component/types");
 
-            return Ok(response);
+            return Ok(JsonSerializer.Deserialize<List<ComponentTypeDto?>?>(response));
         }
 
         [HttpPost("sign-up")]

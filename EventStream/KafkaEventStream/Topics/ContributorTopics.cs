@@ -1,4 +1,6 @@
-﻿namespace KafkaEventStream.Topics
+﻿using EventStream.Topics;
+
+namespace KafkaEventStream.Topics
 {
     public class ContributorTopics : IServiceTopics
     {

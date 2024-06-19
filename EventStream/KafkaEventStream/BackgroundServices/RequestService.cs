@@ -1,70 +1,50 @@
-﻿using KafkaEventStream.EventHandling;
-using KafkaEventStream.Topics;
+﻿using EventStream.EventHandling;
+using EventStream.Topics;
 using Microsoft.Extensions.Hosting;
 
 namespace KafkaEventStream.BackgroundServices
 {
-    /// <summary>
-    /// A specific background service sends a request and waits for a response.
-    /// </summary>
     public class RequestService : BackgroundService
     {
         private readonly IServiceTopics _topics;
+        private readonly IMessageProducer _messageProducer;
+        private readonly IMessageConsumer _messageConsumer;
 
-        public RequestService(IServiceTopics topics)
-        {
-            _topics = topics;
-        }
-
-        /// <summary>
-        /// The value that should change if a response is received.
-        /// </summary>
         private static string? _responseResult = null;
-
-        /// <summary>
-        /// The time allocated to receive a response.
-        /// </summary>
         private static int _ticsForResponse = 1000; // 1000 == 10 sec.
 
-        /// <summary>
-        /// The method sends a request and waits for a response.
-        /// </summary>
-        /// <param name="topics">Object that contains the names of the topics.</param>
-        /// <param name="endpoint">Endpoint for which the result should be retrieved.</param>
-        /// <param name="stoppingToken">Cancellation token.</param>
-        /// <returns>Received response.</returns>
-        public static async Task<string> CallAndWaitServiceAsync(
-            IServiceTopics topics, string endpoint, CancellationToken stoppingToken = default)
+        public RequestService(
+            IServiceTopics topics, 
+            IMessageProducer messageProducer, 
+            IMessageConsumer messageConsumer)
         {
-            await CreateRequestToServiceAsync(topics, endpoint, stoppingToken);
-            var response = await GetResponseFromServiceAsync();
+            _topics = topics;
+            _messageProducer = messageProducer;
+            _messageConsumer = messageConsumer;
+        }
+
+        public static async Task<string> CallAndWaitServiceAsync(
+            IServiceTopics topics, string endpoint, 
+            IMessageProducer messageProducer, IMessageConsumer messageConsumer, 
+            CancellationToken stoppingToken = default)
+        {
+            await CreateRequestToServiceAsync(topics, endpoint, messageProducer, stoppingToken);
+            var response = await GetResponseFromServiceAsync(messageConsumer, stoppingToken);
 
             return response;
         }
 
-        /// <summary>
-        /// The method that sends the request.
-        /// </summary>
-        /// <param name="topics">Object that contains the names of the topics.</param>
-        /// <param name="endpoint">Endpoint for which the result should be retrieved.</param>
-        /// <param name="stoppingToken">Cancellation token.</param>
-        /// <returns>Task</returns>
         private static async Task CreateRequestToServiceAsync(
-            IServiceTopics topics, string endpoint, CancellationToken stoppingToken = default)
+            IServiceTopics topics, string endpoint, 
+            IMessageProducer messageProducer, 
+            CancellationToken stoppingToken = default)
         {
             _responseResult = null;
-
-            var producerActions = new ProducerActions();
-
-            await producerActions.ProduceRequestAsync(topics, endpoint);
+            await messageProducer.ProduceAsync(topics.RequestTopic, endpoint);
         }
 
-        /// <summary>
-        /// Checking the value of the response over time.
-        /// </summary>
-        /// <returns>Received response.</returns>
-        /// <exception cref="TimeoutException">If the call is called the call time will expire.</exception>
-        private static async Task<string> GetResponseFromServiceAsync()
+        private static async Task<string> GetResponseFromServiceAsync(
+            IMessageConsumer messageConsumer, CancellationToken stoppingToken)
         {
             int k = 0;
 
@@ -73,7 +53,7 @@ namespace KafkaEventStream.BackgroundServices
                 if (_responseResult == null)
                 {
                     k++;
-                    await Task.Delay(10);
+                    await Task.Delay(10, stoppingToken);
                 }
                 else
                 {
@@ -84,21 +64,14 @@ namespace KafkaEventStream.BackgroundServices
             throw new TimeoutException("Time out!");
         }
 
-        /// <summary>
-        /// A method that is used externally by other services to set the response.
-        /// </summary>
-        /// <param name="responseResult">Response</param>
         internal void SetResponseResult(string responseResult) => _responseResult = responseResult;
 
-        /// <summary>
-        /// Implementation of the default abstract method ExecuteAsync.
-        /// </summary>
-        /// <param name="stoppingToken"></param>
-        /// <returns></returns>
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            var consumerActions = new ConsumerActions();
-            await consumerActions.ConsumeResponseAsync(_topics, SetResponseResult, stoppingToken);
+            await _messageConsumer.ConsumeAsync(_topics.ResponseTopic, message =>
+            {
+                SetResponseResult(message);
+            }, stoppingToken);
         }
     }
 }

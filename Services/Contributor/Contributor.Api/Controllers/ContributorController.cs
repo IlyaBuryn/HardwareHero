@@ -1,4 +1,5 @@
-﻿using HardwareHero.Shared.DTOs.Aggregator;
+﻿using EventStream.EventHandling;
+using HardwareHero.Shared.DTOs.Aggregator;
 using KafkaEventStream;
 using KafkaEventStream.BackgroundServices;
 using KafkaEventStream.Topics;
@@ -15,13 +16,19 @@ namespace Contributor.Api.Controllers
     public class ContributorController : ControllerBase
     {
         private readonly IContributorService _contributorService;
+        private readonly IMessageProducer _messageProducer;
+        private readonly IMessageConsumer _messageConsumer;
         private readonly PageSizeOptions _pageSizeSettings;
 
         public ContributorController(
-            IContributorService contributorService,
+            IContributorService contributorService, 
+            IMessageProducer messageProducer,
+            IMessageConsumer messageConsumer,
             IOptions<PageSizeOptions> pageSizeSettings)
         {
             _contributorService = contributorService;
+            _messageProducer = messageProducer;
+            _messageConsumer = messageConsumer;
             _pageSizeSettings = pageSizeSettings.Value;
         }
 
@@ -30,7 +37,7 @@ namespace Contributor.Api.Controllers
         public async Task<IActionResult> Report()
         {
             var response = await RequestService.CallAndWaitServiceAsync(
-                new ContributorTopics(), "component/types");
+                new ContributorTopics(), "component/types", _messageProducer, _messageConsumer);
 
             return Ok(JsonSerializer.Deserialize<List<ComponentTypeDto?>?>(response));
         }

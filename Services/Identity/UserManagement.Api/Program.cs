@@ -1,3 +1,4 @@
+using HardwareHero.Shared.Extensions;
 using UserManagement.Api.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -14,10 +15,14 @@ builder.Services.AddIdentityServerAuthorization();
 
 builder.Services.AddControllers();
 
+builder.Host.ConfigureElasticLogging();
+
 var app = builder.Build();
 
 app.MigrationInitialization();
 app.UseHttpsRedirection();
+
+app.UseMyCustomMiddlewares();
 
 app.UseCors(x => x
     .AllowAnyOrigin()

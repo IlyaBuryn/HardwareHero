@@ -1,4 +1,10 @@
-﻿using FluentValidation.AspNetCore;
+﻿using Confluent.Kafka;
+using EventStream.EventHandling;
+using EventStream.Topics;
+using FluentValidation.AspNetCore;
+using KafkaEventStream.EventHandling;
+using KafkaEventStream.Extensions;
+using KafkaEventStream;
 using Microsoft.IdentityModel.Tokens;
 using System.Text.Json.Serialization;
 
@@ -58,6 +64,35 @@ namespace Contributor.Api.Extensions
             {
                 configuration.GetSection(typeof(T).Name).Bind(options);
             });
+        }
+
+        public static void StartKafkaRequestWorker<T>(this IServiceCollection services)
+            where T : class, IServiceTopics
+        {
+            var producerConfig = new ProducerConfig
+            {
+                BootstrapServers = EventStreamConstants.BootstrapServers,
+                Acks = Acks.All
+            };
+            var consumerConfig = new ConsumerConfig
+            {
+                BootstrapServers = EventStreamConstants.BootstrapServers,
+                GroupId = EventStreamConstants.MSCommunicationGroupId,
+                AutoOffsetReset = AutoOffsetReset.Earliest
+            };
+
+            services.AddSingleton(producerConfig);
+            services.AddSingleton(consumerConfig);
+
+            services.AddSingleton<IMessageProducer, KafkaMessageProducer>();
+            services.AddSingleton<IMessageConsumer, KafkaMessageConsumer>();
+            services.AddSingleton<IServiceTopics, T>();
+
+            services.StartRequestsBackgroundWorker(
+                services.BuildServiceProvider().GetRequiredService<IServiceTopics>(),
+                services.BuildServiceProvider().GetRequiredService<IMessageProducer>(),
+                services.BuildServiceProvider().GetRequiredService<IMessageConsumer>()
+            );
         }
     }
 }

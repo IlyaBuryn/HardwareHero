@@ -11,13 +11,25 @@ namespace Aggregator.Api.Controllers
     {
         private readonly IComponentService _componentService;
         private readonly PageSizeOptions _pageSizeSettings;
+        private readonly ILogger<ComponentController> _logger;
 
         public ComponentController(
             IComponentService componentService,
-            IOptions<PageSizeOptions> pageSizeSettings)
+            IOptions<PageSizeOptions> pageSizeSettings,
+            ILogger<ComponentController> logger)
         {
             _componentService = componentService;
             _pageSizeSettings = pageSizeSettings.Value;
+            _logger = logger;
+        }
+
+        [HttpGet("log-test")]
+        [AllowAnonymous]
+        public async Task<IActionResult> LogTestAsync()
+        {
+            _logger.LogInformation("Log Tested!");
+
+            return Ok(1);
         }
 
         [HttpPost("component")]

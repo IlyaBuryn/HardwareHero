@@ -1,3 +1,5 @@
+using HardwareHero.Shared.Extensions;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.RegisterMongoClassMap();
@@ -24,11 +26,13 @@ builder.Services.ConfigureCustomServices();
 
 builder.Services.AddCors();
 
+builder.Host.ConfigureElasticLogging();
+
 var app = builder.Build();
 
 await app.ConfigureDatabaseAsync();
 
-app.UseMiddleware<ExceptionHandlerMiddleware<BaseEntity>>();
+app.UseMyCustomMiddlewares();
 
 if (app.Environment.IsDevelopment())
 {

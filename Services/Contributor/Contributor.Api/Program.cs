@@ -1,6 +1,6 @@
-using KafkaEventStream.Extensions;
 using KafkaEventStream.Topics;
 using Microsoft.IdentityModel.Logging;
+using HardwareHero.Shared.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,7 +17,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.ConfigureOptions<PageSizeOptions>(builder.Configuration);
 builder.Services.ConfigureOptions<ImagesSaveOptions>(builder.Configuration);
 
-builder.Services.StartRequestsBackgroundWorker(new ContributorTopics());
+builder.Services.StartKafkaRequestWorker<ContributorTopics>();
 
 var connectionString = builder.Configuration.GetConnectionString(ConnectionNames.ContributorsConnection);
 if (connectionString != null)
@@ -30,10 +30,12 @@ builder.Services.AddApiScopeAuthorization();
 
 builder.Services.AddCors();
 
+builder.Host.ConfigureElasticLogging();
+
 var app = builder.Build();
 
 await app.DatabaseInitialization();
-app.UseMiddleware<ExceptionHandlerMiddleware<BaseEntity>>();
+app.UseMyCustomMiddlewares();
 app.UseHttpsRedirection();
 app.UseRouting();
 

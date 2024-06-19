@@ -3,12 +3,12 @@ using System.Text.Json;
 
 namespace Aggregator.Api
 {
-    public class AggregatorServiceInvokeHandler : IEventEndpointManager
+    public class AggregatorEndpointManager : IEventEndpointManager
     {
         private readonly IServiceProvider _serviceProvider;
         private readonly IComponentTypeService _componentTypeService;
 
-        public AggregatorServiceInvokeHandler(IServiceProvider serviceProvider)
+        public AggregatorEndpointManager(IServiceProvider serviceProvider)
         {
             _serviceProvider = serviceProvider;
             _componentTypeService = _serviceProvider.GetService<IComponentTypeService>();

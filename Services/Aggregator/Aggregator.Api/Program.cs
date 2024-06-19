@@ -1,7 +1,7 @@
 using Aggregator.Api;
-using KafkaEventStream.Extensions;
 using KafkaEventStream.Topics;
 using Microsoft.IdentityModel.Logging;
+using HardwareHero.Shared.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,7 +13,7 @@ builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddSwaggerGen();
 
-builder.Services.StartMediatorBackgroundWorker<AggregatorServiceInvokeHandler>(new ContributorTopics());
+builder.Services.StartKafkaMediator<ContributorTopics, AggregatorEndpointManager>();
 
 var connectionString = builder.Configuration.GetConnectionString(ConnectionNames.AggregatorConnection);
 if (connectionString != null)
@@ -31,10 +31,12 @@ builder.Services.AddCors();
 
 IdentityModelEventSource.ShowPII = true;
 
+builder.Host.ConfigureElasticLogging();
+
 var app = builder.Build();
 
 await app.DatabaseInitialization();
-app.UseMiddleware<ExceptionHandlerMiddleware<BaseEntity>>();
+app.UseMyCustomMiddlewares();
 app.UseHttpsRedirection();
 app.UseRouting();
 

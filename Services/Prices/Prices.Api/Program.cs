@@ -1,3 +1,5 @@
+using HardwareHero.Shared.Extensions;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddCustomControllers();
@@ -20,9 +22,11 @@ builder.Services.AddApiScopeAuthorization();
 
 builder.Services.AddCors();
 
+builder.Host.ConfigureElasticLogging();
+
 var app = builder.Build();
 
-app.UseMiddleware<ExceptionHandlerMiddleware<BaseEntity>>();
+app.UseMyCustomMiddlewares();
 
 if (app.Environment.IsDevelopment())
 {

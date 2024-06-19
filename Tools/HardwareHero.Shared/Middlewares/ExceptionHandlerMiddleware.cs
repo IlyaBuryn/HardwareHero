@@ -1,17 +1,22 @@
 ﻿using System.Net;
 using HardwareHero.Filter.Exceptions;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
 namespace HardwareHero.Shared.Middlewares
 {
     public class ExceptionHandlerMiddleware<T>
     {
+        private readonly ILogger<ExceptionHandlerMiddleware<T>> _logger;
         private readonly RequestDelegate _next;
 
-        public ExceptionHandlerMiddleware(RequestDelegate next)
+        public ExceptionHandlerMiddleware(
+            RequestDelegate next, 
+            ILogger<ExceptionHandlerMiddleware<T>> logger)
         {
             _next = next;
+            _logger = logger;
         }
 
         public async Task InvokeAsync(HttpContext context)
@@ -22,47 +27,52 @@ namespace HardwareHero.Shared.Middlewares
             }
             catch (DataValidationException ex)
             {
-                await HandleExceptionAsync(context, HttpStatusCode.BadRequest, ex.Message);
+                await HandleExceptionAsync(context, HttpStatusCode.BadRequest, ex);
             }
             catch (NotFoundException ex)
             {
-                await HandleExceptionAsync(context, HttpStatusCode.NotFound, ex.Message);
+                await HandleExceptionAsync(context, HttpStatusCode.NotFound, ex);
             }
             catch (AuthorizationException ex)
             {
-                await HandleExceptionAsync(context, HttpStatusCode.Forbidden, ex.Message);
+                await HandleExceptionAsync(context, HttpStatusCode.Forbidden, ex);
             }
             catch (AlreadyExistException<T> ex)
             {
-                await HandleExceptionAsync(context, HttpStatusCode.Conflict, ex.Message);
+                await HandleExceptionAsync(context, HttpStatusCode.Conflict, ex);
             }
             catch (PageOptionsValidationException ex)
             {
-                await HandleExceptionAsync(context, HttpStatusCode.BadRequest, ex.Message);
+                await HandleExceptionAsync(context, HttpStatusCode.BadRequest, ex);
             }
             catch (AuthenticationException ex)
             {
-                await HandleExceptionAsync(context, HttpStatusCode.Unauthorized, ex.Message);
+                await HandleExceptionAsync(context, HttpStatusCode.Unauthorized, ex);
             }
-            catch (FilterException)
+            catch (FilterException ex)
             {
-                await HandleExceptionAsync(context, HttpStatusCode.BadRequest, "Filter error!");
+                await HandleExceptionAsync(context, HttpStatusCode.BadRequest, ex);
             }
             catch (Exception ex)
             {
-                await HandleExceptionAsync(context, HttpStatusCode.InternalServerError, ex.Message);
+                await HandleExceptionAsync(context, HttpStatusCode.InternalServerError, ex);
             }
         }
 
-        private static async Task HandleExceptionAsync(HttpContext context, HttpStatusCode statusCode, string message)
+        private async Task HandleExceptionAsync(
+            HttpContext context, 
+            HttpStatusCode statusCode, 
+            Exception exception)
         {
+            _logger.LogError(new EventId(), exception, exception.Message);
+
             context.Response.StatusCode = (int)statusCode;
             context.Response.ContentType = "application/json";
 
             var errorResponse = new ErrorResponse
             {
                 StatusCode = (int)statusCode,
-                Message = message
+                Message = exception.Message
             };
 
             var json = JsonConvert.SerializeObject(errorResponse);

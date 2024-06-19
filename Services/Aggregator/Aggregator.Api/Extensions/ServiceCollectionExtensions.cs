@@ -1,6 +1,17 @@
-﻿using FluentValidation.AspNetCore;
+﻿using Confluent.Kafka;
+using EventStream.EventHandling;
+using EventStream.Topics;
+using FluentValidation.AspNetCore;
+using KafkaEventStream.EventHandling;
+using KafkaEventStream;
 using Microsoft.IdentityModel.Tokens;
 using System.Text.Json.Serialization;
+using KafkaEventStream.Extensions;
+using Serilog;
+using Serilog.Exceptions;
+using Serilog.Sinks.Elasticsearch;
+using System.Reflection;
+using HardwareHero.Shared.Extensions;
 
 namespace Aggregator.Api.Extensions
 {
@@ -57,6 +68,37 @@ namespace Aggregator.Api.Extensions
             {
                 configuration.GetSection(typeof(T).Name).Bind(options);
             });
+        }
+
+        public static void StartKafkaMediator<T, E>(this IServiceCollection services) 
+            where T : class, IServiceTopics
+            where E : class, IEventEndpointManager
+        {
+            var producerConfig = new ProducerConfig
+            {
+                BootstrapServers = EventStreamConstants.BootstrapServers,
+                Acks = Acks.All
+            };
+            var consumerConfig = new ConsumerConfig
+            {
+                BootstrapServers = EventStreamConstants.BootstrapServers,
+                GroupId = EventStreamConstants.MSCommunicationGroupId,
+                AutoOffsetReset = AutoOffsetReset.Earliest
+            };
+
+            services.AddSingleton(producerConfig);
+            services.AddSingleton(consumerConfig);
+
+            services.AddSingleton<IMessageProducer, KafkaMessageProducer>();
+            services.AddSingleton<IMessageConsumer, KafkaMessageConsumer>();
+            services.AddSingleton<IServiceTopics, T>();
+            services.AddScoped<IEventEndpointManager, E>();
+
+            services.StartMediatorBackgroundWorker<E>(
+                services.BuildServiceProvider().GetRequiredService<IServiceTopics>(),
+                services.BuildServiceProvider().GetRequiredService<IMessageProducer>(),
+                services.BuildServiceProvider().GetRequiredService<IMessageConsumer>()
+            );
         }
     }
 }

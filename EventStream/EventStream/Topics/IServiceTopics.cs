@@ -1,4 +1,4 @@
-﻿namespace KafkaEventStream.Topics
+﻿namespace EventStream.Topics
 {
     public interface IServiceTopics
     {

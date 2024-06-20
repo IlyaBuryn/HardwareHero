@@ -1,5 +1,6 @@
 
 /Services/**/Scripts/
+/Services/**/.logs/
 /images/
 /uploads/
 

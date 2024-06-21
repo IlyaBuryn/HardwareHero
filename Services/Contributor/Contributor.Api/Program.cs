@@ -17,6 +17,11 @@ builder.Services.AddSwaggerGen();
 builder.Services.ConfigureOptions<PageSizeOptions>(builder.Configuration);
 builder.Services.ConfigureOptions<ImagesSaveOptions>(builder.Configuration);
 
+builder.Services.ConfigureCommonOpenTelemetry(
+    "ContributorRemoteManage",
+    builder.Configuration.GetValue<string>("OpenRemoteManageMeterName"),
+    builder.Configuration["Otel:Endpoint"]);
+
 builder.Services.StartKafkaRequestWorker<ContributorTopics>();
 
 var connectionString = builder.Configuration.GetConnectionString(ConnectionNames.ContributorsConnection);
@@ -35,7 +40,7 @@ builder.Host.ConfigureElasticLogging();
 var app = builder.Build();
 
 await app.DatabaseInitialization();
-app.UseMyCustomMiddlewares();
+app.UseCommonCustomMiddlewares();
 app.UseHttpsRedirection();
 app.UseRouting();
 

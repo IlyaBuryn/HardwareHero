@@ -1,6 +1,7 @@
 ﻿using HardwareHero.Shared.Extensions;
 using Serilog;
 using Serilog.Exceptions;
+using System.Reflection;
 
 namespace Configurator.Api.Extensions
 {
@@ -22,7 +23,7 @@ namespace Configurator.Api.Extensions
                 .WriteTo.Debug()
                 .WriteTo.Console()
                 .WriteTo.File(".logs/log.txt", rollingInterval: RollingInterval.Day)
-                .WriteTo.Elasticsearch(configuration.ConfigureElasticSink(environment))
+                .WriteTo.Elasticsearch(configuration.ConfigureElasticSink(Assembly.GetExecutingAssembly().GetName().Name, environment))
                 .Enrich.WithProperty("Environment", environment)
                 .ReadFrom.Configuration(configuration)
                 .CreateLogger();

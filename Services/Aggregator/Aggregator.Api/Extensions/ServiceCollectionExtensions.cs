@@ -7,11 +7,6 @@ using KafkaEventStream;
 using Microsoft.IdentityModel.Tokens;
 using System.Text.Json.Serialization;
 using KafkaEventStream.Extensions;
-using Serilog;
-using Serilog.Exceptions;
-using Serilog.Sinks.Elasticsearch;
-using System.Reflection;
-using HardwareHero.Shared.Extensions;
 
 namespace Aggregator.Api.Extensions
 {

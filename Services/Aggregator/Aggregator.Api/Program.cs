@@ -2,6 +2,8 @@ using Aggregator.Api;
 using KafkaEventStream.Topics;
 using Microsoft.IdentityModel.Logging;
 using HardwareHero.Shared.Extensions;
+using OpenTelemetry.Metrics;
+using OpenTelemetry.Resources;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -29,6 +31,11 @@ builder.Services.AddIdentityServerAuthentication();
 builder.Services.AddApiScopeAuthorization();
 builder.Services.AddCors();
 
+builder.Services.ConfigureCommonOpenTelemetry(
+    "AggregatorRemoteManage",
+    builder.Configuration.GetValue<string>("OpenRemoteManageMeterName"),
+    builder.Configuration["Otel:Endpoint"]);
+
 IdentityModelEventSource.ShowPII = true;
 
 builder.Host.ConfigureElasticLogging();
@@ -36,7 +43,7 @@ builder.Host.ConfigureElasticLogging();
 var app = builder.Build();
 
 await app.DatabaseInitialization();
-app.UseMyCustomMiddlewares();
+app.UseCommonCustomMiddlewares();
 app.UseHttpsRedirection();
 app.UseRouting();
 

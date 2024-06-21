@@ -1,9 +1,12 @@
 version: '3.4'
 
 networks:
-  backend:
   frontend:
+  backend:
+    driver: bridge
   elastic:
+    driver: bridge
+  monitoring:
     driver: bridge
      
 services:  
@@ -19,9 +22,12 @@ services:
     networks:
       - backend
     environment:
+      - Otel__Endpoint=http://otel-collector:4317
       - DB_HOST=hardwarehero.mssql
       - DB_NAME=HardwareHero.AggregatorDb
       - DB_SA_PASSWORD=password@#12345
+    depends_on:
+      - otel-collector
 
   contributor.api:
     container_name: Contributor-api
@@ -34,9 +40,12 @@ services:
     networks:
       - backend
     environment:
+      - Otel__Endpoint=http://otel-collector:4317
       - DB_HOST=hardwarehero.mssql
       - DB_NAME=HardwareHero.ContributorDb
       - DB_SA_PASSWORD=password@#12345
+    depends_on:
+      - otel-collector
 
   prices.api:
     container_name: Prices-api
@@ -46,11 +55,13 @@ services:
       dockerfile: Services/Prices/Prices.Api/Dockerfile
     depends_on:
       - hardwarehero.mongo
+      - otel-collector
     networks:
       - backend
     environment:
+      - Otel__Endpoint=http://otel-collector:4317
       - DB_HOST=hardwarehero.mongo
-      - DB_NAME=Prices
+      - DB_NAME=Prices      
 
   hardwarehero.mongo:
     container_name: HardwareHero-mongo
@@ -74,11 +85,11 @@ services:
       - 8080:1433
  
   zookeeper:
-    image: docker.io/bitnami/zookeeper:3.8
+    image: bitnami/zookeeper:latest
     ports:
       - "2181:2181"
-    volumes:
-      - "zookeeper_data:/bitnami"
+    # volumes:
+    #   - "zookeeper_data:/bitnami"
     networks:
       - backend
     environment:
@@ -88,8 +99,8 @@ services:
     image: docker.io/bitnami/kafka:3.6
     ports:
       - "9092:9092"
-    volumes:
-      - "kafka_data:/bitnami"
+    # volumes:
+    #   - "kafka-data:/bitnami"
     networks:
       - backend
     environment:
@@ -97,6 +108,8 @@ services:
       - KAFKA_CFG_LISTENERS=PLAINTEXT://:9092,CONTROLLER://:9093,EXTERNAL://:9094
       - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://kafka1:9092,EXTERNAL://kafka1:9094
       - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,EXTERNAL:PLAINTEXT,PLAINTEXT:PLAINTEXT
+      - KAFKA_CFG_MAX_REQUEST_SIZE=209715200
+      - KAFKA_CFG_SOCKET_REQUEST_MAX_BYTES=209715200
     depends_on:
       - zookeeper
 
@@ -110,7 +123,7 @@ services:
       KAFKA_CLUSTERS_0_NAME: local
       KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka1:9092
       KAFKA_CLUSTERS_0_ZOOKEEPER: zookeeper:2181
-      KAFKA_CLUSTERS_0_JMXPORT: 9997
+      # KAFKA_CLUSTERS_0_JMXPORT: 9997
     depends_on:
       - kafka1
   
@@ -236,13 +249,66 @@ services:
     networks:
       - elastic
 
+  otel-collector:
+    image: otel/opentelemetry-collector:0.95.0
+    command: ["--config=/etc/otel-collector-config.yml"]
+    volumes:
+      - ./config/otel-collector-config.yml:/etc/otel-collector-config.yml
+    ports:
+      - "8888:8888"
+      - "8889:8889"
+      - "13133:13133"
+      - "4317:4317"
+    networks:
+      - monitoring
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    ports:
+      - 9090:9090
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+    volumes:
+      - ./config/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus-data:/prometheus
+    restart: unless-stopped
+    networks:
+      - monitoring
+      - backend
+
+  node_exporter:
+    image: quay.io/prometheus/node-exporter:v1.5.0
+    container_name: node_exporter
+    command: '--path.rootfs=/host'
+    pid: host
+    restart: unless-stopped
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    networks:
+      - monitoring
+
+  grafana:
+    image: grafana/grafana-oss:latest
+    container_name: grafana
+    ports:
+      - '3000:3000'
+    volumes:
+      - grafana-data:/var/lib/grafana
+    restart: unless-stopped
+    networks:
+      - monitoring
+
+
 volumes:
-  zookeeper_data:
-    driver: local
-
-  kafka_data:
-    driver: local
-
   elasticsearch-data:
+    driver: local
+
+  prometheus-data:
+    driver: local
+  grafana-data:
+    driver: local
 
   shared-scripts:  

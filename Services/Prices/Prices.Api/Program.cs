@@ -22,11 +22,16 @@ builder.Services.AddApiScopeAuthorization();
 
 builder.Services.AddCors();
 
+builder.Services.ConfigureCommonOpenTelemetry(
+    "PricesRemoteManage",
+    builder.Configuration.GetValue<string>("OpenRemoteManageMeterName"),
+    builder.Configuration["Otel:Endpoint"]);
+
 builder.Host.ConfigureElasticLogging();
 
 var app = builder.Build();
 
-app.UseMyCustomMiddlewares();
+app.UseCommonCustomMiddlewares();
 
 if (app.Environment.IsDevelopment())
 {

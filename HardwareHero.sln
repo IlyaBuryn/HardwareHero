@@ -74,7 +74,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "EventStream", "EventStream"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KafkaEventStream", "EventStream\KafkaEventStream\KafkaEventStream.csproj", "{29A6006C-99A4-42F0-B2C4-B580993DBCA1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventStream", "EventStream\EventStream\EventStream.csproj", "{682B90B4-FAD7-474C-831B-A37A35589845}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventStream", "EventStream\EventStream\EventStream.csproj", "{682B90B4-FAD7-474C-831B-A37A35589845}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "config", "config", "{7D3D479A-0C04-4181-B8FC-13E7203F9FDB}"
+	ProjectSection(SolutionItems) = preProject
+		config\prometheus.yml = config\prometheus.yml
+		config\otel-collector-config.yml = config\otel-collector-config.yml
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

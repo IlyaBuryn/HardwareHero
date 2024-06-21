@@ -15,6 +15,11 @@ builder.Services.AddIdentityServerAuthorization();
 
 builder.Services.AddControllers();
 
+builder.Services.ConfigureCommonOpenTelemetry(
+    "UsersRemoteManage",
+    builder.Configuration.GetValue<string>("OpenRemoteManageMeterName"),
+    builder.Configuration["Otel:Endpoint"]);
+
 builder.Host.ConfigureElasticLogging();
 
 var app = builder.Build();
@@ -22,7 +27,7 @@ var app = builder.Build();
 app.MigrationInitialization();
 app.UseHttpsRedirection();
 
-app.UseMyCustomMiddlewares();
+app.UseCommonCustomMiddlewares();
 
 app.UseCors(x => x
     .AllowAnyOrigin()

@@ -24,6 +24,11 @@ builder.Services.AddApiScopeAuthorization();
 
 builder.Services.ConfigureCustomServices();
 
+builder.Services.ConfigureCommonOpenTelemetry(
+    "ConfiguratorRemoteManage",
+    builder.Configuration.GetValue<string>("OpenRemoteManageMeterName"),
+    builder.Configuration["Otel:Endpoint"]);
+
 builder.Services.AddCors();
 
 builder.Host.ConfigureElasticLogging();
@@ -32,7 +37,7 @@ var app = builder.Build();
 
 await app.ConfigureDatabaseAsync();
 
-app.UseMyCustomMiddlewares();
+app.UseCommonCustomMiddlewares();
 
 if (app.Environment.IsDevelopment())
 {

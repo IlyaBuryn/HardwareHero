@@ -11,7 +11,7 @@ namespace KafkaEventStream.BackgroundServices
         private readonly IMessageConsumer _messageConsumer;
 
         private static string? _responseResult = null;
-        private static int _ticsForResponse = 1000; // 1000 == 10 sec.
+        private static int _ticsForResponse = 6000; // 1000 == 10 sec.
 
         public RequestService(
             IServiceTopics topics, 
@@ -53,7 +53,7 @@ namespace KafkaEventStream.BackgroundServices
                 if (_responseResult == null)
                 {
                     k++;
-                    await Task.Delay(10, stoppingToken);
+                    await Task.Delay(1, stoppingToken);
                 }
                 else
                 {

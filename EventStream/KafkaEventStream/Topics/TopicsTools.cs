@@ -9,7 +9,7 @@ namespace KafkaEventStream.Topics
         public static async Task CreateTopicAsync(string topicName, int numPartitions)
         {
             using var adminClient = new AdminClientBuilder(
-                new AdminClientConfig { BootstrapServers = EventStreamConstants.BootstrapServers })
+                new AdminClientConfig { BootstrapServers = EventStreamConstants.DataBootstrapServers })
                 .Build();
 
             try

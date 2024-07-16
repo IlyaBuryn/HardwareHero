@@ -1,19 +1,20 @@
 ﻿using Microsoft.Extensions.Hosting;
 using EventStream.EventHandling;
 using EventStream.Topics;
+using KafkaEventStream.Contracts;
 
 namespace KafkaEventStream.BackgroundServices
 {
     public class MediatorService : BackgroundService
     {
         private readonly IServiceTopics _topics;
-        private readonly IEventEndpointManager _eventEndpointManager;
+        private readonly EventEndpointManager _eventEndpointManager;
         private readonly IMessageConsumer _messageConsumer;
         private readonly IMessageProducer _messageProducer;
 
         public MediatorService(
             IServiceTopics topics, 
-            IEventEndpointManager eventEndpointManager, 
+            EventEndpointManager eventEndpointManager, 
             IMessageConsumer messageConsumer, 
             IMessageProducer messageProducer)
         {

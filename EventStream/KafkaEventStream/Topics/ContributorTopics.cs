@@ -9,8 +9,8 @@ namespace KafkaEventStream.Topics
 
         public async Task CreateTopics()
         {
-            await TopicsTools.CreateTopicAsync(RequestTopic, 4);
-            await TopicsTools.CreateTopicAsync(ResponseTopic, 4);
+            await TopicsTools.CreateTopicAsync(RequestTopic, 2);
+            await TopicsTools.CreateTopicAsync(ResponseTopic, 2);
         }
     }
 }

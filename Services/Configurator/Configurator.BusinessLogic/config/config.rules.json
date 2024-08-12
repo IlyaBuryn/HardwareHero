@@ -1,0 +1,297 @@
+[
+  {
+    "TargetComponentType": "CPU",
+    "TargetAttributeName": "Socket Type",
+    "SourceComponentType": "MB",
+    "SourceAttributeName": "Socket Type",
+    "ProblemLevel": 2
+  },
+  {
+    "TargetComponentType": "CPU",
+    "TargetAttributeName": "Memory Type",
+    "SourceComponentType": "MB",
+    "SourceAttributeName": "Memory Standard",
+    "ProblemLevel": 2
+  },
+  {
+    "TargetComponentType": "CPU",
+    "TargetAttributeName": "Memory Type Frequency",
+    "SourceComponentType": "MB",
+    "SourceAttributeName": "Memory Frequency",
+    "ProblemLevel": 2
+  },
+  {
+    "TargetComponentType": "CPU",
+    "TargetAttributeName": "Memory Type",
+    "SourceComponentType": "RAM",
+    "SourceAttributeName": "Memory Type",
+    "ProblemLevel": 2
+  },
+  {
+    "TargetComponentType": "CPU",
+    "TargetAttributeName": "Memory Type Frequency",
+    "SourceComponentType": "RAM",
+    "SourceAttributeName": "Memory Type Frequency",
+    "ProblemLevel": 2
+  },
+
+
+  // ******
+
+
+  {
+    "TargetComponentType": "Case",
+    "TargetAttributeName": "Motherboard Compatibility",
+    "SourceComponentType": "MB",
+    "SourceAttributeName": "Form Factor",
+    "ProblemLevel": 2
+  },
+  {
+    "TargetComponentType": "Case",
+    "TargetAttributeName": "Max GPU Length",
+    "SourceComponentType": "GPU",
+    "SourceAttributeName": "GPU Length",
+    "ProblemLevel": 2
+  },
+  {
+    "TargetComponentType": "Case",
+    "TargetAttributeName": "Max PSU Length",
+    "SourceComponentType": "PSU",
+    "SourceAttributeName": "PSU Length",
+    "ProblemLevel": 2
+  },
+  {
+    "TargetComponentType": "Case",
+    "TargetAttributeName": "Max CPU Cooler Height",
+    "SourceComponentType": "Cooler",
+    "SourceAttributeName": "Cooler Height",
+    "ProblemLevel": 2
+  },
+
+
+  // ******
+
+
+  {
+    "TargetComponentType": "Cooler",
+    "TargetAttributeName": "CPU Compatibility",
+    "SourceComponentType": "CPU",
+    "SourceAttributeName": "Socket Type",
+    "ProblemLevel": 2
+  },
+  {
+    "TargetComponentType": "Cooler",
+    "TargetAttributeName": "Cooler Height",
+    "SourceComponentType": "Case",
+    "SourceAttributeName": "Max CPU Cooler Height",
+    "ProblemLevel": 2
+  },
+
+
+  // ******
+
+
+
+  {
+    "TargetComponentType": "GPU",
+    "TargetAttributeName": "Interface",
+    "SourceComponentType": "MB",
+    "SourceAttributeName": "Interfaces",
+    "ProblemLevel": 2
+  },
+  //{
+  //  "TargetComponentType": "GPU",
+  //  "TargetAttributeName": "Recommended PSU Wattage",
+  //  "SourceComponentType": "PSU",
+  //  "SourceAttributeName": "Maximum Power",
+  //  "ProblemLevel": 2
+  //},
+  {
+    "TargetComponentType": "GPU",
+    "TargetAttributeName": "Power Connector",
+    "SourceComponentType": "PSU",
+    "SourceAttributeName": "PCI-Express Connector",
+    "ProblemLevel": 2
+  },
+  {
+    "TargetComponentType": "GPU",
+    "TargetAttributeName": "GPU Length",
+    "SourceComponentType": "Case",
+    "SourceAttributeName": "Max GPU Length",
+    "ProblemLevel": 2
+  },
+
+
+  // ******
+
+
+  {
+    "TargetComponentType": "MB",
+    "TargetAttributeName": "Socket Type",
+    "SourceComponentType": "CPU",
+    "SourceAttributeName": "Socket Type",
+    "ProblemLevel": 2
+  },
+  {
+    "TargetComponentType": "MB",
+    "TargetAttributeName": "Memory Standard",
+    "SourceComponentType": "CPU",
+    "SourceAttributeName": "Memory Type",
+    "ProblemLevel": 2
+  },
+  {
+    "TargetComponentType": "MB",
+    "TargetAttributeName": "Memory Standard",
+    "SourceComponentType": "RAM",
+    "SourceAttributeName": "Memory Type",
+    "ProblemLevel": 2
+  },
+  {
+    "TargetComponentType": "MB",
+    "TargetAttributeName": "Memory Frequency",
+    "SourceComponentType": "CPU",
+    "SourceAttributeName": "Memory Type Frequency",
+    "ProblemLevel": 2
+  },
+  {
+    "TargetComponentType": "MB",
+    "TargetAttributeName": "Memory Frequency",
+    "SourceComponentType": "RAM",
+    "SourceAttributeName": "Memory Type Frequency",
+    "ProblemLevel": 2
+  },
+  {
+    "TargetComponentType": "MB",
+    "TargetAttributeName": "Interfaces",
+    "SourceComponentType": "GPU",
+    "SourceAttributeName": "Interface",
+    "ProblemLevel": 2
+  },
+  {
+    "TargetComponentType": "MB",
+    "TargetAttributeName": "M.2",
+    "SourceComponentType": "SD",
+    "SourceAttributeName": "M.2",
+    "ProblemLevel": 2
+  },
+  {
+    "TargetComponentType": "MB",
+    "TargetAttributeName": "SATA",
+    "SourceComponentType": "SD",
+    "SourceAttributeName": "SATA",
+    "ProblemLevel": 2
+  },
+  {
+    "TargetComponentType": "MB",
+    "TargetAttributeName": "Form Factor",
+    "SourceComponentType": "Case",
+    "SourceAttributeName": "Motherboard Compatibility",
+    "ProblemLevel": 2
+  },
+  {
+    "TargetComponentType": "MB",
+    "TargetAttributeName": "Moterboard Power Pin",
+    "SourceComponentType": "PSU",
+    "SourceAttributeName": "Moterboard Power Pin",
+    "ProblemLevel": 2
+  },
+  {
+    "TargetComponentType": "MB",
+    "TargetAttributeName": "CPU Power Pin",
+    "SourceComponentType": "PSU",
+    "SourceAttributeName": "CPU Power Pin",
+    "ProblemLevel": 2
+  },
+
+
+  // ******
+
+
+  //{
+  //  "TargetComponentType": "PSU",
+  //  "TargetAttributeName": "Maximum Power",
+  //  "SourceComponentType": "",
+  //  "SourceAttributeName": "",
+  //  "ProblemLevel": 2
+  //},
+  {
+    "TargetComponentType": "PSU",
+    "TargetAttributeName": "Moterboard Power Pin",
+    "SourceComponentType": "MB",
+    "SourceAttributeName": "Moterboard Power Pin",
+    "ProblemLevel": 2
+  },
+  {
+    "TargetComponentType": "PSU",
+    "TargetAttributeName": "PCI-Express Connector",
+    "SourceComponentType": "GPU",
+    "SourceAttributeName": "Power Connector",
+    "ProblemLevel": 2
+  },
+  {
+    "TargetComponentType": "PSU",
+    "TargetAttributeName": "PSU Length",
+    "SourceComponentType": "Case",
+    "SourceAttributeName": "Max PSU Length",
+    "ProblemLevel": 2
+  },
+  {
+    "TargetComponentType": "PSU",
+    "TargetAttributeName": "CPU Power Pin",
+    "SourceComponentType": "MB",
+    "SourceAttributeName": "CPU Power Pin",
+    "ProblemLevel": 2
+  },
+
+
+  // ******
+
+
+  {
+    "TargetComponentType": "RAM",
+    "TargetAttributeName": "Memory Type",
+    "SourceComponentType": "CPU",
+    "SourceAttributeName": "Memory Type",
+    "ProblemLevel": 2
+  },
+  {
+    "TargetComponentType": "RAM",
+    "TargetAttributeName": "Memory Type",
+    "SourceComponentType": "MB",
+    "SourceAttributeName": "Memory Standard",
+    "ProblemLevel": 2
+  },
+  {
+    "TargetComponentType": "RAM",
+    "TargetAttributeName": "Memory Type Frequency",
+    "SourceComponentType": "MB",
+    "SourceAttributeName": "Memory Frequency",
+    "ProblemLevel": 2
+  },
+  {
+    "TargetComponentType": "RAM",
+    "TargetAttributeName": "Memory Type Frequency",
+    "SourceComponentType": "CPU",
+    "SourceAttributeName": "Memory Type Frequency",
+    "ProblemLevel": 2
+  },
+
+
+  // ******
+
+
+  {
+    "TargetComponentType": "SD",
+    "TargetAttributeName": "M.2",
+    "SourceComponentType": "MB",
+    "SourceAttributeName": "M.2",
+    "ProblemLevel": 2
+  },
+  {
+    "TargetComponentType": "SD",
+    "TargetAttributeName": "SATA",
+    "SourceComponentType": "MB",
+    "SourceAttributeName": "SATA",
+    "ProblemLevel": 2
+  }
+]

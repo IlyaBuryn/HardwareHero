@@ -1,48 +1,33 @@
 ﻿using FluentValidation.AspNetCore;
+using HardwareHero.Shared.Extensions;
+using HardwareHero.Shared.OpenApi;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using MongoDB.Bson.Serialization;
 
 namespace Configurator.Api.Extensions
 {
     public static class ServiceCollectionExtensions
     {
-        public static void AddIdentityServerAuthentication(this IServiceCollection services)
-        {
-            services.AddAuthentication(IdentityServerConstants.AuthenticationScheme)
-                .AddJwtBearer(IdentityServerConstants.AuthenticationScheme, options =>
-                {
-                    options.Authority = IdentityServerConstants.IdentityServerAuthority;
-                    options.RequireHttpsMetadata = false;
-                    options.TokenValidationParameters = new TokenValidationParameters
-                    {
-                        ValidateAudience = false
-                    };
-                });
-        }
-
-        public static void RegisterMongoClassMap(this IServiceCollection services)
-        {
-            BsonClassMap.RegisterClassMap<CPU>();
-            BsonClassMap.RegisterClassMap<GPU>();
-            BsonClassMap.RegisterClassMap<MB>();
-            BsonClassMap.RegisterClassMap<SD>();
-            BsonClassMap.RegisterClassMap<RAM>();
-            BsonClassMap.RegisterClassMap<PS>();
-            BsonClassMap.RegisterClassMap<Case>();
-            BsonClassMap.RegisterClassMap<Cooler>();
-        }
-
-        public static void AddApiScopeAuthorization(this IServiceCollection services)
+        public static void ConfigurePolicyAuthorization(this IServiceCollection services)
         {
             services.AddAuthorization(options =>
             {
                 options.AddPolicy("ApiScope", policy =>
                 {
                     policy.RequireAuthenticatedUser();
-                    policy.RequireClaim("scope", IdentityClientConstants.ServicesApiScope);
-                    policy.RequireRole("User");
+                    policy.RequireClaim("scope", IdentityConstants.ServicesApiScope);
                 });
             });
+        }
+
+        public static void ConfigureOpenTelemetry(this IServiceCollection services, WebApplicationBuilder builder)
+        {
+            services.ConfigureCommonOpenTelemetry(
+                "AggregatorRemoteManage",
+                builder.Configuration.GetValue<string>("OpenRemoteManageMeterName"),
+                builder.Configuration["Otel:Endpoint"]);
         }
 
         public static void AddCustomControllers(this IServiceCollection services)
@@ -67,9 +52,36 @@ namespace Configurator.Api.Extensions
             });
         }
 
-        public static void ConfigureCustomServices(this IServiceCollection services)
+        public static void ConfigureSwagger(this IServiceCollection services)
         {
-            services.AddScoped<Config>();
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Configurator.Api", Version = "v1" });
+                c.AddSecurityDefinition("BearerAuth", new OpenApiSecurityScheme
+                {
+                    Type = SecuritySchemeType.Http,
+                    Scheme = JwtBearerDefaults.AuthenticationScheme.ToLowerInvariant(),
+                    In = ParameterLocation.Header,
+                    Name = "Authorization",
+                    BearerFormat = "JWT",
+                    Description = "JWT Authorization header using the Bearer scheme."
+                });
+
+                c.OperationFilter<AuthResponsesOperationFilter>();
+            });
+        }
+
+        public static void ConfigureCORSPolicy(this IServiceCollection services)
+        {
+            services.AddCors(options =>
+            {
+                options.AddPolicy("default", policy =>
+                {
+                    policy.AllowAnyOrigin()
+                          .AllowAnyHeader()
+                          .AllowAnyMethod();
+                });
+            });
         }
     }
 }

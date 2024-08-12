@@ -16,7 +16,8 @@ namespace Configurator.BusinessLogic.Extensions
         private static void ConfigureServices(IServiceCollection service)
         {
             service.AddScoped<IAssemblyService, AssemblyService>();
-            service.AddScoped<IComponentTypesService, ComponentTypesService>();
+            service.AddScoped<IConfiguratorService, ConfiguratorService>();
+            service.AddScoped<IDataService, DataService>();
         }
 
         private static void ConfigureMapProfiles(IServiceCollection service)

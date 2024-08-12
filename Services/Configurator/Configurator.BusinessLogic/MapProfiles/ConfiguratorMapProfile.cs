@@ -4,15 +4,20 @@
     {
         public ConfiguratorMapProfile()
         {
-            CreateMap<CustomAssembly, CustomAssemblyDto>()
+            CreateMap<StoredAssembly, StoredAssemblyDto>()
+                .ForMember(dto => dto.SelectedComponents, opt => opt.MapFrom(ent =>
+                ent.SelectedComponents))
+                .ReverseMap();
+            
+            CreateMap<ConfiguratorComponent, ConfiguratorComponentDto>()
+                .ForMember(dto => dto.Attributes, opt => opt.MapFrom(ent =>
+                ent.Attributes))
                 .ReverseMap();
 
-            CreateMap<ComponentTypeSigns, ComponentTypeSignsDto>()
-                .ForMember(dto => dto.Specifications, opt => opt.MapFrom(ent =>
-                ent.Specifications))
+            CreateMap<ConfiguratorRule, ConfiguratorRuleDto>()
                 .ReverseMap();
-
-            CreateMap<ComponentTypeSpecification, ComponentTypeSpecificationDto>()
+            
+            CreateMap<ConfiguratorComponentAttribute, ConfiguratorComponentAttributeDto>()
                 .ReverseMap();
         }
     }

@@ -19,7 +19,7 @@ namespace KafkaEventStream.EventHandling
 
             while (!stoppingToken.IsCancellationRequested)
             {
-                var consumerData = consumer.Consume(TimeSpan.FromMilliseconds(1));
+                var consumerData = consumer.Consume(TimeSpan.FromMilliseconds(15));
                 if (consumerData != null)
                 {
                     messageHandler.Invoke(consumerData.Message.Value);

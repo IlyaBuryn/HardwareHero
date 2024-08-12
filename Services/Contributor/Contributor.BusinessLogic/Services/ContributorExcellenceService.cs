@@ -7,7 +7,7 @@
 
         private readonly IValidationRepository<ContributorExcellence> _excellenceValidRepo;
 
-        private readonly IImageRepositoryAsync _imageRepo;
+        private readonly IFileRepositoryAsync _imageRepo;
 
         private readonly IMapper _mapper;
 
@@ -15,7 +15,7 @@
             ICrudRepositoryAsync<ContributorExcellence> excellenceRepo,
             ICrudRepositoryAsync<ContributorModel> contributorRepo,
             IValidationRepository<ContributorExcellence> excellenceValidRepo,
-            IImageRepositoryAsync imageRepo,
+            IFileRepositoryAsync imageRepo,
             IMapper mapper)
         {
             _excellenceRepo = excellenceRepo;
@@ -48,16 +48,15 @@
             excellence.Description = excellenceToUpdate.Description;
             excellence.Name = excellenceToUpdate.Name;
             excellence.Logo = excellenceToUpdate.Logo;
-            await _imageRepo.UpdateImageAsync(
-                excellenceToUpdate.ImageData, excellenceToUpdate.Logo, null);
+
+            var imageId = excellence.Logo.Split("id=").Last();
+
+            var replaceResult = await _imageRepo.ReplaceFileAsync(imageId,
+                excellenceToUpdate.ImageData, excellenceToUpdate.Logo);
+            excellenceToUpdate.Logo = replaceResult;
 
             excellence.Currency = _mapper.Map<Currency>(excellenceToUpdate.Currency);
             excellence.Region = _mapper.Map<Region>(excellenceToUpdate.Region);
-            if (excellenceToUpdate.Currency != null)
-            {
-                await _imageRepo.UpdateImageAsync(
-                    excellenceToUpdate.Currency.ImageData, excellenceToUpdate.Currency.Icon, null);
-            }
 
             var result = await _excellenceRepo.UpdateEntityAsync(excellence);
 

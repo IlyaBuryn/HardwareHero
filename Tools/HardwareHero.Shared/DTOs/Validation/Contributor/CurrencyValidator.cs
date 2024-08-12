@@ -13,9 +13,6 @@ namespace HardwareHero.Shared.DTOs.Validation.Contributor
 
             RuleFor(c => c.Icon).NotEmpty()
                 .WithMessage(ValidationMessages.IsRequired);
-
-            RuleFor(c => c.ImageData).NotEmpty()
-                .WithMessage(ValidationMessages.IsRequired);
         }
     }
 }

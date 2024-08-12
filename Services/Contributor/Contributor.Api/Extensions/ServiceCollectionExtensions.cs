@@ -7,23 +7,33 @@ using KafkaEventStream.Extensions;
 using KafkaEventStream;
 using Microsoft.IdentityModel.Tokens;
 using System.Text.Json.Serialization;
+using HardwareHero.Shared.Extensions;
+using HardwareHero.Shared.OpenApi;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.OpenApi.Models;
 
 namespace Contributor.Api.Extensions
 {
     public static class ServiceCollectionExtensions
     {
-        public static void AddIdentityServerAuthentication(this IServiceCollection services)
+        public static void ConfigurePolicyAuthorization(this IServiceCollection services)
         {
-            services.AddAuthentication(IdentityServerConstants.AuthenticationScheme)
-                .AddJwtBearer(IdentityServerConstants.AuthenticationScheme, options =>
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("ApiScope", policy =>
                 {
-                    options.Authority = IdentityServerConstants.IdentityServerAuthority;
-                    options.RequireHttpsMetadata = false;
-                    options.TokenValidationParameters = new TokenValidationParameters
-                    {
-                        ValidateAudience = false
-                    };
+                    policy.RequireAuthenticatedUser();
+                    policy.RequireClaim("scope", IdentityConstants.ServicesApiScope);
                 });
+            });
+        }
+
+        public static void ConfigureOpenTelemetry(this IServiceCollection services, WebApplicationBuilder builder)
+        {
+            services.ConfigureCommonOpenTelemetry(
+                "ContributorRemoteManage",
+                builder.Configuration.GetValue<string>("OpenRemoteManageMeterName"),
+                builder.Configuration["Otel:Endpoint"]);
         }
 
         public static void AddApiScopeAuthorization(this IServiceCollection services)
@@ -33,8 +43,7 @@ namespace Contributor.Api.Extensions
                 options.AddPolicy("ApiScope", policy =>
                 {
                     policy.RequireAuthenticatedUser();
-                    policy.RequireClaim("scope", IdentityClientConstants.ServicesApiScope);
-                    //policy.RequireRole("User");
+                    policy.RequireClaim("scope", IdentityConstants.ServicesApiScope);
                 });
             });
         }
@@ -44,13 +53,53 @@ namespace Contributor.Api.Extensions
             services.AddControllers(options =>
             {
                 options.SuppressAsyncSuffixInActionNames = false;
-            })
-            .AddJsonOptions(options =>
-            {
-                options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
-                options.JsonSerializerOptions.WriteIndented = true;
             });
         }
+
+        public static void ConfigureSwagger(this IServiceCollection services)
+        {
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Contributor.Api", Version = "v1" });
+                c.AddSecurityDefinition("BearerAuth", new OpenApiSecurityScheme
+                {
+                    Type = SecuritySchemeType.Http,
+                    Scheme = JwtBearerDefaults.AuthenticationScheme.ToLowerInvariant(),
+                    In = ParameterLocation.Header,
+                    Name = "Authorization",
+                    BearerFormat = "JWT",
+                    Description = "JWT Authorization header using the Bearer scheme."
+                });
+
+                c.OperationFilter<AuthResponsesOperationFilter>();
+            });
+        }
+
+        public static void ConfigureCORSPolicy(this IServiceCollection services)
+        {
+            services.AddCors(options =>
+            {
+                options.AddPolicy("default", policy =>
+                {
+                    policy.AllowAnyOrigin()
+                          .AllowAnyHeader()
+                          .AllowAnyMethod();
+                });
+            });
+        }
+
+        //public static void AddCustomControllers(this IServiceCollection services)
+        //{
+        //    services.AddControllers(options =>
+        //    {
+        //        options.SuppressAsyncSuffixInActionNames = false;
+        //    })
+        //    .AddJsonOptions(options =>
+        //    {
+        //        options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+        //        options.JsonSerializerOptions.WriteIndented = true;
+        //    });
+        //}
 
         public static void AddFluentValidation(this IServiceCollection services)
         {
@@ -64,35 +113,6 @@ namespace Contributor.Api.Extensions
             {
                 configuration.GetSection(typeof(T).Name).Bind(options);
             });
-        }
-
-        public static void StartKafkaRequestWorker<T>(this IServiceCollection services)
-            where T : class, IServiceTopics
-        {
-            var producerConfig = new ProducerConfig
-            {
-                BootstrapServers = EventStreamConstants.BootstrapServers,
-                Acks = Acks.All
-            };
-            var consumerConfig = new ConsumerConfig
-            {
-                BootstrapServers = EventStreamConstants.BootstrapServers,
-                GroupId = EventStreamConstants.MSCommunicationGroupId,
-                AutoOffsetReset = AutoOffsetReset.Earliest
-            };
-
-            services.AddSingleton(producerConfig);
-            services.AddSingleton(consumerConfig);
-
-            services.AddSingleton<IMessageProducer, KafkaMessageProducer>();
-            services.AddSingleton<IMessageConsumer, KafkaMessageConsumer>();
-            services.AddSingleton<IServiceTopics, T>();
-
-            services.StartRequestsBackgroundWorker(
-                services.BuildServiceProvider().GetRequiredService<IServiceTopics>(),
-                services.BuildServiceProvider().GetRequiredService<IMessageProducer>(),
-                services.BuildServiceProvider().GetRequiredService<IMessageConsumer>()
-            );
         }
     }
 }

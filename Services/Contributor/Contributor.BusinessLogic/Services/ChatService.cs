@@ -1,4 +1,6 @@
-﻿namespace Contributor.BusinessLogic.Services
+﻿using HardwareHero.Filter.Operations;
+
+namespace Contributor.BusinessLogic.Services
 {
     public class ChatService : IChatService
     {
@@ -80,17 +82,17 @@
             return result;
         }
 
-        public async Task<PageResponse<ChatRoomDto?>?> GetChatsByContributorIdAsync(Guid contributorId, PaginationInfo paginationInfo)
+        public async Task<PageResponse<ChatRoomDto?>?> GetChatsByContributorIdAsync(Guid contributorId, IPaginable filter)
         {
-            _chatRoomValidationRepo.CheckPaginationOptions(paginationInfo);
+            _chatRoomValidationRepo.CheckPaginationOptions(filter);
 
             var chats = await _chatRoomRepo
                 .GetManyWithDefaultOrEmptyCheckAsync(x => x.Participants.Any(x => x.Id == contributorId));
 
-            var result = await _chatRoomRepo.GetMappedPageAsync<ChatRoomDto>(
-                chats, paginationInfo, _mapper);
+            var result = await _chatRoomRepo.GetMappedPageAsync(chats, filter);
+            var mappedResult = _mapper.Map<PageResponse<ChatRoomDto>>(result);
 
-            return result;
+            return mappedResult;
         }
 
         public async Task<Guid?> SendMessageAsync(ChatMessageDto messageToSend)
@@ -130,17 +132,17 @@
             return result;
         }
 
-        public async Task<PageResponse<ChatMessageDto?>?> GetMessagesByChatIdAsync(Guid chatRoomId, PaginationInfo paginationInfo)
+        public async Task<PageResponse<ChatMessageDto?>?> GetMessagesByChatIdAsync(Guid chatRoomId, IPaginable filter)
         {
-            _chatRoomValidationRepo.CheckPaginationOptions(paginationInfo);
+            _chatRoomValidationRepo.CheckPaginationOptions(filter);
 
             var messages = await _chatMessageRepo
                 .GetManyWithDefaultOrEmptyCheckAsync(x => x.ChatRoomId == chatRoomId);
 
-            var result = await _chatMessageRepo.GetMappedPageAsync<ChatMessageDto>(
-                messages.Reverse(), paginationInfo, _mapper);
+            var result = await _chatMessageRepo.GetMappedPageAsync(messages.Reverse(), filter);
+            var mappedResult = _mapper.Map<PageResponse<ChatMessageDto>>(result);
 
-            return result;
+            return mappedResult;
         }
 
         private async Task<bool> AllTheseContributorsExist(ICollection<ContributorModelDto>? contributors)

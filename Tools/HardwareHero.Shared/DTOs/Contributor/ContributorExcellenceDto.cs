@@ -1,11 +1,13 @@
-﻿namespace HardwareHero.Shared.DTOs.Contributor
+﻿using Microsoft.AspNetCore.Http;
+
+namespace HardwareHero.Shared.DTOs.Contributor
 {
     public class ContributorExcellenceDto
     {
         public Guid Id { get; set; }
         public string Name { get; set; }
         public string Logo { get; set; }
-        public byte[] ImageData { get; set; }
+        public IFormFile ImageData { get; set; }
         public string? Description { get; set; }
         public string Phone { get; set; }
         public string? MainWebLink { get; set; }

@@ -27,8 +27,7 @@ namespace Contributor.Api.Controllers
         }
 
         [HttpPut("excellence")]
-        [AllowAnonymous]
-        //[Authorize(Roles = Roles.Contributor)]
+        [Authorize(Roles = Roles.Contributor)]
         public async Task<IActionResult> UpdateAsync([FromBody] ContributorExcellenceDto excellenceToUpdate)
         {
             var response = await _excellenceService

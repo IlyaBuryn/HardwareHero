@@ -4,6 +4,7 @@
     {
         Task<Guid?> AddRegionAsync(RegionDto regionToAdd);
         Task<bool> UpdateRegionAsync(RegionDto regionToUpdate);
+        Task<IEnumerable<RegionDto?>?> GetRegionsAsync();
         Task<IEnumerable<string>?> GetCountriesAsync();
         Task<IEnumerable<RegionDto?>?> GetRegionsByCountryAsync(string country);
         Task<RegionDto?> GetRegionByCityAsync(string city);

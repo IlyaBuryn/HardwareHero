@@ -10,8 +10,6 @@ namespace Contributor.BusinessLogic.Services
         private readonly IValidationRepository<Region> _regionValidationRepo;
         private readonly IValidationRepository<Currency> _currencyValidationRepo;
 
-        private readonly IImageRepositoryAsync _imageRepo;
-
         private readonly IMapper _mapper;
 
         public ReferencesDataService(
@@ -19,14 +17,12 @@ namespace Contributor.BusinessLogic.Services
             ICrudRepositoryAsync<Currency> currencyRepo,
             IValidationRepository<Region> regionValidationRepo,
             IValidationRepository<Currency> currencyValidationRepo,
-            IImageRepositoryAsync imageRepo,
             IMapper mapper)
         {
             _regionRepo = regionRepo;
             _currencyRepo = currencyRepo;
             _regionValidationRepo = regionValidationRepo;
             _currencyValidationRepo = currencyValidationRepo;
-            _imageRepo = imageRepo;
             _mapper = mapper;
         }
 
@@ -70,6 +66,16 @@ namespace Contributor.BusinessLogic.Services
             return countries;
         }
 
+        public async Task<IEnumerable<RegionDto?>?> GetRegionsAsync()
+        {
+            var regions = new List<RegionDto?>();
+
+            var regionsSet = await _regionRepo.GetManyEntitiesAsync();
+            var result = _mapper.Map<List<RegionDto?>>(await regionsSet.ToListAsync());
+
+            return result;
+        }
+
         public async Task<IEnumerable<RegionDto?>?> GetRegionsByCountryAsync(string country)
         {
             var regionsSet = await _regionRepo.GetManyWithDefaultOrEmptyCheckAsync(
@@ -99,8 +105,6 @@ namespace Contributor.BusinessLogic.Services
             _currencyValidationRepo.CheckIfObjectAlreadyExist(
                 x => x.Name == currencyToAdd.Name);
 
-            await _imageRepo.SaveImageAsync(currencyToAdd.ImageData, currencyToAdd.Icon, null);
-
             var currency = _mapper.Map<Currency>(currencyToAdd);
             var result = await _currencyRepo.CreateEntityAsync(currency);
 
@@ -117,8 +121,6 @@ namespace Contributor.BusinessLogic.Services
 
             currency.Name = currencyToUpdate.Name;
             currency.Icon = currencyToUpdate.Icon;
-
-            await _imageRepo.UpdateImageAsync(currencyToUpdate.ImageData, currencyToUpdate.Icon, null);
 
             var result = await _currencyRepo.UpdateEntityAsync(currency);
 

@@ -17,8 +17,7 @@ namespace Contributor.Api.Controllers
         }
 
         [HttpPost]
-        [AllowAnonymous]
-        //[Authorize(Roles = Roles.Manager)]
+        [Authorize(Roles = Roles.Manager)]
         public async Task<IActionResult> CreatePlanAsync([FromBody] SubscriptionPlanDto subscriptionPlanToAdd)
         {
             var response = await _subscriptionService
@@ -28,8 +27,7 @@ namespace Contributor.Api.Controllers
         }
 
         [HttpPut]
-        [AllowAnonymous]
-        //[Authorize(Roles = Roles.Manager)]
+        [Authorize(Roles = Roles.Manager)]
         public async Task<IActionResult> UpdatePlanAsync([FromBody] SubscriptionPlanDto subscriptionPlanToUpdate)
         {
             var response = await _subscriptionService
@@ -39,8 +37,7 @@ namespace Contributor.Api.Controllers
         }
 
         [HttpDelete("{subscriptionPlanId}")]
-        [AllowAnonymous]
-        //[Authorize(Roles = Roles.Manager)]
+        [Authorize(Roles = Roles.Manager)]
         public async Task<IActionResult> DeletePlanAsync([FromRoute] Guid subscriptionPlanId)
         {
             var response = await _subscriptionService
@@ -50,8 +47,7 @@ namespace Contributor.Api.Controllers
         }
 
         [HttpGet]
-        [AllowAnonymous]
-        //[Authorize(Roles = Roles.Contributor)]
+        [Authorize(Roles = Roles.Contributor)]
         public async Task<IActionResult> GetPlansAsync()
         {
             var response = await _subscriptionService
@@ -61,8 +57,7 @@ namespace Contributor.Api.Controllers
         }
 
         [HttpPost("contributor/{contributorId}/subscribe/{subscriptionPlanId}")]
-        [AllowAnonymous]
-        //[Authorize(Roles = Roles.Contributor)]
+        [Authorize(Roles = Roles.Contributor)]
         public async Task<IActionResult> SubscribeAsync([FromRoute] Guid contributorId, [FromRoute] Guid subscriptionPlanId)
         {
             var response = await _subscriptionService
@@ -72,8 +67,7 @@ namespace Contributor.Api.Controllers
         }
 
         [HttpPut("contributor/{contributorId}/unsubscribe")]
-        [AllowAnonymous]
-        //[Authorize(Roles = Roles.Contributor)]
+        [Authorize(Roles = Roles.Contributor)]
         public async Task<IActionResult> UnubscribeAsync([FromRoute] Guid contributorId)
         {
             var response = await _subscriptionService

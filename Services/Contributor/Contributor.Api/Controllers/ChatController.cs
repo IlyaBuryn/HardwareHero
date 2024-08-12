@@ -7,7 +7,6 @@ namespace Contributor.Api.Controllers
     [ApiController]
     [Produces("application/json")]
     [Route("api/chat")]
-    [Authorize]
     public class ChatController : ControllerBase
     {
         private readonly IChatService _chatService;
@@ -22,8 +21,7 @@ namespace Contributor.Api.Controllers
         }
 
         [HttpPost]
-        [AllowAnonymous]
-        //[Authorize(Roles = Roles.Contributor)]
+        [Authorize(Roles = Roles.Contributor)]
         public async Task<IActionResult> CreateAsync([FromBody] ChatRoomDto chatToAdd)
         {
             var response = await _chatService
@@ -33,8 +31,7 @@ namespace Contributor.Api.Controllers
         }
 
         [HttpPut]
-        [AllowAnonymous]
-        //[Authorize(Roles = Roles.Manager)]
+        [Authorize(Roles = Roles.Manager)]
         public async Task<IActionResult> UpdateAsync([FromBody] ChatRoomDto chatToUpdate)
         {
             var response = await _chatService
@@ -44,8 +41,7 @@ namespace Contributor.Api.Controllers
         }
 
         [HttpDelete("{chatRoomId}")]
-        [AllowAnonymous]
-        //[Authorize(Roles = Roles.Manager)]
+        [Authorize(Roles = Roles.Manager)]
         public async Task<IActionResult> DeleteAsync([FromRoute] Guid chatRoomId)
         {
             var response = await _chatService
@@ -55,8 +51,7 @@ namespace Contributor.Api.Controllers
         }
 
         [HttpGet("{chatRoomId}")]
-        [AllowAnonymous]
-        //[Authorize(Roles = Roles.Contributor)]
+        [Authorize(Roles = Roles.Contributor)]
         public async Task<IActionResult> GetByIdAsync([FromRoute] Guid chatRoomId)
         {
             var response = await _chatService
@@ -66,23 +61,18 @@ namespace Contributor.Api.Controllers
         }
 
         [HttpPost("contributor/{contributorId}")]
-        [AllowAnonymous]
-        //[Authorize(Roles = Roles.Contributor)]
-        public async Task<IActionResult> GetAsPageAsync([FromRoute] Guid contributorId, [FromBody] FilterRequestDomain<ChatRoom> filter)
+        [Authorize(Roles = Roles.Contributor)]
+        public async Task<IActionResult> GetAsPageAsync([FromRoute] Guid contributorId, [FromBody] ChatRoomFilter filter)
         {
-            filter.ApplyPageSizeOptions(_pageSizeOptions);
-
-            var paginationInfo = PaginationInfo.ConvertFromFilterPagination(filter.PageRequestInfo);
             var response = await _chatService
-                .GetChatsByContributorIdAsync(contributorId, paginationInfo);
+                .GetChatsByContributorIdAsync(contributorId, filter);
 
             return Ok(response);
         }
 
 
         [HttpPost("message")]
-        [AllowAnonymous]
-        //[Authorize(Roles = Roles.Contributor)]
+        [Authorize(Roles = Roles.Contributor)]
         public async Task<IActionResult> SendMessageAsync([FromBody] ChatMessageDto messageToSend)
         {
             var response = await _chatService
@@ -92,8 +82,7 @@ namespace Contributor.Api.Controllers
         }
 
         [HttpPut("message")]
-        [AllowAnonymous]
-        //[Authorize(Roles = Roles.Contributor)]
+        [Authorize(Roles = Roles.Contributor)]
         public async Task<IActionResult> UpdateMessageAsync([FromBody] ChatMessageDto messageToUpdate)
         {
             var response = await _chatService
@@ -103,15 +92,11 @@ namespace Contributor.Api.Controllers
         }
 
         [HttpPost("{chatRoomId}")]
-        [AllowAnonymous]
-        //[Authorize(Roles = Roles.Contributor)]
-        public async Task<IActionResult> GetMessagesAsync([FromRoute] Guid chatRoomId, [FromBody] FilterRequestDomain<ChatMessage> filter)
+        [Authorize(Roles = Roles.Contributor)]
+        public async Task<IActionResult> GetMessagesAsync([FromRoute] Guid chatRoomId, [FromBody] MessagesFilter filter)
         {
-            filter.ApplyPageSizeOptions(_pageSizeOptions);
-
-            var paginationInfo = PaginationInfo.ConvertFromFilterPagination(filter.PageRequestInfo);
             var response = await _chatService
-                .GetMessagesByChatIdAsync(chatRoomId, paginationInfo);
+                .GetMessagesByChatIdAsync(chatRoomId, filter);
 
             return Ok(response);
         }

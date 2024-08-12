@@ -32,19 +32,8 @@ namespace Contributor.Api.Controllers
             _pageSizeSettings = pageSizeSettings.Value;
         }
 
-        [HttpGet("report")]
-        [AllowAnonymous]
-        public async Task<IActionResult> Report()
-        {
-            var response = await RequestService.CallAndWaitServiceAsync(
-                new ContributorTopics(), "component/types", _messageProducer, _messageConsumer);
-
-            return Ok(JsonSerializer.Deserialize<List<ComponentTypeDto?>?>(response));
-        }
-
         [HttpPost("sign-up")]
-        [AllowAnonymous]
-        //[Authorize(Roles = Roles.User)]
+        [Authorize(Roles = Roles.User)]
         public async Task<IActionResult> SignUpAsync([FromBody] ContributorModelDto contributorToAdd)
         {
             var response = await _contributorService
@@ -54,8 +43,7 @@ namespace Contributor.Api.Controllers
         }
 
         [HttpDelete("{contributorId}")]
-        [AllowAnonymous]
-        //[Authorize(Roles = Roles.User)]
+        [Authorize(Roles = Roles.User)]
         public async Task<IActionResult> DeleteAsync([FromRoute] Guid contributorId)
         {
             var response = await _contributorService
@@ -81,12 +69,9 @@ namespace Contributor.Api.Controllers
         }
 
         [HttpPost]
-        [AllowAnonymous]
-        //[Authorize(Roles = Roles.Manager)]
+        [Authorize(Roles = Roles.Manager)]
         public async Task<IActionResult> GetAsPageAsync([FromBody] ContributorsFilter filter)
         {
-            filter.ApplyPageSizeOptions(_pageSizeSettings);
-
             var response = await _contributorService
                 .GetContributorsAsPageAsync(filter);
             
@@ -94,8 +79,7 @@ namespace Contributor.Api.Controllers
         }
 
         [HttpGet("{contributorId}/confirm-info")]
-        [AllowAnonymous]
-        //[Authorize(Roles = Roles.Manager)]
+        [Authorize(Roles = Roles.Manager)]
         public async Task<IActionResult> GetConfirmInfoAsync([FromRoute] Guid contributorId)
         {
             var response = await _contributorService
@@ -105,8 +89,7 @@ namespace Contributor.Api.Controllers
         }
 
         [HttpPut("{contributorId}/confirm-info")]
-        [AllowAnonymous]
-        //[Authorize(Roles = Roles.Manager)]
+        [Authorize(Roles = Roles.Manager)]
         public async Task<IActionResult> ChangeConfirmInfoAsync([FromRoute] Guid contributorId, [FromBody] ContributorConfirmInfoDto info)
         {
             var response = await _contributorService

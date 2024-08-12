@@ -11,7 +11,7 @@
         private readonly ICrudRepositoryAsync<SubscriptionPlan> _subscriptionPlanRepo;
         private readonly ICrudRepositoryAsync<ContributorExcellence> _excellenceRepo;
         
-        private readonly IImageRepositoryAsync _imagesRepo;
+        private readonly IFileRepositoryAsync _imagesRepo;
 
         private readonly IMapper _mapper;
 
@@ -22,7 +22,7 @@
             ICrudRepositoryAsync<ContributorConfirmInfo> contributorConfirmInfoRepo,
             ICrudRepositoryAsync<SubscriptionPlan> subscriptionPlanRepo,
             ICrudRepositoryAsync<ContributorExcellence> excellenceRepo,
-            IImageRepositoryAsync imagesRepo,
+            IFileRepositoryAsync imagesRepo,
             IMapper mapper)
         {
             _contributorRepo = contributorRepo;
@@ -41,13 +41,14 @@
 
             _contributorValidationRepo
                 .CheckIfObjectAlreadyExist(x => x.UserId == contributorToAdd.UserId);
-
             _contributorExcValidationRepo
                 .CheckIfObjectAlreadyExist(x => x.Name == contributorToAdd.ContributorExcellence.Name);
 
-            await _imagesRepo.SaveImageAsync(
+            var uploadResult = await _imagesRepo.UploadFileAsync(
                 contributorToAdd.ContributorExcellence.ImageData,
-                contributorToAdd.ContributorExcellence.Logo, null);
+                contributorToAdd.ContributorExcellence.Logo);
+
+            contributorToAdd.ContributorExcellence.Logo = uploadResult;
 
             var contributor = _mapper.Map<ContributorModel>(contributorToAdd);
             var contributorResult = await _contributorRepo.CreateEntityAsync(contributor);
@@ -60,7 +61,9 @@
             var contributor = await _contributorRepo
                 .GetOneWithNotFoundCheck(x => x.Id == contributorId, false);
 
-            _imagesRepo.DeleteImage(contributor!.ContributorExcellence.Logo, null);
+            var imageId = contributor.ContributorExcellence.Logo.Split("id=").Last();
+
+            await _imagesRepo.DeleteFileAsync(imageId);
 
             var result = await _contributorRepo.RemoveEntityAsync(contributorId);
 
@@ -87,22 +90,21 @@
 
         public async Task<PageResponse<ContributorModelDto?>> GetContributorsAsPageAsync(ContributorsFilter filter)
         {
-            var paginationInfo = PaginationInfo.ConvertFromFilterPagination(filter.PageRequestInfo);
-            _contributorValidationRepo.CheckPaginationOptions(paginationInfo);
+            _contributorValidationRepo.CheckPaginationOptions(filter);
 
-            var includesFilter = filter.ShowOnlyExcellences ? 
-                new IncludeProperties<ContributorModel>(x => x.ContributorExcellence)
-                : new IncludeProperties<ContributorModel>();
+            IncludeProperties<ContributorModel> includesFilter = filter.ShowOnlyExcellences ? 
+                new(x => x.ContributorExcellence)
+                : new(x => x.ContributorExcellence, x => x.SubscriptionPlanInfo, x => x.ContributorConfirmInfo);
 
             var query = await _contributorRepo.GetManyEntitiesAsync(includesFilter);
 
             query = query.ApplyFilter(filter).Query;
             query = query.ApplyOrderBy(filter).Query;
 
-            var result = await _contributorRepo.GetMappedPageAsync<ContributorModelDto>(
-                query, paginationInfo, _mapper);
+            var result = await _contributorRepo.GetMappedPageAsync(query, filter);
+            var mappedResult = _mapper.Map<PageResponse<ContributorModelDto?>>(result);
 
-            return result;
+            return mappedResult;
         }
 
         public async Task<ContributorConfirmInfoDto?> GetConfirmInfoByContributorIdAsync(Guid contributorId)

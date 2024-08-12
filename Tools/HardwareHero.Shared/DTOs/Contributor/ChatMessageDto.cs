@@ -1,4 +1,6 @@
-﻿namespace HardwareHero.Shared.DTOs.Contributor
+﻿using System.Text.Json.Serialization;
+
+namespace HardwareHero.Shared.DTOs.Contributor
 {
     public class ChatMessageDto
     {
@@ -8,7 +10,10 @@
         public DateTime Timestamp { get; set; }
         public Guid ChatRoomId { get; set; }
         public Guid SenderId { get; set; }
+
+        [JsonIgnore]
         public ChatRoomDto? ChatRoom { get; set; }
+        [JsonIgnore]
         public ContributorModelDto? Sender { get; set; }
     }
 }

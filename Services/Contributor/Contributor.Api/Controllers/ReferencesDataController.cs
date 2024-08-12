@@ -17,8 +17,7 @@ namespace Contributor.Api.Controllers
         }
 
         [HttpPost("region")]
-        [AllowAnonymous]
-        //[Authorize(Roles = Roles.Contributor)]
+        [Authorize(Roles = Roles.Contributor)]
         public async Task<IActionResult> CreateRegionAsync([FromBody] RegionDto regionToAdd)
         {
             var response = await _referencesDataService
@@ -28,12 +27,21 @@ namespace Contributor.Api.Controllers
         }
 
         [HttpPut("region")]
-        [AllowAnonymous]
-        //[Authorize(Roles = Roles.Manager)]
+        [Authorize(Roles = Roles.Manager)]
         public async Task<IActionResult> UpdateRegionAsync([FromBody] RegionDto regionToUpdate)
         {
             var response = await _referencesDataService
                 .UpdateRegionAsync(regionToUpdate);
+
+            return Ok(response);
+        }
+
+        [HttpGet("regions")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetregionsAsync()
+        {
+            var response = await _referencesDataService
+                .GetRegionsAsync();
 
             return Ok(response);
         }
@@ -69,8 +77,7 @@ namespace Contributor.Api.Controllers
         }
 
         [HttpPost("currency")]
-        [AllowAnonymous]
-        //[Authorize(Roles = Roles.Manager)]
+        [Authorize(Roles = Roles.Manager)]
         public async Task<IActionResult> CreateCurrencyAsync([FromBody] CurrencyDto currencyToAdd)
         {
             var response = await _referencesDataService
@@ -80,8 +87,7 @@ namespace Contributor.Api.Controllers
         }
 
         [HttpPut("currency")]
-        [AllowAnonymous]
-        //[Authorize(Roles = Roles.Manager)]
+        [Authorize(Roles = Roles.Manager)]
         public async Task<IActionResult> UpdateCurrencyAsync([FromBody] CurrencyDto currencyToUpdate)
         {
             var response = await _referencesDataService

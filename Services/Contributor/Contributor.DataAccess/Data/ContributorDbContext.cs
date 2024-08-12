@@ -5,7 +5,10 @@ namespace Contributor.DataAccess.Data
     public class ContributorDbContext : DbContext
     {
         public ContributorDbContext(DbContextOptions<ContributorDbContext> options) 
-            : base(options) { }
+            : base(options) 
+        { 
+            this.ChangeTracker.LazyLoadingEnabled = false; 
+        }
 
         public DbSet<ContributorModel> Contributors { get; set; }
         public DbSet<ContributorExcellence> ContributorExcellences { get; set; }

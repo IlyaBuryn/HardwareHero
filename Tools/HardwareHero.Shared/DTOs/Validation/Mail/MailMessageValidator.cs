@@ -8,16 +8,16 @@ namespace HardwareHero.Shared.DTOs.Validation.Mail
     {
         public MailMessageValidator()
         {
-            RuleFor(x => x.MessageContent).NotEmpty()
+            RuleFor(x => x.Subject).NotEmpty()
                 .WithMessage(ValidationMessages.IsRequired);
 
-            RuleFor(x => x.MessageTitle).NotEmpty()
+            RuleFor(x => x.Body).NotEmpty()
                 .WithMessage(ValidationMessages.IsRequired);
 
             RuleFor(x => x.SenderId).NotEmpty()
                 .WithMessage(ValidationMessages.IsRequired);
 
-            RuleFor(x => x.RecipientsEmailAddress).NotEmpty()
+            RuleFor(x => x.RecipientMailAddress).NotEmpty()
                 .WithMessage(ValidationMessages.IsRequired);
         }
     }

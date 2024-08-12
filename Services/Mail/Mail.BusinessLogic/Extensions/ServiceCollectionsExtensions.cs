@@ -16,6 +16,7 @@ namespace Mail.BusinessLogic.Extensions
         private static void ConfigureServices(IServiceCollection service)
         {
             service.AddScoped<IMailService, MailService>();
+            service.AddScoped<IMailServicePresets, MailServicePresets>();
         }
 
         private static void ConfigureMapProfiles(IServiceCollection service)

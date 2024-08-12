@@ -2,6 +2,6 @@
 {
     public interface IMailService
     {
-        Guid SendMessage(MailMessageDto message);
+        Task<Guid> SendMailAsync(MailMessageDto messageToSend);
     }
 }

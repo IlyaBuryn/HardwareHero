@@ -15,4 +15,9 @@
     <None Include=".dockerignore" />
     <None Include="docker-compose.yml" />
   </ItemGroup>
+  <ProjectExtensions>
+    <VisualStudio>
+      <UserProperties sharedsettings_1json__JsonSchema="https://json.schemastore.org/appsettings.json" />
+    </VisualStudio>
+  </ProjectExtensions>
 </Project>

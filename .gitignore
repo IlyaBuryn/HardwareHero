@@ -1,6 +1,7 @@
 
-/Services/**/Scripts/
 /Services/**/.logs/
+/.credentials/
+/.tmp/
 /images/
 /uploads/
 

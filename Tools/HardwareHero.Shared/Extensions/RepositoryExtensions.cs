@@ -1,4 +1,5 @@
-﻿using HardwareHero.Shared.Repositories;
+﻿using HardwareHero.Filter.Operations;
+using HardwareHero.Shared.Repositories;
 using HardwareHero.Shared.Repositories.Contracts;
 
 namespace HardwareHero.Shared.Extensions
@@ -45,10 +46,9 @@ namespace HardwareHero.Shared.Extensions
         }
 
         public static void CheckPaginationOptions<T>
-            (this IValidationRepository<T> repo, PaginationInfo paginationInfo) where T : BaseEntity
+            (this IValidationRepository<T> repo, IPaginable filter) where T : BaseEntity
         {
-            repo.CheckPaginationOptions(paginationInfo,
-                new PageOptionsValidationException());
+            repo.CheckPaginationOptions(filter, new PageOptionsValidationException());
         }
 
 

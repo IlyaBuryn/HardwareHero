@@ -1,8 +1,6 @@
-﻿using HardwareHero.Filter.Options;
-
-namespace HardwareHero.Shared.Options
+﻿namespace HardwareHero.Shared.Options
 {
-    public class PageSizeOptions : IPageSizeOptions
+    public class PageSizeOptions
     {
         public int PageSize { get; set; }
         public int DefaultPageNumber { get; set; }

@@ -15,8 +15,7 @@ namespace HardwareHero.Shared.Repositories.Contracts
         Task<T?> GetOneEntityAsync([NotNull] Expression<Func<T, bool>> expression, IncludeProperties<T> includeProperties);
 
         Task<IQueryable<T?>> GetManyEntitiesAsync(IncludeProperties<T>? includeProperties = null);
-        Task<IQueryable<T?>> GetManyEntitiesAsync([NotNull] Expression<Func<T, bool>> expression);
-        Task<IQueryable<T?>> GetManyEntitiesAsync([NotNull] Expression<Func<T, bool>> expression, IncludeProperties<T> includeProperties);
+        Task<IQueryable<T?>> GetManyEntitiesAsync([NotNull] Expression<Func<T, bool>> expression, IncludeProperties<T>? includeProperties = null);
 
         DbContext GetDbContext();
     }

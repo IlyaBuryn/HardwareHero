@@ -20,11 +20,5 @@
             IncludeExpressions = expressions;
             IsAllIncludes = false;
         }
-
-        public IncludeProperties(bool isAllIncludes, params Expression<Func<T, object>>[] expressions)
-        {
-            IncludeExpressions = expressions;
-            IsAllIncludes = isAllIncludes;
-        }
     }
 }

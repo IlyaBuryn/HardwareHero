@@ -1,4 +1,5 @@
-﻿using HardwareHero.Shared.Repositories.Contracts;
+﻿using HardwareHero.Filter.Operations;
+using HardwareHero.Shared.Repositories.Contracts;
 using Microsoft.EntityFrameworkCore;
 
 namespace HardwareHero.Shared.Repositories.EF
@@ -31,9 +32,9 @@ namespace HardwareHero.Shared.Repositories.EF
             }
         }
 
-        public void CheckPaginationOptions(PaginationInfo paginationInfo, Exception pageException)
+        public void CheckPaginationOptions(IPaginable filter, Exception pageException)
         {
-            if (paginationInfo.PageNumber <= 0 || paginationInfo.PageSize <= 0)
+            if (filter.PageNumber <= 0 || filter.PageSize <= 0)
             {
                 throw pageException;
             }

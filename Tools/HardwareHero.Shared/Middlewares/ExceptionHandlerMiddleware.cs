@@ -45,6 +45,10 @@ namespace HardwareHero.Shared.Middlewares
             {
                 await HandleExceptionAsync(context, HttpStatusCode.BadRequest, ex);
             }
+            catch (AuthenticationProblemException ex)
+            {
+                await HandleExceptionAsync(context, HttpStatusCode.BadRequest, ex);
+            }
             catch (AuthenticationException ex)
             {
                 await HandleExceptionAsync(context, HttpStatusCode.Unauthorized, ex);

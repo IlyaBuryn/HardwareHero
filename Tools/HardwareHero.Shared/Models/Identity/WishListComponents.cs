@@ -3,5 +3,6 @@
     public class WishListComponents : BaseEntity
     { 
         public Guid ComponentId { get; set; }
+        public string ApplicationUserId { get; set; }
     }
 }

@@ -1,9 +1,8 @@
 ﻿namespace HardwareHero.Shared.Requests
 {
-    // TODO: ?
     public class AddRemoveRolesRequest
     {
-        public string UserName { get; set; }
-        public string[] RoleNames { get; set; }
+        public string Username { get; set; }
+        public string[] Roles { get; set; }
     }
 }

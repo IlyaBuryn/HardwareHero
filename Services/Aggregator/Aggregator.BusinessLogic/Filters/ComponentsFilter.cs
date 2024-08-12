@@ -1,70 +1,54 @@
-﻿namespace Aggregator.BusinessLogic.Filters
+﻿using HardwareHero.Filter.Operations;
+using System.Linq.Expressions;
+
+namespace Aggregator.BusinessLogic.Filters
 {
-    public class ComponentsFilter : FilterRequestDomain<Component>
+    public class ComponentsFilter : FilterRequestDomain<Component>, 
+        ISelectable<Component>, IFilterable<Component>, ISortable<Component>, IPaginable
     {
         public ComponentsFilter()
-            : base()
         {
-            AddTransformationPattern(SelectionPattern);
-        }
-
-        public override void SetFilterExpression()
-        {
-            base.SetFilterExpression();
-
-            if (SearchString != null)
-                AddFilterCondition(x => x.Name.Contains(SearchString) || x.Description.Contains(SearchString));
-
-            if (Type != null)
-                AddFilterCondition(x => x.ComponentType != null ? x.ComponentType.Name == Type || x.ComponentType.FullName == Type : true);
-
-            if (AttributeFilters != null && AttributeFilters.Count() != 0)
-            {
-                foreach (var attributeFilter in AttributeFilters)
-                {
-                    AddFilterCondition(x => x.ComponentAttributes
-                        .Any(a => a.AttributeName == attributeFilter.Key &&
-                                  a.AttributeValue.Contains(attributeFilter.Value)));
-                }
-            }
-
-            
+            SetupFilterExpressions();
+            SetupSortByExpressions();
         }
 
         public string? SearchString { get; set; }
         public string? Type { get; set; }
-        public Dictionary<string, string>? AttributeFilters { get; set; }
+        public string? SortByProperty { get; init; }
+        public bool SortByDescending { get; init; } = true;
+        public uint PageNumber { get; init; }
+        public uint PageSize { get; init; }
 
-        
-
-        public static Component? SelectionPattern(Component? refItem)
+        public object SetupSelectFields(Component? item)
         {
-            //if (refItem.ComponentImages != null)
-            //{
-            //    refItem.ComponentImages = refItem.ComponentImages.Select(ci => new ComponentImages
-            //    {
-            //        Id = ci.Id,
-            //        Image = ci.Image,
-            //        Component = null
-            //    }).ToList();
-            //}
-
-            refItem.ComponentImages = null;
-            refItem.ComponentAttributes = null;
-
-            return refItem;
-
-            //return new Component
-            //{
-            //    Id = refItem.Id,
-            //    Name = refItem.Name,
-            //    Description = refItem.Description,
-            //    ComponentType = refItem.ComponentType,
-
-            //    ComponentAttributes = null,
-            //    ComponentTypeId = Guid.Empty,
-            //    ComponentImages = null,
-            //};
+            return new Component
+            {
+                Id = item.Id,
+                Name = item.Name,
+                Description = item.Description,
+                ComponentType = item.ComponentType,
+            };
         }
+
+        public void SetupFilterExpressions()
+        {
+            FilterExpressions[nameof(Component)] =
+                component =>
+                (string.IsNullOrEmpty(SearchString) || (component.Name.Contains(SearchString) || component.Description.Contains(SearchString))) &&
+                (string.IsNullOrEmpty(Type) || (component.ComponentType != null ? component.ComponentType.Name == Type || component.ComponentType.FullName == Type : true));
+        }
+
+        public void SetupSortByExpressions()
+        {
+            SortByExpressions[nameof(Component.Id)] = component => component.Id;
+            SortByExpressions[nameof(Component.Name)] = component => component.Name;
+            SortByExpressions[nameof(Component.ComponentType)] = component => component.ComponentType.Name;
+        }
+
+        public Expression<Func<Component, bool>>? OnGetFilterExpression()
+            => GetFilterExpression(nameof(Component));
+
+        public Expression<Func<Component, object>>? OnGetSortExpression(string? sortByProperty)
+            => GetSortExpression(sortByProperty);
     }
 }

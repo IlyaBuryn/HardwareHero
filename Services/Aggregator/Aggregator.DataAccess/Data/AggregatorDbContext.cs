@@ -6,7 +6,9 @@ namespace Aggregator.DataAccess.Data
     {
         public AggregatorDbContext(DbContextOptions<AggregatorDbContext> options) 
             : base(options)
-        { }
+        {
+            this.ChangeTracker.LazyLoadingEnabled = false;
+        }
 
         public DbSet<Component> Components { get; set; }
         public DbSet<ComponentAttributes> ComponentAttributes { get; set; }

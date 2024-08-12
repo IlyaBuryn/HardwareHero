@@ -1,40 +1,39 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using EventStream.EventHandling;
+using KafkaEventStream.BackgroundServices;
+using KafkaEventStream.Topics;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 
 namespace Aggregator.Api.Controllers
 {
-    [ApiController]
     [Produces("application/json")]
     [Route("api/aggregator")]
+    [ApiController]
     public class ComponentController : ControllerBase
     {
         private readonly IComponentService _componentService;
         private readonly PageSizeOptions _pageSizeSettings;
         private readonly ILogger<ComponentController> _logger;
+        private readonly IMessageProducer _messageProducer;
+        private readonly IMessageConsumer _messageConsumer;
 
         public ComponentController(
             IComponentService componentService,
             IOptions<PageSizeOptions> pageSizeSettings,
-            ILogger<ComponentController> logger)
+            ILogger<ComponentController> logger,
+            IMessageProducer messageProducer,
+            IMessageConsumer messageConsumer)
         {
             _componentService = componentService;
             _pageSizeSettings = pageSizeSettings.Value;
             _logger = logger;
-        }
-
-        [HttpGet("log-test")]
-        [AllowAnonymous]
-        public async Task<IActionResult> LogTestAsync()
-        {
-            _logger.LogInformation("Log Tested!");
-
-            return Ok(1);
+            _messageProducer = messageProducer;
+            _messageConsumer = messageConsumer;
         }
 
         [HttpPost("component")]
-        [AllowAnonymous]
-        //[Authorize(Roles = Roles.Manager)]
+        [Authorize(Roles = Roles.Manager)]
         public async Task<IActionResult> CreateAsync([FromBody] ComponentDto componentToAdd)
         {
             var response = await _componentService
@@ -45,8 +44,7 @@ namespace Aggregator.Api.Controllers
 
 
         [HttpPut("component")]
-        [AllowAnonymous]
-        //[Authorize(Roles = Roles.Manager)]
+        [Authorize(Roles = Roles.Manager)]
         public async Task<IActionResult> UpdateAsync([FromBody] ComponentDto componentToUpdate)
         {
             var response = await _componentService
@@ -57,8 +55,7 @@ namespace Aggregator.Api.Controllers
 
 
         [HttpDelete("component/{componentId}")]
-        [AllowAnonymous]
-        //[Authorize(Roles = Roles.Manager)]
+        [Authorize(Roles = Roles.Manager)]
         public async Task<IActionResult> DeleteAsync([FromRoute] Guid componentId)
         {
             var response = await _componentService
@@ -69,9 +66,8 @@ namespace Aggregator.Api.Controllers
 
 
         [HttpPost("components")]
-        [AllowAnonymous]
-        //[Authorize(Roles = Roles.Admin)]
-        public async Task<IActionResult> CreateFromJsonAsync([FromBody] List<ComponentDto> componentsToAdd)
+        [Authorize(Roles = Roles.Admin)]
+        public async Task<IActionResult> CreateManyAsync([FromBody] List<ComponentDto> componentsToAdd)
         {
             var response = await _componentService
                 .AddComponentsAsync(componentsToAdd);
@@ -105,8 +101,6 @@ namespace Aggregator.Api.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> GetComponents([FromBody] ComponentsFilter filter)
         {
-            filter.ApplyPageSizeOptions(_pageSizeSettings);
-
             var response = await _componentService.GetComponentsAsPageAsync(filter);
             
             return Ok(response);

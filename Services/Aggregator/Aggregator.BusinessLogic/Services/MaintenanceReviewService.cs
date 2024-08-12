@@ -1,4 +1,6 @@
-﻿namespace Aggregator.BusinessLogic.Services
+﻿using HardwareHero.Filter.Operations;
+
+namespace Aggregator.BusinessLogic.Services
 {
     public class MaintenanceReviewService : IMaintenanceReviewService
     {
@@ -17,12 +19,12 @@
             throw new NotImplementedException();
         }
 
-        public Task<List<ComponentGlobalReviewDto?>> GetComponentGlobalReviewsAsPageByMaintenanceIdAsync(PaginationInfo paginationInfo, Guid maintenanceId)
+        public Task<List<ComponentGlobalReviewDto?>> GetComponentGlobalReviewsAsPageByMaintenanceIdAsync(IPaginable filter, Guid maintenanceId)
         {
             throw new NotImplementedException();
         }
 
-        public Task<List<ComponentLocalReviewDto?>> GetComponentLocalReviewsAsPageByMaintenanceIdAsync(PaginationInfo paginationInfo, Guid maintenanceId)
+        public Task<List<ComponentLocalReviewDto?>> GetComponentLocalReviewsAsPageByMaintenanceIdAsync(IPaginable filter, Guid maintenanceId)
         {
             throw new NotImplementedException();
         }

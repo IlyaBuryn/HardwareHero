@@ -1,17 +1,26 @@
-﻿namespace Aggregator.BusinessLogic.Filters
-{
-    public class ComponentGlobalReviewFilter : FilterRequestDomain<ComponentGlobalReview>
-    {
-        public ComponentGlobalReviewFilter()
-            : base()
-        {
-            AddTransformationPattern(SelectionPattern);
-        }
+﻿using HardwareHero.Filter.Operations;
 
-        public static ComponentGlobalReview? SelectionPattern(ComponentGlobalReview? item)
+namespace Aggregator.BusinessLogic.Filters
+{
+    public class ComponentGlobalReviewFilter : FilterRequestDomain<ComponentGlobalReview>,
+        ISelectable<ComponentGlobalReview>, IPaginable
+    {
+        public uint PageNumber { get; init; }
+        public uint PageSize { get; init; }
+
+        public object SetupSelectFields(ComponentGlobalReview? item)
         {
-            item.Component = null;
-            return item;
+            return new ComponentGlobalReview
+            {
+                Id = item.Id,
+                Text = item.Text,
+                Rating = item.Rating,
+                AuthorName = item.AuthorName,
+                ComponentId = item.ComponentId,
+                ContributorId = item.ContributorId,
+                IsRecommended = item.IsRecommended,
+                Timestamp = item.Timestamp,
+            };
         }
     }
 }

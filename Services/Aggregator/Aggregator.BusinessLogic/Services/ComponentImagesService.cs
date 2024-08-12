@@ -5,20 +5,16 @@ namespace Aggregator.BusinessLogic.Services
     public class ComponentImagesService : IComponentImagesService
     {
         private readonly ICrudRepositoryAsync<ComponentImages> _componentImagesRepo;
-
         private readonly IValidationRepository<ComponentImages> _componentImagesValidationRepo;
-
-        private readonly IObjectImageRepositoryAsync<ComponentImages> _imagesRepo;
-
+        private readonly IFileRepositoryAsync _imagesRepo;
         private readonly IMapper _mapper;
-
         private readonly string _fileNameDivider;
 
 
         public ComponentImagesService(
             ICrudRepositoryAsync<ComponentImages> componentImagesRepo,
             IValidationRepository<ComponentImages> componentImagesValidationRepo,
-            IObjectImageRepositoryAsync<ComponentImages> imagesRepo,
+            IFileRepositoryAsync imagesRepo,
             IOptions<ImagesSaveOptions> savePathOptions,
             IMapper mapper)
         {
@@ -33,16 +29,17 @@ namespace Aggregator.BusinessLogic.Services
         {
             componentImageToAdd.Id = Guid.NewGuid();
 
-            _componentImagesValidationRepo.CheckIfObjectAlreadyExist(
-                x => x.ComponentId == componentImageToAdd.ComponentId && x.Image == componentImageToAdd.Image,
-                componentImageToAdd.Image);
-
+            //_componentImagesValidationRepo.CheckIfObjectAlreadyExist(
+            //    x => x.ComponentId == componentImageToAdd.ComponentId && x.Image == componentImageToAdd.Image,
+            //    componentImageToAdd.Image);
+            
             var componentImage = _mapper.Map<ComponentImages>(componentImageToAdd);
-            var imageSaveResult = await _imagesRepo.SaveImageAsync(componentImage,
-                componentImageToAdd.ImageData, componentImage.ComponentId + _fileNameDivider + componentImage.Image);
+            var imageLink = await _imagesRepo.UploadFileAsync(componentImageToAdd.ImageData,
+                componentImage.ComponentId + _fileNameDivider + componentImage.Image);
+            componentImage.Image = imageLink;
 
             Guid result = Guid.Empty;
-            if (!string.IsNullOrEmpty(imageSaveResult))
+            if (!string.IsNullOrEmpty(imageLink))
             {
                 result = await _componentImagesRepo.CreateEntityAsync(componentImage);
             }
@@ -55,11 +52,11 @@ namespace Aggregator.BusinessLogic.Services
         {
             var image = await _componentImagesRepo.GetOneWithNotFoundCheck(x => x.Id == componentImageId);
 
-            var imageDeleteResult = await _imagesRepo.DeleteImageAsync(image,
-                image.ComponentId + _fileNameDivider + image.Image);
+            var imageId = image.Image.Split("id=").Last();
+            var imageDeleteResult = await _imagesRepo.DeleteFileAsync(imageId);
 
             bool result = false;
-            if (!string.IsNullOrEmpty(imageDeleteResult))
+            if (imageDeleteResult)
             {
                 result = await _componentImagesRepo.RemoveEntityAsync(componentImageId);
             }

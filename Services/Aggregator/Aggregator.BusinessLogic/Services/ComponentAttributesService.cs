@@ -1,13 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Aggregator.BusinessLogic.Extensions;
+using Microsoft.EntityFrameworkCore;
 
 namespace Aggregator.BusinessLogic.Services
 {
     public class ComponentAttributesService : IComponentAttributesService
     {
         private readonly ICollectionRepositoryAsync<ComponentAttributes> _componentAttributesRepo;
-
         private readonly IValidationRepository<ComponentAttributes> _componentAttributesValidationRepo;
-
         private readonly IMapper _mapper;
 
         public ComponentAttributesService(
@@ -92,20 +91,19 @@ namespace Aggregator.BusinessLogic.Services
 
         public async Task<PageResponse<ComponentAttributesDto?>> GetAllUniqueComponentAttributesAsPageAsync(ComponentAttributesFilter filter)
         {
-            var paginationInfo = PaginationInfo.ConvertFromFilterPagination(filter.PageRequestInfo);
-            _componentAttributesValidationRepo.CheckPaginationOptions(paginationInfo);
+            _componentAttributesValidationRepo.CheckPaginationOptions(filter);
 
             var query = await _componentAttributesRepo.GetManyEntitiesAsync(
-                new IncludeProperties<ComponentAttributes>(x => x.Component, x => x.Component.ComponentType));
+                new IncludeProperties<ComponentAttributes>(false));
 
             query = query.ApplyFilter(filter).Query;
             query = query.ApplyOrderBy(filter).Query;
-            query = query.ApplyGroupBy(filter).Query;
+            query = query.ApplyGroupBy(filter).Groups.SeparateGroupsToComponentAttributes();
 
-            var result = await _componentAttributesRepo.GetMappedPageAsync<ComponentAttributesDto>(
-                query, paginationInfo, _mapper);
+            var result = await _componentAttributesRepo.GetMappedPageAsync(query, filter);
+            var mappedResult = _mapper.Map<PageResponse<ComponentAttributesDto>>(result);
 
-            return result;
+            return mappedResult;
         }
     }
 }

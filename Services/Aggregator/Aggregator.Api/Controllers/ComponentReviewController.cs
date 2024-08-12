@@ -22,8 +22,7 @@ namespace Aggregator.Api.Controllers
 
 
         [HttpPost("component/review/local")]
-        [AllowAnonymous]
-        //[Authorize(Roles = Roles.User)]
+        [Authorize(Roles = Roles.User)]
         public async Task<IActionResult> CreateLocalReviewAsync([FromBody] ComponentLocalReviewDto reviewToAdd)
         {
             var response = await _componentReviewService
@@ -34,8 +33,7 @@ namespace Aggregator.Api.Controllers
 
 
         [HttpPost("component/review/global")]
-        [AllowAnonymous]
-        //[Authorize(Roles = Roles.Admin)]
+        [Authorize(Roles = Roles.Admin)]
         public async Task<IActionResult> CreateGlobalReviewAsync([FromBody] ComponentGlobalReviewDto reviewToAdd)
         {
             var response = await _componentReviewService
@@ -46,8 +44,7 @@ namespace Aggregator.Api.Controllers
 
 
         [HttpPut("component/review/local")]
-        [AllowAnonymous]
-        //[Authorize(Roles = Roles.User)]
+        [Authorize(Roles = Roles.User)]
         public async Task<IActionResult> UpdateLocalReviewAsync([FromBody] ComponentLocalReviewDto reviewToUpdate)
         {
             var response = await _componentReviewService
@@ -57,8 +54,7 @@ namespace Aggregator.Api.Controllers
         }
 
         [HttpPut("component/review/global")]
-        [AllowAnonymous]
-        //[Authorize(Roles = Roles.Admin)]
+        [Authorize(Roles = Roles.Admin)]
         public async Task<IActionResult> UpdateGlobalReviewAsync([FromBody] ComponentGlobalReviewDto reviewToUpdate)
         {
             var response = await _componentReviewService
@@ -69,8 +65,7 @@ namespace Aggregator.Api.Controllers
 
 
         [HttpDelete("component/review/local/{reviewId}")]
-        [AllowAnonymous]
-        //[Authorize(Roles = Roles.User)]
+        [Authorize(Roles = Roles.User)]
         public async Task<IActionResult> DeleteLocalReviewAsync([FromRoute] Guid reviewId)
         {
             var response = await _componentReviewService
@@ -81,8 +76,7 @@ namespace Aggregator.Api.Controllers
 
 
         [HttpDelete("component/review/global/{reviewId}")]
-        [AllowAnonymous]
-        //[Authorize(Roles = Roles.Admin)]
+        [Authorize(Roles = Roles.Admin)]
         public async Task<IActionResult> DeleteGlobalReviewAsync([FromRoute] Guid reviewId)
         {
             var response = await _componentReviewService
@@ -93,8 +87,7 @@ namespace Aggregator.Api.Controllers
 
 
         [HttpPost("components/reviews")]
-        [AllowAnonymous]
-        //[Authorize(Roles = Roles.Admin)]
+        [Authorize(Roles = Roles.Admin)]
         public async Task<IActionResult> CreateFromJsonAsync([FromBody] List<ComponentGlobalReviewDto> reviews)
         {
             var response = await _componentReviewService
@@ -103,26 +96,22 @@ namespace Aggregator.Api.Controllers
             return Ok(response);
         }
 
-        [HttpPost("component/reviews/local/{componentId}")]
+        [HttpPost("component/{componentId}/reviews/local")]
         [AllowAnonymous]
         public async Task<IActionResult> GetLocalReviewsAsPageByComponentId(
             [FromBody] ComponentLocalReviewFilter filter, [FromRoute] Guid componentId)
         {
-            filter.ApplyPageSizeOptions(_pageSizeSettings);
-
             var response = await _componentReviewService
                 .GetComponentLocalReviewsAsPageByComponentIdAsync(filter, componentId);
 
             return Ok(response);
         }
 
-        [HttpPost("component/reviews/global/{componentId}")]
+        [HttpPost("component/{componentId}/reviews/global")]
         [AllowAnonymous]
         public async Task<IActionResult> GetGlobalReviewsAsPageByComponentId(
             [FromBody] ComponentGlobalReviewFilter filter, [FromRoute] Guid componentId)
         {
-            filter.ApplyPageSizeOptions(_pageSizeSettings);
-
             var response = await _componentReviewService
                 .GetComponentGlobalReviewsAsPageByComponentIdAsync(filter, componentId);
 

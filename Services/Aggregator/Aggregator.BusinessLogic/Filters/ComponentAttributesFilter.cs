@@ -1,39 +1,50 @@
-﻿using System.Text.RegularExpressions;
+﻿using HardwareHero.Filter.Operations;
+using System.Linq.Expressions;
 
 namespace Aggregator.BusinessLogic.Filters
 {
-    public class ComponentAttributesFilter : FilterRequestDomain<ComponentAttributes>
+    public class ComponentAttributesFilter : FilterRequestDomain<ComponentAttributes>,
+        IFilterable<ComponentAttributes>, IGroupable<ComponentAttributes>, IPaginable, ISortable<ComponentAttributes>
     {
         public ComponentAttributesFilter()
-            : base()
         {
-            GroupByRequestInfo = new()
-            {
-                PropertyName = nameof(ComponentAttributes.AttributeName)
-            };
-
-            AddGroupByTransformationPattern(GroupedPattern);
-        }
-
-        public override void SetFilterExpression()
-        {
-            base.SetFilterExpression();
-
-            if (Type != null)
-                AddFilterCondition(x => x.Component != null && x.Component.ComponentType != null ? x.Component.ComponentType.Name == Type || x.Component.ComponentType.FullName == Type : true);
+            SetupFilterExpressions();
+            SetupGroupByExpressions();
+            SetupSortByExpressions();
         }
 
         public string? Type { get; set; }
+        public string? GroupByProperty { get; init; }
+        public uint PageNumber { get; init; }
+        public uint PageSize { get; init; }
+        public string? SortByProperty { get => throw new NotImplementedException(); init => throw new NotImplementedException(); }
+        public bool SortByDescending { get => throw new NotImplementedException(); init => throw new NotImplementedException(); }
 
-        public static IQueryable<ComponentAttributes?>? GroupedPattern(IQueryable<IGrouping<object, ComponentAttributes?>>? groups)
+        public void SetupFilterExpressions()
         {
-            var query = groups.Select(group => new ComponentAttributes
-            {
-                AttributeName = (string)(group.Key is string ? group.Key : string.Empty),
-                AttributeValue = string.Join("|", group.Select(attr => attr.AttributeValue).Distinct().ToList()),
-            });
-
-            return query;
+            FilterExpressions[nameof(ComponentAttributes)] =
+                attr => (attr.Component == null || attr.Component.ComponentType == null) || (attr.Component.ComponentType.Name == Type || attr.Component.ComponentType.FullName == Type);
         }
+
+        public void SetupGroupByExpressions()
+        {
+            GroupByExpressions[nameof(ComponentAttributes.AttributeName)] =
+                attr => attr.AttributeName;
+        }
+
+        public void SetupSortByExpressions()
+        {
+            SortByExpressions[nameof(ComponentAttributes.AttributeName)] = attr => attr.AttributeName;
+            SortByExpressions[nameof(ComponentAttributes.AttributeValue)] = attr => attr.AttributeValue;
+        }
+
+        public Expression<Func<ComponentAttributes, bool>>? OnGetFilterExpression()
+            => GetFilterExpression(nameof(ComponentAttributes));
+
+        public Expression<Func<ComponentAttributes, object>>? OnGetGroupExpression(string groupByProperty)
+            => GetGroupExpression(groupByProperty);
+
+        public Expression<Func<ComponentAttributes, object>>? OnGetSortExpression(string? sortByProperty)
+            => GetSortExpression(sortByProperty);
     }
 }

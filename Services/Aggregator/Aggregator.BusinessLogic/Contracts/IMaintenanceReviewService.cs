@@ -1,4 +1,6 @@
-﻿namespace Aggregator.BusinessLogic.Contracts
+﻿using HardwareHero.Filter.Operations;
+
+namespace Aggregator.BusinessLogic.Contracts
 {
     public interface IMaintenanceReviewService
     {
@@ -12,8 +14,8 @@
 
         Task<Guid[]> AddGlobalReviewsFromJsonAsync(string jsonData);
 
-        Task<List<ComponentLocalReviewDto?>> GetComponentLocalReviewsAsPageByMaintenanceIdAsync(PaginationInfo paginationInfo, Guid maintenanceId);
-        Task<List<ComponentGlobalReviewDto?>> GetComponentGlobalReviewsAsPageByMaintenanceIdAsync(PaginationInfo paginationInfo, Guid maintenanceId);
+        Task<List<ComponentLocalReviewDto?>> GetComponentLocalReviewsAsPageByMaintenanceIdAsync(IPaginable filter, Guid maintenanceId);
+        Task<List<ComponentGlobalReviewDto?>> GetComponentGlobalReviewsAsPageByMaintenanceIdAsync(IPaginable filter, Guid maintenanceId);
         Task<decimal> GetMaintenanceAvgMarkAsync(Guid maintenanceId);
     }
 }

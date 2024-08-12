@@ -12,7 +12,7 @@ namespace Aggregator.DataAccess.Extensions
             builder.AddScoped(typeof(ICollectionRepositoryAsync<>), typeof(EFCollectionRepositoryAsync<>));
             builder.AddScoped(typeof(ICrudRepositoryAsync<>), typeof(EFCrudRepositoryAsync<>));
             builder.AddScoped(typeof(IValidationRepository<>), typeof(EFValidationRepository<>));
-            builder.AddScoped(typeof(IObjectImageRepositoryAsync<>), typeof(ObjectImageRepositoryAsync<>));
+            builder.AddScoped(typeof(IFileRepositoryAsync), typeof(GoogleDriveRepositoryAsync));
 
             builder.AddScoped<DbContext, AggregatorDbContext>();
         }

@@ -27,8 +27,7 @@ namespace Aggregator.Api.Controllers
         }
 
         [HttpPost("component/type")]
-        [AllowAnonymous]
-        //[Authorize(Roles = Roles.Manager)]
+        [Authorize(Roles = Roles.Manager)]
         public async Task<IActionResult> CreateTypeAsync([FromBody] ComponentTypeDto componentTypeToAdd)
         {
             var response = await _componentTypeService
@@ -39,8 +38,7 @@ namespace Aggregator.Api.Controllers
 
 
         [HttpPut("component/type")]
-        [AllowAnonymous]
-        //[Authorize(Roles = Roles.Manager)]
+        [Authorize(Roles = Roles.Manager)]
         public async Task<IActionResult> UpdateTypeAsync([FromBody] ComponentTypeDto componentTypeToUpdate)
         {
             var response = await _componentTypeService
@@ -51,8 +49,7 @@ namespace Aggregator.Api.Controllers
 
 
         [HttpDelete("component/type/{typeId}")]
-        [AllowAnonymous]
-        //[Authorize(Roles = Roles.Manager)]
+        [Authorize(Roles = Roles.Manager)]
         public async Task<IActionResult> DeleteTypeAsync([FromRoute] Guid typeId)
         {
             var response = await _componentTypeService
@@ -74,8 +71,7 @@ namespace Aggregator.Api.Controllers
 
 
         [HttpPost("component/image")]
-        [AllowAnonymous]
-        //[Authorize(Roles = Roles.Manager)]
+        [Authorize(Roles = Roles.Manager)]
         public async Task<IActionResult> AddImageAsync([FromBody] ComponentImagesDto componentImageToAdd)
         {
             var response = await _componentImagesService
@@ -86,8 +82,7 @@ namespace Aggregator.Api.Controllers
 
 
         [HttpDelete("component/image/{imageId}")]
-        [AllowAnonymous]
-        //[Authorize(Roles = Roles.Manager)]
+        [Authorize(Roles = Roles.Manager)]
         public async Task<IActionResult> DeleteImageAsync([FromRoute] Guid imageId)
         {
             var response = await _componentImagesService
@@ -98,8 +93,7 @@ namespace Aggregator.Api.Controllers
 
 
         [HttpPost("component/attribute")]
-        [AllowAnonymous]
-        //[Authorize(Roles = Roles.Manager)]
+        [Authorize(Roles = Roles.Manager)]
         public async Task<IActionResult> CreateAttributeAsync([FromBody] ComponentAttributesDto attributeToAdd)
         {
             var response = await _componentAttributesService
@@ -110,8 +104,7 @@ namespace Aggregator.Api.Controllers
 
 
         [HttpPut("component/{componentId}/attributes")]
-        [AllowAnonymous]
-        //[Authorize(Roles = Roles.Manager)] 
+        [Authorize(Roles = Roles.Manager)] 
         public async Task<IActionResult> ReplaceAttributesAsync(
             [FromRoute] Guid componentId, [FromBody] Dictionary<string, string> attributes)
         {
@@ -123,8 +116,7 @@ namespace Aggregator.Api.Controllers
 
 
         [HttpPut("component/attribute")]
-        [AllowAnonymous]
-        //[Authorize(Roles = Roles.Manager)]
+        [Authorize(Roles = Roles.Manager)]
         public async Task<IActionResult> UpdateAttributeValueAsync(
             [FromBody] ComponentAttributesDto attributeToUpdate)
         {
@@ -136,8 +128,7 @@ namespace Aggregator.Api.Controllers
 
 
         [HttpDelete("component/{componentId}/attribute/{key}")]
-        [AllowAnonymous]
-        //[Authorize(Roles = Roles.Manager)]
+        [Authorize(Roles = Roles.Manager)]
         public async Task<IActionResult> DeleteAttributeAsync(
             [FromRoute] Guid componentId, [FromRoute] string key)
         {
@@ -152,8 +143,6 @@ namespace Aggregator.Api.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> GetAttributesGroupAsPageAsync([FromBody] ComponentAttributesFilter filter)
         {
-            filter.ApplyPageSizeOptions(_pageSizeSettings);
-
             var response = await _componentAttributesService
                 .GetAllUniqueComponentAttributesAsPageAsync(filter);
 

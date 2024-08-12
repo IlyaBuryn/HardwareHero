@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using HardwareHero.Shared.Extensions;
 using Microsoft.Extensions.Options;
 
 namespace Aggregator.BusinessLogic.Services
@@ -13,7 +13,7 @@ namespace Aggregator.BusinessLogic.Services
         private readonly IValidationRepository<Component> _componentValidationRepo;
         private readonly IValidationRepository<ComponentType> _componentTypeValidationRepo;
 
-        private readonly IObjectImageRepositoryAsync<ComponentImages> _imagesRepo;
+        private readonly IFileRepositoryAsync _imagesRepo;
 
         private readonly IMapper _mapper;
 
@@ -24,7 +24,7 @@ namespace Aggregator.BusinessLogic.Services
             ICrudRepositoryAsync<ComponentViews> componentViewsRepo,
             IValidationRepository<Component> componentValidationRepo,
             IValidationRepository<ComponentType> componentTypeValidationRepo,
-            IObjectImageRepositoryAsync<ComponentImages> imagesRepo,
+            IFileRepositoryAsync imagesRepo,
             IMapper mapper,
             IOptions<ImagesSaveOptions> savePathOptions,
             ICrudRepositoryAsync<ComponentType> componentTypeRepo)
@@ -50,8 +50,9 @@ namespace Aggregator.BusinessLogic.Services
             {
                 foreach (var image in componentToAdd.ComponentImages)
                 {
-                    await _imagesRepo.SaveImageAsync(_mapper.Map<ComponentImages>(image),
-                        image.ImageData, image.ComponentId + _fileNameDivider + image.Image);
+                    var imageName = image.ComponentId + _fileNameDivider + image.Image;
+                    var uploadingResult = await _imagesRepo.UploadFileAsync(image.ImageData, imageName);
+                    image.Image = imageName;
                 }
             }
 
@@ -88,15 +89,13 @@ namespace Aggregator.BusinessLogic.Services
         {
             var component = await _componentRepo.GetOneWithNotFoundCheck(x => x.Id == componentId);
 
-            // No need to delete the test data yet, however this code works.
-            //if (component.ComponentImages != null && component.ComponentImages.Count() != 0)
-            //{
-            //    foreach (var image in component.ComponentImages)
-            //    {
-            //        await _imagesRepo.DeleteImageAsync(image,
-            //            image.ComponentId + _fileNameDivider + image.Image);
-            //    }
-            //}
+            if (component.ComponentImages != null && component.ComponentImages.Count() != 0)
+            {
+                //foreach (var image in component.ComponentImages)
+                //{
+                //    var isDeleted = await _imagesRepo.DeleteFileAsync(image.Image);
+                //}
+            }
 
             var result = await _componentRepo.RemoveEntityAsync(componentId);
 
@@ -149,19 +148,17 @@ namespace Aggregator.BusinessLogic.Services
         }
 
 
-        public async Task<PageResponse<ComponentDto?>> GetComponentsAsPageAsync(ComponentsFilter filter)
+        public async Task<PageResponse<object?>> GetComponentsAsPageAsync(ComponentsFilter filter)
         {
-            var paginationInfo = PaginationInfo.ConvertFromFilterPagination(filter.PageRequestInfo);
-            _componentValidationRepo.CheckPaginationOptions(paginationInfo);
+            _componentValidationRepo.CheckPaginationOptions(filter);
 
             var query = await _componentRepo.GetManyEntitiesAsync(new IncludeProperties<Component>());
 
             query = query.ApplyFilter(filter).Query;
             query = query.ApplyOrderBy(filter).Query;
-            query = query.ApplySelection(filter).Query;
+            var selected = query.ApplySelection(filter).Query;
 
-            var result = await _componentRepo.GetMappedPageAsync<ComponentDto>(
-                query, paginationInfo, _mapper);
+            var result = await _componentRepo.GetObjectPageAsync(selected, filter);
 
             return result;
         }

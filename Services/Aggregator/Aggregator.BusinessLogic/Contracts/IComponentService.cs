@@ -10,6 +10,6 @@
 
         Task<ComponentDto?> GetComponentByIdAsync(Guid componentId);
         Task<List<ComponentDto?>> GetComponentsByIdsAsync(List<Guid> componentsIds);
-        Task<PageResponse<ComponentDto?>> GetComponentsAsPageAsync(ComponentsFilter filter);
+        Task<PageResponse<object?>> GetComponentsAsPageAsync(ComponentsFilter filter);
     }
 }

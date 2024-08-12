@@ -1,9 +1,9 @@
-﻿using KafkaEventStream;
+﻿using KafkaEventStream.Contracts;
 using System.Text.Json;
 
 namespace Aggregator.Api
 {
-    public class AggregatorEndpointManager : IEventEndpointManager
+    public class AggregatorEndpointManager : EventEndpointManager
     {
         private readonly IServiceProvider _serviceProvider;
         private readonly IComponentTypeService _componentTypeService;
@@ -14,9 +14,9 @@ namespace Aggregator.Api
             _componentTypeService = _serviceProvider.GetService<IComponentTypeService>();
         }
 
-        public async Task<string> InvokeByEndpoint(string requestDest)
+        public override async Task<string> InvokeByEndpoint(string endpoint)
         {
-            if (requestDest == "component/types")
+            if (IsMatchEndpoints(endpoint, "component/types"))
             {
                 var result = await _componentTypeService.GetComponentTypesAsync();
                 return JsonSerializer.Serialize(result);

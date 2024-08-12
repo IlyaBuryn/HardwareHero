@@ -1,0 +1,1505 @@
+[
+  {
+    "ComponentId": "18ea6e49-ffd4-479d-be13-eb83c9ef10dd",
+    "ComponentType": "CPU",
+    "Attributes": [
+      {
+        "Key": "Socket Type",
+        "Value": "AM5",
+        "Operation": "value"
+      },
+      {
+        "Key": "Memory Type",
+        "Value": "DDR5",
+        "Operation": "values"
+      },
+      {
+        "Key": "Memory Type Frequency",
+        "Value": "5200",
+        "Operation": "max"
+      }
+    ]
+  },
+  {
+    "ComponentId": "c23d9f9a-85be-4ab6-9d7b-2d6e806e0290",
+    "ComponentType": "CPU",
+    "Attributes": [
+      {
+        "Key": "Socket Type",
+        "Value": "LGA 1700",
+        "Operation": "value"
+      },
+      {
+        "Key": "Memory Type",
+        "Value": "DDR5 / DDR4",
+        "Operation": "values"
+      },
+      {
+        "Key": "Memory Type Frequency",
+        "Value": "4800",
+        "Operation": "max"
+      }
+    ]
+  },
+  {
+    "ComponentId": "207fd2c4-861b-49cd-992d-85d2477a5d73",
+    "ComponentType": "CPU",
+    "Attributes": [
+      {
+        "Key": "Socket Type",
+        "Value": "AM5",
+        "Operation": "value"
+      },
+      {
+        "Key": "Memory Type",
+        "Value": "DDR5",
+        "Operation": "values"
+      },
+      {
+        "Key": "Memory Type Frequency",
+        "Value": "5200",
+        "Operation": "max"
+      }
+    ]
+  },
+  {
+    "ComponentId": "60092e5d-08e3-4c3a-b27f-537dc0726a3a",
+    "ComponentType": "CPU",
+    "Attributes": [
+      {
+        "Key": "Socket Type",
+        "Value": "AM4",
+        "Operation": "value"
+      },
+      {
+        "Key": "Memory Type",
+        "Value": "DDR4",
+        "Operation": "values"
+      },
+      {
+        "Key": "Memory Type Frequency",
+        "Value": "3200",
+        "Operation": "max"
+      }
+    ]
+  },
+  {
+    "ComponentId": "53777784-e82c-4a42-998a-9c54634943bd",
+    "ComponentType": "CPU",
+    "Attributes": [
+      {
+        "Key": "Socket Type",
+        "Value": "LGA 1700",
+        "Operation": "value"
+      },
+      {
+        "Key": "Memory Type",
+        "Value": "DDR4 / DDR5",
+        "Operation": "values"
+      },
+      {
+        "Key": "Memory Type Frequency",
+        "Value": "4800",
+        "Operation": "max"
+      }
+    ]
+  },
+  {
+    "ComponentId": "dfb7c67f-f325-41b7-9a21-f68a12cb2d03",
+    "ComponentType": "CPU",
+    "Attributes": [
+      {
+        "Key": "Socket Type",
+        "Value": "AM4",
+        "Operation": "value"
+      },
+      {
+        "Key": "Memory Type",
+        "Value": "DDR4",
+        "Operation": "values"
+      },
+      {
+        "Key": "Memory Type Frequency",
+        "Value": "3200",
+        "Operation": "max"
+      }
+    ]
+  },
+  {
+    "ComponentId": "6bc9e0fb-16a4-4745-99e4-4c8dda32d635",
+    "ComponentType": "CPU",
+    "Attributes": [
+      {
+        "Key": "Socket Type",
+        "Value": "LGA 1700",
+        "Operation": "value"
+      },
+      {
+        "Key": "Memory Type",
+        "Value": "DDR4 / DDR5",
+        "Operation": "values"
+      },
+      {
+        "Key": "Memory Type Frequency",
+        "Value": "4800",
+        "Operation": "max"
+      }
+    ]
+  },
+  {
+    "ComponentId": "b1c3e4cd-3283-42dd-a6b5-62ac5cbcb595",
+    "ComponentType": "CPU",
+    "Attributes": [
+      {
+        "Key": "Socket Type",
+        "Value": "AM4",
+        "Operation": "value"
+      },
+      {
+        "Key": "Memory Type",
+        "Value": "DDR4",
+        "Operation": "values"
+      },
+      {
+        "Key": "Memory Type Frequency",
+        "Value": "3200",
+        "Operation": "max"
+      }
+    ]
+  },
+  {
+    "ComponentId": "3dcd56dc-bdc4-4090-9841-e7b1c283957c",
+    "ComponentType": "CPU",
+    "Attributes": [
+      {
+        "Key": "Socket Type",
+        "Value": "LGA 1700",
+        "Operation": "value"
+      },
+      {
+        "Key": "Memory Type",
+        "Value": "DDR4 / DDR5",
+        "Operation": "values"
+      },
+      {
+        "Key": "Memory Type Frequency",
+        "Value": "4800",
+        "Operation": "max"
+      }
+    ]
+  },
+  {
+    "ComponentId": "9f17447a-8bb5-4496-be07-cb9a27479533",
+    "ComponentType": "Case",
+    "Attributes": [
+      {
+        "Key": "Motherboard Compatibility",
+        "Value": "MicroATX / xATX / MiniITX / E-ATX",
+        "Operation": "values"
+      },
+      {
+        "Key": "Max GPU Length",
+        "Value": "360",
+        "Operation": "max"
+      },
+      {
+        "Key": "Max PSU Length",
+        "Value": "180",
+        "Operation": "max"
+      },
+      {
+        "Key": "Max CPU Cooler Height",
+        "Value": "170",
+        "Operation": "max"
+      }
+    ]
+  },
+  {
+    "ComponentId": "fb9c6b4e-9b97-4c93-897d-f159735935d6",
+    "ComponentType": "Case",
+    "Attributes": [
+      {
+        "Key": "Motherboard Compatibility",
+        "Value": "MicroATX / xATX / MiniDTX / MiniITX",
+        "Operation": "values"
+      },
+      {
+        "Key": "Max GPU Length",
+        "Value": "355",
+        "Operation": "max"
+      },
+      {
+        "Key": "Max PSU Length",
+        "Value": "255",
+        "Operation": "max"
+      },
+      {
+        "Key": "Max CPU Cooler Height",
+        "Value": "145",
+        "Operation": "max"
+      }
+    ]
+  },
+  {
+    "ComponentId": "89fb1e2e-7540-4fca-9ea5-94c38195010c",
+    "ComponentType": "Case",
+    "Attributes": [
+      {
+        "Key": "Motherboard Compatibility",
+        "Value": "MicroATX / xATX / MiniITX / E-ATX",
+        "Operation": "values"
+      },
+      {
+        "Key": "Max GPU Length",
+        "Value": "360",
+        "Operation": "max"
+      },
+      {
+        "Key": "Max PSU Length",
+        "Value": "180",
+        "Operation": "max"
+      },
+      {
+        "Key": "Max CPU Cooler Height",
+        "Value": "170",
+        "Operation": "max"
+      }
+    ]
+  },
+  {
+    "ComponentId": "b5b42281-6b59-4ee1-9590-f94953a6dcbd",
+    "ComponentType": "Case",
+    "Attributes": [
+      {
+        "Key": "Motherboard Compatibility",
+        "Value": "MicroATX / xATX / MiniITX / E-ATX",
+        "Operation": "values"
+      },
+      {
+        "Key": "Max GPU Length",
+        "Value": "400",
+        "Operation": "max"
+      },
+      {
+        "Key": "Max PSU Length",
+        "Value": "220",
+        "Operation": "max"
+      },
+      {
+        "Key": "Max CPU Cooler Height",
+        "Value": "162",
+        "Operation": "max"
+      }
+    ]
+  },
+  {
+    "ComponentId": "1a4c7538-a7eb-4507-aa55-16857aef18d6",
+    "ComponentType": "Case",
+    "Attributes": [
+      {
+        "Key": "Motherboard Compatibility",
+        "Value": "MicroATX / xATX / ITX",
+        "Operation": "values"
+      },
+      {
+        "Key": "Max GPU Length",
+        "Value": "422",
+        "Operation": "max"
+      },
+      {
+        "Key": "Max PSU Length",
+        "Value": "224",
+        "Operation": "max"
+      },
+      {
+        "Key": "Max CPU Cooler Height",
+        "Value": "183",
+        "Operation": "max"
+      }
+    ]
+  },
+  {
+    "ComponentId": "84c34d24-b8e5-4048-9eaf-b494c584c744",
+    "ComponentType": "Case",
+    "Attributes": [
+      {
+        "Key": "Motherboard Compatibility",
+        "Value": "MicroATX / xATX / MiniITX / E-ATX",
+        "Operation": "values"
+      },
+      {
+        "Key": "Max GPU Length",
+        "Value": "450",
+        "Operation": "max"
+      },
+      {
+        "Key": "Max PSU Length",
+        "Value": "225",
+        "Operation": "max"
+      },
+      {
+        "Key": "Max CPU Cooler Height",
+        "Value": "190",
+        "Operation": "max"
+      }
+    ]
+  },
+  {
+    "ComponentId": "58556804-5b1e-49da-8c80-e29de6fc273b",
+    "ComponentType": "Cooler",
+    "Attributes": [
+      {
+        "Key": "CPU Compatibility",
+        "Value": "LGA 1700 / LGA 1200 / LGA 115 / AM5 / AM4 / sTRX4 / TR4",
+        "Operation": "values"
+      },
+      {
+        "Key": "Cooler Height",
+        "Value": "121",
+        "Operation": "value"
+      }
+    ]
+  },
+  {
+    "ComponentId": "27497fd7-531e-473f-9ead-222afd0a9b4a",
+    "ComponentType": "Cooler",
+    "Attributes": [
+      {
+        "Key": "CPU Compatibility",
+        "Value": "LGA 2066 / LGA 2011-3 / LGA 2011 / LGA 1700 / LGA 1200 / LGA 1155 / LGA 1151 / LGA 1150 / AM4",
+        "Operation": "values"
+      },
+      {
+        "Key": "Cooler Height",
+        "Value": "160",
+        "Operation": "value"
+      }
+    ]
+  },
+  {
+    "ComponentId": "c4a08c40-ab2c-4346-8190-09ba0bb53ac2",
+    "ComponentType": "Cooler",
+    "Attributes": [
+      {
+        "Key": "CPU Compatibility",
+        "Value": "LGA 2066 / LGA2011-0 / LGA 2011-3 / LGA 1700 / LGA 1156 / LGA 1155 / LGA 1151 / LGA 1150 / AM4 / AM3 / AM2 / FM2 / FM1",
+        "Operation": "values"
+      },
+      {
+        "Key": "Cooler Height",
+        "Value": "158",
+        "Operation": "value"
+      }
+    ]
+  },
+  {
+    "ComponentId": "ec48d769-bb82-44f5-9d5b-fa85672df375",
+    "ComponentType": "Cooler",
+    "Attributes": [
+      {
+        "Key": "CPU Compatibility",
+        "Value": "LGA 1200 / LGA 1156 / LGA 1155 / LGA 1151 / LGA 1150 / AM4",
+        "Operation": "values"
+      },
+      {
+        "Key": "Cooler Height",
+        "Value": "37",
+        "Operation": "value"
+      }
+    ]
+  },
+  {
+    "ComponentId": "a0b85774-7131-4612-a0c4-6d0ec29484ee",
+    "ComponentType": "Cooler",
+    "Attributes": [
+      {
+        "Key": "CPU Compatibility",
+        "Value": "LGA 1200 / LGA 1151 / LGA 1150 / LGA 1155 / LGA 1156",
+        "Operation": "values"
+      },
+      {
+        "Key": "Cooler Height",
+        "Value": "55",
+        "Operation": "value"
+      }
+    ]
+  },
+  {
+    "ComponentId": "d5947087-a778-4291-af5f-272f0e33a504",
+    "ComponentType": "GPU",
+    "Attributes": [
+      {
+        "Key": "Interface",
+        "Value": "PCI Express 4.0",
+        "Operation": "value"
+      },
+      {
+        "Key": "Recommended PSU Wattage",
+        "Value": "750",
+        "Operation": "value"
+      },
+      {
+        "Key": "Power Connector",
+        "Value": "2 x 8-Pin",
+        "Operation": "value"
+      },
+      {
+        "Key": "GPU Length",
+        "Value": "300",
+        "Operation": "value"
+      }
+    ]
+  },
+  {
+    "ComponentId": "6df9893e-db9a-4708-ac17-7f58a108e3b2",
+    "ComponentType": "GPU",
+    "Attributes": [
+      {
+        "Key": "Interface",
+        "Value": "PCI Express 4.0",
+        "Operation": "value"
+      },
+      {
+        "Key": "Recommended PSU Wattage",
+        "Value": "650",
+        "Operation": "value"
+      },
+      {
+        "Key": "Power Connector",
+        "Value": "8-Pin",
+        "Operation": "value"
+      },
+      {
+        "Key": "GPU Length",
+        "Value": "269",
+        "Operation": "value"
+      }
+    ]
+  },
+  {
+    "ComponentId": "d65de006-8250-4f86-9daf-566d19c2f379",
+    "ComponentType": "GPU",
+    "Attributes": [
+      {
+        "Key": "Interface",
+        "Value": "PCI Express 3.0",
+        "Operation": "value"
+      },
+      {
+        "Key": "Recommended PSU Wattage",
+        "Value": "450",
+        "Operation": "value"
+      },
+      {
+        "Key": "Power Connector",
+        "Value": "6-Pin & 8-Pin",
+        "Operation": "value"
+      },
+      {
+        "Key": "GPU Length",
+        "Value": "215",
+        "Operation": "value"
+      }
+    ]
+  },
+  {
+    "ComponentId": "b3efd4c1-2507-4a24-8b6d-20aea4848d73",
+    "ComponentType": "GPU",
+    "Attributes": [
+      {
+        "Key": "Interface",
+        "Value": "PCI Express 4.0",
+        "Operation": "value"
+      },
+      {
+        "Key": "Recommended PSU Wattage",
+        "Value": "650",
+        "Operation": "value"
+      },
+      {
+        "Key": "Power Connector",
+        "Value": "8-Pin",
+        "Operation": "value"
+      },
+      {
+        "Key": "GPU Length",
+        "Value": "261",
+        "Operation": "value"
+      }
+    ]
+  },
+  {
+    "ComponentId": "7dcfc16c-678a-4ce8-aafd-5053ddb4ffb4",
+    "ComponentType": "GPU",
+    "Attributes": [
+      {
+        "Key": "Interface",
+        "Value": "PCI Express 3.0",
+        "Operation": "value"
+      },
+      {
+        "Key": "Recommended PSU Wattage",
+        "Value": "500",
+        "Operation": "value"
+      },
+      {
+        "Key": "Power Connector",
+        "Value": "8-Pin",
+        "Operation": "value"
+      },
+      {
+        "Key": "GPU Length",
+        "Value": "236",
+        "Operation": "value"
+      }
+    ]
+  },
+  {
+    "ComponentId": "0d43b538-65eb-4bcf-9883-85ea289acd4d",
+    "ComponentType": "GPU",
+    "Attributes": [
+      {
+        "Key": "Interface",
+        "Value": "PCI Express 4.0",
+        "Operation": "value"
+      },
+      {
+        "Key": "Recommended PSU Wattage",
+        "Value": "450",
+        "Operation": "value"
+      },
+      {
+        "Key": "Power Connector",
+        "Value": "8-Pin",
+        "Operation": "value"
+      },
+      {
+        "Key": "GPU Length",
+        "Value": "238",
+        "Operation": "value"
+      }
+    ]
+  },
+  {
+    "ComponentId": "506e0ca2-140b-49ae-b6b8-e03a75227766",
+    "ComponentType": "GPU",
+    "Attributes": [
+      {
+        "Key": "Interface",
+        "Value": "PCI Express 4.0",
+        "Operation": "value"
+      },
+      {
+        "Key": "Recommended PSU Wattage",
+        "Value": "500",
+        "Operation": "value"
+      },
+      {
+        "Key": "Power Connector",
+        "Value": "8-Pin",
+        "Operation": "value"
+      },
+      {
+        "Key": "GPU Length",
+        "Value": "269",
+        "Operation": "value"
+      }
+    ]
+  },
+  {
+    "ComponentId": "c673342f-622d-4541-9525-4c9ad30943a8",
+    "ComponentType": "MB",
+    "Attributes": [
+      {
+        "Key": "Socket Type",
+        "Value": "LGA 1700",
+        "Operation": "value"
+      },
+      {
+        "Key": "Memory Standard",
+        "Value": "DDR5",
+        "Operation": "value"
+      },
+      {
+        "Key": "Memory Frequency",
+        "Value": "7600",
+        "Operation": "max"
+      },
+      {
+        "Key": "Interfaces",
+        "Value": "PCI Express 4.0",
+        "Operation": "values"
+      },
+      {
+        "Key": "M.2",
+        "Value": "2",
+        "Operation": "count"
+      },
+      {
+        "Key": "SATA",
+        "Value": "4",
+        "Operation": "count"
+      },
+      {
+        "Key": "Form Factor",
+        "Value": "MicroATX",
+        "Operation": "value"
+      },
+      {
+        "Key": "Moterboard Power Pin",
+        "Value": "24-pin",
+        "Operation": "value"
+      },
+      {
+        "Key": "CPU Power Pin",
+        "Value": "8-pin",
+        "Operation": "value"
+      }
+    ]
+  },
+  {
+    "ComponentId": "a9d592c4-9ea3-42d5-8051-d889f15bc3c8",
+    "ComponentType": "MB",
+    "Attributes": [
+      {
+        "Key": "Socket Type",
+        "Value": "LGA 1700",
+        "Operation": "value"
+      },
+      {
+        "Key": "Memory Standard",
+        "Value": "DDR5",
+        "Operation": "value"
+      },
+      {
+        "Key": "Memory Frequency",
+        "Value": "6400",
+        "Operation": "max"
+      },
+      {
+        "Key": "Interfaces",
+        "Value": "PCI Express 4.0 / PCI Express 5.0",
+        "Operation": "values"
+      },
+      {
+        "Key": "M.2",
+        "Value": "3",
+        "Operation": "count"
+      },
+      {
+        "Key": "SATA",
+        "Value": "6",
+        "Operation": "count"
+      },
+      {
+        "Key": "Form Factor",
+        "Value": "xATX",
+        "Operation": "value"
+      },
+      {
+        "Key": "Moterboard Power Pin",
+        "Value": "24-pin",
+        "Operation": "value"
+      },
+      {
+        "Key": "CPU Power Pin",
+        "Value": "8-pin",
+        "Operation": "value"
+      }
+    ]
+  },
+  {
+    "ComponentId": "10a0c02a-effe-4bf8-b161-89ecbecc32ec",
+    "ComponentType": "MB",
+    "Attributes": [
+      {
+        "Key": "Socket Type",
+        "Value": "AM4",
+        "Operation": "value"
+      },
+      {
+        "Key": "Memory Standard",
+        "Value": "DDR4",
+        "Operation": "value"
+      },
+      {
+        "Key": "Memory Frequency",
+        "Value": "4400",
+        "Operation": "max"
+      },
+      {
+        "Key": "Interfaces",
+        "Value": "PCI Express 4.0 / PCI Express 3.0",
+        "Operation": "values"
+      },
+      {
+        "Key": "M.2",
+        "Value": "1",
+        "Operation": "count"
+      },
+      {
+        "Key": "SATA",
+        "Value": "4",
+        "Operation": "count"
+      },
+      {
+        "Key": "Form Factor",
+        "Value": "MicroATX",
+        "Operation": "value"
+      },
+      {
+        "Key": "Moterboard Power Pin",
+        "Value": "24-pin",
+        "Operation": "value"
+      },
+      {
+        "Key": "CPU Power Pin",
+        "Value": "8-pin",
+        "Operation": "value"
+      }
+    ]
+  },
+  {
+    "ComponentId": "29476666-5df4-47b6-abd0-bd0774f0c462",
+    "ComponentType": "MB",
+    "Attributes": [
+      {
+        "Key": "Socket Type",
+        "Value": "LGA 1700",
+        "Operation": "value"
+      },
+      {
+        "Key": "Memory Standard",
+        "Value": "DDR5",
+        "Operation": "value"
+      },
+      {
+        "Key": "Memory Frequency",
+        "Value": "7200",
+        "Operation": "max"
+      },
+      {
+        "Key": "Interfaces",
+        "Value": "PCI Express 4.0 / PCI Express 5.0",
+        "Operation": "values"
+      },
+      {
+        "Key": "M.2",
+        "Value": "4",
+        "Operation": "count"
+      },
+      {
+        "Key": "SATA",
+        "Value": "4",
+        "Operation": "count"
+      },
+      {
+        "Key": "Form Factor",
+        "Value": "xATX",
+        "Operation": "value"
+      },
+      {
+        "Key": "Moterboard Power Pin",
+        "Value": "24-pin",
+        "Operation": "value"
+      },
+      {
+        "Key": "CPU Power Pin",
+        "Value": "4-pin",
+        "Operation": "value"
+      }
+    ]
+  },
+  {
+    "ComponentId": "8f69977a-27b4-4188-a478-b3bff4150150",
+    "ComponentType": "MB",
+    "Attributes": [
+      {
+        "Key": "Socket Type",
+        "Value": "AM5",
+        "Operation": "value"
+      },
+      {
+        "Key": "Memory Standard",
+        "Value": "DDR5",
+        "Operation": "value"
+      },
+      {
+        "Key": "Memory Frequency",
+        "Value": "6400",
+        "Operation": "max"
+      },
+      {
+        "Key": "Interfaces",
+        "Value": "PCI Express 4.0",
+        "Operation": "values"
+      },
+      {
+        "Key": "M.2",
+        "Value": "2",
+        "Operation": "count"
+      },
+      {
+        "Key": "SATA",
+        "Value": "4",
+        "Operation": "count"
+      },
+      {
+        "Key": "Form Factor",
+        "Value": "MicroATX",
+        "Operation": "value"
+      },
+      {
+        "Key": "Moterboard Power Pin",
+        "Value": "24-pin",
+        "Operation": "value"
+      },
+      {
+        "Key": "CPU Power Pin",
+        "Value": "4-pin",
+        "Operation": "value"
+      }
+    ]
+  },
+  {
+    "ComponentId": "54ebb54f-1aaf-424d-bff4-c444ceb1c959",
+    "ComponentType": "MB",
+    "Attributes": [
+      {
+        "Key": "Socket Type",
+        "Value": "LGA 2011",
+        "Operation": "value"
+      },
+      {
+        "Key": "Memory Standard",
+        "Value": "DDR4",
+        "Operation": "value"
+      },
+      {
+        "Key": "Memory Frequency",
+        "Value": "2400",
+        "Operation": "max"
+      },
+      {
+        "Key": "Interfaces",
+        "Value": "PCI Express x4 / PCI Express x16 / PCI Express x1",
+        "Operation": "values"
+      },
+      {
+        "Key": "M.2",
+        "Value": "2",
+        "Operation": "count"
+      },
+      {
+        "Key": "SATA",
+        "Value": "6",
+        "Operation": "count"
+      },
+      {
+        "Key": "Form Factor",
+        "Value": "xATX",
+        "Operation": "value"
+      },
+      {
+        "Key": "Moterboard Power Pin",
+        "Value": "24-pin",
+        "Operation": "value"
+      },
+      {
+        "Key": "CPU Power Pin",
+        "Value": "8-pin",
+        "Operation": "value"
+      }
+    ]
+  },
+  {
+    "ComponentId": "15a19f9b-9f68-443d-a62e-12f46635cddd",
+    "ComponentType": "MB",
+    "Attributes": [
+      {
+        "Key": "Socket Type",
+        "Value": "LGA 1151",
+        "Operation": "value"
+      },
+      {
+        "Key": "Memory Standard",
+        "Value": "DDR3",
+        "Operation": "value"
+      },
+      {
+        "Key": "Memory Frequency",
+        "Value": "1666",
+        "Operation": "max"
+      },
+      {
+        "Key": "Interfaces",
+        "Value": "PCI Express x8",
+        "Operation": "values"
+      },
+      {
+        "Key": "M.2",
+        "Value": "0",
+        "Operation": "count"
+      },
+      {
+        "Key": "SATA",
+        "Value": "0",
+        "Operation": "count"
+      },
+      {
+        "Key": "Form Factor",
+        "Value": "M-ATX",
+        "Operation": "value"
+      },
+      {
+        "Key": "Moterboard Power Pin",
+        "Value": "24-pin",
+        "Operation": "value"
+      },
+      {
+        "Key": "CPU Power Pin",
+        "Value": "4-pin",
+        "Operation": "value"
+      }
+    ]
+  },
+  {
+    "ComponentId": "c9cc9dd5-35e7-4dd5-a483-c66fd01a2e41",
+    "ComponentType": "MB",
+    "Attributes": [
+      {
+        "Key": "Socket Type",
+        "Value": "LGA 1700",
+        "Operation": "value"
+      },
+      {
+        "Key": "Memory Standard",
+        "Value": "DDR5",
+        "Operation": "value"
+      },
+      {
+        "Key": "Memory Frequency",
+        "Value": "6400",
+        "Operation": "max"
+      },
+      {
+        "Key": "Interfaces",
+        "Value": "PCI Express 5.0 x16 / PCI Express 3.0 x16 / PCI Express x1",
+        "Operation": "values"
+      },
+      {
+        "Key": "M.2",
+        "Value": "4",
+        "Operation": "count"
+      },
+      {
+        "Key": "SATA",
+        "Value": "6",
+        "Operation": "count"
+      },
+      {
+        "Key": "Form Factor",
+        "Value": "xATX",
+        "Operation": "value"
+      },
+      {
+        "Key": "Moterboard Power Pin",
+        "Value": "24-pin",
+        "Operation": "value"
+      },
+      {
+        "Key": "CPU Power Pin",
+        "Value": "4-pin",
+        "Operation": "value"
+      }
+    ]
+  },
+  {
+    "ComponentId": "8ecaaeed-f488-445c-ac22-bab1e158198e",
+    "ComponentType": "PSU",
+    "Attributes": [
+      {
+        "Key": "Maximum Power",
+        "Value": "750",
+        "Operation": "max"
+      },
+      {
+        "Key": "Moterboard Power Pin",
+        "Value": "24-pin",
+        "Operation": "value"
+      },
+      {
+        "Key": "PCI-Express Connector",
+        "Value": "8-Pin",
+        "Operation": "values"
+      },
+      {
+        "Key": "PSU Length",
+        "Value": "160",
+        "Operation": "value"
+      },
+      {
+        "Key": "CPU Power Pin",
+        "Value": "8-pin",
+        "Operation": "value"
+      }
+    ]
+  },
+  {
+    "ComponentId": "fd5006c6-9ad3-495f-85f0-2a87696947f2",
+    "ComponentType": "PSU",
+    "Attributes": [
+      {
+        "Key": "Maximum Power",
+        "Value": "1600",
+        "Operation": "max"
+      },
+      {
+        "Key": "PSU Length",
+        "Value": "220",
+        "Operation": "value"
+      },
+      {
+        "Key": "Moterboard Power Pin",
+        "Value": "24-pin",
+        "Operation": "value"
+      },
+      {
+        "Key": "PCI-Express Connector",
+        "Value": "8-Pin",
+        "Operation": "value"
+      },
+      {
+        "Key": "CPU Power Pin",
+        "Value": "8-pin",
+        "Operation": "value"
+      }
+    ]
+  },
+  {
+    "ComponentId": "69b91dcc-09c3-41af-8bc5-cbdf4083766e",
+    "ComponentType": "PSU",
+    "Attributes": [
+      {
+        "Key": "Maximum Power",
+        "Value": "850",
+        "Operation": "max"
+      },
+      {
+        "Key": "PSU Length",
+        "Value": "150",
+        "Operation": "value"
+      },
+      {
+        "Key": "Moterboard Power Pin",
+        "Value": "24-pin",
+        "Operation": "value"
+      },
+      {
+        "Key": "PCI-Express Connector",
+        "Value": "8-Pin",
+        "Operation": "value"
+      },
+      {
+        "Key": "CPU Power Pin",
+        "Value": "8-pin",
+        "Operation": "value"
+      }
+    ]
+  },
+  {
+    "ComponentId": "7160fec0-2f00-4469-afe5-5816ed082e83",
+    "ComponentType": "PSU",
+    "Attributes": [
+      {
+        "Key": "Maximum Power",
+        "Value": "1000",
+        "Operation": "max"
+      },
+      {
+        "Key": "PSU Length",
+        "Value": "130",
+        "Operation": "value"
+      },
+      {
+        "Key": "Moterboard Power Pin",
+        "Value": "24-pin",
+        "Operation": "value"
+      },
+      {
+        "Key": "PCI-Express Connector",
+        "Value": "8-Pin",
+        "Operation": "value"
+      },
+      {
+        "Key": "CPU Power Pin",
+        "Value": "8-pin",
+        "Operation": "value"
+      }
+    ]
+  },
+  {
+    "ComponentId": "ab06f0a9-d8a8-4320-9a6e-11858ddbdd34",
+    "ComponentType": "PSU",
+    "Attributes": [
+      {
+        "Key": "Maximum Power",
+        "Value": "850",
+        "Operation": "max"
+      },
+      {
+        "Key": "PSU Length",
+        "Value": "150",
+        "Operation": "value"
+      },
+      {
+        "Key": "Moterboard Power Pin",
+        "Value": "24-pin",
+        "Operation": "value"
+      },
+      {
+        "Key": "PCI-Express Connector",
+        "Value": "8-Pin",
+        "Operation": "value"
+      },
+      {
+        "Key": "CPU Power Pin",
+        "Value": "8-pin",
+        "Operation": "value"
+      }
+    ]
+  },
+  {
+    "ComponentId": "cad24e2f-ceb3-4a0a-8863-bba1f7850ef3",
+    "ComponentType": "PSU",
+    "Attributes": [
+      {
+        "Key": "Maximum Power",
+        "Value": "850",
+        "Operation": "max"
+      },
+      {
+        "Key": "PSU Length",
+        "Value": "151",
+        "Operation": "value"
+      },
+      {
+        "Key": "Moterboard Power Pin",
+        "Value": "24-pin",
+        "Operation": "value"
+      },
+      {
+        "Key": "PCI-Express Connector",
+        "Value": "8-Pin",
+        "Operation": "value"
+      },
+      {
+        "Key": "CPU Power Pin",
+        "Value": "8-pin",
+        "Operation": "value"
+      }
+    ]
+  },
+  {
+    "ComponentId": "25418d43-ee71-44db-868a-77cec0d873ee",
+    "ComponentType": "PSU",
+    "Attributes": [
+      {
+        "Key": "Maximum Power",
+        "Value": "1000",
+        "Operation": "max"
+      },
+      {
+        "Key": "PSU Length",
+        "Value": "151",
+        "Operation": "value"
+      },
+      {
+        "Key": "Moterboard Power Pin",
+        "Value": "24-pin",
+        "Operation": "value"
+      },
+      {
+        "Key": "PCI-Express Connector",
+        "Value": "8-Pin",
+        "Operation": "value"
+      },
+      {
+        "Key": "CPU Power Pin",
+        "Value": "8-pin",
+        "Operation": "value"
+      }
+    ]
+  },
+  {
+    "ComponentId": "785f049f-75ea-4713-8755-44d07890d1ce",
+    "ComponentType": "PSU",
+    "Attributes": [
+      {
+        "Key": "Maximum Power",
+        "Value": "1000",
+        "Operation": "max"
+      },
+      {
+        "Key": "PSU Length",
+        "Value": "190",
+        "Operation": "value"
+      },
+      {
+        "Key": "Moterboard Power Pin",
+        "Value": "24-pin",
+        "Operation": "value"
+      },
+      {
+        "Key": "PCI-Express Connector",
+        "Value": "8-Pin",
+        "Operation": "value"
+      },
+      {
+        "Key": "CPU Power Pin",
+        "Value": "8-pin",
+        "Operation": "value"
+      }
+    ]
+  },
+  {
+    "ComponentId": "35055e95-fda4-44e5-9181-5be27d1e1588",
+    "ComponentType": "RAM",
+    "Attributes": [
+      {
+        "Key": "Memory Type",
+        "Value": "DDR5",
+        "Operation": "value"
+      },
+      {
+        "Key": "Memory Type Frequency",
+        "Value": "6400",
+        "Operation": "value"
+      }
+    ]
+  },
+  {
+    "ComponentId": "4cf69ad1-099c-43e8-a5ce-971dd1757f65",
+    "ComponentType": "RAM",
+    "Attributes": [
+      {
+        "Key": "Memory Type",
+        "Value": "DDR4",
+        "Operation": "value"
+      },
+      {
+        "Key": "Memory Type Frequency",
+        "Value": "3200",
+        "Operation": "value"
+      }
+    ]
+  },
+  {
+    "ComponentId": "b3290472-e196-48ee-bd09-5b506510c2b1",
+    "ComponentType": "RAM",
+    "Attributes": [
+      {
+        "Key": "Memory Type",
+        "Value": "DDR5",
+        "Operation": "value"
+      },
+      {
+        "Key": "Memory Type Frequency",
+        "Value": "6000",
+        "Operation": "value"
+      }
+    ]
+  },
+  {
+    "ComponentId": "3f024cb7-73aa-42e3-bbe0-8b798962227e",
+    "ComponentType": "RAM",
+    "Attributes": [
+      {
+        "Key": "Memory Type",
+        "Value": "DDR4",
+        "Operation": "value"
+      },
+      {
+        "Key": "Memory Type Frequency",
+        "Value": "3200",
+        "Operation": "value"
+      }
+    ]
+  },
+  {
+    "ComponentId": "b7972fd1-bfa3-4aea-8c87-43603406af60",
+    "ComponentType": "RAM",
+    "Attributes": [
+      {
+        "Key": "Memory Type",
+        "Value": "DDR5",
+        "Operation": "value"
+      },
+      {
+        "Key": "Memory Type Frequency",
+        "Value": "5600",
+        "Operation": "value"
+      }
+    ]
+  },
+  {
+    "ComponentId": "3cabc72e-1967-4249-bd9e-31f98fd5107b",
+    "ComponentType": "RAM",
+    "Attributes": [
+      {
+        "Key": "Memory Type",
+        "Value": "DDR5",
+        "Operation": "value"
+      },
+      {
+        "Key": "Memory Type Frequency",
+        "Value": "4800",
+        "Operation": "value"
+      }
+    ]
+  },
+  {
+    "ComponentId": "b8b92837-d6d1-40df-b6fe-eb92c645da72",
+    "ComponentType": "RAM",
+    "Attributes": [
+      {
+        "Key": "Memory Type",
+        "Value": "DDR4",
+        "Operation": "value"
+      },
+      {
+        "Key": "Memory Type Frequency",
+        "Value": "3200",
+        "Operation": "value"
+      }
+    ]
+  },
+  {
+    "ComponentId": "fb269342-7866-4e3a-90b2-3e57a24f016c",
+    "ComponentType": "RAM",
+    "Attributes": [
+      {
+        "Key": "Memory Type",
+        "Value": "DDR5",
+        "Operation": "value"
+      },
+      {
+        "Key": "Memory Type Frequency",
+        "Value": "5600",
+        "Operation": "value"
+      }
+    ]
+  },
+  {
+    "ComponentId": "c51643d1-3f46-4bed-bb8d-42e8c8ce521d",
+    "ComponentType": "SD",
+    "Attributes": [
+      {
+        "Key": "M.2",
+        "Value": "false",
+        "Operation": "bool"
+      },
+      {
+        "Key": "SATA",
+        "Value": "true",
+        "Operation": "bool"
+      }
+    ]
+  },
+  {
+    "ComponentId": "978addb6-cbc4-4d76-8c14-d2279dcdcd0f",
+    "ComponentType": "SD",
+    "Attributes": [
+      {
+        "Key": "M.2",
+        "Value": "false",
+        "Operation": "bool"
+      },
+      {
+        "Key": "SATA",
+        "Value": "true",
+        "Operation": "bool"
+      }
+    ]
+  },
+  {
+    "ComponentId": "c57489d2-3f72-411e-889c-62cc364174b1",
+    "ComponentType": "SD",
+    "Attributes": [
+      {
+        "Key": "M.2",
+        "Value": "false",
+        "Operation": "bool"
+      },
+      {
+        "Key": "SATA",
+        "Value": "true",
+        "Operation": "bool"
+      }
+    ]
+  },
+  {
+    "ComponentId": "75a8b8b0-04e8-4d4f-9462-79ccb13a03fb",
+    "ComponentType": "SD",
+    "Attributes": [
+      {
+        "Key": "M.2",
+        "Value": "true",
+        "Operation": "bool"
+      },
+      {
+        "Key": "SATA",
+        "Value": "false",
+        "Operation": "bool"
+      }
+    ]
+  },
+  {
+    "ComponentId": "3b4d9d95-b96a-4fa0-83b1-2d4432eec939",
+    "ComponentType": "SD",
+    "Attributes": [
+      {
+        "Key": "M.2",
+        "Value": "false",
+        "Operation": "bool"
+      },
+      {
+        "Key": "SATA",
+        "Value": "true",
+        "Operation": "bool"
+      }
+    ]
+  },
+  {
+    "ComponentId": "6e889ab7-bf7e-4058-ac4a-8c64a242229f",
+    "ComponentType": "SD",
+    "Attributes": [
+      {
+        "Key": "M.2",
+        "Value": "false",
+        "Operation": "bool"
+      },
+      {
+        "Key": "SATA",
+        "Value": "true",
+        "Operation": "bool"
+      }
+    ]
+  },
+  {
+    "ComponentId": "4d120703-a73d-4941-856e-24b69f999d4b",
+    "ComponentType": "SD",
+    "Attributes": [
+      {
+        "Key": "M.2",
+        "Value": "true",
+        "Operation": "bool"
+      },
+      {
+        "Key": "SATA",
+        "Value": "false",
+        "Operation": "bool"
+      }
+    ]
+  }
+]

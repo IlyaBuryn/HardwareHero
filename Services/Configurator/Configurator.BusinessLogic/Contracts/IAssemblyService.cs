@@ -1,15 +1,10 @@
-﻿using HardwareHero.Services.Shared.DTOs.Configurator;
-
-namespace Configurator.BusinessLogic.Contracts
+﻿namespace Configurator.BusinessLogic.Contracts
 {
     public interface IAssemblyService
     {
-        Task<List<CustomAssemblyDto?>> GetAssemblyListAsync();
-        Task<List<CustomAssemblyDto?>> GetAssemblyListByUserIdAsync(Guid userId, string category);
-        Task<Guid?> AddAssemblyAsync(CustomAssemblyDto assemblyToAdd);
-        Task<bool> UpdateAssemblyAsync(CustomAssemblyDto assemblyToUpdate);
+        Task<List<StoredAssemblyDto?>> GetAssembliesByUserIdAsync(Guid userId);
+        Task<Guid?> SaveAssemblyAsync(StoredAssemblyDto assemblyToAdd);
+        Task<bool> UpdateAssemblyAsync(StoredAssemblyDto assemblyToUpdate);
         Task<bool> RemoveAssemblyAsync(Guid assemblyId);
-        Task<List<Guid>?> GetComponentIdsByAssemblyIdAsync(Guid assemblyId);
-
     }
 }

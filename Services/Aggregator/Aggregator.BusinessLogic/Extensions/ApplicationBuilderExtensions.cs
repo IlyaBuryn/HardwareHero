@@ -1,5 +1,4 @@
-﻿using Aggregator.DataAccess.Extensions;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 
 namespace Aggregator.BusinessLogic.Extensions
 {
@@ -7,7 +6,8 @@ namespace Aggregator.BusinessLogic.Extensions
     {
         public async static Task DatabaseInitialization(this IApplicationBuilder app)
         {
-            await app.MigrationInitialization();
+            await DataAccess.Extensions
+                .ApplicationBuilderExtensions.DatabaseInitialization(app);
         }
     }
 }

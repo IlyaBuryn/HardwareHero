@@ -1,7 +1,6 @@
-﻿using HardwareHero.Services.Shared.DTOs.Prices;
+﻿using HardwareHero.Shared.Requests;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Prices.BusinessLogic.Contracts;
 
 namespace Prices.Api.Controllers
 {
@@ -19,30 +18,34 @@ namespace Prices.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateAsync([FromBody] ContributorPriceDto priceToAdd)
+        //[Authorize(Roles = Roles.Contributor)]
+        [AllowAnonymous]
+        public async Task<IActionResult> ChangePriceAsync([FromBody] ChangePriceRequest request)
         {
             var response = await _contributorPricesService
-               .AddContributorPriceAsync(priceToAdd);
+               .ChangePriceAsync(request);
 
-            return CreatedAtAction(nameof(CreateAsync), response);
+            return CreatedAtAction(nameof(ChangePriceAsync), response);
         }
 
         [HttpGet("{componentId}")]
-        public async Task<IActionResult> GetPricesByComponentIdAsync([FromRoute] Guid componentId)
+        [AllowAnonymous]
+        public async Task<IActionResult> GetComponentPricesAsync([FromRoute] Guid componentId)
         {
             var response = await _contributorPricesService
-                .GetContributorPricesByComponentIdAsync(componentId);
+                .GetComponentPricesAsync(componentId);
 
             return Ok(response);
         }
 
-        [HttpGet("{componentId}/latest")]
-        public async Task<IActionResult> GetLatestPriceByComponentIdAsync([FromRoute] Guid componentId)
-        {
-            var response = await _contributorPricesService
-                .GetLastPriceAsync(componentId);
+        //[HttpPost("")]
+        //[AllowAnonymous]
+        //public async Task<IActionResult> GetPricesToDiscreetlyUpdate([FromBody] PaginationInfo pageInfo)
+        //{
+        //    var response = await _contributorPricesService
+        //        .GetPricesToDiscreetlyUpdate(pageInfo);
 
-            return Ok(response);
-        }
+        //    return Ok(response);
+        //}
     }
 }

@@ -1,14 +1,11 @@
-﻿using Configurator.BusinessLogic.Contracts;
-using HardwareHero.Services.Shared.DTOs.Configurator;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Configurator.Api.Controllers
 {
     [ApiController]
     [Produces("application/json")]
-    [Route("api/assemblies")]
-    [Authorize]
+    [Route("api/assembly")]
     public class AssembliesController : ControllerBase
     {
         private readonly IAssemblyService _assemblyService;
@@ -19,16 +16,17 @@ namespace Configurator.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateAsync(CustomAssemblyDto assemblyToAdd)
+        [Authorize(Roles = Roles.User)]
+        public async Task<IActionResult> SaveAsync(StoredAssemblyDto assemblyToAdd)
         {
             var response = await _assemblyService
-                .AddAssemblyAsync(assemblyToAdd);
+                .SaveAssemblyAsync(assemblyToAdd);
 
-            return Ok(response);
+            return CreatedAtAction(nameof(SaveAsync), response);
         }
 
         [HttpPut]
-        public async Task<IActionResult> UpdateAsync(CustomAssemblyDto assemblyToUpdate)
+        public async Task<IActionResult> UpdateAsync(StoredAssemblyDto assemblyToUpdate)
         {
             var response = await _assemblyService
                 .UpdateAssemblyAsync(assemblyToUpdate);
@@ -45,31 +43,11 @@ namespace Configurator.Api.Controllers
             return Ok(response);
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetAllAsync()
+        [HttpGet("assemblies/{userId}")]
+        public async Task<IActionResult> GetManyByUserIdAsync([FromRoute] Guid userId)
         {
             var response = await _assemblyService
-                .GetAssemblyListAsync();
-
-            return Ok(response);
-        }
-
-        [HttpGet("{userId}")]
-        public async Task<IActionResult> GetAllByUserIdAsync([FromRoute] Guid userId)
-        {
-            var response = await _assemblyService
-
-
-                .GetAssemblyListByUserIdAsync(userId, "PC");
-
-            return Ok(response);
-        }
-
-        [HttpGet("{assemblyId}/components")]
-        public async Task<IActionResult> GetComponentIdsAsync([FromRoute] Guid assemblyId)
-        {
-            var response = await _assemblyService
-                .GetComponentIdsByAssemblyIdAsync(assemblyId);
+                .GetAssembliesByUserIdAsync(userId);
 
             return Ok(response);
         }

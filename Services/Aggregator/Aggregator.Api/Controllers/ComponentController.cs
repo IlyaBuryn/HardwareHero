@@ -1,42 +1,51 @@
-﻿using Aggregator.BusinessLogic.Contracts;
-using HardwareHero.Services.Shared.DTOs;
-using HardwareHero.Services.Shared.Options;
+﻿using EventStream.EventHandling;
+using KafkaEventStream.BackgroundServices;
+using KafkaEventStream.Topics;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 
 namespace Aggregator.Api.Controllers
 {
-    [ApiController]
     [Produces("application/json")]
     [Route("api/aggregator")]
+    [ApiController]
     public class ComponentController : ControllerBase
     {
         private readonly IComponentService _componentService;
         private readonly PageSizeOptions _pageSizeSettings;
+        private readonly ILogger<ComponentController> _logger;
+        private readonly IMessageProducer _messageProducer;
+        private readonly IMessageConsumer _messageConsumer;
 
         public ComponentController(
             IComponentService componentService,
-            IOptions<PageSizeOptions> pageSizeSettings)
+            IOptions<PageSizeOptions> pageSizeSettings,
+            ILogger<ComponentController> logger,
+            IMessageProducer messageProducer,
+            IMessageConsumer messageConsumer)
         {
             _componentService = componentService;
             _pageSizeSettings = pageSizeSettings.Value;
+            _logger = logger;
+            _messageProducer = messageProducer;
+            _messageConsumer = messageConsumer;
         }
 
         [HttpPost("component")]
-        [Authorize]
-        public async Task<IActionResult> AddComponentAsync([FromBody] ComponentDto componentToAdd)
+        [Authorize(Roles = Roles.Manager)]
+        public async Task<IActionResult> CreateAsync([FromBody] ComponentDto componentToAdd)
         {
             var response = await _componentService
                 .AddComponentAsync(componentToAdd);
 
-            return CreatedAtAction(nameof(AddComponentAsync), response);
+            return CreatedAtAction(nameof(CreateAsync), response);
         }
 
 
         [HttpPut("component")]
-        [Authorize]
-        public async Task<IActionResult> UpdateComponentAsync([FromBody] ComponentDto componentToUpdate)
+        [Authorize(Roles = Roles.Manager)]
+        public async Task<IActionResult> UpdateAsync([FromBody] ComponentDto componentToUpdate)
         {
             var response = await _componentService
                 .UpdateComponentAsync(componentToUpdate);
@@ -46,8 +55,8 @@ namespace Aggregator.Api.Controllers
 
 
         [HttpDelete("component/{componentId}")]
-        [Authorize]
-        public async Task<IActionResult> RemoveComponentAsync([FromRoute] Guid componentId)
+        [Authorize(Roles = Roles.Manager)]
+        public async Task<IActionResult> DeleteAsync([FromRoute] Guid componentId)
         {
             var response = await _componentService
                 .RemoveComponentAsync(componentId);
@@ -56,9 +65,20 @@ namespace Aggregator.Api.Controllers
         }
 
 
+        [HttpPost("components")]
+        [Authorize(Roles = Roles.Admin)]
+        public async Task<IActionResult> CreateManyAsync([FromBody] List<ComponentDto> componentsToAdd)
+        {
+            var response = await _componentService
+                .AddComponentsAsync(componentsToAdd);
+
+            return Ok(response);
+        }
+
+
         [HttpGet("component/{componentId}")]
         [AllowAnonymous]
-        public async Task<IActionResult> GetComponentById([FromRoute] Guid componentId)
+        public async Task<IActionResult> GetById([FromRoute] Guid componentId)
         {
             var response = await _componentService
                 .GetComponentByIdAsync(componentId);
@@ -66,52 +86,23 @@ namespace Aggregator.Api.Controllers
             return Ok(response);
         }
 
-
-        [HttpGet("component-mark/{componentId}")]
-        [Authorize]
-        public async Task<IActionResult> GetComponentAvgMark([FromRoute] Guid componentId)
+        [HttpPost("components/ids")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetByIds([FromBody] List<Guid> componentsIds)
         {
             var response = await _componentService
-                .GetComponentAvgMarkAsync(componentId);
-            
+                .GetComponentsByIdsAsync(componentsIds);
+
             return Ok(response);
         }
 
 
-        [HttpGet("components/{pageNumber}")]
+        [HttpPost("components/page")]
         [AllowAnonymous]
-        public async Task<IActionResult> GetComponents(
-            [FromRoute] int pageNumber,
-            [FromHeader(Name = "X-Specification-Filter")] string specificationFilter,
-            [FromHeader(Name = "X-Search-String")] string? searchString,
-            [FromHeader(Name = "X-Page-Size")] int? pageSize)
+        public async Task<IActionResult> GetComponents([FromBody] ComponentsFilter filter)
         {
-            if (pageSize == null || pageSize <= 0)
-            {
-                pageSize = _pageSizeSettings.PageSize;
-            }
-
-            var response = await _componentService
-                .GetComponentsAsPageAsync(pageNumber, (int)pageSize, specificationFilter, searchString);
+            var response = await _componentService.GetComponentsAsPageAsync(filter);
             
-            return Ok(response);
-        }
-
-        [HttpGet("components/pageCount")]
-        [AllowAnonymous]
-        public async Task<IActionResult> GetPageCount(
-            [FromHeader(Name = "X-Specification-Filter")] string specificationFilter,
-            [FromHeader(Name = "X-Search-String")] string? searchString,
-            [FromHeader(Name = "X-Page-Size")] int? pageSize)
-        {
-            if (pageSize == null || pageSize <= 0)
-            {
-                pageSize = _pageSizeSettings.PageSize;
-            }
-
-            var response = await _componentService
-                .GetComponentsPageCountAsync((int)pageSize, specificationFilter, searchString);
-
             return Ok(response);
         }
     }

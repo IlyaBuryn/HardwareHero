@@ -12,7 +12,12 @@
     <None Include="docker-compose.override.yml">
       <DependentUpon>docker-compose.yml</DependentUpon>
     </None>
-    <None Include="docker-compose.yml" />
     <None Include=".dockerignore" />
+    <None Include="docker-compose.yml" />
   </ItemGroup>
+  <ProjectExtensions>
+    <VisualStudio>
+      <UserProperties sharedsettings_1json__JsonSchema="https://json.schemastore.org/appsettings.json" />
+    </VisualStudio>
+  </ProjectExtensions>
 </Project>

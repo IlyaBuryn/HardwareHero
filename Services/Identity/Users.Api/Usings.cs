@@ -1,0 +1,16 @@
+﻿global using HardwareHero.Shared.Extensions;
+global using HardwareHero.Shared.Exceptions;
+global using HardwareHero.Shared.Models.Identity;
+global using HardwareHero.Shared.Constants;
+global using HardwareHero.Shared.OpenApi;
+global using Identity.Shared.Contexts;
+global using Microsoft.AspNetCore.Identity;
+global using Microsoft.EntityFrameworkCore;
+global using Microsoft.AspNetCore.Authentication.JwtBearer;
+global using Microsoft.OpenApi.Models;
+global using Microsoft.AspNetCore.Authorization;
+global using Microsoft.AspNetCore.Mvc;
+global using FluentValidation.AspNetCore;
+global using Serilog;
+global using Serilog.Exceptions;
+global using System.Reflection;

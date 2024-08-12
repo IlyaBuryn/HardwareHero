@@ -1,56 +1,54 @@
-using HardwareHero.Services.Shared.Constants;
-using Contributor.BusinessLogic.Extensions;
-using HardwareHero.Services.Shared.Options;
-using HardwareHero.Services.Shared.Middlewares;
-using Contributor.Api.Extensions;
+using KafkaEventStream.Topics;
 using Microsoft.IdentityModel.Logging;
+using HardwareHero.Shared.Extensions;
+using KafkaEventStream.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Host.ConfigureSecretsFile();
 
-IdentityModelEventSource.ShowPII = true;
+builder.Services.AddFluentValidation();
+builder.Services.ConfigureOpenTelemetry(builder);
+
+builder.Services.ConfigureCommonJwtAuthentication(builder);
+builder.Services.ConfigurePolicyAuthorization();
+
+var connectionString = builder.Configuration.GetConnectionString(ConnectionNames.ContributorsConnection);
+builder.Services.ConfigureBusinessLogicLayer(connectionString);
+builder.Services.ConfigureOptions<PageSizeOptions>(builder.Configuration);
+builder.Services.ConfigureOptions<ImagesSaveOptions>(builder.Configuration);
+builder.Services.ConfigureKafkaRequestsBackgroundWorker<ContributorTopics>();
 
 builder.Services.AddCustomControllers();
 
-builder.Services.AddFluentValidation();
-
+builder.Services.ConfigureSwagger();
 builder.Services.AddEndpointsApiExplorer();
+builder.Services.ConfigureCORSPolicy();
 
-builder.Services.AddSwaggerGen();
-
-builder.Services.ConfigureOptions<ChatOptions>(builder.Configuration);
-
-var connectionString = builder.Configuration.GetConnectionString(ConnectionNames.ContributorsConnection);
-if (connectionString != null)
-{
-    builder.Services.ConfigureBusinessLogicLayer(connectionString);
-}
-
-builder.Services.AddIdentityServerAuthentication();
-
-builder.Services.AddApiScopeAuthorization();
-
-builder.Services.AddCors();
-
+IdentityModelEventSource.ShowPII = true;
+builder.Host.ConfigureElasticLogging();
 var app = builder.Build();
 
-app.DatabaseInitialization();
-app.UseMiddleware<ExceptionHandlerMiddleware>();
-app.UseHttpsRedirection();
-app.UseRouting();
+await app.DatabaseInitialization();
+app.UseCommonCustomMiddlewares();
+
+app.UseCors("default");
 
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+else
+{
+    app.UseHttpsRedirection();
+}
 
-app.UseCors(x => x
-    .AllowAnyOrigin()
-    .AllowAnyMethod()
-    .AllowAnyHeader());
+app.UseStaticFiles();
+app.UseRouting();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
 app.MapControllers().RequireAuthorization("ApiScope");
 
 app.Run();

@@ -1,8 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using Aggregator.DataAccess.Data;
-using Aggregator.DataAccess.Repositories;
-using HardwareHero.Services.Shared.Repositories.Contracts;
+﻿using Microsoft.Extensions.DependencyInjection;
 
 namespace Aggregator.DataAccess.Extensions
 {
@@ -13,7 +9,10 @@ namespace Aggregator.DataAccess.Extensions
             builder.AddDbContext<AggregatorDbContext>(options => 
                 options.UseSqlServer(connectionString));
 
-            builder.AddScoped(typeof(IPageRepositoryAsync<>), typeof(AggregatorEFRepository<>));
+            builder.AddScoped(typeof(ICollectionRepositoryAsync<>), typeof(EFCollectionRepositoryAsync<>));
+            builder.AddScoped(typeof(ICrudRepositoryAsync<>), typeof(EFCrudRepositoryAsync<>));
+            builder.AddScoped(typeof(IValidationRepository<>), typeof(EFValidationRepository<>));
+            builder.AddScoped(typeof(IFileRepositoryAsync), typeof(GoogleDriveRepositoryAsync));
 
             builder.AddScoped<DbContext, AggregatorDbContext>();
         }

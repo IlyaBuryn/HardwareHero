@@ -1,0 +1,78 @@
+{
+  "Routes": [
+    // Account
+    {
+      "UpstreamPathTemplate": "/identity/account/sign-up",
+      "UpstreamHttpMethod": [ "Post" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "identity.api",
+          "Port": 80
+        }
+      ],
+      "DownstreamPathTemplate": "/api/identity/account/sign-up"
+    },
+
+    {
+      "UpstreamPathTemplate": "/identity/account/sign-in",
+      "UpstreamHttpMethod": [ "Post" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "identity.api",
+          "Port": 80
+        }
+      ],
+      "DownstreamPathTemplate": "/api/identity/account/sign-in"
+    },
+
+    {
+      "UpstreamPathTemplate": "/identity/account/refresh-token",
+      "UpstreamHttpMethod": [ "Post" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "identity.api",
+          "Port": 80
+        }
+      ],
+      "DownstreamPathTemplate": "/api/identity/account/refresh-token"
+    },
+
+    // Claims
+    {
+      "UpstreamPathTemplate": "/identity/claims/{userId}",
+      "UpstreamHttpMethod": [ "Get" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "identity.api",
+          "Port": 80
+        }
+      ],
+      "DownstreamPathTemplate": "/api/identity/claims/{userId}"
+    },
+
+    {
+      "UpstreamPathTemplate": "/identity/claims/{userId}/{claimName}/{claimValue}",
+      "UpstreamHttpMethod": [ "Post" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "identity.api",
+          "Port": 80
+        }
+      ],
+      "DownstreamPathTemplate": "/api/identity/claims/{userId}/{claimName}/{claimValue}"
+    }
+  ],
+  "GlobalConfiguration": {
+    "BaseUrl": "https://localhost:8070"
+  }
+}

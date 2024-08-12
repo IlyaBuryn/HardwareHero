@@ -1,54 +1,49 @@
-using HardwareHero.Services.Shared.Constants;
-using HardwareHero.Services.Shared.Options;
-using Configurator.BusinessLogic.Extensions;
-using Configurator.Api.Extensions;
-using HardwareHero.Services.Shared.Middlewares;
+using HardwareHero.Shared.Extensions;
+using Microsoft.IdentityModel.Logging;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Host.ConfigureSecretsFile();
 
-builder.Services.RegisterMongoClassMap();
+builder.Services.AddFluentValidation();
+builder.Services.ConfigureOpenTelemetry(builder);
+
+builder.Services.ConfigureCommonJwtAuthentication(builder);
+builder.Services.ConfigurePolicyAuthorization();
+
+builder.Services.ConfigureOptions<DatabaseOptions>(builder.Configuration, ConnectionNames.ConfiguratorConnection);
+builder.Services.ConfigureBusinessLogicLayer();
 
 builder.Services.AddCustomControllers();
 
-builder.Services.AddFluentValidation();
-
-builder.Services.ConfigureOptions<DatabaseOptions>(
-    builder.Configuration, 
-    ConnectionNames.ConfiguratorConnection);
-
+builder.Services.ConfigureSwagger();
 builder.Services.AddEndpointsApiExplorer();
+builder.Services.ConfigureCORSPolicy();
 
-builder.Services.AddSwaggerGen();
-
-builder.Services.ConfigureBusinessLogicLayer();
-
-builder.Services.AddIdentityServerAuthentication();
-
-builder.Services.AddApiScopeAuthorization();
-
-builder.Services.ConfigureCustomServices();
-
-builder.Services.AddCors();
-
+IdentityModelEventSource.ShowPII = true;
+builder.Host.ConfigureElasticLogging();
 var app = builder.Build();
 
 await app.ConfigureDatabaseAsync();
+app.UseCommonCustomMiddlewares();
 
-app.UseMiddleware<ExceptionHandlerMiddleware>();
+app.UseCors("default");
 
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+else
+{
+    app.UseHttpsRedirection();
+}
 
-app.UseCors(x => x
-    .AllowAnyOrigin()
-    .AllowAnyMethod()
-    .AllowAnyHeader());
+app.UseStaticFiles();
+app.UseRouting();
 
-app.UseHttpsRedirection();
+app.UseAuthentication();
 app.UseAuthorization();
+
 app.MapControllers().RequireAuthorization("ApiScope");
 
 app.Run();

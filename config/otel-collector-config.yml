@@ -1,0 +1,24 @@
+receivers:
+  otlp:
+    protocols:
+      grpc:
+        endpoint: otel-collector:4317 # The address to which the Collector will receive data via gRPC
+
+exporters:
+  prometheus:
+    endpoint: otel-collector:8889 # The address where Prometheus-formatted metrics will be exported.
+
+processors:
+  batch:
+
+extensions:
+  health_check:
+    endpoint: otel-collector:13133 # An address to which you can send a request to check the status of the Collector.
+
+service:
+  extensions: [health_check]
+  pipelines:
+    metrics:
+      receivers: [otlp]
+      processors: [batch]
+      exporters: [prometheus]

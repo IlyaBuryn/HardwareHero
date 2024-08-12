@@ -1,8 +1,4 @@
-﻿using Contributor.DataAccess.Data;
-using Contributor.DataAccess.Repositories;
-using HardwareHero.Services.Shared.Repositories.Contracts;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 
 namespace Contributor.DataAccess.Extensions
 {
@@ -13,7 +9,10 @@ namespace Contributor.DataAccess.Extensions
             builder.AddDbContext<ContributorDbContext>(options =>
                 options.UseSqlServer(connectionString));
 
-            builder.AddScoped(typeof(ICrudRepositoryAsync<>), typeof(ContributorEFRepository<>));
+            builder.AddScoped(typeof(ICollectionRepositoryAsync<>), typeof(EFCollectionRepositoryAsync<>));
+            builder.AddScoped(typeof(ICrudRepositoryAsync<>), typeof(EFCrudRepositoryAsync<>));
+            builder.AddScoped(typeof(IValidationRepository<>), typeof(EFValidationRepository<>));
+            builder.AddScoped(typeof(IFileRepositoryAsync), typeof(GoogleDriveRepositoryAsync));
 
             builder.AddScoped<DbContext, ContributorDbContext>();
         }

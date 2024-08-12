@@ -1,7 +1,4 @@
-﻿using Aggregator.BusinessLogic.Contracts;
-using HardwareHero.Services.Shared.DTOs;
-using HardwareHero.Services.Shared.Options;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 
@@ -10,7 +7,6 @@ namespace Aggregator.Api.Controllers
     [ApiController]
     [Produces("application/json")]
     [Route("api/aggregator")]
-    [Authorize]
     public class ComponentReviewController : ControllerBase
     {
         private readonly IComponentReviewService _componentReviewService;
@@ -25,29 +21,110 @@ namespace Aggregator.Api.Controllers
         }
 
 
-        [HttpPost("component-review")]
-        public async Task<IActionResult> AddComponentReviewAsync([FromBody] ComponentReviewDto componentReviewToAdd)
+        [HttpPost("component/review/local")]
+        [Authorize(Roles = Roles.User)]
+        public async Task<IActionResult> CreateLocalReviewAsync([FromBody] ComponentLocalReviewDto reviewToAdd)
         {
             var response = await _componentReviewService
-                .AddComponentReviewAsync(componentReviewToAdd);
+                .AddLocalReviewAsync(reviewToAdd);
             
-            return CreatedAtAction(nameof(AddComponentReviewAsync), response);
+            return CreatedAtAction(nameof(CreateLocalReviewAsync), response);
         }
 
 
-        [HttpGet("component-reviews/{componentId}/{pageNumber}")]
-        public async Task<IActionResult> GetComponentReviewsByComponentIdAsync(
-            [FromRoute] int pageNumber,
-            [FromRoute] Guid componentId,
-            [FromHeader(Name = "X-Page-Size")] int? pageSize)
+        [HttpPost("component/review/global")]
+        [Authorize(Roles = Roles.Admin)]
+        public async Task<IActionResult> CreateGlobalReviewAsync([FromBody] ComponentGlobalReviewDto reviewToAdd)
         {
-            if (pageSize == null || pageSize <= 0)
-            {
-                pageSize = _pageSizeSettings.PageSize;
-            }
-
             var response = await _componentReviewService
-                .GetComponentReviewsAsPageByComponentIdAsync(pageNumber, (int)pageSize, componentId);
+                .AddGlobalReviewAsync(reviewToAdd);
+
+            return CreatedAtAction(nameof(CreateLocalReviewAsync), response);
+        }
+
+
+        [HttpPut("component/review/local")]
+        [Authorize(Roles = Roles.User)]
+        public async Task<IActionResult> UpdateLocalReviewAsync([FromBody] ComponentLocalReviewDto reviewToUpdate)
+        {
+            var response = await _componentReviewService
+                .UpdateLocalReviewAsync(reviewToUpdate);
+
+            return Ok(response);
+        }
+
+        [HttpPut("component/review/global")]
+        [Authorize(Roles = Roles.Admin)]
+        public async Task<IActionResult> UpdateGlobalReviewAsync([FromBody] ComponentGlobalReviewDto reviewToUpdate)
+        {
+            var response = await _componentReviewService
+                .UpdateGlobalReviewAsync(reviewToUpdate);
+
+            return Ok(response);
+        }
+
+
+        [HttpDelete("component/review/local/{reviewId}")]
+        [Authorize(Roles = Roles.User)]
+        public async Task<IActionResult> DeleteLocalReviewAsync([FromRoute] Guid reviewId)
+        {
+            var response = await _componentReviewService
+                .RemoveLocalReviewAsync(reviewId);
+
+            return Ok(response);
+        }
+
+
+        [HttpDelete("component/review/global/{reviewId}")]
+        [Authorize(Roles = Roles.Admin)]
+        public async Task<IActionResult> DeleteGlobalReviewAsync([FromRoute] Guid reviewId)
+        {
+            var response = await _componentReviewService
+                .RemoveGlobalReviewAsync(reviewId);
+
+            return Ok(response);
+        }
+
+
+        [HttpPost("components/reviews")]
+        [Authorize(Roles = Roles.Admin)]
+        public async Task<IActionResult> CreateFromJsonAsync([FromBody] List<ComponentGlobalReviewDto> reviews)
+        {
+            var response = await _componentReviewService
+                .AddGlobalReviewsAsync(reviews);
+
+            return Ok(response);
+        }
+
+        [HttpPost("component/{componentId}/reviews/local")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetLocalReviewsAsPageByComponentId(
+            [FromBody] ComponentLocalReviewFilter filter, [FromRoute] Guid componentId)
+        {
+            var response = await _componentReviewService
+                .GetComponentLocalReviewsAsPageByComponentIdAsync(filter, componentId);
+
+            return Ok(response);
+        }
+
+        [HttpPost("component/{componentId}/reviews/global")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetGlobalReviewsAsPageByComponentId(
+            [FromBody] ComponentGlobalReviewFilter filter, [FromRoute] Guid componentId)
+        {
+            var response = await _componentReviewService
+                .GetComponentGlobalReviewsAsPageByComponentIdAsync(filter, componentId);
+
+            return Ok(response);
+        }
+
+
+        [HttpGet("component/reviews/avg/{componentId}")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetAvgMarksAsync([FromRoute] Guid componentId)
+        {
+            var response = await _componentReviewService
+                .GetComponentAvgMarkAsync(componentId);
             
             return Ok(response);
         }

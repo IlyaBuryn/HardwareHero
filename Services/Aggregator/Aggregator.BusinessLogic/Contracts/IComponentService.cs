@@ -1,15 +1,15 @@
-﻿using HardwareHero.Services.Shared.DTOs;
-
-namespace Aggregator.BusinessLogic.Contracts
+﻿namespace Aggregator.BusinessLogic.Contracts
 {
     public interface IComponentService
     {
-        Task<List<ComponentDto?>> GetComponentsAsPageAsync(int pageNumber, int pageSize, string specificationFilter, string searchString);
-        Task<int> GetComponentsPageCountAsync(int pageSize, string specificationFilter, string searchString);
-        Task<ComponentDto?> GetComponentByIdAsync(Guid componentId);
         Task<Guid?> AddComponentAsync(ComponentDto componentToAdd);
         Task<bool> UpdateComponentAsync(ComponentDto componentToUpdate);
         Task<bool> RemoveComponentAsync(Guid componentId);
-        Task<decimal> GetComponentAvgMarkAsync(Guid componentId);
+
+        Task<ComplexResponse> AddComponentsAsync(IEnumerable<ComponentDto> componentsToAdd);
+
+        Task<ComponentDto?> GetComponentByIdAsync(Guid componentId);
+        Task<List<ComponentDto?>> GetComponentsByIdsAsync(List<Guid> componentsIds);
+        Task<PageResponse<object?>> GetComponentsAsPageAsync(ComponentsFilter filter);
     }
 }

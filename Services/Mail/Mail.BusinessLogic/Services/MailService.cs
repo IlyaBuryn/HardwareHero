@@ -1,61 +1,64 @@
-﻿using AutoMapper;
-using HardwareHero.Services.Shared.Constants;
-using HardwareHero.Services.Shared.DTOs.Mail;
-using HardwareHero.Services.Shared.Options;
-using Mail.BusinessLogic.Contracts;
-using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Options;
 using MongoDB.Driver;
-
 using MailKit.Net.Smtp;
 using MailKit.Security;
 using MimeKit;
+using MimeKit.Text;
+using Microsoft.Extensions.Configuration;
 
 namespace Mail.BusinessLogic.Services
 {
     public class MailService : IMailService
     {
-        private readonly IMongoCollection<HardwareHero.Services.Shared.Models.Mail.MailMessage> _mailCollection;
+        private readonly IConfiguration _configuration;
+        private readonly IMongoCollection<HardwareHero.Shared.Models.Mail.MailMessage> _mailCollection;
         private readonly IMapper _mapper;
         private readonly DatabaseOptions _databaseSettings;
-        private readonly string senderEmailAddress = "issaac.bishop@gmail.com";
 
         public MailService(
             IOptions<DatabaseOptions> databaseSettings,
-            IMapper mapper)
+            IMapper mapper,
+            IConfiguration configuration)
         {
             _databaseSettings = databaseSettings.Value;
             var mongoClient = new MongoClient(_databaseSettings.ConnectionString);
             var mongoDb = mongoClient.GetDatabase(_databaseSettings.DatabaseName);
 
             _mailCollection = mongoDb
-                .GetCollection<HardwareHero.Services.Shared.Models.Mail.MailMessage>(
+                .GetCollection<HardwareHero.Shared.Models.Mail.MailMessage>(
                 _databaseSettings.Collections[ConfiguratorCollectionNames.MailCollection].CollectionName);
 
             _mapper = mapper;
+            _configuration = configuration;
         }
 
-        public Guid SendMessage(MailMessageDto message)
+        public async Task<Guid> SendMailAsync(MailMessageDto messageToSend)
         {
-            MimeMessage messageToDelivery = new MimeMessage();
+            var config = _configuration.GetSection("SMTP");
+            var email = new MimeMessage();
 
-            var uniqueGuid = Guid.NewGuid();
-            messageToDelivery.From.Add(new MailboxAddress("HardwareHero.Management: " + uniqueGuid.ToString(), senderEmailAddress));
-            messageToDelivery.To.Add(new MailboxAddress("Получатель", message.RecipientsEmailAddress));
-            messageToDelivery.Subject = message.MessageTitle;
-            messageToDelivery.Body = new TextPart("plain")
+            email.From.Add(MailboxAddress.Parse(config.GetSection("SenderAddress").Value));
+            email.To.Add(MailboxAddress.Parse(messageToSend.RecipientMailAddress));
+            email.Subject = messageToSend.Subject;
+            email.Body = new TextPart(TextFormat.Html)
             {
-                Text = message.MessageContent
+                Text = messageToSend.Body
             };
 
-            using (var client = new SmtpClient())
-            {
-                client.Connect("smtp.gmail.com", 587, SecureSocketOptions.StartTls);
-                client.Authenticate(senderEmailAddress, "...");
-                client.Send(messageToDelivery);
-                client.Disconnect(true);
-            }
+            using var smtp = new SmtpClient();
+            smtp.Connect("smtp.gmail.com", 465, SecureSocketOptions.SslOnConnect);
+            smtp.Authenticate(config.GetSection("SenderAddress").Value, config.GetSection("SenderAddressPassword").Value);
+            smtp.Send(email);
+            smtp.Disconnect(true);
 
-            return uniqueGuid;
+            messageToSend.Id = Guid.NewGuid();
+            messageToSend.Timestamp = DateTime.Now;
+
+            var message = _mapper.Map<MailMessage>(messageToSend);
+            message.Body = string.Empty;
+            await _mailCollection.InsertOneAsync(message);
+
+            return messageToSend.Id;
         }
     }
 }

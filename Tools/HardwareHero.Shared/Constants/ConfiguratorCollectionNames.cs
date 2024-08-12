@@ -1,0 +1,12 @@
+﻿namespace HardwareHero.Shared.Constants
+{
+    public static class ConfiguratorCollectionNames
+    {
+        public const string ComponentTypesCollection = "ComponentTypes";
+        public const string AssembliesCollection = "Assemblies";
+        public const string PricesCollection = "ContributorPrices";
+        public const string MailCollection = "MailMessages";
+        public const string ComponentsCollection = "Components";
+        public const string ConfiguratorRulesCollection = "ConfiguratorRules";
+    }
+}

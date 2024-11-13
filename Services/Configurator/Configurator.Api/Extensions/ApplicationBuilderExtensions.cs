@@ -1,4 +1,4 @@
-﻿using HardwareHero.Shared.Models.Configurator;
+﻿using Configurator.BusinessLogic.Models;
 using MongoDB.Bson.Serialization.Conventions;
 
 namespace Configurator.Api.Extensions

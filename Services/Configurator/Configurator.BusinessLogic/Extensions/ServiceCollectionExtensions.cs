@@ -18,6 +18,7 @@ namespace Configurator.BusinessLogic.Extensions
             service.AddScoped<IAssemblyService, AssemblyService>();
             service.AddScoped<IConfiguratorService, ConfiguratorService>();
             service.AddScoped<IDataService, DataService>();
+            service.AddScoped<IAttributeService, AttributeService>();
         }
 
         private static void ConfigureMapProfiles(IServiceCollection service)
@@ -30,7 +31,7 @@ namespace Configurator.BusinessLogic.Extensions
 
         private static void ConfigureDtoValidators(IServiceCollection service)
         {
-            var assembly = Assembly.Load(new AssemblyName("HardwareHero.Shared"));
+            var assembly = Assembly.Load(new AssemblyName("Configurator.DTOs"));
             service.AddValidatorsFromAssembly(assembly);
         }
     }

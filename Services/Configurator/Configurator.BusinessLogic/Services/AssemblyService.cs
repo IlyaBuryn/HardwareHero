@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.Options;
+﻿using Configurator.BusinessLogic.Models;
+using Configurator.DTOs.Domain;
+using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 
 namespace Configurator.BusinessLogic.Services
@@ -38,6 +40,43 @@ namespace Configurator.BusinessLogic.Services
 
             return result;
         }
+
+        public void AddComponentAsync(Guid assemblyId, ConfiguratorComponent componentToAdd)
+        {
+            var filter = Builders<StoredAssembly>.Filter.Eq(a => a.Id, assemblyId);
+
+            var assembly = _assembliesCollection.Find(filter).First();
+            if (assembly == null)
+            {
+                throw new NotFoundException(nameof(assembly));
+            }
+
+            assembly.SelectedComponents.Add(componentToAdd);
+
+            // TODO: save
+        }
+
+        public void RemoveComponentAsync(Guid assemblyId, Guid componentId)
+        {
+            var filter = Builders<StoredAssembly>.Filter.Eq(a => a.Id, assemblyId);
+
+            var assembly = _assembliesCollection.Find(filter).First();
+            if (assembly == null)
+            {
+                throw new NotFoundException(nameof(assembly));
+            }
+
+            var component = assembly.SelectedComponents.FirstOrDefault(a => a.Id == componentId);
+            if (component == null)
+            {
+                throw new NotFoundException(nameof(component));
+            }
+
+            assembly.SelectedComponents.Remove(component);
+
+            // TODO: save
+        }
+
 
         public async Task<Guid?> SaveAssemblyAsync(StoredAssemblyDto assemblyToAdd)
         {

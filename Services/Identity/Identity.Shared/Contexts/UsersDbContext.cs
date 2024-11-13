@@ -1,4 +1,4 @@
-﻿using HardwareHero.Shared.Models.Identity;
+﻿using Identity.Shared.Domain;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
@@ -13,7 +13,7 @@ namespace Identity.Shared.Contexts
             this.ChangeTracker.LazyLoadingEnabled = false;
         }
 
-        public DbSet<WishListComponents> WishListComponents { get; set; }
+        public DbSet<WishListComponent> WishListComponents { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

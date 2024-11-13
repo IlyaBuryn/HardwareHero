@@ -1,4 +1,6 @@
-﻿namespace Contributor.BusinessLogic.Contracts
+﻿using Contributor.DTOs.Domain.Contributors;
+
+namespace Contributor.BusinessLogic.Contracts
 {
     public interface IContributorService
     {

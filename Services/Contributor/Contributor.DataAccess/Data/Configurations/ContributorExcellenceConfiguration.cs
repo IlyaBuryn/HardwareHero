@@ -1,4 +1,6 @@
-﻿namespace Contributor.DataAccess.Data.Configurations
+﻿using Contributor.DataAccess.Models;
+
+namespace Contributor.DataAccess.Data.Configurations
 {
     internal class ContributorExcellenceConfiguration
         : IEntityTypeConfiguration<ContributorExcellence>
@@ -11,13 +13,13 @@
             builder.Property(c => c.Name).IsRequired().HasMaxLength(ValidationValues.NameMaxLength);
             builder.HasIndex(c => c.Name).IsUnique();
 
-            builder.Property(c => c.Logo).IsRequired();
-
             builder.Property(c => c.Description).HasMaxLength(ValidationValues.ContributorDescriptionMaxLength);
 
             builder.Property(c => c.Phone).IsRequired().HasMaxLength(ValidationValues.PhoneMaxLength);
 
             builder.Property(c => c.RegionId).IsRequired();
+
+            builder.Property(c => c.CurrencyId).IsRequired();
         }
     }
 }

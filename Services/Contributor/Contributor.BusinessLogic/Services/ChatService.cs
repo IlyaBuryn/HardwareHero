@@ -1,31 +1,28 @@
-﻿using HardwareHero.Filter.Operations;
+﻿using Contributor.DataAccess.Models;
+using Contributor.DTOs.Domain.Chat;
+using Contributor.DTOs.Domain.Contributors;
+using HardwareHero.Filter.Operations;
+using HardwareHero.Shared.Extensions.Repository;
 
 namespace Contributor.BusinessLogic.Services
 {
     public class ChatService : IChatService
     {
-        private readonly ICollectionRepositoryAsync<ChatRoom> _chatRoomRepo;
-        private readonly ICollectionRepositoryAsync<ContributorModel> _contributorRepo;
-        private readonly ICollectionRepositoryAsync<ChatMessage> _chatMessageRepo;
-
-        private readonly IValidationRepository<ChatRoom> _chatRoomValidationRepo;
-        private readonly IValidationRepository<ContributorModel> _contributorValidationRepo;
+        private readonly IQueryRepositoryAsync<ChatRoom> _chatRoomRepo;
+        private readonly IQueryRepositoryAsync<ContributorModel> _contributorRepo;
+        private readonly IQueryRepositoryAsync<ChatMessage> _chatMessageRepo;
 
         private readonly IMapper _mapper;
 
         public ChatService(
-            ICollectionRepositoryAsync<ChatRoom> chatRoomRepo,
-            ICollectionRepositoryAsync<ContributorModel> contributorRepo,
-            ICollectionRepositoryAsync<ChatMessage> chatMessageRepo,
-            IValidationRepository<ChatRoom> chatRoomValidationRepo,
-            IValidationRepository<ContributorModel> contributorValidationRepo,
+            IQueryRepositoryAsync<ChatRoom> chatRoomRepo,
+            IQueryRepositoryAsync<ContributorModel> contributorRepo,
+            IQueryRepositoryAsync<ChatMessage> chatMessageRepo,
             IMapper mapper)
         {
             _chatRoomRepo = chatRoomRepo;
             _contributorRepo = contributorRepo;
             _chatMessageRepo = chatMessageRepo;
-            _chatRoomValidationRepo = chatRoomValidationRepo;
-            _contributorValidationRepo = contributorValidationRepo;
             _mapper = mapper;
         }
 
@@ -40,8 +37,9 @@ namespace Contributor.BusinessLogic.Services
             
             var chat = _mapper.Map<ChatRoom>(chatToAdd);
             var result = await _chatRoomRepo.CreateEntityAsync(chat);
+            result.DataAnswerCheck();
             
-            return result;
+            return result.Value!.Id;
         }
 
         public async Task<bool> UpdateChatRoomAsync(ChatRoomDto chatToUpdate)
@@ -52,95 +50,90 @@ namespace Contributor.BusinessLogic.Services
             }
 
             var chat = await _chatRoomRepo
-                .GetOneWithNotFoundCheck(x => x.Id == chatToUpdate.Id);
+                .NotFoundCheckAsync(x => x.Id == chatToUpdate.Id);
 
             chat.Subject = chatToUpdate.Subject;
             chat.Participants = _mapper.Map<ICollection<ContributorModel>>(chatToUpdate.Participants);
             
             var result = await _chatRoomRepo.UpdateEntityAsync(chat);
+            result.DataAnswerCheck();
             
-            return result;
+            return result.Value != null;
         }
 
         public async Task<bool> DeleteChatRoomAsync(Guid chatRoomId)
         {
             var chat = await _chatRoomRepo
-                .GetOneWithNotFoundCheck(x => x.Id == chatRoomId);
+                .NotFoundCheckAsync(x => x.Id == chatRoomId);
 
             var result = await _chatRoomRepo.RemoveEntityAsync(chatRoomId);
+            result.DataAnswerCheck();
             
-            return result;
+            return result.Value != null;
         }
 
         public async Task<ChatRoomDto?> GetChatByIdAsync(Guid chatRoomId)
         {
             var chat = await _chatRoomRepo
-                .GetManyWithDefaultOrEmptyCheckAsync(x => x.Id == chatRoomId, true);
+                .FindAsync(x => x.Id == chatRoomId);
+            chat.DataAnswerCheck();
 
-            var result = _mapper.Map<ChatRoomDto>(chat);
+            var result = _mapper.Map<ChatRoomDto>(chat.Value);
             
             return result;
         }
 
         public async Task<PageResponse<ChatRoomDto?>?> GetChatsByContributorIdAsync(Guid contributorId, IPaginable filter)
         {
-            _chatRoomValidationRepo.CheckPaginationOptions(filter);
-
             var chats = await _chatRoomRepo
-                .GetManyWithDefaultOrEmptyCheckAsync(x => x.Participants.Any(x => x.Id == contributorId));
+                .FindPagedAsync(x => x.Participants.Any(x => x.Id == contributorId), filter);
+            chats.DataAnswerCheck();
 
-            var result = await _chatRoomRepo.GetMappedPageAsync(chats, filter);
-            var mappedResult = _mapper.Map<PageResponse<ChatRoomDto>>(result);
+            var page = chats.ToPageResponse();
+            var result = _mapper.Map<PageResponse<ChatRoomDto>>(page);
 
-            return mappedResult;
+            return result;
         }
 
         public async Task<Guid?> SendMessageAsync(ChatMessageDto messageToSend)
         {
-            _chatRoomValidationRepo.CheckIfObjectNotFound(x => x.Id == messageToSend.ChatRoomId);
-            _contributorValidationRepo.CheckIfObjectNotFound(x => x.Id == messageToSend.SenderId);
-
-            var chatRoom = await _chatRoomRepo
-                .GetOneWithNotFoundCheck(x => x.Id == messageToSend.ChatRoomId);
+            var chatRoom = await _chatRoomRepo.NotFoundCheckAsync(x => x.Id == messageToSend.ChatRoomId);
+            await _contributorRepo.NotFoundCheckAsync(x => x.Id == messageToSend.SenderId);
 
             var message = _mapper.Map<ChatMessage>(messageToSend);
             message.Id = Guid.NewGuid();
             chatRoom.ChatMessages.Add(message);
 
             var result = await _chatRoomRepo.UpdateEntityAsync(chatRoom);
+            result.DataAnswerCheck();
             
-            return result ? message.Id : Guid.Empty;
+            return result.Value!.Id;
         }
 
         public async Task<bool> UpdateMessageAsync(ChatMessageDto messageToSend)
         {
-            _chatRoomValidationRepo.CheckIfObjectNotFound(x => x.Id == messageToSend.ChatRoomId);
-            _contributorValidationRepo.CheckIfObjectNotFound(x => x.Id == messageToSend.SenderId);
-
-            var chatRoom = await _chatRoomRepo
-                .GetOneWithNotFoundCheck(x => x.Id == messageToSend.ChatRoomId);
-
-            var message = await _chatMessageRepo
-                .GetOneWithNotFoundCheck(x => x.Id == messageToSend.Id);
+            var chatRoom = await _chatRoomRepo.NotFoundCheckAsync(x => x.Id == messageToSend.ChatRoomId);
+            await _contributorRepo.NotFoundCheckAsync(x => x.Id == messageToSend.SenderId);
+            var message = await _chatMessageRepo.NotFoundCheckAsync(x => x.Id == messageToSend.Id);
 
             message.Text = messageToSend.Text;
             message.Timestamp = DateTime.Now;
             message.IsEdited = true;
 
             var result = await _chatMessageRepo.UpdateEntityAsync(message);
+            result.DataAnswerCheck();
 
-            return result;
+            return result.Value != null;
         }
 
         public async Task<PageResponse<ChatMessageDto?>?> GetMessagesByChatIdAsync(Guid chatRoomId, IPaginable filter)
         {
-            _chatRoomValidationRepo.CheckPaginationOptions(filter);
-
             var messages = await _chatMessageRepo
-                .GetManyWithDefaultOrEmptyCheckAsync(x => x.ChatRoomId == chatRoomId);
+                .FindPagedAsync(x => x.ChatRoomId == chatRoomId, filter);
+            messages.DataAnswerCheck();
+            var page = messages.ToPageResponse();
 
-            var result = await _chatMessageRepo.GetMappedPageAsync(messages.Reverse(), filter);
-            var mappedResult = _mapper.Map<PageResponse<ChatMessageDto>>(result);
+            var mappedResult = _mapper.Map<PageResponse<ChatMessageDto>>(page);
 
             return mappedResult;
         }
@@ -149,8 +142,7 @@ namespace Contributor.BusinessLogic.Services
         {
             foreach (var contributor in contributors)
             {
-                var _ = await _contributorRepo.GetOneEntityAsync(
-                    expression: x => x.Id == contributor.Id);
+                var _ = await _contributorRepo.FindEntityAsync(x => x.Id == contributor.Id);
                 if (_ == null)
                 {
                     return false;

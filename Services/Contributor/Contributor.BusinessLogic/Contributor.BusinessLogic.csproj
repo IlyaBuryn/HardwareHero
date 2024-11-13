@@ -39,6 +39,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\..\Tools\HardwareHero.Shared\HardwareHero.Shared.csproj" />
     <ProjectReference Include="..\Contributor.DataAccess\Contributor.DataAccess.csproj" />
+    <ProjectReference Include="..\Contributor.DTOs\Contributor.DTOs.csproj" />
   </ItemGroup>
 
 </Project>

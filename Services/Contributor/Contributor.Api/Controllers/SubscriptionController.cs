@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Contributor.DTOs.Domain.Subscription;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Contributor.Api.Controllers
@@ -51,7 +52,17 @@ namespace Contributor.Api.Controllers
         public async Task<IActionResult> GetPlansAsync()
         {
             var response = await _subscriptionService
-                .GetSubscriptionPlansAsync();
+                .GetPlansAsync();
+
+            return Ok(response);
+        }
+
+        [HttpGet("{currencyId}")]
+        [Authorize(Roles = Roles.Contributor)]
+        public async Task<IActionResult> GetPlansByCurrencyAsync([FromRoute] Guid currencyId)
+        {
+            var response = await _subscriptionService
+                .GetPlansByCurrencyAsync(currencyId);
 
             return Ok(response);
         }
@@ -68,7 +79,7 @@ namespace Contributor.Api.Controllers
 
         [HttpPut("contributor/{contributorId}/unsubscribe")]
         [Authorize(Roles = Roles.Contributor)]
-        public async Task<IActionResult> UnubscribeAsync([FromRoute] Guid contributorId)
+        public async Task<IActionResult> UnsubscribeAsync([FromRoute] Guid contributorId)
         {
             var response = await _subscriptionService
                 .UnsubscribeContributorAsync(contributorId);

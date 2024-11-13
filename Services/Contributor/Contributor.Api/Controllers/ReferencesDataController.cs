@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Contributor.DTOs.Domain.Currencies;
+using Contributor.DTOs.Domain.Regions;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Contributor.Api.Controllers
@@ -38,7 +40,7 @@ namespace Contributor.Api.Controllers
 
         [HttpGet("regions")]
         [AllowAnonymous]
-        public async Task<IActionResult> GetregionsAsync()
+        public async Task<IActionResult> GetRegionsAsync()
         {
             var response = await _referencesDataService
                 .GetRegionsAsync();
@@ -46,32 +48,32 @@ namespace Contributor.Api.Controllers
             return Ok(response);
         }
 
-        [HttpGet("region/countries")]
+        [HttpGet("regions/{countryCode}")]
         [AllowAnonymous]
-        public async Task<IActionResult> GetCountriesAsync()
+        public async Task<IActionResult> GetRegionsByCodeAsync([FromRoute] string countryCode)
         {
             var response = await _referencesDataService
-                .GetCountriesAsync();
+                .GetRegionsByCountryAsync(countryCode);
 
             return Ok(response);
         }
 
-        [HttpGet("region/countries/{city}")]
+        [HttpGet("regions/{countryCode}/cities")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetCitiesByCodeAsync([FromRoute] string countryCode)
+        {
+            var response = await _referencesDataService
+                .GetCitiesByCountryAsync(countryCode);
+
+            return Ok(response);
+        }
+
+        [HttpGet("region/{city}")]
         [AllowAnonymous]
         public async Task<IActionResult> GetCountriesAsync([FromRoute] string city)
         {
             var response = await _referencesDataService
                 .GetRegionByCityAsync(city);
-
-            return Ok(response);
-        }
-
-        [HttpGet("region/{country}")]
-        [AllowAnonymous]
-        public async Task<IActionResult> GetRegionsByCountryAsync([FromRoute] string country)
-        {
-            var response = await _referencesDataService
-                .GetRegionsByCountryAsync(country);
 
             return Ok(response);
         }
@@ -102,6 +104,16 @@ namespace Contributor.Api.Controllers
         {
             var response = await _referencesDataService
                 .GetCurrenciesAsync();
+
+            return Ok(response);
+        }
+
+        [HttpGet("references")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetEverythingAsync()
+        {
+            var response = await _referencesDataService
+                .GetCurrenciesAndRegionsAsync();
 
             return Ok(response);
         }

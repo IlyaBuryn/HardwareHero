@@ -1,33 +1,31 @@
-﻿namespace Contributor.BusinessLogic.Services
+﻿using Contributor.DataAccess.Models;
+using Contributor.DTOs.Domain.Contributors;
+using HardwareHero.Shared.Extensions.Repository;
+using System.Linq.Expressions;
+
+namespace Contributor.BusinessLogic.Services
 {
     public class ContributorService : IContributorService
     {
-        private readonly ICollectionRepositoryAsync<ContributorModel> _contributorRepo;
+        private readonly IQueryRepositoryAsync<ContributorModel> _contributorRepo;
 
-        private readonly IValidationRepository<ContributorModel> _contributorValidationRepo;
-        private readonly IValidationRepository<ContributorExcellence> _contributorExcValidationRepo;
-
-        private readonly ICrudRepositoryAsync<ContributorConfirmInfo> _contributorConfirmInfoRepo;
-        private readonly ICrudRepositoryAsync<SubscriptionPlan> _subscriptionPlanRepo;
-        private readonly ICrudRepositoryAsync<ContributorExcellence> _excellenceRepo;
+        private readonly IBaseRepositoryAsync<ContributorConfirmInfo> _contributorConfirmInfoRepo;
+        private readonly IBaseRepositoryAsync<SubscriptionPlan> _subscriptionPlanRepo;
+        private readonly IBaseRepositoryAsync<ContributorExcellence> _excellenceRepo;
         
         private readonly IFileRepositoryAsync _imagesRepo;
 
         private readonly IMapper _mapper;
 
         public ContributorService(
-            ICollectionRepositoryAsync<ContributorModel> contributorRepo,
-            IValidationRepository<ContributorModel> contributorValidationRepo,
-            IValidationRepository<ContributorExcellence> contributorExcValidationRepo,
-            ICrudRepositoryAsync<ContributorConfirmInfo> contributorConfirmInfoRepo,
-            ICrudRepositoryAsync<SubscriptionPlan> subscriptionPlanRepo,
-            ICrudRepositoryAsync<ContributorExcellence> excellenceRepo,
+            IQueryRepositoryAsync<ContributorModel> contributorRepo,
+            IBaseRepositoryAsync<ContributorConfirmInfo> contributorConfirmInfoRepo,
+            IBaseRepositoryAsync<SubscriptionPlan> subscriptionPlanRepo,
+            IBaseRepositoryAsync<ContributorExcellence> excellenceRepo,
             IFileRepositoryAsync imagesRepo,
             IMapper mapper)
         {
             _contributorRepo = contributorRepo;
-            _contributorValidationRepo = contributorValidationRepo;
-            _contributorExcValidationRepo = contributorExcValidationRepo;
             _contributorConfirmInfoRepo = contributorConfirmInfoRepo;
             _subscriptionPlanRepo = subscriptionPlanRepo;
             _excellenceRepo = excellenceRepo;
@@ -39,41 +37,44 @@
         {
             contributorToAdd.Id = Guid.NewGuid();
 
-            _contributorValidationRepo
-                .CheckIfObjectAlreadyExist(x => x.UserId == contributorToAdd.UserId);
-            _contributorExcValidationRepo
-                .CheckIfObjectAlreadyExist(x => x.Name == contributorToAdd.ContributorExcellence.Name);
+            await _contributorRepo.AlreadyExistCheckAsync(x => x.UserId == contributorToAdd.UserId);
+            await _excellenceRepo.AlreadyExistCheckAsync(
+                x => x.Name == contributorToAdd.ContributorExcellence.Name);
 
-            var uploadResult = await _imagesRepo.UploadFileAsync(
-                contributorToAdd.ContributorExcellence.ImageData,
-                contributorToAdd.ContributorExcellence.Logo);
+            if (contributorToAdd.ContributorExcellence.ImageData != null)
+            {
+                var uploadResult = await _imagesRepo.UploadFileAsync(
+                    contributorToAdd.ContributorExcellence.ImageData,
+                    contributorToAdd.ContributorExcellence.LogoName);
 
-            contributorToAdd.ContributorExcellence.Logo = uploadResult;
+                contributorToAdd.ContributorExcellence.LogoUrl = uploadResult.Value;
+            }
 
             var contributor = _mapper.Map<ContributorModel>(contributorToAdd);
-            var contributorResult = await _contributorRepo.CreateEntityAsync(contributor);
+            var result = await _contributorRepo.CreateEntityAsync(contributor);
+            result.DataAnswerCheck();
 
-            return contributorResult;
+            return result.Value!.Id;
         }
 
         public async Task<bool> RemoveContributorAsync(Guid contributorId)
         {
             var contributor = await _contributorRepo
-                .GetOneWithNotFoundCheck(x => x.Id == contributorId, false);
+                .NotFoundCheckAsync(x => x.Id == contributorId);
 
-            var imageId = contributor.ContributorExcellence.Logo.Split("id=").Last();
-
-            await _imagesRepo.DeleteFileAsync(imageId);
+            var imageName = contributor.ContributorExcellence.LogoName;
+            await _imagesRepo.DeleteFileAsync(imageName);
 
             var result = await _contributorRepo.RemoveEntityAsync(contributorId);
+            result.DataAnswerCheck();
 
-            return result;
+            return result.Value != null;
         }
 
         public async Task<ContributorModelDto?> GetContributorByExcNameAsync(string name)
         {
             var contributor = await _contributorRepo
-                .GetOneWithNotFoundCheck(x => x.ContributorExcellence.Name == name);
+                .NotFoundCheckAsync(x => x.ContributorExcellence.Name == name);
 
             var result = _mapper.Map<ContributorModelDto>(contributor);
             return result;
@@ -82,27 +83,25 @@
         public async Task<ContributorModelDto?> GetContributorByUserIdAsync(Guid userId)
         {
             var contributor = await _contributorRepo
-                .GetOneWithNotFoundCheck(x => x.UserId == userId);
+                .NotFoundCheckAsync(x => x.UserId == userId);
 
             var result = _mapper.Map<ContributorModelDto>(contributor);
             return result;
         }
 
+        // TODO: remove switch from filter
         public async Task<PageResponse<ContributorModelDto?>> GetContributorsAsPageAsync(ContributorsFilter filter)
         {
-            _contributorValidationRepo.CheckPaginationOptions(filter);
+            var query = await _contributorRepo.FindPagedAsync(null, filter,
+                x => x.ContributorExcellence, 
+                x => x.SubscriptionPlanInfo, 
+                x => x.ContributorConfirmInfo);
 
-            IncludeProperties<ContributorModel> includesFilter = filter.ShowOnlyExcellences ? 
-                new(x => x.ContributorExcellence)
-                : new(x => x.ContributorExcellence, x => x.SubscriptionPlanInfo, x => x.ContributorConfirmInfo);
+            //query = query.ApplyFilter(filter).Query;
+            //query = query.ApplyOrderBy(filter).Query;
 
-            var query = await _contributorRepo.GetManyEntitiesAsync(includesFilter);
-
-            query = query.ApplyFilter(filter).Query;
-            query = query.ApplyOrderBy(filter).Query;
-
-            var result = await _contributorRepo.GetMappedPageAsync(query, filter);
-            var mappedResult = _mapper.Map<PageResponse<ContributorModelDto?>>(result);
+            var page = query.ToPageResponse;
+            var mappedResult = _mapper.Map<PageResponse<ContributorModelDto?>>(page);
 
             return mappedResult;
         }
@@ -110,7 +109,7 @@
         public async Task<ContributorConfirmInfoDto?> GetConfirmInfoByContributorIdAsync(Guid contributorId)
         {
             var contributor = await _contributorRepo
-                .GetOneWithNotFoundCheck(x => x.Id == contributorId);
+                .NotFoundCheckAsync(x => x.Id == contributorId);
             
             if (contributor.ContributorConfirmInfo == null)
             {
@@ -125,7 +124,7 @@
         public async Task<bool> ChangeConfirmInfoForContributorAsync(Guid contributorId, ContributorConfirmInfoDto info)
         {
             var contributor = await _contributorRepo
-                .GetOneWithNotFoundCheck(x => x.Id == contributorId);
+                .NotFoundCheckAsync(x => x.Id == contributorId);
 
             if (contributor.ContributorConfirmInfo == null)
             {
@@ -139,7 +138,9 @@
             contributorInfo.TimeStamp = DateTime.Now;
 
             var result = await _contributorConfirmInfoRepo.UpdateEntityAsync(contributorInfo);
-            return result;
+            result.DataAnswerCheck();
+
+            return result.Value != null;
 
         }
 
@@ -153,7 +154,9 @@
             };
 
             var result = await _contributorConfirmInfoRepo.CreateEntityAsync(contributorInfo);
-            return result;
+            result.DataAnswerCheck();
+
+            return result.Value!.Id;
         }
     }
 }

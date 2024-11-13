@@ -1,12 +1,8 @@
-﻿using EventStream.EventHandling;
-using HardwareHero.Shared.DTOs.Aggregator;
-using KafkaEventStream;
-using KafkaEventStream.BackgroundServices;
-using KafkaEventStream.Topics;
+﻿using Contributor.DTOs.Domain.Contributors;
+using EventStream.EventHandling;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
-using System.Text.Json;
 
 namespace Contributor.Api.Controllers
 {

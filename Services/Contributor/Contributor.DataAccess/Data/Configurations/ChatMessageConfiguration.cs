@@ -1,4 +1,6 @@
-﻿namespace Contributor.DataAccess.Data.Configurations
+﻿using Contributor.DataAccess.Models;
+
+namespace Contributor.DataAccess.Data.Configurations
 {
     internal class ChatMessageConfiguration : IEntityTypeConfiguration<ChatMessage>
     {

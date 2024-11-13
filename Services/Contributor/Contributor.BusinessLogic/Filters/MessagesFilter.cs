@@ -2,7 +2,7 @@
 
 namespace Contributor.BusinessLogic.Filters
 {
-    public class MessagesFilter : FilterRequestDomain<ChatMessage>, IPaginable
+    public class MessagesFilter : IPaginable
     {
         public uint PageNumber { get; init; }
         public uint PageSize { get; init; }

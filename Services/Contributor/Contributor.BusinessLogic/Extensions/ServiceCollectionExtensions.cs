@@ -34,7 +34,7 @@ namespace Contributor.BusinessLogic.Extensions
 
         private static void ConfigureDtoValidators(IServiceCollection services)
         {
-            var assembly = Assembly.Load(new AssemblyName("HardwareHero.Shared"));
+            var assembly = Assembly.Load(new AssemblyName("Contributor.DTOs"));
             services.AddValidatorsFromAssembly(assembly);
         }
     }

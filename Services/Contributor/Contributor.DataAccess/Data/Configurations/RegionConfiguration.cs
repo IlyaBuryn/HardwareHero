@@ -1,4 +1,6 @@
-﻿namespace Contributor.DataAccess.Data.Configurations
+﻿using Contributor.DataAccess.Models;
+
+namespace Contributor.DataAccess.Data.Configurations
 {
     public class RegionConfiguration : IEntityTypeConfiguration<Region>
     {
@@ -8,6 +10,8 @@
             builder.Property(c => c.Id).ValueGeneratedOnAdd();
 
             builder.Property(c => c.Country).IsRequired();
+
+            builder.Property(c => c.Code).IsRequired();
         }
     }
 }

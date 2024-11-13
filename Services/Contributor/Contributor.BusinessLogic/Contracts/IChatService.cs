@@ -1,4 +1,5 @@
-﻿using HardwareHero.Filter.Operations;
+﻿using Contributor.DTOs.Domain.Chat;
+using HardwareHero.Filter.Operations;
 
 namespace Contributor.BusinessLogic.Contracts
 {
@@ -15,7 +16,6 @@ namespace Contributor.BusinessLogic.Contracts
 
         Task<PageResponse<ChatMessageDto?>?> GetMessagesByChatIdAsync(Guid chatRoomId, IPaginable filter);
 
-        
-
+        // TODO: To TCP
     }
 }

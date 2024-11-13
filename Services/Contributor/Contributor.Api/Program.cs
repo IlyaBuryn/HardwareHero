@@ -15,7 +15,6 @@ builder.Services.ConfigurePolicyAuthorization();
 var connectionString = builder.Configuration.GetConnectionString(ConnectionNames.ContributorsConnection);
 builder.Services.ConfigureBusinessLogicLayer(connectionString);
 builder.Services.ConfigureOptions<PageSizeOptions>(builder.Configuration);
-builder.Services.ConfigureOptions<ImagesSaveOptions>(builder.Configuration);
 builder.Services.ConfigureKafkaRequestsBackgroundWorker<ContributorTopics>();
 
 builder.Services.AddCustomControllers();

@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using Contributor.DataAccess.Models;
+using System.Reflection;
 
 namespace Contributor.DataAccess.Data
 {

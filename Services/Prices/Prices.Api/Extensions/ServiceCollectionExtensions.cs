@@ -1,9 +1,14 @@
 ﻿using FluentValidation.AspNetCore;
 using HardwareHero.Shared.Extensions;
 using HardwareHero.Shared.OpenApi;
+using HardwareHero.Shared.Repositories.Contracts;
+using HardwareHero.Shared.Repositories.Mongo;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using MongoDB.Driver;
 
 namespace Prices.Api.Extensions
 {

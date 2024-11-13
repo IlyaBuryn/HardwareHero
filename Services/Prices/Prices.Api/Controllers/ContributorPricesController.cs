@@ -1,6 +1,7 @@
-﻿using HardwareHero.Shared.Requests;
+﻿using HardwareHero.Filter.Operations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using static Prices.DTOs.Requests.PricesRequests;
 
 namespace Prices.Api.Controllers
 {
@@ -18,8 +19,7 @@ namespace Prices.Api.Controllers
         }
 
         [HttpPost]
-        //[Authorize(Roles = Roles.Contributor)]
-        [AllowAnonymous]
+        [Authorize(Roles = Roles.Contributor)]
         public async Task<IActionResult> ChangePriceAsync([FromBody] ChangePriceRequest request)
         {
             var response = await _contributorPricesService
@@ -30,22 +30,32 @@ namespace Prices.Api.Controllers
 
         [HttpGet("{componentId}")]
         [AllowAnonymous]
-        public async Task<IActionResult> GetComponentPricesAsync([FromRoute] Guid componentId)
+        public async Task<IActionResult> GetPositionsAsync([FromRoute] Guid componentId, [FromQuery] IPaginable filter)
         {
             var response = await _contributorPricesService
-                .GetComponentPricesAsync(componentId);
+                .GetPositionsPagedAsync(componentId, filter);
 
             return Ok(response);
         }
 
-        //[HttpPost("")]
-        //[AllowAnonymous]
-        //public async Task<IActionResult> GetPricesToDiscreetlyUpdate([FromBody] PaginationInfo pageInfo)
-        //{
-        //    var response = await _contributorPricesService
-        //        .GetPricesToDiscreetlyUpdate(pageInfo);
+        [HttpGet("{componentId}/low-latest")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetLowestFromLatestPricesAsync([FromRoute] Guid componentId)
+        {
+            var response = await _contributorPricesService
+                .GetLowestFromLatestPricesAsync(componentId);
 
-        //    return Ok(response);
-        //}
+            return Ok(response);
+        }
+
+        [HttpPut("{componentPriceId}/status")]
+        [Authorize(Roles = Roles.Contributor)]
+        public async Task<IActionResult> ChangeUnsupportedStatusAsync([FromRoute] Guid componentPriceId)
+        {
+            var response = await _contributorPricesService
+                .ChangeUnsupportedStatusAsync(componentPriceId);
+
+            return Ok(response);
+        }
     }
 }

@@ -1,97 +1,112 @@
-﻿using HardwareHero.Shared.Models;
-using HardwareHero.Shared.Requests;
+﻿using HardwareHero.Filter.Operations;
+using HardwareHero.Shared.Extensions.Repository;
+using HardwareHero.Shared.Repositories.Contracts;
 using HardwareHero.Shared.Responses;
-using Microsoft.Extensions.Options;
-using MongoDB.Bson;
 using MongoDB.Driver;
+using Prices.BusinessLogic.Models;
+using Prices.DTOs.Prices;
+using static Prices.DTOs.Requests.PricesRequests;
+using static Prices.DTOs.Responses.PricesResponseRecords;
 
 namespace Prices.BusinessLogic.Services
 {
     public class ContributorPriceService : IContributorPricesService
     {
-        private readonly IMongoCollection<ContributorComponentPrices> _pricesCollection;
+        private readonly IBaseRepositoryAsync<ContributorComponentPrices> _pricesRepo;
         private readonly IMapper _mapper;
-        private readonly DatabaseOptions _databaseSettings;
+
 
         public ContributorPriceService(
-            IOptions<DatabaseOptions> databaseSettings,
+            IBaseRepositoryAsync<ContributorComponentPrices> pricesRepo,
             IMapper mapper)
         {
-            _databaseSettings = databaseSettings.Value;
-            var mongoClient = new MongoClient(_databaseSettings.ConnectionString);
-            var mongoDb = mongoClient.GetDatabase(_databaseSettings.DatabaseName);
-
-            _pricesCollection = mongoDb
-                .GetCollection<ContributorComponentPrices>(
-                _databaseSettings.Collections[ConfiguratorCollectionNames.PricesCollection].CollectionName);
-
+            _pricesRepo = pricesRepo;
             _mapper = mapper;
         }
 
+
         public async Task<Guid?> ChangePriceAsync(ChangePriceRequest request)
         {
-            var prices = await _pricesCollection.Find(
-                x => x.ComponentId == request.ComponentId &&
-                x.ContributorId == request.ContributorId)
-                .ToListAsync();
+            var price = await _pricesRepo.FindEntityAsync(
+                x => x.ComponentId == request.componentId &&
+                x.ContributorId == request.contributorId);
+            price.DataAnswerCheck();
 
-            var price = prices.FirstOrDefault();
-
-            if (price == null)
+            if (price.Value == null)
             {
                 var newPrice = new ContributorComponentPrices()
                 {
                     Id = Guid.NewGuid(),
-                    ComponentId = request.ComponentId,
-                    ContributorId = request.ContributorId,
+                    ComponentId = request.componentId,
+                    ContributorId = request.contributorId,
                     Prices = new List<PriceStamp>()
                     {
                         new()
                         {
-                            Price = request.NewPrice,
+                            Price = request.newPrice,
                             Timestamp = DateTime.Now,
                         }
                     }
                 };
 
-                await _pricesCollection.InsertOneAsync(newPrice);
+                var created = await _pricesRepo.CreateEntityAsync(newPrice);
+                created.DataAnswerCheck();
 
-                return newPrice.Id;
+                return created.Value!.Id;
             }
 
-            price.Prices.Add(new PriceStamp()
+            price.Value.Prices.Add(new PriceStamp()
             {
-                Price = request.NewPrice,
+                Price = request.newPrice,
                 Timestamp = DateTime.Now,
             });
 
-            var filter = Builders<ContributorComponentPrices>.Filter.Eq("_id", price.Id);
-            var update = Builders<ContributorComponentPrices>.Update
-                .Set("Prices", price.Prices);
+            var updated = await _pricesRepo.UpdateEntityAsync(price.Value);
+            updated.DataAnswerCheck();
 
-            var result = await _pricesCollection.ReplaceOneAsync(filter, price);
-
-            if (result.IsAcknowledged && result.ModifiedCount > 0)
-            {
-                return price.Id;
-            }
-            else
-            {
-                throw new Exception("Can't update element!");
-            }
+            return updated.Value!.Id;
         }
 
-        public async Task<List<ContributorComponentPricesDto?>> GetComponentPricesAsync(Guid componentId)
+        public async Task<PageResponse<PositionsResponse>> GetPositionsPagedAsync(Guid componentId, IPaginable filter)
         {
-            var prices = await _pricesCollection.Find(x => x.ComponentId == componentId).ToListAsync();
-            if (prices == null || prices.Count == 0)
+            // TODO: Need to edit IQueryRepo for mongoDb
+            throw new NotImplementedException();
+            //var prices = await _pricesRepo.FindAllEntitiesAsync(
+            //    x => x.ComponentId == componentId);
+            //prices.DataAnswerCheck();
+
+            //var result = _mapper.Map<List<ContributorComponentPricesDto?>>(prices.Value!);
+
+            //return result;
+        }
+
+        public async Task<PriceResponse> GetLowestFromLatestPricesAsync(Guid componentId)
+        {
+            var pricesAnswer = await _pricesRepo.FindAllEntitiesAsync(
+                x => x.ComponentId == componentId && x.IsUnsupported == false);
+            pricesAnswer.DataAnswerCheck();
+
+            var prices = pricesAnswer.Value;
+            if (prices == null)
             {
-                throw new NotFoundException(nameof(prices));
+                throw new NullReferenceException(nameof(prices));
             }
 
-            var result = _mapper.Map<List<ContributorComponentPricesDto?>>(prices);
+            var latestLowPrice = prices.Select(x => x.Prices.Last().Price).Min();
 
-            return result;
+            // TODO: Change NewGuid to currencyId.
+            return new PriceResponse(Guid.NewGuid(), latestLowPrice);
+        }
+
+        public async Task<bool> ChangeUnsupportedStatusAsync(Guid componentPriceId)
+        {
+            var price = await _pricesRepo.NotFoundCheckAsync(
+                x => x.Id == componentPriceId);
+
+            price.IsUnsupported = !price.IsUnsupported;
+            var result = await _pricesRepo.UpdateEntityAsync(price);
+
+            return result.Value != null;
         }
 
         //public async Task<PageResponse<ContributorComponentPricesDto?>> GetPricesToDiscreetlyUpdate(PaginationInfo pageInfo)

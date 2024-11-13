@@ -12,6 +12,9 @@
           "Port": 80
         }
       ],
+      "UpstreamHeaderTransform": {
+        "DownstreamRequireAuth": true
+      },
       "DownstreamPathTemplate": "/api/aggregator/component"
     },
 

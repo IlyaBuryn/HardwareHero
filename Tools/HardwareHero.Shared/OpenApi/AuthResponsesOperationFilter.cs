@@ -8,10 +8,10 @@ namespace HardwareHero.Shared.OpenApi
     {
         public void Apply(OpenApiOperation operation, OperationFilterContext context)
         {
-            var attributes = context.MethodInfo.DeclaringType.GetCustomAttributes(true)
+            var attributes = context?.MethodInfo?.DeclaringType?.GetCustomAttributes(true)
                 .Union(context.MethodInfo.GetCustomAttributes(true));
 
-            if (attributes.OfType<IAllowAnonymous>().Any())
+            if (attributes == null || attributes.OfType<IAllowAnonymous>().Any())
             {
                 return;
             }

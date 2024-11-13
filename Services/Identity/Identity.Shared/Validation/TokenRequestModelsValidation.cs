@@ -1,6 +1,10 @@
-﻿namespace Identity.Api.Records.Validation
+﻿using FluentValidation;
+using HardwareHero.Shared.Constants;
+using Identity.Shared.Requests;
+
+namespace Identity.Shared.Validation
 {
-    public class TokenRequestModelsValidation : AbstractValidator<RequestModels.TokenRequest>
+    public class TokenRequestModelsValidation : AbstractValidator<TokenRequest>
     {
         public TokenRequestModelsValidation()
         {

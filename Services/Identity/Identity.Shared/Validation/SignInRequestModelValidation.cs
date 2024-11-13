@@ -1,13 +1,14 @@
-﻿namespace Identity.Api.Records.Validation
-{
-    public class SignUpRequestModelValidation : AbstractValidator<RequestModels.SignUpRequestModel>
-    {
-        public SignUpRequestModelValidation()
-        {
-            RuleFor(s => s.Email).NotEmpty()
-                .WithMessage(ValidationMessages.IsRequired);
+﻿using FluentValidation;
+using HardwareHero.Shared.Constants;
+using static Identity.Shared.Requests.IdentityRequestRecords;
 
-            RuleFor(s => s.Username).NotEmpty()
+namespace Identity.Shared.Validation
+{
+    public class SignInRequestModelValidation : AbstractValidator<SignInRequest>
+    {
+        public SignInRequestModelValidation()
+        {
+            RuleFor(s => s.UsernameOrEmail).NotEmpty()
                 .WithMessage(ValidationMessages.IsRequired);
 
             RuleFor(s => s.Password).NotEmpty()

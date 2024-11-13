@@ -4,11 +4,11 @@
     public class NotFoundException : Exception
     {
         public NotFoundException()
-            : base("Object doesn't exist!")
+            : base("Entity doesn't exist!")
         { }
 
-        public NotFoundException(string message)
-            : base($"This entity doesn't exist: {message}!")
+        public NotFoundException(string entity)
+            : base($"This entity doesn't exist: {entity}!")
         { }
     }
 }

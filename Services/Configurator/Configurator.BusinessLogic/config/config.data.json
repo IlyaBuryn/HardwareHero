@@ -11,7 +11,7 @@
       {
         "Key": "Memory Type",
         "Value": "DDR5",
-        "Operation": "values"
+        "Operation": "list"
       },
       {
         "Key": "Memory Type Frequency",
@@ -32,7 +32,7 @@
       {
         "Key": "Memory Type",
         "Value": "DDR5 / DDR4",
-        "Operation": "values"
+        "Operation": "list"
       },
       {
         "Key": "Memory Type Frequency",
@@ -53,7 +53,7 @@
       {
         "Key": "Memory Type",
         "Value": "DDR5",
-        "Operation": "values"
+        "Operation": "list"
       },
       {
         "Key": "Memory Type Frequency",
@@ -74,7 +74,7 @@
       {
         "Key": "Memory Type",
         "Value": "DDR4",
-        "Operation": "values"
+        "Operation": "list"
       },
       {
         "Key": "Memory Type Frequency",
@@ -95,7 +95,7 @@
       {
         "Key": "Memory Type",
         "Value": "DDR4 / DDR5",
-        "Operation": "values"
+        "Operation": "list"
       },
       {
         "Key": "Memory Type Frequency",
@@ -116,7 +116,7 @@
       {
         "Key": "Memory Type",
         "Value": "DDR4",
-        "Operation": "values"
+        "Operation": "list"
       },
       {
         "Key": "Memory Type Frequency",
@@ -137,7 +137,7 @@
       {
         "Key": "Memory Type",
         "Value": "DDR4 / DDR5",
-        "Operation": "values"
+        "Operation": "list"
       },
       {
         "Key": "Memory Type Frequency",
@@ -158,7 +158,7 @@
       {
         "Key": "Memory Type",
         "Value": "DDR4",
-        "Operation": "values"
+        "Operation": "list"
       },
       {
         "Key": "Memory Type Frequency",
@@ -179,7 +179,7 @@
       {
         "Key": "Memory Type",
         "Value": "DDR4 / DDR5",
-        "Operation": "values"
+        "Operation": "list"
       },
       {
         "Key": "Memory Type Frequency",
@@ -195,7 +195,7 @@
       {
         "Key": "Motherboard Compatibility",
         "Value": "MicroATX / xATX / MiniITX / E-ATX",
-        "Operation": "values"
+        "Operation": "list"
       },
       {
         "Key": "Max GPU Length",
@@ -221,7 +221,7 @@
       {
         "Key": "Motherboard Compatibility",
         "Value": "MicroATX / xATX / MiniDTX / MiniITX",
-        "Operation": "values"
+        "Operation": "list"
       },
       {
         "Key": "Max GPU Length",
@@ -247,7 +247,7 @@
       {
         "Key": "Motherboard Compatibility",
         "Value": "MicroATX / xATX / MiniITX / E-ATX",
-        "Operation": "values"
+        "Operation": "list"
       },
       {
         "Key": "Max GPU Length",
@@ -273,7 +273,7 @@
       {
         "Key": "Motherboard Compatibility",
         "Value": "MicroATX / xATX / MiniITX / E-ATX",
-        "Operation": "values"
+        "Operation": "list"
       },
       {
         "Key": "Max GPU Length",
@@ -299,7 +299,7 @@
       {
         "Key": "Motherboard Compatibility",
         "Value": "MicroATX / xATX / ITX",
-        "Operation": "values"
+        "Operation": "list"
       },
       {
         "Key": "Max GPU Length",
@@ -325,7 +325,7 @@
       {
         "Key": "Motherboard Compatibility",
         "Value": "MicroATX / xATX / MiniITX / E-ATX",
-        "Operation": "values"
+        "Operation": "list"
       },
       {
         "Key": "Max GPU Length",
@@ -351,7 +351,7 @@
       {
         "Key": "CPU Compatibility",
         "Value": "LGA 1700 / LGA 1200 / LGA 115 / AM5 / AM4 / sTRX4 / TR4",
-        "Operation": "values"
+        "Operation": "list"
       },
       {
         "Key": "Cooler Height",
@@ -367,7 +367,7 @@
       {
         "Key": "CPU Compatibility",
         "Value": "LGA 2066 / LGA 2011-3 / LGA 2011 / LGA 1700 / LGA 1200 / LGA 1155 / LGA 1151 / LGA 1150 / AM4",
-        "Operation": "values"
+        "Operation": "list"
       },
       {
         "Key": "Cooler Height",
@@ -383,7 +383,7 @@
       {
         "Key": "CPU Compatibility",
         "Value": "LGA 2066 / LGA2011-0 / LGA 2011-3 / LGA 1700 / LGA 1156 / LGA 1155 / LGA 1151 / LGA 1150 / AM4 / AM3 / AM2 / FM2 / FM1",
-        "Operation": "values"
+        "Operation": "list"
       },
       {
         "Key": "Cooler Height",
@@ -399,7 +399,7 @@
       {
         "Key": "CPU Compatibility",
         "Value": "LGA 1200 / LGA 1156 / LGA 1155 / LGA 1151 / LGA 1150 / AM4",
-        "Operation": "values"
+        "Operation": "list"
       },
       {
         "Key": "Cooler Height",
@@ -415,7 +415,7 @@
       {
         "Key": "CPU Compatibility",
         "Value": "LGA 1200 / LGA 1151 / LGA 1150 / LGA 1155 / LGA 1156",
-        "Operation": "values"
+        "Operation": "list"
       },
       {
         "Key": "Cooler Height",
@@ -628,17 +628,17 @@
       {
         "Key": "Interfaces",
         "Value": "PCI Express 4.0",
-        "Operation": "values"
+        "Operation": "list"
       },
       {
         "Key": "M.2",
         "Value": "2",
-        "Operation": "count"
+        "Operation": "max"
       },
       {
         "Key": "SATA",
         "Value": "4",
-        "Operation": "count"
+        "Operation": "max"
       },
       {
         "Key": "Form Factor",
@@ -679,17 +679,17 @@
       {
         "Key": "Interfaces",
         "Value": "PCI Express 4.0 / PCI Express 5.0",
-        "Operation": "values"
+        "Operation": "list"
       },
       {
         "Key": "M.2",
         "Value": "3",
-        "Operation": "count"
+        "Operation": "max"
       },
       {
         "Key": "SATA",
         "Value": "6",
-        "Operation": "count"
+        "Operation": "max"
       },
       {
         "Key": "Form Factor",
@@ -730,17 +730,17 @@
       {
         "Key": "Interfaces",
         "Value": "PCI Express 4.0 / PCI Express 3.0",
-        "Operation": "values"
+        "Operation": "list"
       },
       {
         "Key": "M.2",
         "Value": "1",
-        "Operation": "count"
+        "Operation": "max"
       },
       {
         "Key": "SATA",
         "Value": "4",
-        "Operation": "count"
+        "Operation": "max"
       },
       {
         "Key": "Form Factor",
@@ -781,17 +781,17 @@
       {
         "Key": "Interfaces",
         "Value": "PCI Express 4.0 / PCI Express 5.0",
-        "Operation": "values"
+        "Operation": "list"
       },
       {
         "Key": "M.2",
         "Value": "4",
-        "Operation": "count"
+        "Operation": "max"
       },
       {
         "Key": "SATA",
         "Value": "4",
-        "Operation": "count"
+        "Operation": "max"
       },
       {
         "Key": "Form Factor",
@@ -832,17 +832,17 @@
       {
         "Key": "Interfaces",
         "Value": "PCI Express 4.0",
-        "Operation": "values"
+        "Operation": "list"
       },
       {
         "Key": "M.2",
         "Value": "2",
-        "Operation": "count"
+        "Operation": "max"
       },
       {
         "Key": "SATA",
         "Value": "4",
-        "Operation": "count"
+        "Operation": "max"
       },
       {
         "Key": "Form Factor",
@@ -883,17 +883,17 @@
       {
         "Key": "Interfaces",
         "Value": "PCI Express x4 / PCI Express x16 / PCI Express x1",
-        "Operation": "values"
+        "Operation": "list"
       },
       {
         "Key": "M.2",
         "Value": "2",
-        "Operation": "count"
+        "Operation": "max"
       },
       {
         "Key": "SATA",
         "Value": "6",
-        "Operation": "count"
+        "Operation": "max"
       },
       {
         "Key": "Form Factor",
@@ -934,17 +934,17 @@
       {
         "Key": "Interfaces",
         "Value": "PCI Express x8",
-        "Operation": "values"
+        "Operation": "list"
       },
       {
         "Key": "M.2",
         "Value": "0",
-        "Operation": "count"
+        "Operation": "max"
       },
       {
         "Key": "SATA",
         "Value": "0",
-        "Operation": "count"
+        "Operation": "max"
       },
       {
         "Key": "Form Factor",
@@ -985,17 +985,17 @@
       {
         "Key": "Interfaces",
         "Value": "PCI Express 5.0 x16 / PCI Express 3.0 x16 / PCI Express x1",
-        "Operation": "values"
+        "Operation": "list"
       },
       {
         "Key": "M.2",
         "Value": "4",
-        "Operation": "count"
+        "Operation": "max"
       },
       {
         "Key": "SATA",
         "Value": "6",
-        "Operation": "count"
+        "Operation": "max"
       },
       {
         "Key": "Form Factor",
@@ -1031,7 +1031,7 @@
       {
         "Key": "PCI-Express Connector",
         "Value": "8-Pin",
-        "Operation": "values"
+        "Operation": "value"
       },
       {
         "Key": "PSU Length",

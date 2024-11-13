@@ -1,4 +1,7 @@
-﻿namespace Prices.BusinessLogic.MapProfiles
+﻿using Prices.BusinessLogic.Models;
+using Prices.DTOs.Prices;
+
+namespace Prices.BusinessLogic.MapProfiles
 {
     public class ContributorPricesMapProfile : Profile
     {
@@ -8,9 +11,6 @@
                 .ReverseMap();
 
             CreateMap<ComponentReferences, ComponentReferencesDto>()
-                .ReverseMap();
-
-            CreateMap<MaintenanceReferences, MaintenanceReferencesDto>()
                 .ReverseMap();
         }
     }

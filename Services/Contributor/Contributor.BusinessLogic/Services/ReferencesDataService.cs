@@ -1,28 +1,26 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Contributor.DataAccess.Models;
+using Contributor.DTOs.Domain.Currencies;
+using Contributor.DTOs.Domain.Regions;
+using HardwareHero.Shared.Extensions.Repository;
+using Microsoft.EntityFrameworkCore;
+using static Contributor.DTOs.Responses.ContributorResponseRecords;
 
 namespace Contributor.BusinessLogic.Services
 {
     public class ReferencesDataService : IReferencesDataService
     {
-        private readonly ICrudRepositoryAsync<Region> _regionRepo;
-        private readonly ICrudRepositoryAsync<Currency> _currencyRepo;
-
-        private readonly IValidationRepository<Region> _regionValidationRepo;
-        private readonly IValidationRepository<Currency> _currencyValidationRepo;
+        private readonly IBaseRepositoryAsync<Region> _regionRepo;
+        private readonly IBaseRepositoryAsync<Currency> _currencyRepo;
 
         private readonly IMapper _mapper;
 
         public ReferencesDataService(
-            ICrudRepositoryAsync<Region> regionRepo,
-            ICrudRepositoryAsync<Currency> currencyRepo,
-            IValidationRepository<Region> regionValidationRepo,
-            IValidationRepository<Currency> currencyValidationRepo,
+            IBaseRepositoryAsync<Region> regionRepo,
+            IBaseRepositoryAsync<Currency> currencyRepo,
             IMapper mapper)
         {
             _regionRepo = regionRepo;
             _currencyRepo = currencyRepo;
-            _regionValidationRepo = regionValidationRepo;
-            _currencyValidationRepo = currencyValidationRepo;
             _mapper = mapper;
         }
 
@@ -30,69 +28,67 @@ namespace Contributor.BusinessLogic.Services
         {
             regionToAdd.Id = Guid.NewGuid();
 
-            _regionValidationRepo.CheckIfObjectAlreadyExist(
+            await _regionRepo.AlreadyExistCheckAsync(
                 x => x.Country == regionToAdd.Country && x.City == regionToAdd.City);
 
             var region = _mapper.Map<Region>(regionToAdd);
             var result = await _regionRepo.CreateEntityAsync(region);
+            result.DataAnswerCheck();
 
-            return result;
+            return result.Value!.Id;
         }
 
         public async Task<bool> UpdateRegionAsync(RegionDto regionToUpdate)
         {
-            _regionValidationRepo.CheckIfObjectAlreadyExist(
+            await _regionRepo.AlreadyExistCheckAsync(
                 x => x.Country == regionToUpdate.Country && x.City == regionToUpdate.City);
 
-            var region = await _regionRepo.GetOneWithNotFoundCheck
-                (x => x.Id == regionToUpdate.Id, false);
+            var region = await _regionRepo.NotFoundCheckAsync(x => x.Id == regionToUpdate.Id);
 
             region.City = regionToUpdate.City;
             region.Country = regionToUpdate.Country;
 
             var result = await _regionRepo.UpdateEntityAsync(region);
+            result.DataAnswerCheck();
 
-            return result;
-        }
-
-        public async Task<IEnumerable<string>?> GetCountriesAsync()
-        {
-            var countries = new List<string>();
-
-            var countriesSet = await _regionRepo.GetManyEntitiesAsync();
-
-            countries = await countriesSet.GroupBy(x => x.Country).Select(x => x.Key).ToListAsync();
-
-            return countries;
+            return result.Value != null;
         }
 
         public async Task<IEnumerable<RegionDto?>?> GetRegionsAsync()
         {
-            var regions = new List<RegionDto?>();
+            var regions = await _regionRepo.FindAllEntitiesAsync();
+            regions.DataAnswerCheck();
 
-            var regionsSet = await _regionRepo.GetManyEntitiesAsync();
-            var result = _mapper.Map<List<RegionDto?>>(await regionsSet.ToListAsync());
+            var result = _mapper.Map<List<RegionDto?>>(regions.Value);
 
             return result;
         }
 
-        public async Task<IEnumerable<RegionDto?>?> GetRegionsByCountryAsync(string country)
+        public async Task<IEnumerable<RegionDto?>?> GetRegionsByCountryAsync(string countryCode)
         {
-            var regionsSet = await _regionRepo.GetManyWithDefaultOrEmptyCheckAsync(
-                x => x.Country == country, false);
+            var regions = await _regionRepo.FindAllEntitiesAsync(x => x.Code == countryCode);
+            regions.DataAnswerCheck();
 
-            var regionsList = await regionsSet.ToListAsync();
-            var result = _mapper.Map<IEnumerable<RegionDto?>?>(regionsList);
+            var result = _mapper.Map<IEnumerable<RegionDto?>?>(regions.Value);
+
+            return result;
+        }
+
+        public async Task<IEnumerable<CityDto?>?> GetCitiesByCountryAsync(string countryCode)
+        {
+            var regions = await _regionRepo.FindAllEntitiesAsync(x => x.Code == countryCode);
+            regions.DataAnswerCheck();
+
+            var result = _mapper.Map<IEnumerable<CityDto?>?>(regions.Value);
 
             return result;
         }
 
         public async Task<RegionDto?> GetRegionByCityAsync(string city)
         {
-            var region = await _regionRepo.GetOneWithNotFoundCheck(
-                x => x.City == city, false);
+            var region = await _regionRepo.FindEntityAsync(x => x.City == city);
 
-            var result = _mapper.Map<RegionDto>(region);
+            var result = _mapper.Map<RegionDto>(region.Value);
 
             return result;
         }
@@ -102,40 +98,47 @@ namespace Contributor.BusinessLogic.Services
         {
             currencyToAdd.Id = Guid.NewGuid();
 
-            _currencyValidationRepo.CheckIfObjectAlreadyExist(
-                x => x.Name == currencyToAdd.Name);
+            await _currencyRepo.AlreadyExistCheckAsync(
+                x => x.Code == currencyToAdd.Code);
 
             var currency = _mapper.Map<Currency>(currencyToAdd);
             var result = await _currencyRepo.CreateEntityAsync(currency);
+            result.DataAnswerCheck();
 
-            return result;
+            return result.Value!.Id;
         }
 
         public async Task<bool> UpdateCurrencyAsync(CurrencyDto currencyToUpdate)
         {
-            _currencyValidationRepo.CheckIfObjectAlreadyExist(
-                x => x.Name == currencyToUpdate.Name);
+            await _currencyRepo.AlreadyExistCheckAsync(x => x.Code == currencyToUpdate.Code);
 
             var currency = await _currencyRepo
-                .GetOneWithNotFoundCheck(x => x.Id == currencyToUpdate.Id, false);
+                .NotFoundCheckAsync(x => x.Id == currencyToUpdate.Id);
 
-            currency.Name = currencyToUpdate.Name;
-            currency.Icon = currencyToUpdate.Icon;
+            currency.Code = currencyToUpdate.Code;
+            currency.Symbol = currencyToUpdate.Symbol;
 
             var result = await _currencyRepo.UpdateEntityAsync(currency);
+            result.DataAnswerCheck();
 
-            return result;
+            return result.Value != null;
         }
 
         public async Task<IEnumerable<CurrencyDto?>?> GetCurrenciesAsync()
         {
-            var currenciesSet = await _currencyRepo.GetManyEntitiesAsync();
-
-            var currenciesList = await currenciesSet.ToListAsync();
-
-            var result = _mapper.Map<IEnumerable<CurrencyDto?>?>(currenciesList);
+            var currenciesSet = await _currencyRepo.FindAllEntitiesAsync();
+            var result = _mapper.Map<IEnumerable<CurrencyDto?>?>(currenciesSet.Value);
 
             return result;
+        }
+
+        public async Task<RegionsAndCurrenciesResponse> GetCurrenciesAndRegionsAsync()
+        {
+            var regions = await GetRegionsAsync();
+            var currencies = await GetCurrenciesAsync();
+
+            return new RegionsAndCurrenciesResponse(
+                regions, currencies);
         }
     }
 }

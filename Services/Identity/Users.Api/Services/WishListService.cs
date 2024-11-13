@@ -1,4 +1,5 @@
-﻿using Users.Api.Contracts;
+﻿using Identity.Shared.Domain;
+using Users.Api.Contracts;
 
 namespace Users.Api.Services
 {
@@ -11,7 +12,7 @@ namespace Users.Api.Services
             _usersDbContext = usersDbContext;
         }
 
-        public async Task<int> ChangeWishListAsync(string userId, WishListComponents[] components)
+        public async Task<int> ChangeWishListAsync(string userId, WishListComponent[] components)
         {
             var user = await _usersDbContext.Users.FirstOrDefaultAsync(x => x.Id == userId);
             if (user == null)
@@ -33,14 +34,14 @@ namespace Users.Api.Services
                 throw new NotFoundException(nameof(user));
             }
 
-            var components = await _usersDbContext.WishListComponents.Where(x => x.ApplicationUserId == userId).ToListAsync();
+            var components = await _usersDbContext.WishListComponents.Where(x => x.UserId == userId).ToListAsync();
             _usersDbContext.WishListComponents.RemoveRange(components);
             var result = await _usersDbContext.SaveChangesAsync();
 
             return result;
         }
 
-        public async Task<IQueryable<WishListComponents>> GetWishListComponentsAsync(string userId)
+        public async Task<IQueryable<WishListComponent>> GetWishListComponentsAsync(string userId)
         {
             var user = await _usersDbContext.Users.FirstOrDefaultAsync(x => x.Id == userId);
             if (user == null)
@@ -48,7 +49,7 @@ namespace Users.Api.Services
                 throw new NotFoundException(nameof(user));
             }
 
-            var components = _usersDbContext.WishListComponents.Where(x => x.ApplicationUserId == userId);
+            var components = _usersDbContext.WishListComponents.Where(x => x.UserId == userId);
 
             return components;
         }

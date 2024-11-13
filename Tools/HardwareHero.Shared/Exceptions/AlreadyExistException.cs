@@ -1,14 +1,28 @@
-﻿namespace HardwareHero.Shared.Exceptions
+﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using System.Text.Json;
+
+namespace HardwareHero.Shared.Exceptions
 {
     [Serializable]
-    public class AlreadyExistException<T> : Exception
+    public class AlreadyExistException : Exception
     {
         public AlreadyExistException()
-            : base($"This {nameof(T)} is already exist!")
+            : base("The entity is already exists!")
         { }
 
-        public AlreadyExistException(string entity)
-            : base($"This {nameof(T)}: \\\"{entity}\\\" is already exist!")
+        public AlreadyExistException(BaseEntity? entity)
+            : base($"The entity is already exist:\n" +
+              entity == null ? "NULL" : $"{JsonSerializer.Serialize(
+                  entity!,
+                  new JsonSerializerOptions { WriteIndented = true })}")
+        { }
+
+        public AlreadyExistException(object? entity, Type entityType)
+            : base($"The entity is already exist:\n" +
+              entity == null ? "NULL" : $"{JsonSerializer.Serialize(
+                  entity, 
+                  entityType, 
+                  new JsonSerializerOptions { WriteIndented = true })}")
         { }
     }
 }

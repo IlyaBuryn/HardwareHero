@@ -7,6 +7,14 @@
     <MaxCpuCount>8</MaxCpuCount>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DefineConstants>$(DefineConstants);MSSQL</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DefineConstants>$(DefineConstants);MSSQL</DefineConstants>
+  </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.0" />
     <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.5.2" />
@@ -31,6 +39,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\..\Tools\HardwareHero.Shared\HardwareHero.Shared.csproj" />
     <ProjectReference Include="..\Contributor.DataAccess\Contributor.DataAccess.csproj" />
+    <ProjectReference Include="..\Contributor.DTOs\Contributor.DTOs.csproj" />
   </ItemGroup>
 
 </Project>

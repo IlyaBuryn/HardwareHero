@@ -1,4 +1,6 @@
-﻿namespace Identity.Api.Data
+﻿using Identity.Shared.Domain;
+
+namespace Identity.Api.Data
 {
     public class GrantsDbContext : DbContext
     {

@@ -1,4 +1,7 @@
-﻿namespace Configurator.BusinessLogic.MapProfiles
+﻿using Configurator.BusinessLogic.Models;
+using Configurator.DTOs.Domain;
+
+namespace Configurator.BusinessLogic.MapProfiles
 {
     public class ConfiguratorMapProfile : Profile
     {

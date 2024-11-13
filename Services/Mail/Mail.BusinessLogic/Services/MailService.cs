@@ -1,35 +1,30 @@
-﻿using Microsoft.Extensions.Options;
-using MongoDB.Driver;
-using MailKit.Net.Smtp;
+﻿using MailKit.Net.Smtp;
 using MailKit.Security;
 using MimeKit;
 using MimeKit.Text;
 using Microsoft.Extensions.Configuration;
+using HardwareHero.Shared.Repositories.Contracts;
+using Mail.BusinessLogic.Models;
+using Mail.DTOs.Mail;
+using HardwareHero.Shared.Extensions.Repository;
 
 namespace Mail.BusinessLogic.Services
 {
     public class MailService : IMailService
     {
         private readonly IConfiguration _configuration;
-        private readonly IMongoCollection<HardwareHero.Shared.Models.Mail.MailMessage> _mailCollection;
+        private readonly IBaseRepositoryAsync<MailMessage> _messageRepo;
         private readonly IMapper _mapper;
-        private readonly DatabaseOptions _databaseSettings;
+
 
         public MailService(
-            IOptions<DatabaseOptions> databaseSettings,
-            IMapper mapper,
-            IConfiguration configuration)
+            IConfiguration configuration,
+            IBaseRepositoryAsync<MailMessage> messageRepository,
+            IMapper mapper)
         {
-            _databaseSettings = databaseSettings.Value;
-            var mongoClient = new MongoClient(_databaseSettings.ConnectionString);
-            var mongoDb = mongoClient.GetDatabase(_databaseSettings.DatabaseName);
-
-            _mailCollection = mongoDb
-                .GetCollection<HardwareHero.Shared.Models.Mail.MailMessage>(
-                _databaseSettings.Collections[ConfiguratorCollectionNames.MailCollection].CollectionName);
-
-            _mapper = mapper;
             _configuration = configuration;
+            _messageRepo = messageRepository;
+            _mapper = mapper;
         }
 
         public async Task<Guid> SendMailAsync(MailMessageDto messageToSend)
@@ -56,7 +51,8 @@ namespace Mail.BusinessLogic.Services
 
             var message = _mapper.Map<MailMessage>(messageToSend);
             message.Body = string.Empty;
-            await _mailCollection.InsertOneAsync(message);
+            var result = await _messageRepo.CreateEntityAsync(message);
+            result.DataAnswerCheck();
 
             return messageToSend.Id;
         }

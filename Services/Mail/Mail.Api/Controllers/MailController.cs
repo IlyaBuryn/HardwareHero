@@ -1,4 +1,5 @@
 ﻿using Mail.BusinessLogic.Services;
+using Mail.DTOs.Mail;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

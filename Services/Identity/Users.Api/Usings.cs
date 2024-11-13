@@ -1,6 +1,5 @@
 ﻿global using HardwareHero.Shared.Extensions;
 global using HardwareHero.Shared.Exceptions;
-global using HardwareHero.Shared.Models.Identity;
 global using HardwareHero.Shared.Constants;
 global using HardwareHero.Shared.OpenApi;
 global using Identity.Shared.Contexts;

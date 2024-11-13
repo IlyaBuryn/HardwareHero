@@ -30,8 +30,8 @@
     },
 
     {
-      "UpstreamPathTemplate": "/users",
-      "UpstreamHttpMethod": [ "Get" ],
+      "UpstreamPathTemplate": "/users/fetch",
+      "UpstreamHttpMethod": [ "Post" ],
 
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
@@ -40,7 +40,10 @@
           "Port": 80
         }
       ],
-      "DownstreamPathTemplate": "/api/users"
+      "UpstreamHeaderTransform": {
+        "DownstreamRequireAuth": true
+      },
+      "DownstreamPathTemplate": "/api/users/fetch"
     },
 
     // Roles

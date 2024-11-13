@@ -102,7 +102,7 @@ namespace Aggregator.Api.Controllers
             [FromBody] ComponentLocalReviewFilter filter, [FromRoute] Guid componentId)
         {
             var response = await _componentReviewService
-                .GetComponentLocalReviewsAsPageByComponentIdAsync(filter, componentId);
+                .GetComponentLocalReviewsPageAsync(filter, componentId);
 
             return Ok(response);
         }
@@ -113,18 +113,18 @@ namespace Aggregator.Api.Controllers
             [FromBody] ComponentGlobalReviewFilter filter, [FromRoute] Guid componentId)
         {
             var response = await _componentReviewService
-                .GetComponentGlobalReviewsAsPageByComponentIdAsync(filter, componentId);
+                .GetComponentGlobalReviewsPageAsync(filter, componentId);
 
             return Ok(response);
         }
 
 
-        [HttpGet("component/reviews/avg/{componentId}")]
+        [HttpGet("component/reviews/metric/{componentId}")]
         [AllowAnonymous]
-        public async Task<IActionResult> GetAvgMarksAsync([FromRoute] Guid componentId)
+        public async Task<IActionResult> GetComponentReviewsMetric([FromRoute] Guid componentId)
         {
             var response = await _componentReviewService
-                .GetComponentAvgMarkAsync(componentId);
+                .GetReviewsMetricForComponent(componentId);
             
             return Ok(response);
         }

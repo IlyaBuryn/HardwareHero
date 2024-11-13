@@ -1,192 +1,189 @@
-﻿using HardwareHero.Shared.Extensions;
-using Microsoft.Extensions.Options;
+﻿using Aggregator.DataAccess.Models.Components;
+using Aggregator.DTOs.Components;
+using HardwareHero.Shared.Extensions.Repository;
+using HardwareHero.Shared.Repositories.Answers;
+using static Aggregator.DTOs.Response.AggregatorResponseRecords;
 
 namespace Aggregator.BusinessLogic.Services
 {
     public class ComponentService : IComponentService
     {
-        private readonly ICollectionRepositoryAsync<Component> _componentRepo;
-
-        private readonly ICrudRepositoryAsync<ComponentViews> _componentViewsRepo;
-        private readonly ICrudRepositoryAsync<ComponentType> _componentTypeRepo;
-
-        private readonly IValidationRepository<Component> _componentValidationRepo;
-        private readonly IValidationRepository<ComponentType> _componentTypeValidationRepo;
-
+        private readonly IQueryRepositoryAsync<Component> _componentRepo;
+        private readonly IBaseRepositoryAsync<ComponentMetric> _componentMetricsRepo;
+        private readonly IBaseRepositoryAsync<ComponentType> _componentTypeRepo;
         private readonly IFileRepositoryAsync _imagesRepo;
 
         private readonly IMapper _mapper;
 
-        private readonly string _fileNameDivider;
-
         public ComponentService(
-            ICollectionRepositoryAsync<Component> componentRepo,
-            ICrudRepositoryAsync<ComponentViews> componentViewsRepo,
-            IValidationRepository<Component> componentValidationRepo,
-            IValidationRepository<ComponentType> componentTypeValidationRepo,
+            IQueryRepositoryAsync<Component> componentRepo,
+            IBaseRepositoryAsync<ComponentMetric> componentMetricsRepo,
+            IBaseRepositoryAsync<ComponentType> componentTypeRepo,
             IFileRepositoryAsync imagesRepo,
-            IMapper mapper,
-            IOptions<ImagesSaveOptions> savePathOptions,
-            ICrudRepositoryAsync<ComponentType> componentTypeRepo)
+            IMapper mapper)
         {
             _componentRepo = componentRepo;
-            _componentViewsRepo = componentViewsRepo;
-            _componentValidationRepo = componentValidationRepo;
-            _componentTypeValidationRepo = componentTypeValidationRepo;
+            _componentMetricsRepo = componentMetricsRepo;
+            _componentTypeRepo = componentTypeRepo;
             _imagesRepo = imagesRepo;
             _mapper = mapper;
-            _fileNameDivider = savePathOptions.Value.FileNameDivider ?? string.Empty;
-            _componentTypeRepo = componentTypeRepo;
         }
 
         public async Task<Guid?> AddComponentAsync(ComponentDto componentToAdd)
         {
             componentToAdd.Id = Guid.NewGuid();
 
-            _componentValidationRepo.CheckIfObjectAlreadyExist(x => x.Name == componentToAdd.Name, componentToAdd.Name);
-            _componentTypeValidationRepo.CheckIfObjectNotFound(x => x.Id == componentToAdd.ComponentTypeId);
+            await _componentRepo.AlreadyExistCheckAsync(x => x.Name == componentToAdd.Name);
+            await _componentTypeRepo.NotFoundCheckAsync(x => x.Id == componentToAdd.ComponentTypeId);
 
+            // TODO: Maybe I should just set images state here?
             if (componentToAdd.ComponentImages != null && componentToAdd.ComponentImages.Count() != 0)
             {
+
                 foreach (var image in componentToAdd.ComponentImages)
                 {
-                    var imageName = image.ComponentId + _fileNameDivider + image.Image;
+                    image.Id = Guid.NewGuid();
+                    var imageName = $"{image.ComponentId}_{image.Id}";
                     var uploadingResult = await _imagesRepo.UploadFileAsync(image.ImageData, imageName);
-                    image.Image = imageName;
+                    image.ImageName = imageName;
                 }
             }
 
+            var metric = await _componentMetricsRepo.CreateEntityAsync(
+                new ComponentMetric()
+                {
+                    CreatedAt = DateTime.UtcNow,
+                });
+            metric.DataAnswerCheck();
+
             var component = _mapper.Map<Component>(componentToAdd);
             var result = await _componentRepo.CreateEntityAsync(component);
+            result.DataAnswerCheck();
 
-            return result;
+            return result.Value?.Id;
         }
 
 
         public async Task<bool> UpdateComponentAsync(ComponentDto componentToUpdate)
         {
-            _componentValidationRepo.CheckIfObjectAlreadyExist(
-                x => x.Name == componentToUpdate.Name && x.Id != componentToUpdate.Id,
-                componentToUpdate.Name);
+            await _componentRepo.AlreadyExistCheckAsync(
+                x => x.Name == componentToUpdate.Name && x.Id != componentToUpdate.Id);
 
             var component = await _componentRepo
-                .GetOneWithNotFoundCheck(x => x.Id == componentToUpdate.Id);
+                .NotFoundCheckAsync(x => x.Id == componentToUpdate.Id);
 
             var componentType = await _componentTypeRepo
-                .GetOneWithNotFoundCheck(x => x.Id == componentToUpdate.ComponentTypeId);
+                .NotFoundCheckAsync(x => x.Id == componentToUpdate.ComponentTypeId);
 
             component.Name = componentToUpdate.Name;
             component.Description = componentToUpdate.Description;
             component.ComponentTypeId = componentType.Id;
 
             var result = await _componentRepo.UpdateEntityAsync(component);
+            result.DataAnswerCheck();
 
-            return result;
+            return result.Value != null;
         }
 
 
-        public async Task<bool> RemoveComponentAsync(Guid componentId)
+        public async Task<bool> RemoveComponentAsync(Guid componentId, bool deactivate = true)
         {
-            var component = await _componentRepo.GetOneWithNotFoundCheck(x => x.Id == componentId);
+            var component = await _componentRepo.NotFoundCheckAsync(x => x.Id == componentId);
 
-            if (component.ComponentImages != null && component.ComponentImages.Count() != 0)
+            DataAnswer<Component> result;
+            if (deactivate)
             {
-                //foreach (var image in component.ComponentImages)
-                //{
-                //    var isDeleted = await _imagesRepo.DeleteFileAsync(image.Image);
-                //}
+                component.IsActive = false;
+                result = await _componentRepo.UpdateEntityAsync(component);
+            }
+            else
+            {
+                result = await _componentRepo.RemoveEntityAsync(componentId);
             }
 
-            var result = await _componentRepo.RemoveEntityAsync(componentId);
+            result.DataAnswerCheck();
 
-            return result;
+            return result.Value != null;
         }
 
 
-        public async Task<ComplexResponse> AddComponentsAsync(IEnumerable<ComponentDto> componentsToAdd)
+        public async Task<CreationOfManyResponse> AddComponentsAsync(IEnumerable<ComponentDto> componentsToAdd)
         {
-            var result = new ComplexResponse();
+            var values = new Dictionary<string, string>();
 
             foreach (var componentDto in componentsToAdd)
             {
                 try
                 {
                     await AddComponentAsync(componentDto);
-                    result.Responses.Add(new ComplexResponse.TupleResponse(componentDto.Name, true.ToString()));
+                    values.Add(componentDto.Name, true.ToString());
                 }
                 catch (Exception ex)
                 {
-                    result.Responses.Add(new ComplexResponse.TupleResponse(componentDto.Name, ex.Message));
+                    values.Add(componentDto.Name, ex.Message);
                 }
             }
 
-            return result;
+            return new CreationOfManyResponse(values);
         }
 
 
         public async Task<ComponentDto?> GetComponentByIdAsync(Guid componentId)
         {
-            var component = await _componentRepo.GetOneWithNotFoundCheck(x => x.Id == componentId);
+            var component = await _componentRepo.NotFoundCheckAsync(x => x.Id == componentId);
 
-            await IncrementComponentView(componentId);
+            await IncrementComponentViewCount(componentId);
 
             return _mapper.Map<ComponentDto?>(component);
         }
 
 
-        public async Task<List<ComponentDto?>> GetComponentsByIdsAsync(List<Guid> componentsIds)
+        public async Task<IQueryable<ComponentDto?>> GetComponentsByIdsAsync(List<Guid> componentsIds)
         {
-            var result = new List<ComponentDto?>();
+            var result = await _componentRepo.FindAsync(x => x.Equals(componentsIds.Any()));
+            result.DataAnswerCheck();
 
-            foreach (var componentId in componentsIds)
+            var mapped = _mapper.Map<IQueryable<ComponentDto>>(result.Value);
+
+            return mapped;
+        }
+
+        // TODO: 🤨
+        public async Task<PageResponse<ComponentDto>?> GetComponentsPageAsync(ComponentsFilter filter)
+        {
+            var page = await _componentRepo.FindPagedAsync(null, filter);
+            page.DataAnswerCheck();
+
+            //query = query.ApplyFilter(filter).Query;
+            //query = query.ApplyOrderBy(filter).Query;
+            //var selected = query.ApplySelection(filter).Query;
+
+            var result = page.ToPageResponse();
+            var mapped = _mapper.Map<PageResponse<ComponentDto>>(result);
+
+            return mapped;
+        }
+
+        // TODO: 🤨
+        private async Task IncrementComponentViewCount(Guid componentId)
+        {
+            var componentMetric = await _componentMetricsRepo
+                .FindEntityAsync(x => x.ComponentId == componentId);
+
+            if (componentMetric.Value == null)
             {
-                var component = await _componentRepo.GetOneWithNotFoundCheck(x => x.Id == componentId);
-                result.Add(_mapper.Map<ComponentDto?>(component));
-            }
-
-            return result;
-        }
-
-
-        public async Task<PageResponse<object?>> GetComponentsAsPageAsync(ComponentsFilter filter)
-        {
-            _componentValidationRepo.CheckPaginationOptions(filter);
-
-            var query = await _componentRepo.GetManyEntitiesAsync(new IncludeProperties<Component>());
-
-            query = query.ApplyFilter(filter).Query;
-            query = query.ApplyOrderBy(filter).Query;
-            var selected = query.ApplySelection(filter).Query;
-
-            var result = await _componentRepo.GetObjectPageAsync(selected, filter);
-
-            return result;
-        }
-
-        private static Component? TryX(Component? item)
-        {
-            item.ComponentImages = null;
-            item.ComponentAttributes = null;
-            return item;
-        }
-
-        private async Task IncrementComponentView(Guid componentId)
-        {
-            var componentView = await _componentViewsRepo.GetOneEntityAsync(x => x.ComponentId == componentId);
-            if (componentView == null)
-            {
-                await _componentViewsRepo.CreateEntityAsync(new ComponentViews
+                await _componentMetricsRepo.CreateEntityAsync(new ComponentMetric
                 {
                     ComponentId = componentId,
                     ViewsCount = 1,
                 });
+
+                return;
             }
-            else
-            {
-                var updatedComponentView = componentView;
-                updatedComponentView.ViewsCount += 1;
-                await _componentViewsRepo.UpdateEntityAsync(updatedComponentView);
-            }
+
+            var metric = componentMetric.Value;
+            metric.ViewsCount += 1;
+            await _componentMetricsRepo.UpdateEntityAsync(metric);
         }
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace Aggregator.BusinessLogic.Contracts
+﻿using Aggregator.DTOs.Components;
+
+namespace Aggregator.BusinessLogic.Contracts
 {
     public interface IComponentTypeService
     {
@@ -6,6 +8,6 @@
         Task<bool> UpdateComponentTypeAsync(ComponentTypeDto componentTypeToUpdate);
         Task<bool> RemoveComponentTypeAsync(Guid typeId);
 
-        Task<List<ComponentTypeDto?>> GetComponentTypesAsync();
+        Task<IEnumerable<ComponentTypeDto>?> GetComponentTypesAsync();
     }
 }

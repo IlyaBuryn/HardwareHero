@@ -1,4 +1,5 @@
-﻿using HardwareHero.Filter.Operations;
+﻿using Aggregator.DataAccess.Models.Components;
+using HardwareHero.Filter.Operations;
 
 namespace Aggregator.BusinessLogic.Filters
 {
@@ -14,7 +15,6 @@ namespace Aggregator.BusinessLogic.Filters
             {
                 Id = item.Id,
                 Text = item.Text,
-                Rating = item.Rating,
                 ComponentId = item.ComponentId,
                 IsRecommended = item.IsRecommended,
                 Timestamp = item.Timestamp,

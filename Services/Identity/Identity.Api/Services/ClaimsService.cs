@@ -1,4 +1,5 @@
 ﻿using Identity.Api.Contracts;
+using Identity.Shared.Domain;
 
 namespace Identity.Api.Services
 {

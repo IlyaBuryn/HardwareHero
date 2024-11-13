@@ -1,8 +1,6 @@
 ﻿global using HardwareHero.Shared.Extensions;
 global using HardwareHero.Shared.Constants;
 global using HardwareHero.Shared.Exceptions;
-global using HardwareHero.Shared.Models.Identity;
-global using HardwareHero.Shared.Responses;
 global using Microsoft.AspNetCore.Identity;
 global using Microsoft.EntityFrameworkCore;
 global using Microsoft.Extensions.Options;

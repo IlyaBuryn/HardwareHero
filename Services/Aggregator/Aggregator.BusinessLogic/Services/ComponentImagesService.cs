@@ -1,67 +1,76 @@
-﻿using Microsoft.Extensions.Options;
+﻿using Aggregator.DataAccess.Models.Components;
+using Aggregator.DTOs.Components;
+using HardwareHero.Shared.Extensions.Repository;
 
 namespace Aggregator.BusinessLogic.Services
 {
     public class ComponentImagesService : IComponentImagesService
     {
-        private readonly ICrudRepositoryAsync<ComponentImages> _componentImagesRepo;
-        private readonly IValidationRepository<ComponentImages> _componentImagesValidationRepo;
+        private readonly IBaseRepositoryAsync<ComponentImage> _componentImagesRepo;
+        private readonly IBaseRepositoryAsync<Component> _componentRepo;
         private readonly IFileRepositoryAsync _imagesRepo;
         private readonly IMapper _mapper;
-        private readonly string _fileNameDivider;
 
 
         public ComponentImagesService(
-            ICrudRepositoryAsync<ComponentImages> componentImagesRepo,
-            IValidationRepository<ComponentImages> componentImagesValidationRepo,
+            IBaseRepositoryAsync<ComponentImage> componentImagesRepo,
             IFileRepositoryAsync imagesRepo,
-            IOptions<ImagesSaveOptions> savePathOptions,
-            IMapper mapper)
+            IMapper mapper,
+            IBaseRepositoryAsync<Component> componentRepo)
         {
             _componentImagesRepo = componentImagesRepo;
-            _componentImagesValidationRepo = componentImagesValidationRepo;
             _imagesRepo = imagesRepo;
-            _fileNameDivider = savePathOptions.Value.FileNameDivider ?? string.Empty;
             _mapper = mapper;
+            _componentRepo = componentRepo;
         }
 
-        public async Task<Guid?> AddComponentImageAsync(ComponentImagesDto componentImageToAdd)
+        public async Task<Guid?> AddComponentImageAsync(ComponentImageDto componentImageToAdd)
         {
             componentImageToAdd.Id = Guid.NewGuid();
-
-            //_componentImagesValidationRepo.CheckIfObjectAlreadyExist(
-            //    x => x.ComponentId == componentImageToAdd.ComponentId && x.Image == componentImageToAdd.Image,
-            //    componentImageToAdd.Image);
+            var component = await _componentRepo.NotFoundCheckAsync(x => x.Id == componentImageToAdd.Id);
             
-            var componentImage = _mapper.Map<ComponentImages>(componentImageToAdd);
+            var componentImage = _mapper.Map<ComponentImage>(componentImageToAdd);
             var imageLink = await _imagesRepo.UploadFileAsync(componentImageToAdd.ImageData,
-                componentImage.ComponentId + _fileNameDivider + componentImage.Image);
-            componentImage.Image = imageLink;
+                componentImage.ImageName!);
+            imageLink.DataAnswerCheck();
 
-            Guid result = Guid.Empty;
-            if (!string.IsNullOrEmpty(imageLink))
-            {
-                result = await _componentImagesRepo.CreateEntityAsync(componentImage);
-            }
+            componentImage.ImageUrl = imageLink.Value;
+            var result = await _componentImagesRepo.CreateEntityAsync(componentImage);
+            result.DataAnswerCheck();
 
-            return result;
+            return result.Value?.Id;
         }
 
 
-        public async Task<bool> RemoveComponentImageAsync(Guid componentImageId)
+        public async Task<bool> RemoveComponentImageAsync(Guid componentImageId, bool removeActive = false)
         {
-            var image = await _componentImagesRepo.GetOneWithNotFoundCheck(x => x.Id == componentImageId);
-
-            var imageId = image.Image.Split("id=").Last();
-            var imageDeleteResult = await _imagesRepo.DeleteFileAsync(imageId);
-
-            bool result = false;
-            if (imageDeleteResult)
+            var existImage = await _componentImagesRepo.NotFoundCheckAsync(x => x.Id == componentImageId);
+            if (existImage.ComponentId != null && !removeActive)
             {
-                result = await _componentImagesRepo.RemoveEntityAsync(componentImageId);
+                return false;
             }
 
-            return result;
+            var result = await _imagesRepo.DeleteFileAsync(existImage.ImageName);
+            result.DataAnswerCheck();
+
+            var final = await _componentImagesRepo.RemoveEntityAsync(componentImageId);
+            final.DataAnswerCheck();
+            
+            return final.Value != null;
+        }
+
+        public async Task<bool> ChangeActiveImageStatusAsync(Guid componentImageId)
+        {
+            var existImage = await _componentImagesRepo.NotFoundCheckAsync(x => x.Id == componentImageId);
+
+            var id = existImage.ComponentId != null ? existImage.ComponentId : existImage.RevokedId;
+            existImage.ComponentId = existImage.ComponentId == null ? id : null;
+            existImage.RevokedId = existImage.RevokedId == null ? id : null;
+
+            var result = await _componentImagesRepo.UpdateEntityAsync(existImage);
+            result.DataAnswerCheck();
+            
+            return result.Value != null;
         }
     }
 }

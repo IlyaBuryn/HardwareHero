@@ -1,26 +1,26 @@
-﻿namespace Contributor.BusinessLogic.Services
+﻿using Contributor.DataAccess.Models;
+using Contributor.DTOs.Domain.Contributors;
+using HardwareHero.Shared.Extensions.Repository;
+
+namespace Contributor.BusinessLogic.Services
 {
     public class ContributorExcellenceService : IContributorExcellenceService
     {
-        private readonly ICrudRepositoryAsync<ContributorExcellence> _excellenceRepo;
-        private readonly ICrudRepositoryAsync<ContributorModel> _contributorRepo;
-
-        private readonly IValidationRepository<ContributorExcellence> _excellenceValidRepo;
+        private readonly IBaseRepositoryAsync<ContributorExcellence> _excellenceRepo;
+        private readonly IBaseRepositoryAsync<ContributorModel> _contributorRepo;
 
         private readonly IFileRepositoryAsync _imageRepo;
 
         private readonly IMapper _mapper;
 
         public ContributorExcellenceService(
-            ICrudRepositoryAsync<ContributorExcellence> excellenceRepo,
-            ICrudRepositoryAsync<ContributorModel> contributorRepo,
-            IValidationRepository<ContributorExcellence> excellenceValidRepo,
+            IBaseRepositoryAsync<ContributorExcellence> excellenceRepo,
+            IBaseRepositoryAsync<ContributorModel> contributorRepo,
             IFileRepositoryAsync imageRepo,
             IMapper mapper)
         {
             _excellenceRepo = excellenceRepo;
             _contributorRepo = contributorRepo;
-            _excellenceValidRepo = excellenceValidRepo;
             _imageRepo = imageRepo;
             _mapper = mapper;
         }
@@ -28,7 +28,7 @@
         public async Task<ContributorExcellenceDto?> GetExcellenceByContributorIdAsync(Guid contributorId)
         {
             var contributor = await _contributorRepo
-                .GetOneWithNotFoundCheck(x => x.Id == contributorId);
+                .NotFoundCheckAsync(x => x.Id == contributorId);
 
             var result = _mapper.Map<ContributorExcellenceDto>(contributor.ContributorExcellence);
 
@@ -38,35 +38,36 @@
         public async Task<bool> UpdateExcellenceAsync(ContributorExcellenceDto excellenceToUpdate)
         {
             var excellence = await _excellenceRepo
-                .GetOneWithNotFoundCheck(x => x.Id == excellenceToUpdate.Id);
+                .NotFoundCheckAsync(x => x.Id == excellenceToUpdate.Id);
 
-            _excellenceValidRepo.CheckIfObjectAlreadyExist(x => x.Name != excellenceToUpdate.Name);
+            await _excellenceRepo.AlreadyExistCheckAsync(x => x.Name != excellenceToUpdate.Name);
 
             excellence.Phone = excellenceToUpdate.Phone;
             excellence.MainWebLink = excellenceToUpdate.MainWebLink;
             excellence.MainApiLink = excellenceToUpdate.MainApiLink;
             excellence.Description = excellenceToUpdate.Description;
             excellence.Name = excellenceToUpdate.Name;
-            excellence.Logo = excellenceToUpdate.Logo;
+            excellence.LogoUrl = excellenceToUpdate.LogoUrl;
 
-            var imageId = excellence.Logo.Split("id=").Last();
+            var imageName = excellence.LogoName;
 
-            var replaceResult = await _imageRepo.ReplaceFileAsync(imageId,
-                excellenceToUpdate.ImageData, excellenceToUpdate.Logo);
-            excellenceToUpdate.Logo = replaceResult;
+            var replaceResult = await _imageRepo.ReplaceFileAsync(imageName,
+                excellenceToUpdate.ImageData, excellenceToUpdate.LogoName);
+            excellenceToUpdate.LogoUrl = replaceResult.Value;
 
             excellence.Currency = _mapper.Map<Currency>(excellenceToUpdate.Currency);
             excellence.Region = _mapper.Map<Region>(excellenceToUpdate.Region);
 
             var result = await _excellenceRepo.UpdateEntityAsync(excellence);
+            result.DataAnswerCheck();
 
-            return result;
+            return result.Value != null;
         }
 
         public async Task<ContributorExcellenceDto?> GetExcellenceByNameAsync(string name)
         {
             var excellence = await _excellenceRepo
-                .GetOneWithNotFoundCheck(x => x.Name == name);
+                .NotFoundCheckAsync(x => x.Name == name);
 
             var result = _mapper.Map<ContributorExcellenceDto>(excellence);
             

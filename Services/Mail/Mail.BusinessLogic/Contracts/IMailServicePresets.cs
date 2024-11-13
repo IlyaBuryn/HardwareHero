@@ -1,4 +1,6 @@
-﻿namespace Mail.BusinessLogic.Contracts
+﻿using Mail.DTOs.Mail;
+
+namespace Mail.BusinessLogic.Contracts
 {
     public interface IMailServicePresets
     {

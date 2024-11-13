@@ -1,6 +1,10 @@
-﻿using Identity.Api.Contracts;
+﻿using HardwareHero.Shared.Models;
+using Identity.Api.Contracts;
 using Identity.Api.Data;
-using Identity.Api.Records;
+using Identity.Shared.Domain;
+using Identity.Shared.Requests;
+using Identity.Shared.Responses;
+using static Identity.Shared.Requests.IdentityRequestRecords;
 
 namespace Identity.Api.Services
 {
@@ -31,7 +35,7 @@ namespace Identity.Api.Services
         }
 
 
-        public async Task<ApplicationUser> SignInAsync(RequestModels.SignInRequestModel model)
+        public async Task<ApplicationUser> SignInAsync(SignInRequest model)
         {
             ApplicationUser? existingEmail = null;
             var modelContainsEmail = false;
@@ -59,7 +63,7 @@ namespace Identity.Api.Services
             throw new AuthenticationException();
         }
 
-        public async Task<ApplicationUser> SignUpAsync(RequestModels.SignUpRequestModel model)
+        public async Task<ApplicationUser> SignUpAsync(SignUpRequest model)
         {
             var existingUsername = await _userManager.FindByNameAsync(model.Username);
             if (existingUsername != null)
@@ -98,7 +102,7 @@ namespace Identity.Api.Services
             throw new AuthenticationException(roleResult.Errors.First().Description);
         }
 
-        public async Task<AuthenticationResponse> RefreshTokenAsync(RequestModels.TokenRequest tokenRequest)
+        public async Task<AuthenticationResponse> RefreshTokenAsync(TokenRequest tokenRequest)
         {
             var result = await VerifyTokenAsync(tokenRequest);
 
@@ -110,7 +114,7 @@ namespace Identity.Api.Services
             return result;
         }
 
-        public async Task<AuthenticationResponse?> VerifyTokenAsync(RequestModels.TokenRequest tokenRequest)
+        public async Task<AuthenticationResponse?> VerifyTokenAsync(TokenRequest tokenRequest)
         {
             var jwtTokenHandler = new JwtSecurityTokenHandler();
 
@@ -190,7 +194,7 @@ namespace Identity.Api.Services
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(claims),
-                Expires = DateTime.UtcNow.AddMinutes(5),
+                Expires = DateTime.UtcNow.AddMinutes(1),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
 
@@ -253,6 +257,22 @@ namespace Identity.Api.Services
             }
 
             return claims;
+        }
+
+        public async Task<AuthenticationResponse> UpdatePasswordAsync(UserPasswordChangeRequest model)
+        {
+            var user = await _userManager.FindByEmailAsync(model.Email);
+            if (user == null)
+            {
+                throw new NotFoundException(nameof(user));
+            }
+
+            var newUserResult = await _userManager.ChangePasswordAsync(user, model.OldPassword, model.NewPassword);
+            var result = newUserResult.Succeeded ? await GenerateJwtTokenAsync(user) :
+                throw new Exception(newUserResult.Errors.First().Description);
+            result.UserId = user.Id;
+
+            return result;
         }
 
         private DateTime UnixTimeStampToDateTime(double unixTimeStamp)

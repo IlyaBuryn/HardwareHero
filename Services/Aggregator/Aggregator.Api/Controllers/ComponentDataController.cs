@@ -72,7 +72,7 @@ namespace Aggregator.Api.Controllers
 
         [HttpPost("component/image")]
         [Authorize(Roles = Roles.Manager)]
-        public async Task<IActionResult> AddImageAsync([FromBody] ComponentImagesDto componentImageToAdd)
+        public async Task<IActionResult> AddImageAsync([FromBody] ComponentImageDto componentImageToAdd)
         {
             var response = await _componentImagesService
                 .AddComponentImageAsync(componentImageToAdd);
@@ -81,9 +81,9 @@ namespace Aggregator.Api.Controllers
         }
 
 
-        [HttpDelete("component/image/{imageId}")]
+        [HttpDelete("component/image/{imageId}/{acceptUnrevoked}")]
         [Authorize(Roles = Roles.Manager)]
-        public async Task<IActionResult> DeleteImageAsync([FromRoute] Guid imageId)
+        public async Task<IActionResult> DeleteImageAsync([FromRoute] Guid imageId, [FromRoute] bool acceptUnrevoked = false)
         {
             var response = await _componentImagesService
                 .RemoveComponentImageAsync(imageId);
@@ -91,10 +91,20 @@ namespace Aggregator.Api.Controllers
             return Ok(response);
         }
 
+        [HttpPut("component/image/{imageId}")]
+        [Authorize(Roles = Roles.Admin)]
+        public async Task<IActionResult> ChangeActiveImageStatusAsync([FromRoute] Guid imageId)
+        {
+            var response = await _componentImagesService
+                .ChangeActiveImageStatusAsync(imageId);
+
+            return Ok(response);
+        }
+
 
         [HttpPost("component/attribute")]
         [Authorize(Roles = Roles.Manager)]
-        public async Task<IActionResult> CreateAttributeAsync([FromBody] ComponentAttributesDto attributeToAdd)
+        public async Task<IActionResult> CreateAttributeAsync([FromBody] ComponentAttributeDto attributeToAdd)
         {
             var response = await _componentAttributesService
                 .AddComponentAttributeAsync(attributeToAdd);
@@ -103,22 +113,10 @@ namespace Aggregator.Api.Controllers
         }
 
 
-        [HttpPut("component/{componentId}/attributes")]
-        [Authorize(Roles = Roles.Manager)] 
-        public async Task<IActionResult> ReplaceAttributesAsync(
-            [FromRoute] Guid componentId, [FromBody] Dictionary<string, string> attributes)
-        {
-            var response = await _componentAttributesService
-                .ReplaceComponentAttributesAsync(componentId, attributes);
-
-            return Ok(response);
-        }
-
-
         [HttpPut("component/attribute")]
         [Authorize(Roles = Roles.Manager)]
         public async Task<IActionResult> UpdateAttributeValueAsync(
-            [FromBody] ComponentAttributesDto attributeToUpdate)
+            [FromBody] ComponentAttributeDto attributeToUpdate)
         {
             var response = await _componentAttributesService
                 .UpdateComponentAttributeValueAsync(attributeToUpdate);
@@ -127,24 +125,24 @@ namespace Aggregator.Api.Controllers
         }
 
 
-        [HttpDelete("component/{componentId}/attribute/{key}")]
+        [HttpDelete("component/{componentId}/attribute")]
         [Authorize(Roles = Roles.Manager)]
         public async Task<IActionResult> DeleteAttributeAsync(
             [FromRoute] Guid componentId, [FromRoute] string key)
         {
             var response = await _componentAttributesService
-                .RemoveComponentAttributeAsync(componentId, key);
+                .RemoveComponentAttributeAsync(componentId);
 
             return Ok(response);
         }
 
 
-        [HttpPost("attributes")]
+        [HttpPost("component/{componentId}/specs")]
         [AllowAnonymous]
-        public async Task<IActionResult> GetAttributesGroupAsPageAsync([FromBody] ComponentAttributesFilter filter)
+        public async Task<IActionResult> GetComponentSpecificationsAsync([FromRoute] Guid componentId)
         {
             var response = await _componentAttributesService
-                .GetAllUniqueComponentAttributesAsPageAsync(filter);
+                .GetComponentSpecsAsync(componentId);
 
             return Ok(response);
         }

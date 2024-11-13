@@ -9,9 +9,9 @@ namespace Aggregator.DataAccess.Extensions
             builder.AddDbContext<AggregatorDbContext>(options => 
                 options.UseSqlServer(connectionString));
 
-            builder.AddScoped(typeof(ICollectionRepositoryAsync<>), typeof(EFCollectionRepositoryAsync<>));
-            builder.AddScoped(typeof(ICrudRepositoryAsync<>), typeof(EFCrudRepositoryAsync<>));
-            builder.AddScoped(typeof(IValidationRepository<>), typeof(EFValidationRepository<>));
+            builder.AddScoped(typeof(IQueryRepositoryAsync<>), typeof(EFQueryRepositoryAsync<>));
+            builder.AddScoped(typeof(IBaseRepositoryAsync<>), typeof(EFBaseRepositoryAsync<>));
+            builder.AddScoped(typeof(ISpecificRepositoryAsync<>), typeof(EFSpecificRepositoryAsync<>));
             builder.AddScoped(typeof(IFileRepositoryAsync), typeof(GoogleDriveRepositoryAsync));
 
             builder.AddScoped<DbContext, AggregatorDbContext>();

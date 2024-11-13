@@ -1,19 +1,21 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Contributor.DataAccess.Models;
+using Contributor.DTOs.Domain.Subscription;
+using HardwareHero.Shared.Extensions.Repository;
 
 namespace Contributor.BusinessLogic.Services
 {
     public class SubscriptionService : ISubscriptionService
     {
-        private readonly ICrudRepositoryAsync<SubscriptionPlanInfo> _subscriptionPlanInfoRepo;
-        private readonly ICrudRepositoryAsync<SubscriptionPlan> _subscriptionPlanRepo;
-        private readonly ICrudRepositoryAsync<ContributorModel> _contributorRepo;
+        private readonly IBaseRepositoryAsync<SubscriptionPlanInfo> _subscriptionPlanInfoRepo;
+        private readonly IBaseRepositoryAsync<SubscriptionPlan> _subscriptionPlanRepo;
+        private readonly IBaseRepositoryAsync<ContributorModel> _contributorRepo;
 
         private readonly IMapper _mapper;
 
         public SubscriptionService(
-            ICrudRepositoryAsync<SubscriptionPlanInfo> subscriptionPlanInfoRepo,
-            ICrudRepositoryAsync<SubscriptionPlan> subscriptionPlanRepo,
-            ICrudRepositoryAsync<ContributorModel> contributorRepo,
+            IBaseRepositoryAsync<SubscriptionPlanInfo> subscriptionPlanInfoRepo,
+            IBaseRepositoryAsync<SubscriptionPlan> subscriptionPlanRepo,
+            IBaseRepositoryAsync<ContributorModel> contributorRepo,
             IMapper mapper)
         {
             _subscriptionPlanInfoRepo = subscriptionPlanInfoRepo;
@@ -26,15 +28,17 @@ namespace Contributor.BusinessLogic.Services
         {
             var subscriptionPlan = _mapper.Map<SubscriptionPlan>(subscriptionPlanToAdd);
             var result = await _subscriptionPlanRepo.CreateEntityAsync(subscriptionPlan);
+            result.DataAnswerCheck();
 
-            return result;
+            return result.Value!.Id;
         }
 
         public async Task<bool> UpdateSubscriptionPlanAsync(SubscriptionPlanDto subscriptionPlanToUpdate)
         {
             var subscriptionPlan = await _subscriptionPlanRepo
-                .GetOneWithNotFoundCheck(x => x.Id == subscriptionPlanToUpdate.Id, false);
+                .NotFoundCheckAsync(x => x.Id == subscriptionPlanToUpdate.Id);
 
+            // TODO: Why?
             if (!await ThisPlanHaveZeroSubscribers(subscriptionPlan.Id))
             {
                 throw new DataValidationException("You can't change subscription plan that has subscribers!");
@@ -45,14 +49,15 @@ namespace Contributor.BusinessLogic.Services
             subscriptionPlan.PriorityLevel = subscriptionPlanToUpdate.PriorityLevel;
 
             var result = await _subscriptionPlanRepo.UpdateEntityAsync(subscriptionPlan);
+            result.DataAnswerCheck();
 
-            return result;
+            return result.Value != null;
         }
 
         public async Task<bool> RemoveSubscriptionPlanAsync(Guid subscriptionPlanId)
         {
             var subscriptionPlan = await _subscriptionPlanRepo
-                .GetOneWithNotFoundCheck(x => x.Id == subscriptionPlanId, false);
+                .NotFoundCheckAsync(x => x.Id == subscriptionPlanId);
 
             if (!await ThisPlanHaveZeroSubscribers(subscriptionPlan.Id))
             {
@@ -60,17 +65,26 @@ namespace Contributor.BusinessLogic.Services
             }
 
             var result = await _subscriptionPlanRepo.RemoveEntityAsync(subscriptionPlan.Id);
+            result.DataAnswerCheck();
+
+            return result.Value != null;
+        }
+
+        public async Task<IEnumerable<SubscriptionPlanDto?>?> GetPlansByCurrencyAsync(Guid currencyId)
+        {
+            var plans = await _subscriptionPlanRepo.FindAllEntitiesAsync(
+                x => x.CurrencyId == currencyId);
+
+            var result = _mapper.Map<List<SubscriptionPlanDto>>(plans.Value);
 
             return result;
         }
 
-        public async Task<IEnumerable<SubscriptionPlanDto?>?> GetSubscriptionPlansAsync()
+        public async Task<IEnumerable<SubscriptionPlanDto?>?> GetPlansAsync()
         {
-            var plansSet = await _subscriptionPlanRepo.GetManyEntitiesAsync();
+            var plansSet = await _subscriptionPlanRepo.FindAllEntitiesAsync();
 
-            var plansList = await plansSet.ToListAsync();
-
-            var result = _mapper.Map<List<SubscriptionPlanDto>>(plansList);
+            var result = _mapper.Map<List<SubscriptionPlanDto>>(plansSet.Value);
 
             return result;
         }
@@ -78,12 +92,10 @@ namespace Contributor.BusinessLogic.Services
         public async Task<Guid?> SubscribeContributorAsync(Guid contributorId, Guid subscriptionPlanId)
         {
             var contributor = await _contributorRepo
-                .GetOneWithNotFoundCheck(x => x.Id == contributorId);
-
-            contributor.SubscriptionPlanInfo.CheckIfObjectAlreadyExist();
+                .NotFoundCheckAsync(x => x.Id == contributorId);
 
             var plan = await _subscriptionPlanRepo
-                .GetOneWithNotFoundCheck(x => x.Id == subscriptionPlanId);
+                .NotFoundCheckAsync(x => x.Id == subscriptionPlanId);
 
             var planInfo = new SubscriptionPlanInfo()
             {
@@ -98,36 +110,36 @@ namespace Contributor.BusinessLogic.Services
             contributor.SubscriptionPlanInfoId = planInfo.Id;
 
             var result = await _contributorRepo.UpdateEntityAsync(contributor);
+            result.DataAnswerCheck();
 
-            return result ? planInfo.Id : Guid.Empty;
+            return result.Value!.Id;
         }
 
         public async Task<bool> UnsubscribeContributorAsync(Guid contributorId)
         {
             var contributor = await _contributorRepo
-                .GetOneWithNotFoundCheck(x => x.Id == contributorId);
-
-            contributor.SubscriptionPlanInfo.CheckIfObjectNotFound();
+                .NotFoundCheckAsync(x => x.Id == contributorId);
 
             var planInfo = await _subscriptionPlanInfoRepo
-                .GetOneWithNotFoundCheck(x => x.Id == contributor.SubscriptionPlanInfo!.Id);
+                .NotFoundCheckAsync(x => x.Id == contributor.SubscriptionPlanInfo!.Id);
 
             var result = await _subscriptionPlanInfoRepo.RemoveEntityAsync(planInfo.Id);
+            result.DataAnswerCheck();
 
-            return result;
+            return result.Value != null;
         }
 
         private async Task<bool> ThisPlanHaveZeroSubscribers(Guid subscriptionPlanId)
         {
             var subscribers = await _subscriptionPlanInfoRepo
-                .GetManyEntitiesAsync(x => x.PlanId == subscriptionPlanId);
+                .FindAllEntitiesAsync(x => x.PlanId == subscriptionPlanId);
 
-            if (subscribers == null || subscribers.Count() == 0)
+            if (subscribers.Value == null || subscribers.Value.Count() == 0)
             {
                 return true;
             }
 
-            return subscribers.Count() == 0;
+            return subscribers.Value.Count() == 0;
         }
     }
 }

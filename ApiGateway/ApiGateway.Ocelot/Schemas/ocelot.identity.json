@@ -30,6 +30,40 @@
     },
 
     {
+      "UpstreamPathTemplate": "/identity/account",
+      "UpstreamHttpMethod": [ "Put" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "identity.api",
+          "Port": 80
+        }
+      ],
+      "UpstreamHeaderTransform": {
+        "DownstreamRequireAuth": true
+      },
+      "DownstreamPathTemplate": "/api/identity/account"
+    },
+
+    {
+      "UpstreamPathTemplate": "/identity/account/password",
+      "UpstreamHttpMethod": [ "Put" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "identity.api",
+          "Port": 80
+        }
+      ],
+      "UpstreamHeaderTransform": {
+        "DownstreamRequireAuth": true
+      },
+      "DownstreamPathTemplate": "/api/identity/account/password"
+    },
+
+    {
       "UpstreamPathTemplate": "/identity/account/refresh-token",
       "UpstreamHttpMethod": [ "Post" ],
 
@@ -55,6 +89,9 @@
           "Port": 80
         }
       ],
+      "UpstreamHeaderTransform": {
+        "DownstreamRequireAuth": true
+      },
       "DownstreamPathTemplate": "/api/identity/claims/{userId}"
     },
 
@@ -69,6 +106,9 @@
           "Port": 80
         }
       ],
+      "UpstreamHeaderTransform": {
+        "DownstreamRequireAuth": true
+      },
       "DownstreamPathTemplate": "/api/identity/claims/{userId}/{claimName}/{claimValue}"
     }
   ],

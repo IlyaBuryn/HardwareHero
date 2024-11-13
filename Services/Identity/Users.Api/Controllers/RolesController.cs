@@ -26,7 +26,7 @@ namespace Users.Api.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllRolesAsync()
         {
-            var result = await _rolesService.GetAllRolesAsync();
+            var result = await _rolesService.FetchRolesAsync();
 
             return Ok(result);
         }

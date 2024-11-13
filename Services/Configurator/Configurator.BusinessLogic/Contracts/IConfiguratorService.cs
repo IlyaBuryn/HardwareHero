@@ -1,10 +1,10 @@
-﻿using HardwareHero.Shared.Responses;
+﻿using Configurator.BusinessLogic.Models;
+using Configurator.DTOs.Domain;
 
 namespace Configurator.BusinessLogic.Contracts
 {
     public interface IConfiguratorService
     {
-        //Task<List<ConfiguratorComponentDto>?> GetFilteredComponentsAsync
-        //    (List<ConfiguratorComponentDto>? currentAssembly, string targetType, bool filterEnable = true);
+        Task<AssemblyCompatibilityResult> CheckCompatibility(StoredAssembly assembly);
     }
 }

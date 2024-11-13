@@ -1,4 +1,7 @@
-﻿using Users.Api.Contracts;
+﻿using HardwareHero.Shared.Repositories.Contracts;
+using HardwareHero.Shared.Repositories.FS;
+using Identity.Shared.Domain;
+using Users.Api.Contracts;
 using Users.Api.Services;
 
 namespace Users.Api.Extensions
@@ -37,6 +40,7 @@ namespace Users.Api.Extensions
             services.AddScoped<IUsersService, UsersService>();
             services.AddScoped<IRolesService, RolesService>();
             services.AddScoped<IWishListService, WishListService>();
+            services.AddScoped<IFileRepositoryAsync, GoogleDriveRepositoryAsync>();
         }
 
         public static void ConfigureCORSPolicy(this IServiceCollection services)

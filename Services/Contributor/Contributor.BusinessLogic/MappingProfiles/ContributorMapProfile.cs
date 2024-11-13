@@ -1,4 +1,11 @@
-﻿namespace Contributor.BusinessLogic.MappingProfiles
+﻿using Contributor.DataAccess.Models;
+using Contributor.DTOs.Domain.Chat;
+using Contributor.DTOs.Domain.Contributors;
+using Contributor.DTOs.Domain.Currencies;
+using Contributor.DTOs.Domain.Regions;
+using Contributor.DTOs.Domain.Subscription;
+
+namespace Contributor.BusinessLogic.MappingProfiles
 {
     public class ContributorMapProfile : Profile
     {
@@ -35,6 +42,8 @@
             CreateMap<ContributorConfirmInfo, ContributorConfirmInfoDto>().ReverseMap();
 
             CreateMap<Region, RegionDto>().ReverseMap();
+            CreateMap<Region, CityDto>().ReverseMap();
+            CreateMap<Region, CountryDto>().ReverseMap();
 
             CreateMap<Currency, CurrencyDto>().ReverseMap();
         }

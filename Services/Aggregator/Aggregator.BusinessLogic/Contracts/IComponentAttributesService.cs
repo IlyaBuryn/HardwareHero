@@ -1,13 +1,17 @@
-﻿namespace Aggregator.BusinessLogic.Contracts
+﻿using Aggregator.DTOs.Components;
+using static Aggregator.DTOs.Response.AggregatorResponseRecords;
+
+namespace Aggregator.BusinessLogic.Contracts
 {
     public interface IComponentAttributesService
     {
-        Task<Guid?> AddComponentAttributeAsync(ComponentAttributesDto attributeToAdd);
-        Task<bool> UpdateComponentAttributeValueAsync(ComponentAttributesDto attributeToUpdate);
-        Task<bool> RemoveComponentAttributeAsync(Guid componentId, string attributeKey);
+        Task<Guid?> AddComponentAttributeAsync(ComponentAttributeDto attributeToAdd);
+        Task<bool> UpdateComponentAttributeValueAsync(ComponentAttributeDto attributeToUpdate);
+        Task<bool> RemoveComponentAttributeAsync(Guid componentAttributeId);
 
-        Task<List<Guid>> ReplaceComponentAttributesAsync(Guid componentId, Dictionary<string, string> attributesToAdd);
-
-        Task<PageResponse<ComponentAttributesDto?>> GetAllUniqueComponentAttributesAsPageAsync(ComponentAttributesFilter filter);
+        Task<ComponentSpecsResponse> GetComponentSpecsAsync(Guid componentId);
+        // TODO: To specs
+        // Task<PageResponse<ComponentAttributeDto?>> GetUniqueComponentAttributesPageAsync(ComponentAttributesFilter filter);
+        // Task<List<Guid>> ReplaceComponentAttributesAsync(Guid componentId, Dictionary<string, string> attributesToAdd);
     }
 }

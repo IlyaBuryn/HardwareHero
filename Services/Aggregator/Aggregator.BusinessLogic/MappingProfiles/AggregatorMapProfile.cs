@@ -1,45 +1,42 @@
-﻿namespace Aggregator.BusinessLogic.MappingProfiles
+﻿using Aggregator.DataAccess.Models.Components;
+using Aggregator.DataAccess.Models.Specifications;
+using Aggregator.DTOs.Components;
+using Aggregator.DTOs.Specifications;
+
+namespace Aggregator.BusinessLogic.MappingProfiles
 {
     public class AggregatorMapProfile : Profile
     {
         public AggregatorMapProfile()
         {
             CreateMap<ComponentLocalReview, ComponentLocalReviewDto>()
-                .ForMember(dto => dto.Component, opt => opt.MapFrom(ent => ent.Component))
                 .ReverseMap();
 
             CreateMap<ComponentGlobalReview, ComponentGlobalReviewDto>()
-                .ForMember(dto => dto.Component, opt => opt.MapFrom(ent => ent.Component))
                 .ReverseMap();
 
             CreateMap<Component, ComponentDto>()
                 .ForMember(dto => dto.ComponentType, opt => opt.MapFrom(ent => ent.ComponentType))
+                .ForMember(dto => dto.ComponentMetricId, opt => opt.MapFrom(ent => ent.ComponentMetric))
                 .ReverseMap();
 
-            CreateMap<ComponentAttributes, ComponentAttributesDto>()
-                .ForMember(dto => dto.Component, opt => opt.MapFrom(ent => ent.Component))
+            CreateMap<ComponentAttribute, ComponentAttributeDto>()
                 .ReverseMap();
 
-            CreateMap<ComponentImages, ComponentImagesDto>()
-                .ForMember(dto => dto.Component, opt => opt.MapFrom(ent => ent.Component))
+            CreateMap<ComponentImage, ComponentImageDto>()
                 .ReverseMap();
 
-            CreateMap<ComponentType, ComponentTypeDto>().ReverseMap();
-
-
-            CreateMap<Maintenance, MaintenanceDto>()
-                .ForMember(dto => dto.MaintenanceType, opt => opt.MapFrom(ent => ent.MaintenanceType))
+            CreateMap<ComponentType, ComponentTypeDto>()
                 .ReverseMap();
 
-            CreateMap<MaintenanceLocalReview, MaintenanceLocalReviewDto>()
-                .ForMember(dto => dto.Maintenance, opt => opt.MapFrom(ent => ent.Maintenance))
+            CreateMap<SpecificationFilterType, SpecificationFilterTypeDto>()
                 .ReverseMap();
 
-            CreateMap<MaintenanceGlobalReview, MaintenanceGlobalReviewDto>()
-                .ForMember(dto => dto.Maintenance, opt => opt.MapFrom(ent => ent.Maintenance))
+            CreateMap<SpecificationCategory, SpecificationCategoryDto>()
                 .ReverseMap();
 
-            CreateMap<MaintenanceType, MaintenanceTypeDto>().ReverseMap();
+            CreateMap<SpecificationAttribute, SpecificationAttributeDto>()
+                .ReverseMap();
         }
     }
 }

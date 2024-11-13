@@ -1,15 +1,12 @@
-﻿using HardwareHero.Shared.Constants;
-using HardwareHero.Shared.Models.Identity;
-using Identity.Api.Data;
+﻿using Identity.Api.Data;
 using Identity.Shared.Contexts;
-using Microsoft.AspNetCore.Identity;
 using FluentValidation.AspNetCore;
-using HardwareHero.Shared.Extensions;
 using Identity.Api.Contracts;
 using Identity.Api.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.OpenApi.Models;
 using HardwareHero.Shared.OpenApi;
+using Identity.Shared.Domain;
 
 namespace Identity.Api.Extensions
 {

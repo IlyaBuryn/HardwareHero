@@ -1,0 +1,20 @@
+﻿using HardwareHero.Shared.Models;
+
+namespace Contributor.DataAccess.Models
+{
+    public class ContributorExcellence : BaseEntity
+    {
+        public string Name { get; set; }
+        public string? LogoUrl { get; set; }
+        public string? LogoName { get; set; }
+        public string? Description { get; set; }
+        public string Phone { get; set; }
+        public string? MainWebLink { get; set; }
+        public string? MainApiLink { get; set; }
+        public Guid RegionId { get; set; }
+        public Guid CurrencyId { get; set; }
+
+        public virtual Currency? Currency { get; set; }
+        public virtual Region? Region { get; set; }
+    }
+}

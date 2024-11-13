@@ -1,109 +1,79 @@
-﻿using Aggregator.BusinessLogic.Extensions;
-using Microsoft.EntityFrameworkCore;
+﻿using Aggregator.DataAccess.Models.Components;
+using Aggregator.DTOs.Components;
+using HardwareHero.Shared.Extensions.Repository;
+using static Aggregator.DTOs.Response.AggregatorResponseRecords;
 
 namespace Aggregator.BusinessLogic.Services
 {
     public class ComponentAttributesService : IComponentAttributesService
     {
-        private readonly ICollectionRepositoryAsync<ComponentAttributes> _componentAttributesRepo;
-        private readonly IValidationRepository<ComponentAttributes> _componentAttributesValidationRepo;
+        private readonly IQueryRepositoryAsync<ComponentAttribute> _componentAttributesRepo;
         private readonly IMapper _mapper;
 
         public ComponentAttributesService(
-            ICollectionRepositoryAsync<ComponentAttributes> componentAttributesRepo,
-            IValidationRepository<ComponentAttributes> componentAttributesValidationRepo,
+            IQueryRepositoryAsync<ComponentAttribute> componentAttributesRepo,
             IMapper mapper)
         {
             _componentAttributesRepo = componentAttributesRepo;
-            _componentAttributesValidationRepo = componentAttributesValidationRepo;
             _mapper = mapper;
         }
 
-        public async Task<Guid?> AddComponentAttributeAsync(ComponentAttributesDto attributeToAdd)
+        public async Task<Guid?> AddComponentAttributeAsync(ComponentAttributeDto attributeToAdd)
         {
             attributeToAdd.Id = Guid.NewGuid();
 
-            _componentAttributesValidationRepo.CheckIsAlreadyExist(
-                x => x.ComponentId == attributeToAdd.ComponentId && x.AttributeName == attributeToAdd.AttributeName,
-                new AlreadyExistException<ComponentAttributesDto>($"{attributeToAdd.ComponentId} & {attributeToAdd.AttributeName}"));
+            await _componentAttributesRepo.NotFoundCheckAsync(
+                x => x.SpecificationAttributeId == attributeToAdd.SpecificationAttributeId);
 
-            var componentAttributes = _mapper.Map<ComponentAttributes>(attributeToAdd);
+            var componentAttributes = _mapper.Map<ComponentAttribute>(attributeToAdd);
             var result = await _componentAttributesRepo.CreateEntityAsync(componentAttributes);
+            result.DataAnswerCheck();
 
-            return result;
+            return result.Value?.Id;
         }
 
-        public async Task<List<Guid>> ReplaceComponentAttributesAsync(Guid componentId, Dictionary<string, string> attributesToAdd)
+        public async Task<bool> UpdateComponentAttributeValueAsync(ComponentAttributeDto attributeToUpdate)
         {
-            var result = new List<Guid>();
+            var componentAttribute = await _componentAttributesRepo.NotFoundCheckAsync(
+                x => x.SpecificationAttributeId == attributeToUpdate.SpecificationAttributeId);
 
-            var attributesSet = await _componentAttributesRepo.GetManyWithDefaultOrEmptyCheckAsync(
-                x => x.ComponentId == componentId);
-
-            var attributesList = await attributesSet.ToListAsync();
-
-            foreach (var pair in attributesList)
-            {
-                if (pair != null && pair.Id != Guid.Empty)
-                {
-                    await _componentAttributesRepo.RemoveEntityAsync(pair.Id);
-                }
-            }
-
-            foreach (var pair in attributesToAdd)
-            {
-                var id = await _componentAttributesRepo.CreateEntityAsync(new ComponentAttributes()
-                {
-                    AttributeName = pair.Key,
-                    AttributeValue = pair.Value,
-                    ComponentId = componentId,
-                });
-                result.Add(id);
-            }
-
-            return result;
-        }
-
-        public async Task<bool> UpdateComponentAttributeValueAsync(ComponentAttributesDto attributeToUpdate)
-        {
-            var componentAttribute = await _componentAttributesRepo.GetOneWithNotFoundCheck(
-                x => x.ComponentId == attributeToUpdate.ComponentId &&
-                x.AttributeName == attributeToUpdate.AttributeName);
-
-            componentAttribute.AttributeValue = attributeToUpdate.AttributeValue;
+            componentAttribute.Value = attributeToUpdate.Value;
 
             var result = await _componentAttributesRepo.UpdateEntityAsync(componentAttribute);
+            result.DataAnswerCheck();
 
-            return result;
+            return result.Value != null;
         }
 
 
-        public async Task<bool> RemoveComponentAttributeAsync(Guid componentId, string attributeKey)
+        public async Task<bool> RemoveComponentAttributeAsync(Guid componentAttributeId)
         {
-            var componentAttribute = await _componentAttributesRepo.GetOneWithNotFoundCheck(
-                x => x.ComponentId == componentId &&
-                x.AttributeName == attributeKey);
+            var result = await _componentAttributesRepo.RemoveEntityAsync(componentAttributeId);
+            result.DataAnswerCheck();
 
-            var result = await _componentAttributesRepo.RemoveEntityAsync(componentAttribute.Id);
-
-            return result;
+            return result.Value != null;
         }
 
-        public async Task<PageResponse<ComponentAttributesDto?>> GetAllUniqueComponentAttributesAsPageAsync(ComponentAttributesFilter filter)
+        public async Task<ComponentSpecsResponse> GetComponentSpecsAsync(Guid componentId)
         {
-            _componentAttributesValidationRepo.CheckPaginationOptions(filter);
+            var attributes = await _componentAttributesRepo
+                .FindAllEntitiesAsync(x => x.Id == componentId,
+                x => x.SpecificationAttribute, x => x.SpecificationAttribute.SpecificationCategory);
+            attributes.DataAnswerCheck();
 
-            var query = await _componentAttributesRepo.GetManyEntitiesAsync(
-                new IncludeProperties<ComponentAttributes>(false));
+            var result = attributes.Value!
+                .GroupBy(x => x.SpecificationAttribute.SpecificationCategory.Name)
+                .ToDictionary(
+                    g => g.Key,
+                    g => g.ToDictionary(
+                        x => x.SpecificationAttribute.Key,
+                        x => x.Value
+                    )
+                );
 
-            query = query.ApplyFilter(filter).Query;
-            query = query.ApplyOrderBy(filter).Query;
-            query = query.ApplyGroupBy(filter).Groups.SeparateGroupsToComponentAttributes();
+            attributes = null;
 
-            var result = await _componentAttributesRepo.GetMappedPageAsync(query, filter);
-            var mappedResult = _mapper.Map<PageResponse<ComponentAttributesDto>>(result);
-
-            return mappedResult;
+            return new ComponentSpecsResponse(result);
         }
     }
 }

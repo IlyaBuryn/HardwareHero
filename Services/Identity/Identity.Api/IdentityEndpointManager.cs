@@ -1,7 +1,8 @@
 ﻿using Identity.Api.Contracts;
+using Identity.Shared.Requests;
+using Identity.Shared.Responses;
 using KafkaEventStream.Contracts;
 using System.Text.Json;
-using static Identity.Api.Records.RequestModels;
 
 namespace Identity.Api
 {

@@ -33,6 +33,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\EventStream\KafkaEventStream\KafkaEventStream.csproj" />
+    <ProjectReference Include="..\..\Services\Identity\Identity.Shared\Identity.Shared.csproj" />
     <ProjectReference Include="..\..\Tools\HardwareHero.Shared\HardwareHero.Shared.csproj" />
   </ItemGroup>
 

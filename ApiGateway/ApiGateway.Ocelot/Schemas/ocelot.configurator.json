@@ -1,0 +1,21 @@
+{
+  "Routes": [
+    // Attributes
+    {
+      "UpstreamPathTemplate": "/aggregator/attributes/{type}",
+      "UpstreamHttpMethod": [ "Get" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "configurator.api",
+          "Port": 80
+        }
+      ],
+      "DownstreamPathTemplate": "/api/attributes/{type}"
+    }
+  ],
+  "GlobalConfiguration": {
+    "BaseUrl": "https://localhost:8070"
+  }
+}

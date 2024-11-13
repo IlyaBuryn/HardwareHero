@@ -1,4 +1,7 @@
-﻿namespace Aggregator.BusinessLogic.Contracts
+﻿using Aggregator.DTOs.Components;
+using static Aggregator.DTOs.Response.AggregatorResponseRecords;
+
+namespace Aggregator.BusinessLogic.Contracts
 {
     public interface IComponentReviewService
     {
@@ -10,12 +13,12 @@
         Task<bool> UpdateGlobalReviewAsync(ComponentGlobalReviewDto reviewToAdd);
         Task<bool> RemoveGlobalReviewAsync(Guid reviewId);
 
-        Task<ComplexResponse> AddGlobalReviewsAsync(List<ComponentGlobalReviewDto> reviews);
+        Task<CreationOfManyResponse> AddGlobalReviewsAsync(List<ComponentGlobalReviewDto> reviews);
 
-        Task<PageResponse<ComponentLocalReviewDto?>> GetComponentLocalReviewsAsPageByComponentIdAsync(
+        Task<PageResponse<ComponentLocalReviewDto>?> GetComponentLocalReviewsPageAsync(
             ComponentLocalReviewFilter filter, Guid componentId);
-        Task<PageResponse<ComponentGlobalReviewDto?>> GetComponentGlobalReviewsAsPageByComponentIdAsync(
+        Task<PageResponse<ComponentGlobalReviewDto>?> GetComponentGlobalReviewsPageAsync(
             ComponentGlobalReviewFilter filter, Guid componentId);
-        Task<AvgReviewsMarksResponse> GetComponentAvgMarkAsync(Guid componentId);
+        Task<ReviewsMetricResponse> GetReviewsMetricForComponent(Guid componentId);
     }
 }

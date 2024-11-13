@@ -1,4 +1,6 @@
-﻿namespace Contributor.DataAccess.Data.Configurations
+﻿using Contributor.DataAccess.Models;
+
+namespace Contributor.DataAccess.Data.Configurations
 {
     public class CurrencyConfiguration : IEntityTypeConfiguration<Currency>
     {
@@ -7,10 +9,8 @@
             builder.HasKey(c => c.Id);
             builder.Property(c => c.Id).ValueGeneratedOnAdd();
 
-            builder.Property(c => c.Name).IsRequired();
-            builder.HasIndex(c => c.Name).IsUnique();
-
-            builder.Property(c => c.Icon).IsRequired();
+            builder.Property(c => c.Code).IsRequired();
+            builder.HasIndex(c => c.Code).IsUnique();
         }
     }
 }

@@ -9,14 +9,14 @@ using HardwareHero.Filter.Operations;
 public class EFCollectionRepositoryAsync_IntegrationTests
 {
     private readonly IFixture _fixture;
-    private readonly EFCollectionRepositoryAsync<TestEntity> _repository;
+    private readonly EFQueryRepositoryAsync<TestEntity> _repository;
     private TestDbContext _context;
 
     public EFCollectionRepositoryAsync_IntegrationTests()
     {
         _fixture = new Fixture();
         _context = TestDbContext.GetInMemoryDbContext();
-        _repository = new EFCollectionRepositoryAsync<TestEntity>(_context);
+        _repository = new EFQueryRepositoryAsync<TestEntity>(_context);
     }
 
     public class TestPaginable : FilterRequestDomain<TestEntity>, IPaginable
@@ -37,7 +37,6 @@ public class EFCollectionRepositoryAsync_IntegrationTests
         // Arrange
         int count = 30;
         await SetupTestEntitiesAsync(count);
-        var query = await _repository.GetManyEntitiesAsync();
         var resultStamp = new List<TestEntity>();
 
         for (uint i = 1; i < (count / 10) + 2; i++)
@@ -46,7 +45,7 @@ public class EFCollectionRepositoryAsync_IntegrationTests
             var paginationSettings = new TestPaginable(i, 10);
 
             // Act
-            var result = await _repository.GetPageAsync(query, paginationSettings);
+            var result = (await _repository.FindPagedAsync(null, paginationSettings)).Values;
 
             // Assert
             if (i == (count / 10) + 1)
@@ -69,11 +68,10 @@ public class EFCollectionRepositoryAsync_IntegrationTests
         // Arrange
         int count = 30;
         await SetupTestEntitiesAsync(count);
-        var query = await _repository.GetManyEntitiesAsync();
         var props = new TestPaginable(1, 10);
 
         // Act
-        var result = await _repository.GetPageAsync(query, props);
+        var result = (await _repository.FindPagedAsync(null, props)).Values;
 
         // Assert
         result.Should().NotBeNullOrEmpty();
@@ -82,29 +80,14 @@ public class EFCollectionRepositoryAsync_IntegrationTests
     }
 
     [Fact]
-    public async Task GetPageAsync_ReturnEmptyQuery_WhenNoEntryQuery()
-    {
-        // Arrange
-        var props = new TestPaginable(1, 10);
-
-        // Act
-        var result = await _repository.GetPageAsync(null, props);
-
-        // Assert
-        result.Should().NotBeNull();
-        result.Should().HaveCount(0);       
-    }
-
-    [Fact]
     public async Task GetPageAsync_ThrowException_WhenNoPaginationProps()
     {
         // Arrange
         int count = 30;
         await SetupTestEntitiesAsync(count);
-        var query = await _repository.GetManyEntitiesAsync();
 
         // Act
-        Func<Task> act = async () => await _repository.GetPageAsync(query, null);
+        Func<Task> act = async () => await _repository.FindPagedAsync(null, null);
 
         // Assert
         await act.Should().ThrowAsync<ArgumentNullException>();
@@ -116,74 +99,10 @@ public class EFCollectionRepositoryAsync_IntegrationTests
         // Arrange
         int count = 30;
         await SetupTestEntitiesAsync(count);
-        var query = await _repository.GetManyEntitiesAsync();
         var props = new TestPaginable(0, 0);
 
         // Act
-        Func<Task> act = async () => await _repository.GetPageAsync(query, props);
-
-        // Assert
-        await act.Should().ThrowAsync<PageOptionsValidationException>();
-    }
-
-    [Fact]
-    public async Task GetTotalPageCountAsync_ReturnCorrectCount_WhenItSuccessfully()
-    {
-        // Arrange
-        int count = 37;
-        await SetupTestEntitiesAsync(count);
-        var query = await _repository.GetManyEntitiesAsync();
-        var props = new TestPaginable(1, 10);
-        var expected = count % props.PageSize == 0 ?
-            count / props.PageSize : 
-            (count / props.PageSize) + 1;
-
-        // Act
-        var result = await _repository.GetTotalPageCountAsync(query, props);
-
-        // Assert
-        result.Should().Be((int)expected);
-    }
-
-    [Fact]
-    public async Task GetTotalPageCountAsync_ReturnZero_WhenEntryQueryIsNull()
-    {
-        // Arrange
-        var props = new TestPaginable(1, 10);
-
-        // Act
-        var result = await _repository.GetTotalPageCountAsync(null, props);
-
-        // Assert
-        result.Should().Be(0);
-    }
-
-    [Fact]
-    public async Task GetTotalPageCountAsync_ThrowException_WhenNoPaginationProps()
-    {
-        // Arrange
-        int count = 30;
-        await SetupTestEntitiesAsync(count);
-        var query = await _repository.GetManyEntitiesAsync();
-
-        // Act
-        Func<Task> act = async () => await _repository.GetTotalPageCountAsync(query, null);
-
-        // Assert
-        await act.Should().ThrowAsync<ArgumentNullException>();
-    }
-
-    [Fact]
-    public async Task GetTotalPageCountAsync_ThrowException_WhenPaginationPropsIsWrong()
-    {
-        // Arrange
-        int count = 30;
-        await SetupTestEntitiesAsync(count);
-        var query = await _repository.GetManyEntitiesAsync();
-        var props = new TestPaginable(0, 0);
-
-        // Act
-        Func<Task> act = async () => await _repository.GetTotalPageCountAsync(query, props);
+        Func<Task> act = async () => await _repository.FindPagedAsync(null, props);
 
         // Assert
         await act.Should().ThrowAsync<PageOptionsValidationException>();

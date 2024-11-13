@@ -1,5 +1,6 @@
 ﻿using KafkaEventStream.Contracts;
 using Mail.BusinessLogic.Services;
+using Mail.DTOs.Mail;
 
 namespace Mail.Api
 {

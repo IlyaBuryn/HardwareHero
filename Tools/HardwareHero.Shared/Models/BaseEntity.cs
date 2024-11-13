@@ -5,8 +5,13 @@ namespace HardwareHero.Shared.Models
 {
     public class BaseEntity
     {
+    #if MSSQL
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    #endif
+    #if MONGODB
+        [BsonId]
+    #endif
         public Guid Id { get; set; }
     }
 }

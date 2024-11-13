@@ -2,6 +2,7 @@
 using Google.Apis.Drive.v3;
 using Google.Apis.Services;
 using HardwareHero.Filter.Operations;
+using HardwareHero.Shared.Repositories.Answers;
 using HardwareHero.Shared.Repositories.Contracts;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
@@ -34,10 +35,15 @@ namespace HardwareHero.Shared.Repositories.FS
             });
         }
 
-        public async Task<string?> UploadFileAsync(IFormFile file, string fileName)
+        public async Task<DataAnswer<string>> UploadFileAsync(IFormFile file, string? fileName)
         {
             try
             {
+                if (fileName == null)
+                {
+                    throw new ArgumentNullException(nameof(fileName));
+                }
+
                 var fileMetadata = new Google.Apis.Drive.v3.Data.File()
                 {
                     Name = fileName,
@@ -67,31 +73,41 @@ namespace HardwareHero.Shared.Repositories.FS
                 await _driveService.Permissions.Create(permission, fileResponse.Id).ExecuteAsync();
 
                 // Return direct link
-                return $"https://drive.google.com/thumbnail?id={fileResponse.Id}";
+                var link = $"https://drive.google.com/thumbnail?id={fileResponse.Id}";
+                _logger.LogInformation($"Uploaded new image: {link}");
+
+                return new(link);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while uploading the file to Google Drive.");
-                return null;
+                return new(ex);
             }
         }
 
-        public async Task<bool> DeleteFileAsync(string fileName)
+        public async Task<DataAnswer<string>> DeleteFileAsync(string? fileName)
         {
             try
             {
+                if (fileName == null)
+                {
+                    throw new ArgumentNullException(nameof(fileName));
+                }
+
                 var request = _driveService.Files.Delete(fileName);
                 await request.ExecuteAsync();
-                return true;
+
+                return new(fileName);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while deleting the file from Google Drive.");
-                return false;
+                
+                return new(ex);
             }
         }
 
-        public async Task<IList<string>> GetFilesAsync(IPaginable filter)
+        public async Task<DataAnswer<IEnumerable<string>>> GetFilesAsync(IPaginable filter)
         {
             try
             {
@@ -100,32 +116,40 @@ namespace HardwareHero.Shared.Repositories.FS
                 request.Fields = "nextPageToken, files(id, name)";
 
                 var result = await request.ExecuteAsync();
-                return result.Files.Select(item =>
+
+                return new(result.Files.Select(item =>
                 {
                     return  $"{{" +
                             $"\"id\": \"{item.Id}\"," +
                             $"\"name\": \"{item.Name}\"" +
                             $"}}";
-                }).ToList();
+                }));
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while listing files from Google Drive.");
-                throw;
+                
+                return new(ex);
             }
         }
 
-        public async Task<string?> ReplaceFileAsync(string fileName, IFormFile file, string newFileName)
+        public async Task<DataAnswer<string>> ReplaceFileAsync(string? fileName, IFormFile file, string newFileName)
         {
-            var deleteResult = await DeleteFileAsync(fileName);
-
-            string? result = null;
-            if (deleteResult)
+            if (fileName == null)
             {
-                result = await UploadFileAsync(file, newFileName);
+                throw new ArgumentNullException(nameof(fileName));
             }
 
-            return result;
+            var deleteResult = await DeleteFileAsync(fileName);
+
+            if (deleteResult.IsSuccess)
+            {
+                var result = await UploadFileAsync(file, newFileName);
+
+                return result;
+            }
+
+            return deleteResult;
         }
     }
 }

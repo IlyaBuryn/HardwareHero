@@ -1,8 +1,10 @@
 ﻿using EventStream.EventHandling;
 using HardwareHero.Shared.Exceptions;
 using HardwareHero.Shared.Responses;
+using Identity.Shared.Responses;
 using KafkaEventStream.BackgroundServices;
 using KafkaEventStream.Topics;
+using Ocelot.Middleware;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text.Json;
 
@@ -14,7 +16,6 @@ namespace ApiGateway.Ocelot.Middlewares
         private readonly IConfiguration _configuration;
         private readonly IMessageProducer _messageProducer;
         private readonly IMessageConsumer _messageConsumer;
-        private readonly List<(string PathTemplate, string HttpMethod)> _excludedRoutes;
 
         public TokenRefreshMiddleware(
             RequestDelegate next,
@@ -26,28 +27,10 @@ namespace ApiGateway.Ocelot.Middlewares
             _configuration = configuration;
             _messageProducer = messageProducer;
             _messageConsumer = messageConsumer;
-            _excludedRoutes = new List<(string, string)>
-            {
-                ("/identity/account/sign-up", "POST"),
-                ("/identity/account/sign-in", "POST"),
-                ("/aggregator/components/page", "POST"),
-            };
         }
 
         public async Task InvokeAsync(HttpContext context)
         {
-            // Skip if auth isn't required
-            var requestPath = context.Request.Path.Value;
-            var requestMethod = context.Request.Method.ToUpper();
-
-            if (_excludedRoutes.Any(route =>
-                string.Equals(route.PathTemplate, requestPath, StringComparison.OrdinalIgnoreCase)
-                && string.Equals(route.HttpMethod, requestMethod, StringComparison.OrdinalIgnoreCase)))
-            {
-                await _next(context);
-                return;
-            }
-
             var jwtCookieKey = _configuration.GetSection("JwtConfig:JwtCookieKey").Value ?? string.Empty;
             var refreshCookieKey = _configuration.GetSection("JwtConfig:RefreshCookieKey").Value ?? string.Empty;
 
@@ -59,8 +42,9 @@ namespace ApiGateway.Ocelot.Middlewares
             accessToken = context.Request.Cookies[jwtCookieKey]?.Replace("Bearer ", "");
             refreshToken = context.Request.Cookies[refreshCookieKey];
             if (string.IsNullOrEmpty(accessToken) || string.IsNullOrEmpty(refreshToken)) 
-            { 
-                throw new AuthenticationException();
+            {
+                await _next(context);
+                return;
             }
 
             // check if token is Expired
@@ -80,10 +64,14 @@ namespace ApiGateway.Ocelot.Middlewares
 
                 var cookieOptions = new CookieOptions
                 {
-                    HttpOnly = true,
-                    Secure = true,
-                    SameSite = SameSiteMode.Strict
+                    HttpOnly = false,
+                    Secure = false,
+                    SameSite = SameSiteMode.Lax, // TODO:
+                    Domain = "localhost", // TODO:
+                    Path = "/", // TODO:
                 };
+
+                cookieOptions.Expires = DateTime.Now + TimeSpan.FromDays(30); // TODO:
 
                 context.Response.Cookies.Append(jwtCookieKey, identityResponse.AccessToken, cookieOptions);
                 context.Response.Cookies.Append(refreshCookieKey, identityResponse.RefreshToken, cookieOptions);

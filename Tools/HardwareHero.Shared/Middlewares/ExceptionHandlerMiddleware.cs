@@ -37,7 +37,7 @@ namespace HardwareHero.Shared.Middlewares
             {
                 await HandleExceptionAsync(context, HttpStatusCode.Forbidden, ex);
             }
-            catch (AlreadyExistException<T> ex)
+            catch (AlreadyExistException ex)
             {
                 await HandleExceptionAsync(context, HttpStatusCode.Conflict, ex);
             }

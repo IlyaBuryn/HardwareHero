@@ -1,6 +1,8 @@
-﻿using Mail.BusinessLogic.Presets;
+﻿using HardwareHero.Shared.Repositories.Contracts;
+using Mail.BusinessLogic.Models;
+using Mail.BusinessLogic.Presets;
+using Mail.DTOs.Mail;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Options;
 
 namespace Mail.BusinessLogic.Services
 {
@@ -10,9 +12,9 @@ namespace Mail.BusinessLogic.Services
         private Dictionary<MailPresets, Preset?> _mailTemplatePaths;
 
         public MailServicePresets(
-            IOptions<DatabaseOptions> databaseSettings,
+            IBaseRepositoryAsync<MailMessage> repository,
             IMapper mapper, IConfiguration configuration) 
-            : base(databaseSettings, mapper, configuration)
+            : base(configuration, repository, mapper)
         {
             _configuration = configuration;
         }

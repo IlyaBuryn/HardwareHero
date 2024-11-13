@@ -1,4 +1,7 @@
-﻿namespace Mail.BusinessLogic.MapProfiles
+﻿using Mail.BusinessLogic.Models;
+using Mail.DTOs.Mail;
+
+namespace Mail.BusinessLogic.MapProfiles
 {
     public class MailMapProfile : Profile
     {

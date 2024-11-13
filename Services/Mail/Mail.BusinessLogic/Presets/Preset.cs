@@ -1,4 +1,6 @@
-﻿namespace Mail.BusinessLogic.Presets
+﻿using Mail.DTOs.Mail;
+
+namespace Mail.BusinessLogic.Presets
 {
     public abstract class Preset
     {

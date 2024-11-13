@@ -1,4 +1,4 @@
-﻿
+﻿using Mail.DTOs.Mail;
 using Microsoft.Extensions.Configuration;
 
 namespace Mail.BusinessLogic.Presets

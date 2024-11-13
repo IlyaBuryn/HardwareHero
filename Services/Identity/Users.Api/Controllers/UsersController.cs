@@ -1,5 +1,6 @@
 ﻿using Users.Api.Contracts;
-using static Users.Api.Records.RequestModels;
+using Users.Api.Filters;
+using static Identity.Shared.Requests.IdentityRequestRecords;
 
 namespace Users.Api.Controllers
 {
@@ -18,16 +19,17 @@ namespace Users.Api.Controllers
 
         [HttpPost]
         [Authorize(Roles = Roles.Admin)]
-        public async Task<IActionResult> CreateUserAsync([FromBody] CreateUserRequestModel model)
+        public async Task<IActionResult> CreateUserAsync([FromBody] CreateUserRequest model)
         {
             var result = await _userService.CreateUserAsync(model);
 
             return CreatedAtAction(nameof(CreateUserAsync), result);
         }
 
+        // TODO: should I transfer this to identity api?
         [HttpPut("{userId}")]
-        [Authorize(Roles = Roles.Admin)]
-        public async Task<IActionResult> UpdateUserAsync([FromRoute] string userId, UpdateUserRequestModel model)
+        [Authorize(Roles = Roles.User)]
+        public async Task<IActionResult> UpdateUserAsync([FromRoute] string userId, [FromForm] UpdateUserRequest model)
         {
             var result = await _userService.UpdateUserAsync(userId, model);
 
@@ -55,9 +57,9 @@ namespace Users.Api.Controllers
 
         [HttpGet]
         [Authorize(Roles = Roles.Admin)]
-        public async Task<IActionResult> GetAllUsersAsync()
+        public async Task<IActionResult> FetchUsersAsync([FromQuery] UsersFilter filter)
         {
-            var result = await _userService.GetAllUsersAsync();
+            var result = await _userService.FetchUsersAsync(filter);
 
             return Ok(result);
         }

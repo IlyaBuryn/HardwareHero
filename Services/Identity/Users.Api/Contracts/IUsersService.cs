@@ -1,14 +1,17 @@
-﻿using static Users.Api.Records.RequestModels;
-using static Users.Api.Records.ResponseModels;
+﻿using HardwareHero.Shared.Responses;
+using Identity.Shared.Domain;
+using Users.Api.Filters;
+using static Identity.Shared.Requests.IdentityRequestRecords;
+using static Identity.Shared.Responses.IdentityResponseRecords;
 
 namespace Users.Api.Contracts
 {
     public interface IUsersService
     {
-        Task<ApplicationUser> CreateUserAsync(CreateUserRequestModel model);
-        Task<ApplicationUser> UpdateUserAsync(string userId, UpdateUserRequestModel model);
+        Task<ApplicationUser> CreateUserAsync(CreateUserRequest model);
+        Task<ApplicationUser> UpdateUserAsync(string userId, UpdateUserRequest model);
         Task<bool> RemoveUserAsync(string userId);
-        Task<List<ApplicationUser>> GetAllUsersAsync();
-        Task<GetUserResponseModel> GetUserByIdAsync(string userId);
+        Task<PageResponse<FetchUserResponse>> FetchUsersAsync(UsersFilter filter);
+        Task<FetchUserResponse> GetUserByIdAsync(string userId);
     }
 }

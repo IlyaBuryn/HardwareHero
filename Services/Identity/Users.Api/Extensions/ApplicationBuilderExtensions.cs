@@ -2,13 +2,11 @@
 {
     public static class ApplicationBuilderExtensions
     {
-        public static void UseMigration<TContext>(this IApplicationBuilder app, string migrationAssembly) where TContext : DbContext
+        public static void UseMigration<TContext>
+            (this IApplicationBuilder app, string migrationAssembly) where TContext : DbContext
         {
             using (var serviceScope = app.ApplicationServices.CreateScope())
             {
-                //serviceScope.ServiceProvider.GetService<TContext>()!
-                //    .Database.Migrate();
-
                 var context = serviceScope.ServiceProvider.GetRequiredService<TContext>();
 
                 // Set the migration assembly

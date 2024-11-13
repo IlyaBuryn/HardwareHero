@@ -1,4 +1,5 @@
-﻿using Users.Api.Contracts;
+﻿using Identity.Shared.Domain;
+using Users.Api.Contracts;
 
 namespace Users.Api.Services
 {
@@ -20,7 +21,7 @@ namespace Users.Api.Services
             var isExist = await _roleManager.RoleExistsAsync(roleName);
             if (isExist)
             {
-                throw new AlreadyExistException<IdentityRole>(nameof(roleName));
+                throw new AlreadyExistException(nameof(roleName), typeof(IdentityRole));
             }
 
             var role = new IdentityRole(roleName);
@@ -29,7 +30,7 @@ namespace Users.Api.Services
             return result.Succeeded ? role : throw new Exception(result.Errors.First().Description);
         }
 
-        public async Task<IList<IdentityRole>> GetAllRolesAsync()
+        public async Task<IList<IdentityRole>> FetchRolesAsync()
         {
             var result = await _roleManager.Roles.ToListAsync();
 

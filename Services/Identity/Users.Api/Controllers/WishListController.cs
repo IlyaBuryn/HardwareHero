@@ -1,4 +1,5 @@
-﻿using Users.Api.Contracts;
+﻿using Identity.Shared.Domain;
+using Users.Api.Contracts;
 
 namespace Users.Api.Controllers
 {
@@ -18,13 +19,13 @@ namespace Users.Api.Controllers
         [HttpPost("{userId}")]
         public async Task<IActionResult> ChangeWishListAsync([FromRoute] string userId, [FromBody] Guid[] components)
         {
-            var componentsObjects = new WishListComponents[components.Length];
+            var componentsObjects = new WishListComponent[components.Length];
             for (int i = 0; i < components.Length; i++)
             {
-                componentsObjects[i] = new WishListComponents
+                componentsObjects[i] = new WishListComponent
                 {
                     Id = Guid.NewGuid(),
-                    ApplicationUserId = userId,
+                    UserId = userId,
                     ComponentId = components[i]
                 };
             }

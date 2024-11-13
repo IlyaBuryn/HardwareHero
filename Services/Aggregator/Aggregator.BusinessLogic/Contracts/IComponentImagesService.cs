@@ -1,9 +1,12 @@
-﻿namespace Aggregator.BusinessLogic.Contracts
+﻿using Aggregator.DTOs.Components;
+
+namespace Aggregator.BusinessLogic.Contracts
 {
     public interface IComponentImagesService
     {
-        Task<Guid?> AddComponentImageAsync(ComponentImagesDto componentImageToAdd);
-        Task<bool> RemoveComponentImageAsync(Guid componentImageId);
+        Task<Guid?> AddComponentImageAsync(ComponentImageDto componentImageToAdd);
+        Task<bool> RemoveComponentImageAsync(Guid componentImageId, bool acceptUnrevoked = false);
+        Task<bool> ChangeActiveImageStatusAsync(Guid componentImageId);
 
     }
 }

@@ -1,12 +1,4 @@
-﻿using Confluent.Kafka;
-using EventStream.EventHandling;
-using EventStream.Topics;
-using FluentValidation.AspNetCore;
-using KafkaEventStream.EventHandling;
-using KafkaEventStream;
-using Microsoft.IdentityModel.Tokens;
-using System.Text.Json.Serialization;
-using KafkaEventStream.Extensions;
+﻿using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using HardwareHero.Shared.Extensions;
 using HardwareHero.Shared.OpenApi;

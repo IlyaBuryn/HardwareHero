@@ -1,6 +1,8 @@
-﻿namespace Aggregator.DataAccess.Data.Configurations.Components
+﻿using Aggregator.DataAccess.Models.Components;
+
+namespace Aggregator.DataAccess.Data.Configurations.Components
 {
-    internal class ComponentTypesConfiguration : IEntityTypeConfiguration<ComponentType>
+    internal class ComponentTypeConfiguration : IEntityTypeConfiguration<ComponentType>
     {
         public void Configure(EntityTypeBuilder<ComponentType> builder)
         {
@@ -14,6 +16,8 @@
             builder.Property(c => c.FullName).HasMaxLength(128);
 
             builder.Property(c => c.Description).HasMaxLength(1024);
+
+            builder.Property(c => c.AccessibleForConfigurator).HasDefaultValue(false);
         }
     }
 }

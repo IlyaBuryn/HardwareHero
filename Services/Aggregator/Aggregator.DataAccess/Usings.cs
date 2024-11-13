@@ -1,5 +1,4 @@
-﻿global using HardwareHero.Shared.Helpers;
-global using HardwareHero.Shared.Repositories.Contracts;
+﻿global using HardwareHero.Shared.Repositories.Contracts;
 global using HardwareHero.Shared.Repositories.EF;
 global using HardwareHero.Shared.Repositories.FS;
 

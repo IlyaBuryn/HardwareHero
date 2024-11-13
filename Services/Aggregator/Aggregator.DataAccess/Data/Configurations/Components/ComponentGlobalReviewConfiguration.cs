@@ -1,6 +1,8 @@
-﻿namespace Aggregator.DataAccess.Data.Configurations.Components
+﻿using Aggregator.DataAccess.Models.Components;
+
+namespace Aggregator.DataAccess.Data.Configurations.Components
 {
-    internal class ComponentGlobalReviewsConfiguration : IEntityTypeConfiguration<ComponentGlobalReview>
+    internal class ComponentGlobalReviewConfiguration : IEntityTypeConfiguration<ComponentGlobalReview>
     {
         public void Configure(EntityTypeBuilder<ComponentGlobalReview> builder)
         {
@@ -12,7 +14,7 @@
 
             builder.Property(c => c.ComponentId).IsRequired();
 
-            builder.Property(c => c.Timestamp).IsRequired().HasDefaultValue(DateTime.Now);
+            builder.Property(c => c.Timestamp).HasDefaultValue(DateTime.UtcNow);
         }
     }
 }

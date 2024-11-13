@@ -1,6 +1,4 @@
 ﻿using EventStream.EventHandling;
-using KafkaEventStream.BackgroundServices;
-using KafkaEventStream.Topics;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -101,7 +99,7 @@ namespace Aggregator.Api.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> GetComponents([FromBody] ComponentsFilter filter)
         {
-            var response = await _componentService.GetComponentsAsPageAsync(filter);
+            var response = await _componentService.GetComponentsPageAsync(filter);
             
             return Ok(response);
         }

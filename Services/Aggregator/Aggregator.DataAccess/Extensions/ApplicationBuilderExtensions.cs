@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using HardwareHero.Shared.Extensions.Scripts;
+using Microsoft.AspNetCore.Builder;
 
 namespace Aggregator.DataAccess.Extensions
 {
@@ -6,8 +7,7 @@ namespace Aggregator.DataAccess.Extensions
     {
         public static async Task DatabaseInitialization(this IApplicationBuilder app)
         {
-            string scriptPath = "/src/Services/Aggregator/Aggregator.DataAccess/Scripts";
-            await ScriptHelper.InitDatabaseWithSqlScript<AggregatorDbContext>(app, scriptPath);
+            await app.InitDatabaseWithScriptsAsync<AggregatorDbContext>();
         }
     }
 }

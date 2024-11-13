@@ -1,4 +1,6 @@
-﻿namespace Aggregator.DataAccess.Data.Configurations.Components
+﻿using Aggregator.DataAccess.Models.Components;
+
+namespace Aggregator.DataAccess.Data.Configurations.Components
 {
     internal class ComponentsConfiguration : IEntityTypeConfiguration<Component>
     {
@@ -11,6 +13,8 @@
             builder.Property(c => c.Name).IsRequired().HasMaxLength(256);
             builder.HasIndex(c => c.Name).IsUnique();
 
+            builder.Property(c => c.IsActive).HasDefaultValue(true);
+
             builder.Property(c => c.Description).HasMaxLength(1024);
 
             builder.Property(c => c.ComponentTypeId).IsRequired();
@@ -18,7 +22,7 @@
             builder.HasMany(c => c.ComponentImages)
                 .WithOne(c => c.Component)
                 .HasForeignKey(k => k.ComponentId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.SetNull);
 
             builder.HasMany(c => c.ComponentAttributes)
                 .WithOne(c => c.Component)
@@ -29,6 +33,11 @@
                 .WithMany()
                 .HasForeignKey(c => c.ComponentTypeId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            builder.HasOne(c => c.ComponentMetric)
+                .WithMany()
+                .HasForeignKey(c => c.ComponentMetricId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

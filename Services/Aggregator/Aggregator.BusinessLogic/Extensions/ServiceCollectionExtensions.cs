@@ -23,9 +23,7 @@ namespace Aggregator.BusinessLogic.Extensions
             service.AddScoped<IComponentReviewService, ComponentReviewService>();
             service.AddScoped<IComponentImagesService, ComponentImagesService>();
 
-            service.AddScoped<IMaintenanceService, MaintenanceService>();
-            service.AddScoped<IMaintenanceTypeService, MaintenanceTypeService>();
-            service.AddScoped<IMaintenanceReviewService, MaintenanceReviewService>();
+            service.AddScoped<ISpecificationService, SpecificationService>();
         }
 
         private static void ConfigureMapProfiles(IServiceCollection service)
@@ -38,7 +36,7 @@ namespace Aggregator.BusinessLogic.Extensions
 
         private static void ConfigureDtoValidators(IServiceCollection services)
         {
-            var assembly = Assembly.Load(new AssemblyName("HardwareHero.Shared"));
+            var assembly = Assembly.Load(new AssemblyName("HardwareHero.Aggregator.DTOs"));
             services.AddValidatorsFromAssembly(assembly);
         }
     }

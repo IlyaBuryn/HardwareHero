@@ -1,61 +1,48 @@
 ﻿using Aggregator.BusinessLogic.Services;
 using AutoFixture.Kernel;
-using AutoFixture;
 using AutoFixture.Xunit2;
-using HardwareHero.Shared.DTOs.Aggregator;
 using HardwareHero.Shared.Extensions;
-using HardwareHero.Shared.Models.Aggregator;
-using HardwareHero.Shared.Options;
+using HardwareHero.Shared.Extensions.Repository;
 using HardwareHero.Shared.Repositories.Contracts;
-using HardwareHero.Shared.Repositories.EF;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
-using Moq;
 using System.Text;
 using System.Linq.Expressions;
+using Aggregator.DataAccess.Models.Components;
+using Aggregator.DTOs.Components;
+using Moq;
+using HardwareHero.Shared.Repositories.Answers;
 
 namespace Aggregator.Tests.Services
 {
     public class ComponentService_UnitTests
     {
         private readonly Fixture _fixture;
-        private readonly Mock<ICollectionRepositoryAsync<Component>> _componentRepo;
+        private readonly Mock<IQueryRepositoryAsync<Component>> _componentRepo;
 
-        private readonly Mock<ICrudRepositoryAsync<ComponentViews>> _componentViewsRepo;
-        private readonly Mock<ICrudRepositoryAsync<ComponentType>> _componentTypeRepo;
-
-        private readonly Mock<IValidationRepository<Component>> _componentValidationRepo;
-        private readonly Mock<IValidationRepository<ComponentType>> _componentTypeValidationRepo;
+        private readonly Mock<IBaseRepositoryAsync<ComponentMetric>> _componentMetricRepo;
+        private readonly Mock<IBaseRepositoryAsync<ComponentType>> _componentTypeRepo;
 
         private readonly Mock<IFileRepositoryAsync> _imagesRepo;
 
         private readonly Mock<IMapper> _mapper;
-
-        private readonly string _fileNameDivider = "_";
 
         private readonly ComponentService _componentService;
 
         public ComponentService_UnitTests()
         {
             _fixture = new Fixture();
-            _componentRepo = new Mock<ICollectionRepositoryAsync<Component>>();
-            _componentViewsRepo = new Mock<ICrudRepositoryAsync<ComponentViews>>();
-            _componentTypeRepo = new Mock<ICrudRepositoryAsync<ComponentType>>();
-            _componentValidationRepo = new Mock<IValidationRepository<Component>>();
-            _componentTypeValidationRepo = new Mock<IValidationRepository<ComponentType>>();
+            _componentRepo = new Mock<IQueryRepositoryAsync<Component>>();
+            _componentMetricRepo = new Mock<IBaseRepositoryAsync<ComponentMetric>>();
+            _componentTypeRepo = new Mock<IBaseRepositoryAsync<ComponentType>>();
             _imagesRepo = new Mock<IFileRepositoryAsync>();
             _mapper = new Mock<IMapper>();
 
-            var imagesSaveOptions = new ImagesSaveOptions { FileNameDivider = "-", SaveFilePath = "" };
-            var imagesOptionsMock = new Mock<IOptions<ImagesSaveOptions>>();
-            imagesOptionsMock.Setup(o => o.Value).Returns(imagesSaveOptions);
-
             _fixture.Customizations.Add(new TypeRelay(typeof(IFormFile), typeof(FormFile)));
 
-            _componentService = new ComponentService(_componentRepo.Object, _componentViewsRepo.Object,
-                _componentValidationRepo.Object, _componentTypeValidationRepo.Object,
-                _imagesRepo.Object, _mapper.Object, imagesOptionsMock.Object,
-                _componentTypeRepo.Object);
+            _componentService = new ComponentService(_componentRepo.Object, _componentMetricRepo.Object,
+                _componentTypeRepo.Object,
+                _imagesRepo.Object, _mapper.Object);
         }
 
 
@@ -63,23 +50,24 @@ namespace Aggregator.Tests.Services
         public async Task AddComponentAsync_ReturnNonEmptyGuid_WhenFullComponentAddedSuccessfully(ComponentDto componentToAdd)
         {
             // Arrange
-            _componentValidationRepo.Setup(x => x.CheckIfObjectAlreadyExist(
-                It.IsAny<Expression<Func<Component, bool>>>(), It.IsAny<string>()));
-            _componentTypeValidationRepo.Setup(x => x.CheckIfObjectNotFound(
+            _componentRepo.Setup(x => x.AlreadyExistCheckAsync(
+                It.IsAny<Expression<Func<Component, bool>>>()));
+            _componentTypeRepo.Setup(x => x.NotFoundCheckAsync(
                 It.IsAny<Expression<Func<ComponentType, bool>>>()));
             _imagesRepo.Setup(x => x.UploadFileAsync(It.IsAny<IFormFile>(), It.IsAny<string>()))
-                .ReturnsAsync(It.IsAny<string>());
+                .ReturnsAsync(It.IsAny<DataAnswer<string>>());
             _mapper.Setup(x => x.Map<Component>(componentToAdd)).Returns(It.IsAny<Component>());
-            _componentRepo.Setup(x => x.CreateEntityAsync(It.IsAny<Component>())).ReturnsAsync(componentToAdd.Id);
+            _componentRepo.Setup(x => x.CreateEntityAsync(It.IsAny<Component>()))
+                .ReturnsAsync(It.IsAny<DataAnswer<Component>>);
 
             // Act
             var result = await _componentService.AddComponentAsync(componentToAdd);
 
             // Assert
             result.Should().Be(componentToAdd.Id);
-            _componentValidationRepo.Verify(x => x.CheckIfObjectAlreadyExist(
-                It.IsAny<Expression<Func<Component, bool>>>(), It.IsAny<string>()), Times.Once);
-            _componentTypeValidationRepo.Verify(x => x.CheckIfObjectNotFound(
+            _componentRepo.Verify(x => x.AlreadyExistCheckAsync(
+                It.IsAny<Expression<Func<Component, bool>>>()), Times.Once);
+            _componentTypeRepo.Verify(x => x.NotFoundCheckAsync(
                 It.IsAny<Expression<Func<ComponentType, bool>>>()), Times.Once);
             _imagesRepo.Verify(x => x.UploadFileAsync(It.IsAny<IFormFile>(), It.IsAny<string>()),
                 Times.Exactly(componentToAdd.ComponentImages.Count));

@@ -2,7 +2,6 @@
 global using HardwareHero.Shared.Repositories.Contracts;
 global using HardwareHero.Shared.Repositories.EF;
 global using HardwareHero.Shared.Repositories.FS;
-global using HardwareHero.Shared.Models.Aggregator;
 
 global using Aggregator.DataAccess.Data;
 

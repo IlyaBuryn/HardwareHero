@@ -9,12 +9,9 @@ global using AutoMapper;
 global using HardwareHero.Filter.Extensions;
 global using HardwareHero.Filter.RequestsModels;
 
-global using HardwareHero.Shared.DTOs.Aggregator;
 global using HardwareHero.Shared.Exceptions;
 global using HardwareHero.Shared.Extensions;
 global using HardwareHero.Shared.Models;
-global using HardwareHero.Shared.Models.Aggregator;
-global using HardwareHero.Shared.Models.Reviews;
 global using HardwareHero.Shared.Options;
 global using HardwareHero.Shared.Repositories;
 global using HardwareHero.Shared.Repositories.Contracts;

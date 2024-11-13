@@ -41,6 +41,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\Tools\HardwareHero.Shared\HardwareHero.Shared.csproj" />
+    <ProjectReference Include="..\Mail.DTOs\Mail.DTOs.csproj" />
   </ItemGroup>
 
 </Project>

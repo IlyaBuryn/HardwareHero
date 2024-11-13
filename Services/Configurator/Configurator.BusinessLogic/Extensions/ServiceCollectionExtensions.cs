@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 
+
 namespace Configurator.BusinessLogic.Extensions
 {
     public static class ServiceCollectionExtensions

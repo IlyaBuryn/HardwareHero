@@ -14,7 +14,7 @@ namespace HardwareHero.Shared.Extensions.Scripts
         /// A smaller number indicates that the file will be processed first.
         /// </summary>
         public static async Task InitDatabaseWithScriptsAsync<TContext>
-            (this IApplicationBuilder app) where TContext : DbContext
+            (this IApplicationBuilder app, string scriptPath) where TContext : DbContext
         {
             try
             {
@@ -22,10 +22,6 @@ namespace HardwareHero.Shared.Extensions.Scripts
                 {
                     var context = serviceScope.ServiceProvider.GetRequiredService<TContext>();
                     context.Database.Migrate();
-
-                    var assemblyLocation = Assembly.GetExecutingAssembly().Location;
-                    var assemblyDirectory = Path.GetDirectoryName(assemblyLocation) ?? string.Empty;
-                    var scriptPath = Path.Combine(assemblyDirectory, "Scripts");
 
                     if (!Directory.Exists(scriptPath))
                     {

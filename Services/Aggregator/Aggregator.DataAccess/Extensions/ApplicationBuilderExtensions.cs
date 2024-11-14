@@ -7,7 +7,8 @@ namespace Aggregator.DataAccess.Extensions
     {
         public static async Task DatabaseInitialization(this IApplicationBuilder app)
         {
-            await app.InitDatabaseWithScriptsAsync<AggregatorDbContext>();
+            var scriptPath = "/src/Services/Aggregator/Aggregator.DataAccess/Scripts";
+            await app.InitDatabaseWithScriptsAsync<AggregatorDbContext>(scriptPath);
         }
     }
 }

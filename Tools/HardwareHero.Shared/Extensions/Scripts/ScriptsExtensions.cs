@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using System.Reflection;
 
 namespace HardwareHero.Shared.Extensions.Scripts
 {
@@ -30,7 +29,7 @@ namespace HardwareHero.Shared.Extensions.Scripts
 
                     var scriptFiles = Directory.GetFiles(scriptPath, "*.sql")
                         .Where(f => Path.GetFileName(f)?.Split('.')[0].All(char.IsDigit) == true)
-                        .OrderBy(f => int.Parse(Path.GetFileName(f)?.Split('.')[0]))
+                        .OrderBy(f => int.Parse(Path.GetFileName(f)?.Split('.')[0] ?? "999"))
                         .ToList();
 
                     foreach (var scriptFile in scriptFiles)

@@ -1,5 +1,5 @@
 
-/.logs/
+**/.logs/
 /.credentials/
 /.tmp/
 /images/
@@ -405,5 +405,4 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
-/Services/Aggregator/Aggregator.Api/.logs
 ApiGateway/ApiGateway.Ocelot/ocelot.json

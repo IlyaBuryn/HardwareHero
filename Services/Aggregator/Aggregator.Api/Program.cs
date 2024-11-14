@@ -14,7 +14,7 @@ builder.Services.ConfigureCommonJwtAuthentication(builder);
 builder.Services.ConfigurePolicyAuthorization();
 
 var connectionString = builder.Configuration.GetConnectionString(ConnectionNames.AggregatorConnection);
-builder.Services.ConfigureBusinessLogicLayer(connectionString);
+builder.Services.ConfigureBusinessLogicLayer(connectionString ?? "");
 builder.Services.ConfigureOptions<PageSizeOptions>(builder.Configuration);
 builder.Services.ConfigureKafkaMediatorBackgroundWorker<ContributorTopics, AggregatorEndpointManager>();
 builder.Services.ConfigureKafkaRequestsBackgroundWorker<MailTopics>();

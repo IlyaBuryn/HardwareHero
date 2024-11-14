@@ -7,17 +7,17 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{5D
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Aggregator", "Aggregator", "{72740FED-F70B-4C38-B3AA-13D97984035A}"
 	ProjectSection(SolutionItems) = preProject
-		Readme.Aggregator.md = Readme.Aggregator.md
+		Services\Aggregator\Readme.md = Services\Aggregator\Readme.md
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Contributor", "Contributor", "{522919DA-AF76-4D76-B06B-5F9821931A19}"
 	ProjectSection(SolutionItems) = preProject
-		Readme.Contributor.md = Readme.Contributor.md
+		Services\Contributor\Readme.md = Services\Contributor\Readme.md
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Identity", "Identity", "{FFEEF48E-40B4-42EB-B6E5-988FCCA35921}"
 	ProjectSection(SolutionItems) = preProject
-		Readme.Identity.md = Readme.Identity.md
+		Services\Identity\Readme.md = Services\Identity\Readme.md
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Aggregator.DataAccess", "Services\Aggregator\Aggregator.DataAccess\Aggregator.DataAccess.csproj", "{310C1152-0997-4CEF-9348-498C396BE9D3}"
@@ -37,7 +37,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Contributor.Api", "Services
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Configurator", "Configurator", "{B08E54FF-0414-4A92-8245-3308B534E0A7}"
 	ProjectSection(SolutionItems) = preProject
-		Readme.Configurator.md = Readme.Configurator.md
+		Services\Configurator\Readme.md = Services\Configurator\Readme.md
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Configurator.BusinessLogic", "Services\Configurator\Configurator.BusinessLogic\Configurator.BusinessLogic.csproj", "{2A198CFC-CD13-4CD2-BB31-558C086A60A3}"
@@ -52,12 +52,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApiGateway.Ocelot", "ApiGat
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Mail", "Mail", "{4509CA0C-E2CF-42AB-882E-CEB5A8F366B4}"
 	ProjectSection(SolutionItems) = preProject
-		Readme.Mail.md = Readme.Mail.md
+		Services\Mail\Readme.md = Services\Mail\Readme.md
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Prices", "Prices", "{5FE2FF60-6312-44A2-9B2E-FFA9A138310F}"
 	ProjectSection(SolutionItems) = preProject
-		Readme.Prices.md = Readme.Prices.md
+		Services\Prices\Readme.md = Services\Prices\Readme.md
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Prices.Api", "Services\Prices\Prices.Api\Prices.Api.csproj", "{F7B8B3D8-BB42-489D-AA5D-97848394AD37}"
@@ -117,6 +117,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Configurator.DTOs", "Services\Configurator\Configurator.DTOs\Configurator.DTOs.csproj", "{91F36E31-A4D2-405E-AE69-509871E63A7B}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Contributor.DTOs", "Services\Contributor\Contributor.DTOs\Contributor.DTOs.csproj", "{706BAF83-4FD0-408C-93CD-151B876E4B7D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MessageBus", "MessageBus", "{F0C53D09-E22D-41A8-AC10-6D6CD5073184}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -289,6 +291,7 @@ Global
 		{BE1AC4A9-5BC8-4A39-9CE3-1D12ADE543E2} = {4509CA0C-E2CF-42AB-882E-CEB5A8F366B4}
 		{91F36E31-A4D2-405E-AE69-509871E63A7B} = {B08E54FF-0414-4A92-8245-3308B534E0A7}
 		{706BAF83-4FD0-408C-93CD-151B876E4B7D} = {522919DA-AF76-4D76-B06B-5F9821931A19}
+		{F0C53D09-E22D-41A8-AC10-6D6CD5073184} = {142BA8F5-95B5-4606-9E0C-AAB8889CB8CA}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A91C9261-8774-4C8D-A9AB-7E5C97CD9804}

@@ -20,7 +20,7 @@ namespace Contributor.BusinessLogic.MappingProfiles
 
             CreateMap<ChatRoom, ChatRoomDto>()
                 .ForMember(dto => dto.ChatMessages, opt => opt.MapFrom(ent => ent.ChatMessages))
-                .ForMember(dto => dto.Participants, opt => opt.MapFrom(ent => ent.Participants))
+                .ForMember(dto => dto.Participants, opt => opt.MapFrom(ent => ent.Contributors))
                 .ReverseMap();
 
             CreateMap<ChatMessage, ChatMessageDto>()

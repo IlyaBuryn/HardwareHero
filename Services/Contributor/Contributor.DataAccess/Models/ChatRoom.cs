@@ -8,7 +8,7 @@ namespace Contributor.DataAccess.Models
         public string TimeStamp { get; set; }
         public virtual ICollection<ChatMessage>? ChatMessages { get; set; } 
             = new List<ChatMessage>();
-        public virtual ICollection<ContributorModel>? Participants { get; set; } 
+        public virtual ICollection<ContributorModel>? Contributors { get; set; } 
             = new List<ContributorModel>();
 
     }

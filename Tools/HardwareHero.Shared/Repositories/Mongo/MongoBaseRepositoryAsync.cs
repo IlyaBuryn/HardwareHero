@@ -6,11 +6,13 @@ namespace HardwareHero.Shared.Repositories.Mongo
 {
     public class MongoBaseRepositoryAsync<T> : IBaseRepositoryAsync<T> where T : BaseEntity
     {
+        private readonly MongoDbContext _context;
         private readonly IMongoCollection<T> _collection;
 
-        public MongoBaseRepositoryAsync(IMongoDatabase database, string collectionName)
+        public MongoBaseRepositoryAsync(MongoDbContext context)
         {
-            _collection = database.GetCollection<T>(collectionName);
+            _context = context;
+            _collection = _context.GetCollection<T>();
         }
 
         public async Task<int> CountAsync(Expression<Func<T, bool>>? predicate = null)

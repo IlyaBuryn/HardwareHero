@@ -11,11 +11,11 @@ namespace Configurator.Api.Extensions
             {
                 var config = scope.ServiceProvider.GetRequiredService<IDataService>();
 
-                await config.EnsureDatabaseFromFileAsync<ConfiguratorComponent>(
-                    "/src/Services/Configurator/Configurator.BusinessLogic/config/config.data.json", ConfiguratorCollectionNames.ComponentsCollection);
+                //await config.EnsureDatabaseFromFileAsync<ConfiguratorComponent>(
+                //    "/src/Services/Configurator/Configurator.BusinessLogic/config/config.data.json", ConfiguratorCollectionNames.ComponentsCollection);
 
-                await config.EnsureDatabaseFromFileAsync<ConfiguratorRule>(
-                    "/src/Services/Configurator/Configurator.BusinessLogic/config/config.rules.json", ConfiguratorCollectionNames.ConfiguratorRulesCollection);
+                //await config.EnsureDatabaseFromFileAsync<ConfiguratorRule>(
+                //    "/src/Services/Configurator/Configurator.BusinessLogic/config/config.rules.json", ConfiguratorCollectionNames.ConfiguratorRulesCollection);
             }
         }
     }

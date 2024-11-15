@@ -1,10 +1,12 @@
 ﻿using FluentValidation;
 using HardwareHero.Shared.Constants;
+using HardwareHero.Shared.Extensions.MongoDb;
 using HardwareHero.Shared.Repositories.Contracts;
 using HardwareHero.Shared.Repositories.Mongo;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
+using Prices.BusinessLogic.Data;
 using System.Reflection;
 
 namespace Prices.BusinessLogic.Extensions
@@ -13,31 +15,20 @@ namespace Prices.BusinessLogic.Extensions
     {
         public static void ConfigureBusinessLogicLayer(this IServiceCollection service)
         {
-            ConfigureRepositories(service);
             ConfigureServices(service);
             ConfigureMapProfiles(service);
             ConfigureDtoValidators(service);
         }
 
-        private static void ConfigureRepositories(IServiceCollection service)
+        public static void ConfigureDbContext(this IServiceCollection service, DatabaseOptions options)
         {
-            service.AddSingleton<IMongoClient>(sp =>
-            {
-                var settings = sp.GetRequiredService<IOptions<DatabaseOptions>>().Value;
-                return new MongoClient(settings.ConnectionString);
-            });
-
-            service.AddSingleton<IMongoDatabase>(sp =>
-            {
-                var settings = sp.GetRequiredService<IOptions<DatabaseOptions>>().Value;
-                var client = sp.GetRequiredService<IMongoClient>();
-                return client.GetDatabase(settings.Collections[ConfiguratorCollectionNames.PricesCollection].CollectionName);
-            });
-            service.AddScoped(typeof(IBaseRepositoryAsync<>), typeof(MongoBaseRepositoryAsync<>));
+            service.AddMongoDbContext<PricesDbContext>(options.ConnectionString, options.DatabaseName);
         }
 
         private static void ConfigureServices(IServiceCollection service)
         {
+            service.AddScoped(typeof(IBaseRepositoryAsync<>), typeof(MongoBaseRepositoryAsync<>));
+
             service.AddScoped<IContributorPricesService, ContributorPriceService>();
         }
 

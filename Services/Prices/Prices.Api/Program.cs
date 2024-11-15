@@ -1,4 +1,5 @@
 using HardwareHero.Shared.Extensions;
+using HardwareHero.Shared.Extensions.MongoDb;
 using Microsoft.IdentityModel.Logging;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,6 +12,7 @@ builder.Services.ConfigureCommonJwtAuthentication(builder);
 builder.Services.ConfigurePolicyAuthorization();
 
 builder.Services.ConfigureOptions<DatabaseOptions>(builder.Configuration, ConnectionNames.PricesConnection);
+builder.Services.ConfigureDbContext(builder.Services.GetMongoDatabaseOptions());
 builder.Services.ConfigureBusinessLogicLayer();
 
 builder.Services.AddCustomControllers();

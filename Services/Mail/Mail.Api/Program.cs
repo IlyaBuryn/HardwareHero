@@ -1,4 +1,5 @@
 using HardwareHero.Shared.Extensions;
+using HardwareHero.Shared.Extensions.MongoDb;
 using KafkaEventStream.Extensions;
 using Mail.Api;
 using Microsoft.IdentityModel.Logging;
@@ -14,6 +15,7 @@ builder.Services.ConfigurePolicyAuthorization();
 
 builder.Services.ConfigureOptions<DatabaseOptions>(builder.Configuration, ConnectionNames.MailConnection);
 builder.Services.ConfigureKafkaMediatorBackgroundWorker<MailTopics, MailEndpointManager>();
+builder.Services.ConfigureDbContext(builder.Services.GetMongoDatabaseOptions());
 builder.Services.ConfigureBusinessLogicLayer();
 
 builder.Services.AddCustomControllers();

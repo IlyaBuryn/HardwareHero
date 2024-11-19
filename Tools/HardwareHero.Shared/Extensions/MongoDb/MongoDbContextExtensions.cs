@@ -23,6 +23,7 @@ namespace HardwareHero.Shared.Extensions.MongoDb
                 context.Initialize(connectionString, databaseName);
                 return context;
             });
+            services.AddScoped<MongoDbContext, TContext>();
 
             return services;
         }

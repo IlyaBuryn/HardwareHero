@@ -29,6 +29,9 @@ namespace Contributor.DataAccess.Data.Configurations
                 .HasForeignKey(cm => cm.SubscriptionPlanInfoId)
                 .OnDelete(DeleteBehavior.SetNull);
 
+            builder.HasMany(cm => cm.ChatRooms)
+                .WithMany(cn => cn.Contributors);
+
             // TODO: ContributorConfirmInfo cascade and ContributorExcellence cascade
         }
     }

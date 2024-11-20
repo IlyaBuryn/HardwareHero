@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using System.Reflection;
 
 namespace HardwareHero.Shared.Extensions.Scripts
 {
@@ -14,7 +13,7 @@ namespace HardwareHero.Shared.Extensions.Scripts
         /// A smaller number indicates that the file will be processed first.
         /// </summary>
         public static async Task InitDatabaseWithScriptsAsync<TContext>
-            (this IApplicationBuilder app) where TContext : DbContext
+            (this IApplicationBuilder app, string scriptPath) where TContext : DbContext
         {
             try
             {
@@ -23,10 +22,6 @@ namespace HardwareHero.Shared.Extensions.Scripts
                     var context = serviceScope.ServiceProvider.GetRequiredService<TContext>();
                     context.Database.Migrate();
 
-                    var assemblyLocation = Assembly.GetExecutingAssembly().Location;
-                    var assemblyDirectory = Path.GetDirectoryName(assemblyLocation) ?? string.Empty;
-                    var scriptPath = Path.Combine(assemblyDirectory, "Scripts");
-
                     if (!Directory.Exists(scriptPath))
                     {
                         throw new Exception($"Can't run scripts in {scriptPath}");
@@ -34,7 +29,7 @@ namespace HardwareHero.Shared.Extensions.Scripts
 
                     var scriptFiles = Directory.GetFiles(scriptPath, "*.sql")
                         .Where(f => Path.GetFileName(f)?.Split('.')[0].All(char.IsDigit) == true)
-                        .OrderBy(f => int.Parse(Path.GetFileName(f)?.Split('.')[0]))
+                        .OrderBy(f => int.Parse(Path.GetFileName(f)?.Split('.')[0] ?? "999"))
                         .ToList();
 
                     foreach (var scriptFile in scriptFiles)

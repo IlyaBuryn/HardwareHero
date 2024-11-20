@@ -36,7 +36,7 @@ namespace Aggregator.BusinessLogic.Extensions
 
         private static void ConfigureDtoValidators(IServiceCollection services)
         {
-            var assembly = Assembly.Load(new AssemblyName("HardwareHero.Aggregator.DTOs"));
+            var assembly = Assembly.Load(new AssemblyName("Aggregator.DTOs"));
             services.AddValidatorsFromAssembly(assembly);
         }
     }

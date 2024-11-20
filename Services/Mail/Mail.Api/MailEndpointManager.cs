@@ -9,10 +9,10 @@ namespace Mail.Api
         private readonly IServiceProvider _serviceProvider;
         private readonly IMailServicePresets _mailServicePresets;
 
-        public MailEndpointManager(IServiceProvider serviceProvider)
+        public MailEndpointManager(IServiceProvider serviceProvider, IMailServicePresets mailServicePresets)
         {
-            _serviceProvider = serviceProvider;
-            _mailServicePresets = _serviceProvider.GetService<IMailServicePresets>();
+            _serviceProvider = serviceProvider; 
+            _mailServicePresets = mailServicePresets;
         }
 
         public override async Task<string> InvokeByEndpoint(string endpoint)

@@ -6,7 +6,8 @@ namespace Contributor.DataAccess.Extensions
     {
         public static async Task DatabaseInitialization(this IApplicationBuilder app)
         {
-            await app.InitDatabaseWithScriptsAsync<ContributorDbContext>();
+            var scriptPath = "/src/Services/Contributor/Contributor.DataAccess/Scripts";
+            await app.InitDatabaseWithScriptsAsync<ContributorDbContext>(scriptPath);
         }
     }
 }

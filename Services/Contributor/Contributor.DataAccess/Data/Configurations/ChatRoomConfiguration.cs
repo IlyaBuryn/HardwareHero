@@ -15,11 +15,14 @@ namespace Contributor.DataAccess.Data.Configurations
 
             builder.HasMany(cr => cr.ChatMessages)
                 .WithOne(cm => cm.ChatRoom)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Restrict);
 
-            builder.ToTable(x => x
-                .HasCheckConstraint("MaxParticipantsCount",
-                $"COUNT(Participants) <= {ValidationValues.ChatParticipantsMaxCount}"));
+            builder.HasMany(cr => cr.Contributors)
+                .WithMany(cm => cm.ChatRooms);
+
+            //builder.ToTable(x => x
+            //    .HasCheckConstraint("MaxParticipantsCount",
+            //    $"COUNT(Participants) <= {ValidationValues.ChatParticipantsMaxCount}"));
         }
     }
 }

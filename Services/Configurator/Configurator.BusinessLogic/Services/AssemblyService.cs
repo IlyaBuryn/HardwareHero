@@ -1,80 +1,56 @@
 ﻿using Configurator.BusinessLogic.Models;
 using Configurator.DTOs.Domain;
-using Microsoft.Extensions.Options;
+using HardwareHero.Shared.Extensions.Repository;
+using HardwareHero.Shared.Repositories.Contracts;
 using MongoDB.Driver;
 
 namespace Configurator.BusinessLogic.Services
 {
     public class AssemblyService : IAssemblyService
     {
-        private readonly IMongoCollection<StoredAssembly> _assembliesCollection;
+        private readonly IBaseRepositoryAsync<StoredAssembly> _assemblyRepo;
         private readonly IMapper _mapper;
-        private readonly DatabaseOptions _databaseSettings;
 
         public AssemblyService(
-            IOptions<DatabaseOptions> databaseSettings,
+            IBaseRepositoryAsync<StoredAssembly> assemblyRepo,
             IMapper mapper)
         {
-            _databaseSettings = databaseSettings.Value;
-            var mongoClient = new MongoClient(_databaseSettings.ConnectionString);
-            var mongoDb = mongoClient.GetDatabase(_databaseSettings.DatabaseName);
-
-            _assembliesCollection = mongoDb
-                .GetCollection<StoredAssembly>(
-                _databaseSettings.Collections[ConfiguratorCollectionNames.AssembliesCollection].CollectionName);
-
+            _assemblyRepo = assemblyRepo;
             _mapper = mapper;
         }
 
         public async Task<List<StoredAssemblyDto?>> GetAssembliesByUserIdAsync(Guid userId)
         {
-            var filter = Builders<StoredAssembly>.Filter.Eq(a => a.UserId, userId);
+            var assemblies = await _assemblyRepo.FindAllEntitiesAsync(x => x.UserId == userId);
+            assemblies.DataAnswerCheck();
 
-            var assemblies = await _assembliesCollection.Find(filter).ToListAsync();
-            if (assemblies == null || assemblies.Count == 0)
-            {
-                throw new NotFoundException(nameof(assemblies));
-            }
-
-            var result = _mapper.Map<List<StoredAssemblyDto?>>(assemblies);
+            var result = _mapper.Map<List<StoredAssemblyDto?>>(assemblies.Value);
 
             return result;
         }
 
-        public void AddComponentAsync(Guid assemblyId, ConfiguratorComponent componentToAdd)
+        public async void AddComponentAsync(Guid assemblyId, ConfiguratorComponent componentToAdd)
         {
-            var filter = Builders<StoredAssembly>.Filter.Eq(a => a.Id, assemblyId);
-
-            var assembly = _assembliesCollection.Find(filter).First();
-            if (assembly == null)
-            {
-                throw new NotFoundException(nameof(assembly));
-            }
+            var assembly = await _assemblyRepo.NotFoundCheckAsync(
+                x => x.Id == assemblyId);
 
             assembly.SelectedComponents.Add(componentToAdd);
-
-            // TODO: save
+            var result = await _assemblyRepo.UpdateEntityAsync(assembly);
         }
 
-        public void RemoveComponentAsync(Guid assemblyId, Guid componentId)
+        public async void RemoveComponentAsync(Guid assemblyId, Guid componentId)
         {
-            var filter = Builders<StoredAssembly>.Filter.Eq(a => a.Id, assemblyId);
+            var assembly = await _assemblyRepo.NotFoundCheckAsync(
+                x => x.Id == assemblyId);
 
-            var assembly = _assembliesCollection.Find(filter).First();
-            if (assembly == null)
+            var toDelete = assembly.SelectedComponents.FirstOrDefault(x => x.Id == componentId);
+            if (toDelete == null)
             {
-                throw new NotFoundException(nameof(assembly));
+                throw new NotFoundException(nameof(toDelete));
             }
 
-            var component = assembly.SelectedComponents.FirstOrDefault(a => a.Id == componentId);
-            if (component == null)
-            {
-                throw new NotFoundException(nameof(component));
-            }
-
-            assembly.SelectedComponents.Remove(component);
-
-            // TODO: save
+            assembly.SelectedComponents.Remove(toDelete);
+            var result = await _assemblyRepo.UpdateEntityAsync(assembly);
         }
 
 
@@ -84,40 +60,28 @@ namespace Configurator.BusinessLogic.Services
             assemblyToAdd.Timestamp = DateTime.Now;
 
             var assembly = _mapper.Map<StoredAssembly>(assemblyToAdd);
-            await _assembliesCollection.InsertOneAsync(assembly);
+            var result = await _assemblyRepo.CreateEntityAsync(assembly);
 
-            return assemblyToAdd.Id;
+            return result.Value?.Id;
         }
 
         public async Task<bool> UpdateAssemblyAsync(StoredAssemblyDto assemblyToUpdate)
         {
-            var filter = Builders<StoredAssembly>.Filter.Eq(a => a.Id, assemblyToUpdate.Id);
-
-            var assembly = await _assembliesCollection.Find(filter).FirstOrDefaultAsync();
-            if (assembly == null)
-            {
-                throw new NotFoundException(nameof(assembly));
-            }
+            var assembly = await _assemblyRepo.NotFoundCheckAsync(x => x.Id == assemblyToUpdate.Id);
 
             assembly.SelectedComponents = _mapper.Map<List<ConfiguratorComponent>>(assemblyToUpdate.SelectedComponents);
-            var updateResult = await _assembliesCollection.ReplaceOneAsync(filter, assembly);
+            var result = await _assemblyRepo.UpdateEntityAsync(assembly);
 
-            return updateResult.ModifiedCount > 0;
+            return result.Value != null;
         }
 
         public async Task<bool> RemoveAssemblyAsync(Guid assemblyId)
         {
-            var filter = Builders<StoredAssembly>.Filter.Eq(a => a.Id, assemblyId);
+            var assembly = await _assemblyRepo.NotFoundCheckAsync(x => x.Id == assemblyId);
 
-            var assembly = await _assembliesCollection.Find(filter).FirstOrDefaultAsync();
-            if (assembly == null)
-            {
-                throw new NotFoundException(nameof(assembly));
-            }
+            var result = await _assemblyRepo.RemoveEntityAsync(assemblyId);
 
-            var deleteResult = await _assembliesCollection.DeleteOneAsync(filter);
-
-            return deleteResult.DeletedCount > 0;
+            return result.Value != null;
         }
     }
 }

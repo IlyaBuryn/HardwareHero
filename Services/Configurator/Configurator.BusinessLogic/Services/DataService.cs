@@ -21,24 +21,25 @@ namespace Configurator.BusinessLogic.Services
             _logger = logger;
         }
 
+        // TODO: Need new solution
         public async Task EnsureDatabaseFromFileAsync<T>(string filePath, string collectionName) where T : class
         {
-            IMongoCollection<T> _collection = _mongoDb.GetCollection<T>(
-                _databaseSettings.Collections[collectionName].CollectionName);
+            //IMongoCollection<T> _collection = _mongoDb.GetCollection<T>(
+            //    _databaseSettings.Collections[collectionName].CollectionName);
 
-            string jsonData = File.ReadAllText(filePath);
-            var components = JsonConvert.DeserializeObject<List<T>>(jsonData);
+            //string jsonData = File.ReadAllText(filePath);
+            //var components = JsonConvert.DeserializeObject<List<T>>(jsonData);
 
-            ConfigureOptions();
+            //ConfigureOptions();
 
-            try
-            {
-                await _collection.InsertManyAsync(components);
-            }
-            catch
-            {
-                _logger.LogInformation("Configurator: Config data is already exist!");
-            }
+            //try
+            //{
+            //    await _collection.InsertManyAsync(components);
+            //}
+            //catch
+            //{
+            //    _logger.LogInformation("Configurator: Config data is already exist!");
+            //}
         }
 
         private void ConfigureOptions()

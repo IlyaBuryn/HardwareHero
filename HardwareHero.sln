@@ -6,10 +6,19 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{5DB83572-6DDD-4B74-A338-4711FFF43E9F}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Aggregator", "Aggregator", "{72740FED-F70B-4C38-B3AA-13D97984035A}"
+	ProjectSection(SolutionItems) = preProject
+		Services\Aggregator\Readme.md = Services\Aggregator\Readme.md
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Contributor", "Contributor", "{522919DA-AF76-4D76-B06B-5F9821931A19}"
+	ProjectSection(SolutionItems) = preProject
+		Services\Contributor\Readme.md = Services\Contributor\Readme.md
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Identity", "Identity", "{FFEEF48E-40B4-42EB-B6E5-988FCCA35921}"
+	ProjectSection(SolutionItems) = preProject
+		Services\Identity\Readme.md = Services\Identity\Readme.md
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Aggregator.DataAccess", "Services\Aggregator\Aggregator.DataAccess\Aggregator.DataAccess.csproj", "{310C1152-0997-4CEF-9348-498C396BE9D3}"
 EndProject
@@ -27,6 +36,9 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Contributor.Api", "Services\Contributor\Contributor.Api\Contributor.Api.csproj", "{A51C98F0-32EF-4CF9-A13F-DE6587D8212A}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Configurator", "Configurator", "{B08E54FF-0414-4A92-8245-3308B534E0A7}"
+	ProjectSection(SolutionItems) = preProject
+		Services\Configurator\Readme.md = Services\Configurator\Readme.md
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Configurator.BusinessLogic", "Services\Configurator\Configurator.BusinessLogic\Configurator.BusinessLogic.csproj", "{2A198CFC-CD13-4CD2-BB31-558C086A60A3}"
 EndProject
@@ -39,8 +51,14 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApiGateway.Ocelot", "ApiGateway\ApiGateway.Ocelot\ApiGateway.Ocelot.csproj", "{50F539F4-F5B5-461B-B963-19467F53B25A}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Mail", "Mail", "{4509CA0C-E2CF-42AB-882E-CEB5A8F366B4}"
+	ProjectSection(SolutionItems) = preProject
+		Services\Mail\Readme.md = Services\Mail\Readme.md
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Prices", "Prices", "{5FE2FF60-6312-44A2-9B2E-FFA9A138310F}"
+	ProjectSection(SolutionItems) = preProject
+		Services\Prices\Readme.md = Services\Prices\Readme.md
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Prices.Api", "Services\Prices\Prices.Api\Prices.Api.csproj", "{F7B8B3D8-BB42-489D-AA5D-97848394AD37}"
 EndProject
@@ -94,11 +112,17 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Aggregator.DTOs", "Services
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Prices.DTOs", "Services\Prices\Prices.DTOs\Prices.DTOs.csproj", "{78BB3865-7B33-44B1-A9A3-521E37335230}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mail.DTOs", "Services\Mail\Mail.DTOs\Mail.DTOs.csproj", "{BE1AC4A9-5BC8-4A39-9CE3-1D12ADE543E2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mail.DTOs", "Services\Mail\Mail.DTOs\Mail.DTOs.csproj", "{BE1AC4A9-5BC8-4A39-9CE3-1D12ADE543E2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Configurator.DTOs", "Services\Configurator\Configurator.DTOs\Configurator.DTOs.csproj", "{91F36E31-A4D2-405E-AE69-509871E63A7B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Configurator.DTOs", "Services\Configurator\Configurator.DTOs\Configurator.DTOs.csproj", "{91F36E31-A4D2-405E-AE69-509871E63A7B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Contributor.DTOs", "Services\Contributor\Contributor.DTOs\Contributor.DTOs.csproj", "{706BAF83-4FD0-408C-93CD-151B876E4B7D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Contributor.DTOs", "Services\Contributor\Contributor.DTOs\Contributor.DTOs.csproj", "{706BAF83-4FD0-408C-93CD-151B876E4B7D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Gateway", "Gateway", "{08E1D060-ECB0-4A01-A98C-7CA8D73BCAC4}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{EB9C1576-D4FF-4004-8F9D-A7D1648F7886}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Communication", "Communication", "{30172438-8681-433E-9A5A-FFEB66457B9F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -271,6 +295,9 @@ Global
 		{BE1AC4A9-5BC8-4A39-9CE3-1D12ADE543E2} = {4509CA0C-E2CF-42AB-882E-CEB5A8F366B4}
 		{91F36E31-A4D2-405E-AE69-509871E63A7B} = {B08E54FF-0414-4A92-8245-3308B534E0A7}
 		{706BAF83-4FD0-408C-93CD-151B876E4B7D} = {522919DA-AF76-4D76-B06B-5F9821931A19}
+		{08E1D060-ECB0-4A01-A98C-7CA8D73BCAC4} = {142BA8F5-95B5-4606-9E0C-AAB8889CB8CA}
+		{EB9C1576-D4FF-4004-8F9D-A7D1648F7886} = {142BA8F5-95B5-4606-9E0C-AAB8889CB8CA}
+		{30172438-8681-433E-9A5A-FFEB66457B9F} = {142BA8F5-95B5-4606-9E0C-AAB8889CB8CA}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A91C9261-8774-4C8D-A9AB-7E5C97CD9804}

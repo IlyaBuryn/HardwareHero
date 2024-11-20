@@ -53,7 +53,7 @@ namespace Contributor.BusinessLogic.Services
                 .NotFoundCheckAsync(x => x.Id == chatToUpdate.Id);
 
             chat.Subject = chatToUpdate.Subject;
-            chat.Participants = _mapper.Map<ICollection<ContributorModel>>(chatToUpdate.Participants);
+            chat.Contributors = _mapper.Map<ICollection<ContributorModel>>(chatToUpdate.Participants);
             
             var result = await _chatRoomRepo.UpdateEntityAsync(chat);
             result.DataAnswerCheck();
@@ -86,7 +86,7 @@ namespace Contributor.BusinessLogic.Services
         public async Task<PageResponse<ChatRoomDto?>?> GetChatsByContributorIdAsync(Guid contributorId, IPaginable filter)
         {
             var chats = await _chatRoomRepo
-                .FindPagedAsync(x => x.Participants.Any(x => x.Id == contributorId), filter);
+                .FindPagedAsync(x => x.Contributors.Any(x => x.Id == contributorId), filter);
             chats.DataAnswerCheck();
 
             var page = chats.ToPageResponse();

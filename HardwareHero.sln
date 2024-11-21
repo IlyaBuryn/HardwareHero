@@ -124,6 +124,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{EB9C15
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Communication", "Communication", "{30172438-8681-433E-9A5A-FFEB66457B9F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventDriven.Kafka", "Tools\Communication\EventDriven.Kafka\EventDriven.Kafka.csproj", "{D3A571C8-A718-4BC8-B830-B4674CC03E85}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventDriven.Shared", "Tools\Communication\EventDriven.Shared\EventDriven.Shared.csproj", "{C66ABB79-BBD5-4208-89E5-0AC01AF6E1E3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -254,6 +258,14 @@ Global
 		{706BAF83-4FD0-408C-93CD-151B876E4B7D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{706BAF83-4FD0-408C-93CD-151B876E4B7D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{706BAF83-4FD0-408C-93CD-151B876E4B7D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D3A571C8-A718-4BC8-B830-B4674CC03E85}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D3A571C8-A718-4BC8-B830-B4674CC03E85}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D3A571C8-A718-4BC8-B830-B4674CC03E85}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D3A571C8-A718-4BC8-B830-B4674CC03E85}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C66ABB79-BBD5-4208-89E5-0AC01AF6E1E3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C66ABB79-BBD5-4208-89E5-0AC01AF6E1E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C66ABB79-BBD5-4208-89E5-0AC01AF6E1E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C66ABB79-BBD5-4208-89E5-0AC01AF6E1E3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -298,6 +310,8 @@ Global
 		{08E1D060-ECB0-4A01-A98C-7CA8D73BCAC4} = {142BA8F5-95B5-4606-9E0C-AAB8889CB8CA}
 		{EB9C1576-D4FF-4004-8F9D-A7D1648F7886} = {142BA8F5-95B5-4606-9E0C-AAB8889CB8CA}
 		{30172438-8681-433E-9A5A-FFEB66457B9F} = {142BA8F5-95B5-4606-9E0C-AAB8889CB8CA}
+		{D3A571C8-A718-4BC8-B830-B4674CC03E85} = {30172438-8681-433E-9A5A-FFEB66457B9F}
+		{C66ABB79-BBD5-4208-89E5-0AC01AF6E1E3} = {30172438-8681-433E-9A5A-FFEB66457B9F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A91C9261-8774-4C8D-A9AB-7E5C97CD9804}

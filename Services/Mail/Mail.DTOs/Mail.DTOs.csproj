@@ -7,8 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Requests\" />
-    <Folder Include="Responses\" />
+    <Compile Remove="Requests\**" />
+    <Compile Remove="Responses\**" />
+    <EmbeddedResource Remove="Requests\**" />
+    <EmbeddedResource Remove="Responses\**" />
+    <None Remove="Requests\**" />
+    <None Remove="Responses\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -16,6 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\Tools\Communication\EventDriven.Shared\EventDriven.Shared.csproj" />
     <ProjectReference Include="..\..\..\Tools\HardwareHero.Shared\HardwareHero.Shared.csproj" />
   </ItemGroup>
 

@@ -24,10 +24,10 @@ namespace Mail.BusinessLogic.Extensions
 
         private static void ConfigureServices(IServiceCollection service)
         {
-            service.AddScoped(typeof(IBaseRepositoryAsync<>), typeof(MongoBaseRepositoryAsync<>));
+            //service.AddScoped(typeof(IBaseRepositoryAsync<>), typeof(MongoBaseRepositoryAsync<>));
 
-            service.AddScoped<IMailService, MailService>();
             service.AddScoped<IMailServicePresets, MailServicePresets>();
+            service.AddScoped<IMailService, MailService>();
         }
 
         private static void ConfigureMapProfiles(IServiceCollection service)

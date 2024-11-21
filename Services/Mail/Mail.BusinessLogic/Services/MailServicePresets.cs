@@ -12,9 +12,9 @@ namespace Mail.BusinessLogic.Services
         private Dictionary<MailPresets, Preset?> _mailTemplatePaths;
 
         public MailServicePresets(
-            IBaseRepositoryAsync<MailMessage> repository,
+            //IBaseRepositoryAsync<MailMessage> repository,
             IMapper mapper, IConfiguration configuration) 
-            : base(configuration, repository, mapper)
+            : base(configuration, /*repository,*/ mapper)
         {
             _configuration = configuration;
         }

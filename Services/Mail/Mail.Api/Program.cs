@@ -1,7 +1,9 @@
+using EventDriven.Kafka.Config;
+using EventDriven.Kafka.Extensions;
 using HardwareHero.Shared.Extensions;
 using HardwareHero.Shared.Extensions.MongoDb;
-using KafkaEventStream.Extensions;
-using Mail.Api;
+using Mail.Api.Handlers;
+using Mail.DTOs.Events;
 using Microsoft.IdentityModel.Logging;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,17 +15,21 @@ builder.Services.ConfigureOpenTelemetry(builder);
 builder.Services.ConfigureCommonJwtAuthentication(builder);
 builder.Services.ConfigurePolicyAuthorization();
 
-builder.Services.ConfigureOptions<DatabaseOptions>(builder.Configuration, ConnectionNames.MailConnection);
-builder.Services.ConfigureDbContext(builder.Services.GetMongoDatabaseOptions());
+// TODO:
+//builder.Services.ConfigureOptions<DatabaseOptions>(builder.Configuration, ConnectionNames.MailConnection);
+//builder.Services.ConfigureDbContext(builder.Services.GetMongoDatabaseOptions());
 builder.Services.ConfigureBusinessLogicLayer();
-// TODO: It's not working. For some reason it uses MongoDbContext and repository and can't create them.
-//builder.Services.ConfigureKafkaMediatorBackgroundWorker<MailTopics, MailEndpointManager>();
+
+//var eventsConfig = builder.Configuration.GetSection("MailEvents").Get<KafkaConfig>();
+//builder.Services.AddKafkaConsumer<MailSettingsEvent>(eventsConfig);
 
 builder.Services.AddCustomControllers();
 
 builder.Services.ConfigureSwagger();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.ConfigureCORSPolicy();
+
+//builder.Services.AddHostedService<MailEventsHandler>();
 
 IdentityModelEventSource.ShowPII = true;
 builder.Host.ConfigureElasticLogging();

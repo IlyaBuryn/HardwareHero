@@ -56,7 +56,9 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\EventStream\KafkaEventStream\KafkaEventStream.csproj" />
+    <ProjectReference Include="..\..\..\Tools\Communication\EventDriven.Kafka\EventDriven.Kafka.csproj" />
     <ProjectReference Include="..\..\..\Tools\HardwareHero.Shared\HardwareHero.Shared.csproj" />
+    <ProjectReference Include="..\..\Mail\Mail.DTOs\Mail.DTOs.csproj" />
     <ProjectReference Include="..\Aggregator.BusinessLogic\Aggregator.BusinessLogic.csproj" />
   </ItemGroup>
 

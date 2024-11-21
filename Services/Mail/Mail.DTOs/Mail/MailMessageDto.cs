@@ -1,4 +1,6 @@
-﻿namespace Mail.DTOs.Mail
+﻿using Mail.DTOs.Events;
+
+namespace Mail.DTOs.Mail
 {
     public class MailMessageDto
     {
@@ -10,5 +12,7 @@
         public string RecipientMailAddress { get; set; }
         public Guid RecipientId { get; set; }
         public Guid? SenderId { get; set; }
+
+        public MailSettingsEvent? MailSettingsEvent { get; set; }
     }
 }

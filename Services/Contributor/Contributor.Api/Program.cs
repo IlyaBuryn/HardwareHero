@@ -1,7 +1,5 @@
-using KafkaEventStream.Topics;
 using Microsoft.IdentityModel.Logging;
 using HardwareHero.Shared.Extensions;
-using KafkaEventStream.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Host.ConfigureSecretsFile();
@@ -15,7 +13,6 @@ builder.Services.ConfigurePolicyAuthorization();
 var connectionString = builder.Configuration.GetConnectionString(ConnectionNames.ContributorsConnection);
 builder.Services.ConfigureBusinessLogicLayer(connectionString);
 builder.Services.ConfigureOptions<PageSizeOptions>(builder.Configuration);
-builder.Services.ConfigureKafkaRequestsBackgroundWorker<ContributorTopics>();
 
 builder.Services.AddCustomControllers();
 

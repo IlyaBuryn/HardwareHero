@@ -1,14 +1,7 @@
-﻿using Confluent.Kafka;
-using EventStream.EventHandling;
-using EventStream.Topics;
-using FluentValidation.AspNetCore;
+﻿using FluentValidation.AspNetCore;
 using HardwareHero.Shared.Extensions;
 using HardwareHero.Shared.OpenApi;
-using KafkaEventStream;
-using KafkaEventStream.EventHandling;
-using KafkaEventStream.Extensions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 
 namespace Mail.Api.Extensions

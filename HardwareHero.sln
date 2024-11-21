@@ -88,12 +88,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".credentials", ".credential
 		.credentials\sharedsettings.json = .credentials\sharedsettings.json
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "EventStream", "EventStream", "{AB6539AA-F8BB-4B65-BC10-0AA083D95AF8}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KafkaEventStream", "EventStream\KafkaEventStream\KafkaEventStream.csproj", "{29A6006C-99A4-42F0-B2C4-B580993DBCA1}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventStream", "EventStream\EventStream\EventStream.csproj", "{682B90B4-FAD7-474C-831B-A37A35589845}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "config", "config", "{7D3D479A-0C04-4181-B8FC-13E7203F9FDB}"
 	ProjectSection(SolutionItems) = preProject
 		config\otel-collector-config.yml = config\otel-collector-config.yml
@@ -124,9 +118,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{EB9C15
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Communication", "Communication", "{30172438-8681-433E-9A5A-FFEB66457B9F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventDriven.Kafka", "Tools\Communication\EventDriven.Kafka\EventDriven.Kafka.csproj", "{D3A571C8-A718-4BC8-B830-B4674CC03E85}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventDriven.Kafka", "Tools\Communication\EventDriven.Kafka\EventDriven.Kafka.csproj", "{D3A571C8-A718-4BC8-B830-B4674CC03E85}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventDriven.Shared", "Tools\Communication\EventDriven.Shared\EventDriven.Shared.csproj", "{C66ABB79-BBD5-4208-89E5-0AC01AF6E1E3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventDriven.Shared", "Tools\Communication\EventDriven.Shared\EventDriven.Shared.csproj", "{C66ABB79-BBD5-4208-89E5-0AC01AF6E1E3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -214,14 +208,6 @@ Global
 		{3460D653-16F9-4115-97AE-4698CEA07467}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3460D653-16F9-4115-97AE-4698CEA07467}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3460D653-16F9-4115-97AE-4698CEA07467}.Release|Any CPU.Build.0 = Release|Any CPU
-		{29A6006C-99A4-42F0-B2C4-B580993DBCA1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{29A6006C-99A4-42F0-B2C4-B580993DBCA1}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{29A6006C-99A4-42F0-B2C4-B580993DBCA1}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{29A6006C-99A4-42F0-B2C4-B580993DBCA1}.Release|Any CPU.Build.0 = Release|Any CPU
-		{682B90B4-FAD7-474C-831B-A37A35589845}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{682B90B4-FAD7-474C-831B-A37A35589845}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{682B90B4-FAD7-474C-831B-A37A35589845}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{682B90B4-FAD7-474C-831B-A37A35589845}.Release|Any CPU.Build.0 = Release|Any CPU
 		{09B411F7-EF1F-4763-8C37-3ABA4611F03D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{09B411F7-EF1F-4763-8C37-3ABA4611F03D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{09B411F7-EF1F-4763-8C37-3ABA4611F03D}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -296,8 +282,6 @@ Global
 		{E2401498-BFDC-4D70-B7EB-B4E9C1A1547B} = {4509CA0C-E2CF-42AB-882E-CEB5A8F366B4}
 		{94705971-5AA6-444B-8BDE-4FDF9D3D0BC4} = {5FE2FF60-6312-44A2-9B2E-FFA9A138310F}
 		{3460D653-16F9-4115-97AE-4698CEA07467} = {142BA8F5-95B5-4606-9E0C-AAB8889CB8CA}
-		{29A6006C-99A4-42F0-B2C4-B580993DBCA1} = {AB6539AA-F8BB-4B65-BC10-0AA083D95AF8}
-		{682B90B4-FAD7-474C-831B-A37A35589845} = {AB6539AA-F8BB-4B65-BC10-0AA083D95AF8}
 		{09B411F7-EF1F-4763-8C37-3ABA4611F03D} = {142BA8F5-95B5-4606-9E0C-AAB8889CB8CA}
 		{D0E5638D-6B4D-4FD7-B6BF-449DEEEBBC4C} = {FFEEF48E-40B4-42EB-B6E5-988FCCA35921}
 		{B32A19B0-45DC-485E-BA46-6BEA39B89087} = {FFEEF48E-40B4-42EB-B6E5-988FCCA35921}

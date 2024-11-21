@@ -1,8 +1,5 @@
-using Identity.Api;
 using Identity.Api.Data;
 using Identity.Api.Extensions;
-using KafkaEventStream.Extensions;
-using KafkaEventStream.Topics;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Host.ConfigureSecretsFile();
@@ -17,8 +14,6 @@ builder.Services.ConfigureCustomIdentity();
 
 builder.Services.ConfigureServices();
 builder.Services.ConfigureBackgroundServices();
-builder.Services.ConfigureKafkaMediatorBackgroundWorker<IdentityTopics, IdentityEndpointManager>();
-builder.Services.ConfigureKafkaRequestsBackgroundWorker<MailTopics>();
 
 builder.Services.AddCustomControllers();
 

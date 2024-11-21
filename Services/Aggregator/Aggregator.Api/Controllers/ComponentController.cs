@@ -1,5 +1,4 @@
-﻿using EventStream.EventHandling;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 
@@ -13,21 +12,15 @@ namespace Aggregator.Api.Controllers
         private readonly IComponentService _componentService;
         private readonly PageSizeOptions _pageSizeSettings;
         private readonly ILogger<ComponentController> _logger;
-        private readonly IMessageProducer _messageProducer;
-        private readonly IMessageConsumer _messageConsumer;
 
         public ComponentController(
             IComponentService componentService,
             IOptions<PageSizeOptions> pageSizeSettings,
-            ILogger<ComponentController> logger,
-            IMessageProducer messageProducer,
-            IMessageConsumer messageConsumer)
+            ILogger<ComponentController> logger)
         {
             _componentService = componentService;
             _pageSizeSettings = pageSizeSettings.Value;
             _logger = logger;
-            _messageProducer = messageProducer;
-            _messageConsumer = messageConsumer;
         }
 
         [HttpPost("component")]

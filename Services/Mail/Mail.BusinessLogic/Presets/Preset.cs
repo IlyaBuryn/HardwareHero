@@ -21,7 +21,9 @@ namespace Mail.BusinessLogic.Presets
 
         protected virtual void SetupReplacedProperties(MailMessageDto message)
         {
-            AddReplacedProperty("<<<timestamp>>>", DateTime.Now.ToString("dd:MM:yyyy - HH:mm"));
+            AddReplacedProperty("<<<timestamp>>>", message.MailSettingsEvent?.Timestamp.ToString("dd:MM:yyyy - HH:mm") 
+                ?? DateTime.Now.ToString("dd:MM:yyyy - HH:mm"));
+            AddReplacedProperty("<<<username>>>", message.MailSettingsEvent?.Username ?? "{username-not-found}");
         }
 
         public (MailMessageDto, bool) CustomizeMessageBody(MailMessageDto message)

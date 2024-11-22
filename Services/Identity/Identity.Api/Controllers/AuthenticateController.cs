@@ -1,8 +1,6 @@
-﻿using EventStream.EventHandling;
-using Identity.Api.Contracts;
+﻿using Identity.Api.Contracts;
 using Identity.Shared.Requests;
 using Identity.Shared.Responses;
-using KafkaEventStream.BackgroundServices;
 using static Identity.Shared.Requests.IdentityRequestRecords;
 
 namespace Identity.Api.Controllers
@@ -15,19 +13,13 @@ namespace Identity.Api.Controllers
     {
         private readonly IAuthService _authService;
         private readonly IConfiguration _configuration;
-        private readonly IMessageProducer _messageProducer;
-        private readonly IMessageConsumer _messageConsumer;
 
         public AuthenticateController(
             IAuthService authService,
-            IConfiguration configuration,
-            IMessageProducer messageProducer,
-            IMessageConsumer messageConsumer)
+            IConfiguration configuration)
         {
             _authService = authService;
             _configuration = configuration;
-            _messageProducer = messageProducer;
-            _messageConsumer = messageConsumer;
         }
 
         [HttpPost("sign-up")]
@@ -38,11 +30,12 @@ namespace Identity.Api.Controllers
             var result = await _authService.GenerateJwtTokenAsync(user);
             result.UserId = user.Id;
 
-            if (result.IsSuccessful)
-            {
-                await RequestService.CallAndWaitServiceAsync(
-                    new MailTopics(), $"mail/welcome/{user.Email}", _messageProducer, _messageConsumer);
-            }
+            // TODO: change later
+            //if (result.IsSuccessful)
+            //{
+            //    await RequestService.CallAndWaitServiceAsync(
+            //        new MailTopics(), $"mail/welcome/{user.Email}", _messageProducer, _messageConsumer);
+            //}
             
             AppendCookies(result, model.StayIn);
 

@@ -12,8 +12,6 @@ namespace Mail.BusinessLogic.Presets
         protected override void SetupReplacedProperties(MailMessageDto message)
         {
             base.SetupReplacedProperties(message);
-
-            AddReplacedProperty("<<<username>>>", message.RecipientId.ToString());
         }
 
         protected override void SetupTitle(MailMessageDto message)

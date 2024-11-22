@@ -1,5 +1,4 @@
 ﻿using Contributor.DTOs.Domain.Contributors;
-using EventStream.EventHandling;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -12,19 +11,13 @@ namespace Contributor.Api.Controllers
     public class ContributorController : ControllerBase
     {
         private readonly IContributorService _contributorService;
-        private readonly IMessageProducer _messageProducer;
-        private readonly IMessageConsumer _messageConsumer;
         private readonly PageSizeOptions _pageSizeSettings;
 
         public ContributorController(
             IContributorService contributorService, 
-            IMessageProducer messageProducer,
-            IMessageConsumer messageConsumer,
             IOptions<PageSizeOptions> pageSizeSettings)
         {
             _contributorService = contributorService;
-            _messageProducer = messageProducer;
-            _messageConsumer = messageConsumer;
             _pageSizeSettings = pageSizeSettings.Value;
         }
 

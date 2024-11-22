@@ -13,17 +13,17 @@ namespace Mail.BusinessLogic.Services
     public class MailService : IMailService
     {
         private readonly IConfiguration _configuration;
-        private readonly IBaseRepositoryAsync<MailMessage> _messageRepo;
+        //private readonly IBaseRepositoryAsync<MailMessage> _messageRepo;
         private readonly IMapper _mapper;
 
 
         public MailService(
             IConfiguration configuration,
-            IBaseRepositoryAsync<MailMessage> messageRepository,
+            //IBaseRepositoryAsync<MailMessage> messageRepository,
             IMapper mapper)
         {
             _configuration = configuration;
-            _messageRepo = messageRepository;
+            //_messageRepo = messageRepository;
             _mapper = mapper;
         }
 
@@ -51,8 +51,9 @@ namespace Mail.BusinessLogic.Services
 
             var message = _mapper.Map<MailMessage>(messageToSend);
             message.Body = string.Empty;
-            var result = await _messageRepo.CreateEntityAsync(message);
-            result.DataAnswerCheck();
+            // TODO: It's not working. For some reason it's create exception about DbContext
+            //var result = await _messageRepo.CreateEntityAsync(message);
+            //result.DataAnswerCheck();
 
             return messageToSend.Id;
         }

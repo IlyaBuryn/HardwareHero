@@ -41,7 +41,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\Tools\Communication\EventDriven.Kafka\EventDriven.Kafka.csproj" />
+    <ProjectReference Include="..\..\..\Tools\Communication\EventDriven.Shared\EventDriven.Shared.csproj" />
     <ProjectReference Include="..\..\..\Tools\HardwareHero.Shared\HardwareHero.Shared.csproj" />
+    <ProjectReference Include="..\..\Identity\Identity.Shared\Identity.Shared.csproj" />
+    <ProjectReference Include="..\..\Mail\Mail.DTOs\Mail.DTOs.csproj" />
+    <ProjectReference Include="..\..\Storage\Storage.DTOs\Storage.DTOs.csproj" />
     <ProjectReference Include="..\Contributor.DataAccess\Contributor.DataAccess.csproj" />
     <ProjectReference Include="..\Contributor.DTOs\Contributor.DTOs.csproj" />
   </ItemGroup>

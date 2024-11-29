@@ -5,7 +5,8 @@ namespace Configurator.Api.Extensions
 {
     public static class ApplicationBuilderExtensions
     {
-        public static async Task ConfigureDatabaseAsync(this WebApplication app)
+        public static async Task<WebApplication> SetupDefaultDataAsync(
+            this WebApplication app)
         {
             using (var scope = app.Services.CreateScope())
             {
@@ -17,6 +18,8 @@ namespace Configurator.Api.Extensions
                 //await config.EnsureDatabaseFromFileAsync<ConfiguratorRule>(
                 //    "/src/Services/Configurator/Configurator.BusinessLogic/config/config.rules.json", ConfiguratorCollectionNames.ConfiguratorRulesCollection);
             }
+
+            return app;
         }
     }
 }

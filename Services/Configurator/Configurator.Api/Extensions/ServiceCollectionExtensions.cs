@@ -2,15 +2,67 @@
 using HardwareHero.Shared.Extensions;
 using HardwareHero.Shared.OpenApi;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using MongoDB.Bson.Serialization;
 
 namespace Configurator.Api.Extensions
 {
     public static class ServiceCollectionExtensions
     {
-        public static void ConfigurePolicyAuthorization(this IServiceCollection services)
+        public static IServiceCollection ConfigureFluentValidation(
+            this IServiceCollection services)
+        {
+            services
+                .AddFluentValidationAutoValidation()
+                .AddFluentValidationClientsideAdapters();
+
+            return services;
+        }
+
+        public static IServiceCollection ConfigureOpenTelemetry(
+            this IServiceCollection services, WebApplicationBuilder builder)
+        {
+            services.ConfigureCommonOpenTelemetry(
+                "AggregatorRemoteManage",
+                builder.Configuration.GetValue<string>("OpenRemoteManageMeterName"),
+                builder.Configuration["Otel:Endpoint"]);
+
+            return services;
+        }
+
+        public static IServiceCollection ConfigureCustomControllers(
+            this IServiceCollection services)
+        {
+            services.AddControllers(options =>
+            {
+                options.SuppressAsyncSuffixInActionNames = false;
+            });
+
+            return services;
+        }
+
+        public static IServiceCollection ConfigureEventServices(
+            this IServiceCollection services, WebApplicationBuilder builder)
+        {
+            return services;
+        }
+
+        public static IServiceCollection ConfigureEventHandlers(
+            this IServiceCollection services)
+        {
+            return services;
+        }
+
+        public static IServiceCollection ConfigureOptions(
+            this IServiceCollection services, WebApplicationBuilder builder)
+        {
+            services
+                .ConfigureOptions<PageSizeOptions>(builder.Configuration);
+
+            return services;
+        }
+
+        public static IServiceCollection ConfigurePolicyAuthorization(
+            this IServiceCollection services)
         {
             services.AddAuthorization(options =>
             {
@@ -20,39 +72,23 @@ namespace Configurator.Api.Extensions
                     policy.RequireClaim("scope", IdentityConstants.ServicesApiScope);
                 });
             });
+
+            return services;
         }
 
-        public static void ConfigureOpenTelemetry(this IServiceCollection services, WebApplicationBuilder builder)
-        {
-            services.ConfigureCommonOpenTelemetry(
-                "AggregatorRemoteManage",
-                builder.Configuration.GetValue<string>("OpenRemoteManageMeterName"),
-                builder.Configuration["Otel:Endpoint"]);
-        }
-
-        public static void AddCustomControllers(this IServiceCollection services)
-        {
-            services.AddControllers(options =>
-            {
-                options.SuppressAsyncSuffixInActionNames = false;
-            });
-        }
-
-        public static void AddFluentValidation(this IServiceCollection services)
-        {
-            services.AddFluentValidationAutoValidation()
-                .AddFluentValidationClientsideAdapters();
-        }
-
-        public static void ConfigureOptions<T>(this IServiceCollection services, IConfiguration configuration, string optionName) where T : class
+        public static IServiceCollection ConfigureOptions<T>(
+            this IServiceCollection services, IConfiguration configuration) where T : class
         {
             services.Configure<T>(options =>
             {
-                configuration.GetSection(optionName).Bind(options);
+                configuration.GetSection(typeof(T).Name).Bind(options);
             });
+
+            return services;
         }
 
-        public static void ConfigureSwagger(this IServiceCollection services)
+        public static IServiceCollection ConfigureSwagger(
+            this IServiceCollection services)
         {
             services.AddSwaggerGen(c =>
             {
@@ -69,9 +105,12 @@ namespace Configurator.Api.Extensions
 
                 c.OperationFilter<AuthResponsesOperationFilter>();
             });
+
+            return services;
         }
 
-        public static void ConfigureCORSPolicy(this IServiceCollection services)
+        public static IServiceCollection ConfigureCORSPolicy(
+            this IServiceCollection services)
         {
             services.AddCors(options =>
             {
@@ -82,6 +121,8 @@ namespace Configurator.Api.Extensions
                           .AllowAnyMethod();
                 });
             });
+
+            return services;
         }
     }
 }

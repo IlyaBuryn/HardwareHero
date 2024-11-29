@@ -40,9 +40,9 @@ namespace Aggregator.Tests.Services
 
             _fixture.Customizations.Add(new TypeRelay(typeof(IFormFile), typeof(FormFile)));
 
-            _componentService = new ComponentService(_componentRepo.Object, _componentMetricRepo.Object,
-                _componentTypeRepo.Object,
-                _imagesRepo.Object, _mapper.Object);
+            //_componentService = new ComponentService(_componentRepo.Object, _componentMetricRepo.Object,
+            //    _componentTypeRepo.Object,
+            //    _imagesRepo.Object, _mapper.Object);
         }
 
 

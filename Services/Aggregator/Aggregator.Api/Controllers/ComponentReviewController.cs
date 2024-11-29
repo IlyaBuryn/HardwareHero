@@ -53,6 +53,7 @@ namespace Aggregator.Api.Controllers
             return Ok(response);
         }
 
+
         [HttpPut("component/review/global")]
         [Authorize(Roles = Roles.Admin)]
         public async Task<IActionResult> UpdateGlobalReviewAsync([FromBody] ComponentGlobalReviewDto reviewToUpdate)
@@ -96,10 +97,11 @@ namespace Aggregator.Api.Controllers
             return Ok(response);
         }
 
-        [HttpPost("component/{componentId}/reviews/local")]
+
+        [HttpGet("component/{componentId}/reviews/local")]
         [AllowAnonymous]
         public async Task<IActionResult> GetLocalReviewsAsPageByComponentId(
-            [FromBody] ComponentLocalReviewFilter filter, [FromRoute] Guid componentId)
+            [FromQuery] ComponentLocalReviewFilter filter, [FromRoute] Guid componentId)
         {
             var response = await _componentReviewService
                 .GetComponentLocalReviewsPageAsync(filter, componentId);
@@ -107,10 +109,11 @@ namespace Aggregator.Api.Controllers
             return Ok(response);
         }
 
-        [HttpPost("component/{componentId}/reviews/global")]
+
+        [HttpGet("component/{componentId}/reviews/global")]
         [AllowAnonymous]
         public async Task<IActionResult> GetGlobalReviewsAsPageByComponentId(
-            [FromBody] ComponentGlobalReviewFilter filter, [FromRoute] Guid componentId)
+            [FromQuery] ComponentGlobalReviewFilter filter, [FromRoute] Guid componentId)
         {
             var response = await _componentReviewService
                 .GetComponentGlobalReviewsPageAsync(filter, componentId);

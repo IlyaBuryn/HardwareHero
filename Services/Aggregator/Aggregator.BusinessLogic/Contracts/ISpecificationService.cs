@@ -5,15 +5,15 @@ namespace Aggregator.BusinessLogic.Contracts
 {
     public interface ISpecificationService
     {
-        Task<Guid?> AddSpecCategoryAsync(SpecificationCategoryDto categoryToAdd);
-        Task<bool> UpdateSpecCategoryAsync(SpecificationCategoryDto categoryToUpdate);
-        Task<bool> RemoveSpecCategoryAsync(Guid categoryId);
+        Task<Guid?> AddSpecificationCategoryAsync(SpecificationCategoryDto categoryToAdd);
+        Task<bool> UpdateSpecificationCategoryAsync(SpecificationCategoryDto categoryToUpdate);
+        Task<bool> RemoveSpecificationCategoryAsync(Guid categoryId);
 
-        Task<Guid?> AddSpecAttributeAsync(SpecificationAttributeDto attributeToAdd);
-        Task<bool> UpdateSpecAttributeAsync(SpecificationAttributeDto attributeToUpdate);
-        Task<bool> RemoveSpecAttributeAsync(Guid attributeId);
+        Task<Guid?> AddSpecificationKeyAsync(SpecificationAttributeDto attributeToAdd);
+        Task<bool> UpdateSpecificationKeyAsync(SpecificationAttributeDto attributeToUpdate);
+        Task<bool> RemoveSpecificationKeyAsync(Guid attributeId);
 
-        Task<SpecGroupsResponse> GetSpecGroupsAsync(Guid componentTypeId);
+        Task<SpecGroupsResponse> GetSpecificationKeyGroupsAsync(Guid componentTypeId);
 
     }
 }

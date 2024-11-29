@@ -4,14 +4,14 @@ namespace Identity.Shared.Responses
 {
     public class IdentityResponseRecords
     {
-        public record FetchUserResponse(
+        public record UserResponse(
             string UserId,
             string Email,
             string Username,
             IList<string>? Roles,
             DateTime? RegistrationDate,
             string? FirstName,
-            string? FiLastName,
+            string? LastName,
             string? Phone,
             Guid? RegionId,
             Guid? CurrencyId,

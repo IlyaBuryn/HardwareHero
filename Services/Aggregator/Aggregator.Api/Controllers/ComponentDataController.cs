@@ -26,6 +26,7 @@ namespace Aggregator.Api.Controllers
             _pageSizeSettings = pageSizeSettings.Value;
         }
 
+
         [HttpPost("component/type")]
         [Authorize(Roles = Roles.Manager)]
         public async Task<IActionResult> CreateTypeAsync([FromBody] ComponentTypeDto componentTypeToAdd)
@@ -91,6 +92,7 @@ namespace Aggregator.Api.Controllers
             return Ok(response);
         }
 
+
         [HttpPut("component/image/{imageId}")]
         [Authorize(Roles = Roles.Admin)]
         public async Task<IActionResult> ChangeActiveImageStatusAsync([FromRoute] Guid imageId)
@@ -137,7 +139,7 @@ namespace Aggregator.Api.Controllers
         }
 
 
-        [HttpPost("component/{componentId}/specs")]
+        [HttpGet("component/{componentId}/specs")]
         [AllowAnonymous]
         public async Task<IActionResult> GetComponentSpecificationsAsync([FromRoute] Guid componentId)
         {

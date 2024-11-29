@@ -24,6 +24,7 @@ namespace Contributor.BusinessLogic.Services
             _mapper = mapper;
         }
 
+
         public async Task<Guid?> AddRegionAsync(RegionDto regionToAdd)
         {
             regionToAdd.Id = Guid.NewGuid();
@@ -37,6 +38,7 @@ namespace Contributor.BusinessLogic.Services
 
             return result.Value!.Id;
         }
+
 
         public async Task<bool> UpdateRegionAsync(RegionDto regionToUpdate)
         {
@@ -54,6 +56,7 @@ namespace Contributor.BusinessLogic.Services
             return result.Value != null;
         }
 
+
         public async Task<IEnumerable<RegionDto?>?> GetRegionsAsync()
         {
             var regions = await _regionRepo.FindAllEntitiesAsync();
@@ -63,6 +66,7 @@ namespace Contributor.BusinessLogic.Services
 
             return result;
         }
+
 
         public async Task<IEnumerable<RegionDto?>?> GetRegionsByCountryAsync(string countryCode)
         {
@@ -74,6 +78,7 @@ namespace Contributor.BusinessLogic.Services
             return result;
         }
 
+
         public async Task<IEnumerable<CityDto?>?> GetCitiesByCountryAsync(string countryCode)
         {
             var regions = await _regionRepo.FindAllEntitiesAsync(x => x.Code == countryCode);
@@ -83,6 +88,7 @@ namespace Contributor.BusinessLogic.Services
 
             return result;
         }
+
 
         public async Task<RegionDto?> GetRegionByCityAsync(string city)
         {
@@ -108,6 +114,7 @@ namespace Contributor.BusinessLogic.Services
             return result.Value!.Id;
         }
 
+
         public async Task<bool> UpdateCurrencyAsync(CurrencyDto currencyToUpdate)
         {
             await _currencyRepo.AlreadyExistCheckAsync(x => x.Code == currencyToUpdate.Code);
@@ -124,6 +131,7 @@ namespace Contributor.BusinessLogic.Services
             return result.Value != null;
         }
 
+
         public async Task<IEnumerable<CurrencyDto?>?> GetCurrenciesAsync()
         {
             var currenciesSet = await _currencyRepo.FindAllEntitiesAsync();
@@ -131,6 +139,7 @@ namespace Contributor.BusinessLogic.Services
 
             return result;
         }
+
 
         public async Task<RegionsAndCurrenciesResponse> GetCurrenciesAndRegionsAsync()
         {

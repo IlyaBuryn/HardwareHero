@@ -1,6 +1,4 @@
-﻿using System.Text.Json.Serialization;
-
-namespace Aggregator.DTOs.Components
+﻿namespace Aggregator.DTOs.Components
 {
     public class ComponentAttributeDto
     {

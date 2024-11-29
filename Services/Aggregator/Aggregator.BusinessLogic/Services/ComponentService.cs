@@ -1,7 +1,9 @@
 ﻿using Aggregator.DataAccess.Models.Components;
 using Aggregator.DTOs.Components;
+using EventDriven.Shared.Services;
 using HardwareHero.Shared.Extensions.Repository;
 using HardwareHero.Shared.Repositories.Answers;
+using Storage.DTOs.Events;
 using static Aggregator.DTOs.Response.AggregatorResponseRecords;
 
 namespace Aggregator.BusinessLogic.Services
@@ -11,7 +13,10 @@ namespace Aggregator.BusinessLogic.Services
         private readonly IQueryRepositoryAsync<Component> _componentRepo;
         private readonly IBaseRepositoryAsync<ComponentMetric> _componentMetricsRepo;
         private readonly IBaseRepositoryAsync<ComponentType> _componentTypeRepo;
-        private readonly IFileRepositoryAsync _imagesRepo;
+
+        private readonly IRequestService<UploadFileEvent, ReturnFileUrlEvent> _uploadFileService;
+        private readonly IRequestService<ChangeFileEvent, ReturnFileUrlEvent> _changeFileService;
+        private readonly IRequestService<DeleteFileEvent, DeleteFileResultEvent> _deleteFileService;
 
         private readonly IMapper _mapper;
 
@@ -19,15 +24,20 @@ namespace Aggregator.BusinessLogic.Services
             IQueryRepositoryAsync<Component> componentRepo,
             IBaseRepositoryAsync<ComponentMetric> componentMetricsRepo,
             IBaseRepositoryAsync<ComponentType> componentTypeRepo,
-            IFileRepositoryAsync imagesRepo,
-            IMapper mapper)
+            IMapper mapper,
+            IRequestService<UploadFileEvent, ReturnFileUrlEvent> uploadFileService,
+            IRequestService<ChangeFileEvent, ReturnFileUrlEvent> changeFileService,
+            IRequestService<DeleteFileEvent, DeleteFileResultEvent> deleteFileService)
         {
             _componentRepo = componentRepo;
             _componentMetricsRepo = componentMetricsRepo;
             _componentTypeRepo = componentTypeRepo;
-            _imagesRepo = imagesRepo;
             _mapper = mapper;
+            _uploadFileService = uploadFileService;
+            _changeFileService = changeFileService;
+            _deleteFileService = deleteFileService;
         }
+
 
         public async Task<Guid?> AddComponentAsync(ComponentDto componentToAdd)
         {
@@ -36,16 +46,21 @@ namespace Aggregator.BusinessLogic.Services
             await _componentRepo.AlreadyExistCheckAsync(x => x.Name == componentToAdd.Name);
             await _componentTypeRepo.NotFoundCheckAsync(x => x.Id == componentToAdd.ComponentTypeId);
 
-            // TODO: Maybe I should just set images state here?
             if (componentToAdd.ComponentImages != null && componentToAdd.ComponentImages.Count() != 0)
             {
-
+                var index = 0;
                 foreach (var image in componentToAdd.ComponentImages)
                 {
-                    image.Id = Guid.NewGuid();
-                    var imageName = $"{image.ComponentId}_{image.Id}";
-                    var uploadingResult = await _imagesRepo.UploadFileAsync(image.ImageData, imageName);
-                    image.ImageName = imageName;
+                    var response = await _uploadFileService.SendRequestAsync(
+                        new UploadFileEvent()
+                        {
+                            File = image.ImageData,
+                            FileName = string.Join('_', componentToAdd.Id, index)
+                        });
+
+                    image.ImageUrl = response.FileUrl;
+                    image.Index = index;
+                    index++;
                 }
             }
 
@@ -64,6 +79,7 @@ namespace Aggregator.BusinessLogic.Services
         }
 
 
+        // TODO: This method doesn't update images
         public async Task<bool> UpdateComponentAsync(ComponentDto componentToUpdate)
         {
             await _componentRepo.AlreadyExistCheckAsync(
@@ -128,9 +144,14 @@ namespace Aggregator.BusinessLogic.Services
         }
 
 
+        // TODO: event to prices.api
         public async Task<ComponentDto?> GetComponentByIdAsync(Guid componentId)
         {
-            var component = await _componentRepo.NotFoundCheckAsync(x => x.Id == componentId);
+            var component = await _componentRepo.NotFoundCheckAsync(x => x.Id == componentId,
+                x => x.ComponentMetric!,
+                x => x.ComponentImages!,
+                x => x.ComponentAttributes!,
+                x => x.ComponentType!);
 
             await IncrementComponentViewCount(componentId);
 
@@ -138,9 +159,13 @@ namespace Aggregator.BusinessLogic.Services
         }
 
 
+        // TODO: event to prices.api
         public async Task<IQueryable<ComponentDto?>> GetComponentsByIdsAsync(List<Guid> componentsIds)
         {
-            var result = await _componentRepo.FindAsync(x => x.Equals(componentsIds.Any()));
+            var result = await _componentRepo.FindAsync(x => x.Equals(componentsIds.Any()),
+                x => x.ComponentType!,
+                x => x.ComponentImages!,
+                x => x.ComponentMetric!);
             result.DataAnswerCheck();
 
             var mapped = _mapper.Map<IQueryable<ComponentDto>>(result.Value);
@@ -148,15 +173,16 @@ namespace Aggregator.BusinessLogic.Services
             return mapped;
         }
 
-        // TODO: 🤨
+
+        // TODO: event to prices.api
         public async Task<PageResponse<ComponentDto>?> GetComponentsPageAsync(ComponentsFilter filter)
         {
-            var page = await _componentRepo.FindPagedAsync(null, filter);
+            var page = await _componentRepo.FindPagedAsync(
+                filter.BuildFilterPredicate(), filter,
+                x => x.ComponentType!,
+                x => x.ComponentImages!,
+                x => x.ComponentMetric!);
             page.DataAnswerCheck();
-
-            //query = query.ApplyFilter(filter).Query;
-            //query = query.ApplyOrderBy(filter).Query;
-            //var selected = query.ApplySelection(filter).Query;
 
             var result = page.ToPageResponse();
             var mapped = _mapper.Map<PageResponse<ComponentDto>>(result);
@@ -164,7 +190,7 @@ namespace Aggregator.BusinessLogic.Services
             return mapped;
         }
 
-        // TODO: 🤨
+
         private async Task IncrementComponentViewCount(Guid componentId)
         {
             var componentMetric = await _componentMetricsRepo

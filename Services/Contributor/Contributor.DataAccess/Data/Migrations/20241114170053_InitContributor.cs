@@ -91,7 +91,6 @@ namespace Contributor.DataAccess.Data.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
                     LogoUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    LogoName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Description = table.Column<string>(type: "nvarchar(512)", maxLength: 512, nullable: true),
                     Phone = table.Column<string>(type: "nvarchar(16)", maxLength: 16, nullable: false),
                     MainWebLink = table.Column<string>(type: "nvarchar(max)", nullable: true),

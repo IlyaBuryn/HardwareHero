@@ -1,4 +1,4 @@
-﻿using Mail.DTOs.Mail;
+﻿using Mail.DTOs.Events;
 
 namespace Mail.BusinessLogic.Presets
 {
@@ -14,20 +14,21 @@ namespace Mail.BusinessLogic.Presets
             _replacedProperties = new();
         }
 
-        protected virtual void SetupTitle(MailMessageDto message)
+        protected virtual void SetupTitle(SendMailEvent message)
         {
             message.Subject = "[HardwareHero]";
         }
 
-        protected virtual void SetupReplacedProperties(MailMessageDto message)
+        protected virtual void SetupReplacedProperties(SendMailEvent message)
         {
-            AddReplacedProperty("<<<timestamp>>>", message.MailSettingsEvent?.Timestamp.ToString("dd:MM:yyyy - HH:mm") 
-                ?? DateTime.Now.ToString("dd:MM:yyyy - HH:mm"));
-            AddReplacedProperty("<<<username>>>", message.MailSettingsEvent?.Username ?? "{username-not-found}");
+            AddReplacedProperty("<<<timestamp>>>", message.Timestamp.ToString("dd:MM:yyyy - HH:mm"));
+            AddReplacedProperty("<<<username>>>", message.Username ?? "{username-not-found}");
         }
 
-        public (MailMessageDto, bool) CustomizeMessageBody(MailMessageDto message)
+        public (SendMailEvent, bool) CustomizeMessageBody(SendMailEvent? message)
         {
+            ArgumentNullException.ThrowIfNull(message, nameof(message));
+
             if (!File.Exists(_filePath))
             {
                 return (message, false);

@@ -12,7 +12,7 @@ namespace HardwareHero.Shared.Extensions
 {
     public static class CommonServiceCollectionExtensions
     {
-        public static void ConfigureCommonOpenTelemetry(
+        public static IServiceCollection ConfigureCommonOpenTelemetry(
             this IServiceCollection services,
             string OpenRemoteManageMeterName,
             string meter,
@@ -31,9 +31,11 @@ namespace HardwareHero.Shared.Extensions
                             opts.Endpoint = new Uri(endpoint);
                         })
                 );
+
+            return services;
         }
 
-        public static void ConfigureCommonJwtAuthentication(this IServiceCollection services, WebApplicationBuilder builder)
+        public static IServiceCollection ConfigureCommonJwtAuthentication(this IServiceCollection services, WebApplicationBuilder builder)
         {
             services.Configure<JwtConfig>(builder.Configuration.GetSection("JwtConfig"));
 
@@ -71,14 +73,18 @@ namespace HardwareHero.Shared.Extensions
                     }
                 };
             });
+
+            return services;
         }
 
-        public static void ConfigureCommonSQLServerContext<TContext>(
+        public static IServiceCollection ConfigureCommonSQLServerContext<TContext>(
             this IServiceCollection services, WebApplicationBuilder builder, string connectionName) 
             where TContext : DbContext 
         {
             services.AddDbContext<TContext>(options =>
                options.UseSqlServer(builder.Configuration.GetConnectionString(connectionName)));
+
+            return services;
         }
     }
 }

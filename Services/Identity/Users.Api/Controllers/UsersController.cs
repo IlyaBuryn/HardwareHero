@@ -17,6 +17,7 @@ namespace Users.Api.Controllers
             _userService = userService;
         }
 
+
         [HttpPost]
         [Authorize(Roles = Roles.Admin)]
         public async Task<IActionResult> CreateUserAsync([FromBody] CreateUserRequest model)
@@ -26,12 +27,12 @@ namespace Users.Api.Controllers
             return CreatedAtAction(nameof(CreateUserAsync), result);
         }
 
-        // TODO: should I transfer this to identity api?
-        [HttpPut("{userId}")]
+
+        [HttpPut]
         [Authorize(Roles = Roles.User)]
-        public async Task<IActionResult> UpdateUserAsync([FromRoute] string userId, [FromForm] UpdateUserRequest model)
+        public async Task<IActionResult> UpdateUserAsync([FromBody] UpdateUserRequest model)
         {
-            var result = await _userService.UpdateUserAsync(userId, model);
+            var result = await _userService.UpdateUserAsync(model);
 
             return Ok(result);
         }
@@ -46,20 +47,22 @@ namespace Users.Api.Controllers
             return Ok(result);
         }
 
-        [HttpGet("{userId}")]
-        [Authorize(Roles = Roles.User)]
-        public async Task<IActionResult> GetUserByIdAsync([FromRoute] string userId)
-        {
-            var result = await _userService.GetUserByIdAsync(userId);
-
-            return Ok(result);
-        }
 
         [HttpGet]
         [Authorize(Roles = Roles.Admin)]
         public async Task<IActionResult> FetchUsersAsync([FromQuery] UsersFilter filter)
         {
             var result = await _userService.FetchUsersAsync(filter);
+
+            return Ok(result);
+        }
+
+
+        [HttpGet("{userId}")]
+        [Authorize(Roles = Roles.User)]
+        public async Task<IActionResult> GetUserByIdAsync([FromRoute] string userId)
+        {
+            var result = await _userService.GetUserByIdAsync(userId);
 
             return Ok(result);
         }

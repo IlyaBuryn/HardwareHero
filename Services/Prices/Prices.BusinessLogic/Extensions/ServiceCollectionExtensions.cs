@@ -1,11 +1,8 @@
 ﻿using FluentValidation;
-using HardwareHero.Shared.Constants;
 using HardwareHero.Shared.Extensions.MongoDb;
 using HardwareHero.Shared.Repositories.Contracts;
 using HardwareHero.Shared.Repositories.Mongo;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
-using MongoDB.Driver;
 using Prices.BusinessLogic.Data;
 using System.Reflection;
 
@@ -13,37 +10,64 @@ namespace Prices.BusinessLogic.Extensions
 {
     public static class ServiceCollectionExtensions
     {
-        public static void ConfigureBusinessLogicLayer(this IServiceCollection service)
+        public static IServiceCollection ConfigureBusinessLayer(
+            this IServiceCollection services)
         {
-            ConfigureServices(service);
-            ConfigureMapProfiles(service);
-            ConfigureDtoValidators(service);
+            services
+                .ConfigureDbContext()
+                .ConfigureRepositories()
+                .ConfigureServices()
+                .ConfigureMapProfiles()
+                .ConfigureDtoValidators();
+
+            return services;
         }
 
-        public static void ConfigureDbContext(this IServiceCollection service, DatabaseOptions options)
+        internal static IServiceCollection ConfigureDbContext(
+            this IServiceCollection services)
         {
-            service.AddMongoDbContext<PricesDbContext>(options.ConnectionString, options.DatabaseName);
+            services
+                .AddMongoDbContext<PricesDbContext>();
+
+            return services;
         }
 
-        private static void ConfigureServices(IServiceCollection service)
+        internal static IServiceCollection ConfigureRepositories(
+            this IServiceCollection services)
         {
-            service.AddScoped(typeof(IBaseRepositoryAsync<>), typeof(MongoBaseRepositoryAsync<>));
+            services
+                .AddScoped(typeof(IBaseRepositoryAsync<>), typeof(MongoBaseRepositoryAsync<>));
 
-            service.AddScoped<IContributorPricesService, ContributorPriceService>();
+            return services;
         }
 
-        private static void ConfigureMapProfiles(IServiceCollection service)
+        internal static IServiceCollection ConfigureServices(
+            this IServiceCollection services)
         {
-            service.AddAutoMapper(cfg =>
+            services
+                .AddScoped<IContributorPricesService, ContributorPriceService>();
+
+            return services;
+        }
+
+        internal static IServiceCollection ConfigureMapProfiles(
+            this IServiceCollection services)
+        {
+            services.AddAutoMapper(cfg =>
             {
                 cfg.AddProfile<ContributorPricesMapProfile>();
             });
+
+            return services;
         }
 
-        private static void ConfigureDtoValidators(IServiceCollection service)
+        internal static IServiceCollection ConfigureDtoValidators(
+            this IServiceCollection service)
         {
             var assembly = Assembly.Load(new AssemblyName("Prices.DTOs"));
             service.AddValidatorsFromAssembly(assembly);
+
+            return service;
         }
     }
 }

@@ -1,41 +1,83 @@
 ﻿using Aggregator.DataAccess.Models.Components;
-using HardwareHero.Filter.Operations;
-using System.Linq.Expressions;
+using HardwareHero.Shared.Extensions.Filter;
 
 namespace Aggregator.BusinessLogic.Filters
 {
-    public class ComponentsFilter : IPaginable
+    public enum SortByType
+    {
+        None = 0,
+        Views,
+        Relevance,
+        Rating,
+        Price
+    }
+
+    public class ComponentsFilter : IPaginableFilter<Component>
     {
         public string? SearchString { get; set; }
-        public string? TypeId { get; set; }
-        public bool? SortByViews { get; set; } = null;
-        public bool? SortByRelevance { get; set; } = null;
-        public bool? SortByRating { get; set; } = null;
+        public Guid? TypeId { get; set; }
+        public SortByType SortByType { get; set; } = SortByType.None;
+        public bool SortByDescending { get; set; } = true;
+
+        // TODO: skip for now...
         public List<ComponentAttribute>? Attributes { get; set; } = null;
 
         public uint PageNumber { get; init; }
         public uint PageSize { get; init; }
 
+        public Func<Component, bool> BuildFilterPredicate()
+        {
+            return x =>
+            {
+                bool matches = true;
 
-        //public void SetupFilterExpressions()
-        //{
-        //    FilterExpressions[nameof(Component)] =
-        //        component =>
-        //        (string.IsNullOrEmpty(SearchString) || (component.Name.Contains(SearchString) || component.Description.Contains(SearchString))) &&
-        //        (string.IsNullOrEmpty(Type) || (component.ComponentType != null ? component.ComponentType.Name == Type || component.ComponentType.FullName == Type : true));
-        //}
+                if (!string.IsNullOrEmpty(SearchString))
+                {
+                    matches &= x.Name.Contains(SearchString, StringComparison.OrdinalIgnoreCase);
+                }
 
-        //public void SetupSortByExpressions()
-        //{
-        //    SortByExpressions[nameof(Component.Id)] = component => component.Id;
-        //    SortByExpressions[nameof(Component.Name)] = component => component.Name;
-        //    SortByExpressions[nameof(Component.ComponentType)] = component => component.ComponentType.Name;
-        //}
+                if (TypeId.HasValue)
+                {
+                    matches &= x.ComponentTypeId == TypeId.Value;
+                }
 
-        //public Expression<Func<Component, bool>>? OnGetFilterExpression()
-        //    => GetFilterExpression(nameof(Component));
+                if (Attributes != null && Attributes.Any())
+                {
+                    //matches &= Attributes.All(attr =>
+                    //    x.Attributes.Any(xAttr =>
+                    //        xAttr.Key == attr.Key && xAttr.Value == attr.Value));
+                }
 
-        //public Expression<Func<Component, object>>? OnGetSortExpression(string? sortByProperty)
-        //    => GetSortExpression(sortByProperty);
+                return matches;
+            };
+        }
+
+        public IQueryable<Component> ApplySorting(IQueryable<Component> query)
+        { 
+            query = _sortStrategies[SortByType].Invoke(query, SortByDescending);
+
+            return query;
+        }
+
+        private readonly Dictionary<SortByType, Func<IQueryable<Component>, bool, IQueryable<Component>>> _sortStrategies = new()
+        {
+            { SortByType.None, (query, descending) => query },
+
+            //{ SortByType.Price, (query, descending) => descending
+            //    ? query.OrderByDescending(x => x.Price)
+            //    : query.OrderBy(x => x.Price) },
+
+            { SortByType.Views, (query, descending) => descending
+                ? query.OrderByDescending(x => x.ComponentMetric.ViewsCount)
+                : query.OrderBy(x => x.ComponentMetric.ViewsCount) },
+
+            { SortByType.Relevance, (query, descending) => descending
+                ? query.OrderByDescending(x => x.ComponentMetric.ReviewCount)
+                : query.OrderBy(x => x.ComponentMetric.ReviewCount) },
+
+            { SortByType.Rating, (query, descending) => descending
+                ? query.OrderByDescending(x => x.ComponentMetric.Rating)
+                : query.OrderBy(x => x.ComponentMetric.Rating) },
+        };
     }
 }

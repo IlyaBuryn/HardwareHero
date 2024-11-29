@@ -21,6 +21,7 @@ namespace Aggregator.BusinessLogic.Services
             _componentRepo = componentRepo;
         }
 
+
         public async Task<Guid?> AddComponentTypeAsync(ComponentTypeDto componentTypeToAdd)
         {
             componentTypeToAdd.Id = Guid.NewGuid();
@@ -64,12 +65,7 @@ namespace Aggregator.BusinessLogic.Services
             var components = await _componentRepo.FindAllEntitiesAsync(x => x.ComponentTypeId == typeId);
             components.DataAnswerCheck();
 
-            if (components.Value!.Count() > 0)
-            {
-                throw new DataValidationException(
-                    $"Cannot delete an object because {components.Value!.Count()}" +
-                    $" {nameof(Component)} objects depend on this object.");
-            }
+            DependDeleteException.ThrowIfConflict(components.Value!.Count(), nameof(Component));
 
             var result = await _componentTypeRepo.RemoveEntityAsync(typeId);
             result.DataAnswerCheck();

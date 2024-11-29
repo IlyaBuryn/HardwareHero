@@ -26,6 +26,7 @@ namespace Contributor.BusinessLogic.Services
             _mapper = mapper;
         }
 
+
         public async Task<Guid?> CreateChatRoomAsync(ChatRoomDto chatToAdd)
         {
             chatToAdd.Id = Guid.NewGuid();
@@ -41,6 +42,7 @@ namespace Contributor.BusinessLogic.Services
             
             return result.Value!.Id;
         }
+
 
         public async Task<bool> UpdateChatRoomAsync(ChatRoomDto chatToUpdate)
         {
@@ -61,6 +63,7 @@ namespace Contributor.BusinessLogic.Services
             return result.Value != null;
         }
 
+
         public async Task<bool> DeleteChatRoomAsync(Guid chatRoomId)
         {
             var chat = await _chatRoomRepo
@@ -71,6 +74,7 @@ namespace Contributor.BusinessLogic.Services
             
             return result.Value != null;
         }
+
 
         public async Task<ChatRoomDto?> GetChatByIdAsync(Guid chatRoomId)
         {
@@ -83,6 +87,7 @@ namespace Contributor.BusinessLogic.Services
             return result;
         }
 
+
         public async Task<PageResponse<ChatRoomDto?>?> GetChatsByContributorIdAsync(Guid contributorId, IPaginable filter)
         {
             var chats = await _chatRoomRepo
@@ -94,6 +99,7 @@ namespace Contributor.BusinessLogic.Services
 
             return result;
         }
+
 
         public async Task<Guid?> SendMessageAsync(ChatMessageDto messageToSend)
         {
@@ -109,6 +115,7 @@ namespace Contributor.BusinessLogic.Services
             
             return result.Value!.Id;
         }
+
 
         public async Task<bool> UpdateMessageAsync(ChatMessageDto messageToSend)
         {
@@ -126,6 +133,7 @@ namespace Contributor.BusinessLogic.Services
             return result.Value != null;
         }
 
+
         public async Task<PageResponse<ChatMessageDto?>?> GetMessagesByChatIdAsync(Guid chatRoomId, IPaginable filter)
         {
             var messages = await _chatMessageRepo
@@ -137,6 +145,7 @@ namespace Contributor.BusinessLogic.Services
 
             return mappedResult;
         }
+
 
         private async Task<bool> AllTheseContributorsExist(ICollection<ContributorModelDto>? contributors)
         {

@@ -12,6 +12,7 @@ namespace Users.Api.Services
             _usersDbContext = usersDbContext;
         }
 
+
         public async Task<int> ChangeWishListAsync(string userId, WishListComponent[] components)
         {
             var user = await _usersDbContext.Users.FirstOrDefaultAsync(x => x.Id == userId);
@@ -25,6 +26,7 @@ namespace Users.Api.Services
 
             return result;
         }
+
 
         public async Task<int> ClearWishListAsync(string userId)
         {
@@ -40,6 +42,7 @@ namespace Users.Api.Services
 
             return result;
         }
+
 
         public async Task<IQueryable<WishListComponent>> GetWishListComponentsAsync(string userId)
         {

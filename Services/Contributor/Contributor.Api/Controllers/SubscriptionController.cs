@@ -17,6 +17,7 @@ namespace Contributor.Api.Controllers
             _subscriptionService = subscriptionService;
         }
 
+
         [HttpPost]
         [Authorize(Roles = Roles.Manager)]
         public async Task<IActionResult> CreatePlanAsync([FromBody] SubscriptionPlanDto subscriptionPlanToAdd)
@@ -26,6 +27,7 @@ namespace Contributor.Api.Controllers
             
             return CreatedAtAction(nameof(CreatePlanAsync), response);
         }
+
 
         [HttpPut]
         [Authorize(Roles = Roles.Manager)]
@@ -37,6 +39,7 @@ namespace Contributor.Api.Controllers
             return Ok(response);
         }
 
+
         [HttpDelete("{subscriptionPlanId}")]
         [Authorize(Roles = Roles.Manager)]
         public async Task<IActionResult> DeletePlanAsync([FromRoute] Guid subscriptionPlanId)
@@ -46,6 +49,7 @@ namespace Contributor.Api.Controllers
 
             return Ok(response);
         }
+
 
         [HttpGet]
         [Authorize(Roles = Roles.Contributor)]
@@ -57,6 +61,7 @@ namespace Contributor.Api.Controllers
             return Ok(response);
         }
 
+
         [HttpGet("{currencyId}")]
         [Authorize(Roles = Roles.Contributor)]
         public async Task<IActionResult> GetPlansByCurrencyAsync([FromRoute] Guid currencyId)
@@ -67,6 +72,7 @@ namespace Contributor.Api.Controllers
             return Ok(response);
         }
 
+
         [HttpPost("contributor/{contributorId}/subscribe/{subscriptionPlanId}")]
         [Authorize(Roles = Roles.Contributor)]
         public async Task<IActionResult> SubscribeAsync([FromRoute] Guid contributorId, [FromRoute] Guid subscriptionPlanId)
@@ -76,6 +82,7 @@ namespace Contributor.Api.Controllers
 
             return CreatedAtAction(nameof(SubscribeAsync), response);
         }
+
 
         [HttpPut("contributor/{contributorId}/unsubscribe")]
         [Authorize(Roles = Roles.Contributor)]

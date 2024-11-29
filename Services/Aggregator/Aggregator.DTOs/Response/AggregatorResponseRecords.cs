@@ -1,4 +1,6 @@
-﻿namespace Aggregator.DTOs.Response
+﻿using Aggregator.DTOs.Components;
+
+namespace Aggregator.DTOs.Response
 {
     public class AggregatorResponseRecords
     {
@@ -12,9 +14,13 @@
             int totalGlobalReviews);
 
         public record ComponentSpecsResponse(
-            Dictionary<string, Dictionary<string, string>> specs);
+            Dictionary<string, Dictionary<string, string?>>? specs);
 
         public record SpecGroupsResponse(
             Dictionary<string, List<string>> groups);
+
+        public record FullComponentResponse(
+            ComponentDto component,
+            decimal lastPrice);
     }
 }

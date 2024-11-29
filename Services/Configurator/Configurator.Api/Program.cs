@@ -1,31 +1,35 @@
 using HardwareHero.Shared.Extensions;
-using HardwareHero.Shared.Extensions.MongoDb;
 using Microsoft.IdentityModel.Logging;
 
 var builder = WebApplication.CreateBuilder(args);
-builder.Host.ConfigureSecretsFile();
 
-builder.Services.AddFluentValidation();
-builder.Services.ConfigureOpenTelemetry(builder);
+builder.Host
+    .ConfigureSecretsFile()
+    .ConfigureElasticLogging();
 
-builder.Services.ConfigureCommonJwtAuthentication(builder);
-builder.Services.ConfigurePolicyAuthorization();
+builder.Services
+    .ConfigureBusinessLayer()
+    //.ConfigureEventServices(builder)
+    //.ConfigureEventHandlers()
+    .ConfigureOptions(builder);
 
-builder.Services.ConfigureOptions<DatabaseOptions>(builder.Configuration, ConnectionNames.ConfiguratorConnection);
-builder.Services.ConfigureDbContext(builder.Services.GetMongoDatabaseOptions());
-builder.Services.ConfigureBusinessLogicLayer();
+builder.Services
+    .ConfigureFluentValidation()
+    .ConfigureOpenTelemetry(builder)
+    .ConfigureCommonJwtAuthentication(builder)
+    .ConfigurePolicyAuthorization()
+    .ConfigureSwagger()
+    .ConfigureCORSPolicy()
+    .ConfigureCustomControllers();
 
-builder.Services.AddCustomControllers();
-
-builder.Services.ConfigureSwagger();
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.ConfigureCORSPolicy();
+builder.Services
+    .AddEndpointsApiExplorer();
 
 IdentityModelEventSource.ShowPII = true;
-builder.Host.ConfigureElasticLogging();
 var app = builder.Build();
 
-await app.ConfigureDatabaseAsync();
+await app.SetupDefaultDataAsync();
+
 app.UseCommonCustomMiddlewares();
 
 app.UseCors("default");

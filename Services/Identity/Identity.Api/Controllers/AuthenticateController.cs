@@ -22,6 +22,7 @@ namespace Identity.Api.Controllers
             _configuration = configuration;
         }
 
+
         [HttpPost("sign-up")]
         [AllowAnonymous]
         public async Task<IActionResult> SignUpUserAsync([FromBody] SignUpRequest model)
@@ -29,18 +30,12 @@ namespace Identity.Api.Controllers
             var user = await _authService.SignUpAsync(model);
             var result = await _authService.GenerateJwtTokenAsync(user);
             result.UserId = user.Id;
-
-            // TODO: change later
-            //if (result.IsSuccessful)
-            //{
-            //    await RequestService.CallAndWaitServiceAsync(
-            //        new MailTopics(), $"mail/welcome/{user.Email}", _messageProducer, _messageConsumer);
-            //}
             
             AppendCookies(result, model.StayIn);
 
             return Created(nameof(SignUpUserAsync), result);
         }
+
 
         [HttpPost("sign-in")]
         [AllowAnonymous]
@@ -55,6 +50,7 @@ namespace Identity.Api.Controllers
             return Ok(result);
         }
 
+
         [HttpPut("password")]
         [Authorize(Roles = Roles.User)]
         public async Task<IActionResult> UpdatePasswordAsync([FromBody] UserPasswordChangeRequest model)
@@ -66,6 +62,7 @@ namespace Identity.Api.Controllers
             return Ok(result);
         }
 
+
         [HttpPost("refresh-token")]
         [AllowAnonymous]
         public async Task<IActionResult> RefreshToken([FromBody] TokenRequest tokenRequest)
@@ -76,6 +73,7 @@ namespace Identity.Api.Controllers
 
             return Ok(result);
         }
+
 
         private void AppendCookies(AuthenticationResponse model, bool userStayIn = true)
         {

@@ -22,6 +22,7 @@ namespace Aggregator.BusinessLogic.Services
             _mapper = mapper;
         }
 
+
         public async Task<Guid?> AddLocalReviewAsync(ComponentLocalReviewDto reviewToAdd)
         {
             reviewToAdd.Id = Guid.NewGuid();

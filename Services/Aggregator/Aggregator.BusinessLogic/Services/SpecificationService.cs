@@ -22,9 +22,10 @@ namespace Aggregator.BusinessLogic.Services
         }
 
 
-        public async Task<Guid?> AddSpecAttributeAsync(SpecificationAttributeDto attributeToAdd)
+        public async Task<Guid?> AddSpecificationKeyAsync(SpecificationAttributeDto attributeToAdd)
         {
             attributeToAdd.Id = Guid.NewGuid();
+
             await _attributeRepo.AlreadyExistCheckAsync(x => x.Key == attributeToAdd.Key 
                 && x.ComponentTypeId == attributeToAdd.ComponentTypeId);
 
@@ -35,9 +36,11 @@ namespace Aggregator.BusinessLogic.Services
             return result.Value!.Id;
         }
 
-        public async Task<Guid?> AddSpecCategoryAsync(SpecificationCategoryDto categoryToAdd)
+
+        public async Task<Guid?> AddSpecificationCategoryAsync(SpecificationCategoryDto categoryToAdd)
         {
             categoryToAdd.Id = Guid.NewGuid();
+
             await _categoryRepo.AlreadyExistCheckAsync(x => x.Name == categoryToAdd.Name);
 
             var category = _mapper.Map<SpecificationCategory>(categoryToAdd);
@@ -47,15 +50,16 @@ namespace Aggregator.BusinessLogic.Services
             return result.Value!.Id;
         }
 
-        public async Task<SpecGroupsResponse> GetSpecGroupsAsync(Guid componentTypeId)
+
+        public async Task<SpecGroupsResponse> GetSpecificationKeyGroupsAsync(Guid componentTypeId)
         {
             var attributes = await _attributeRepo.FindAllEntitiesAsync(
                 x => x.ComponentTypeId == componentTypeId,
-                x => x.SpecificationCategory);
+                x => x.SpecificationCategory!);
             attributes.DataAnswerCheck();
 
             var result = attributes.Value!
-                .GroupBy(x => x.SpecificationCategory.Name)
+                .GroupBy(x => x.SpecificationCategory!.Name)
                 .ToDictionary(g => g.Key, g => g.Select(x => x.Key).ToList());
             
             attributes = null;
@@ -63,7 +67,8 @@ namespace Aggregator.BusinessLogic.Services
             return new SpecGroupsResponse(result);
         }
 
-        public async Task<bool> RemoveSpecAttributeAsync(Guid attributeId)
+
+        public async Task<bool> RemoveSpecificationKeyAsync(Guid attributeId)
         {
             await _attributeRepo.NotFoundCheckAsync(x => x.Id == attributeId);
 
@@ -73,9 +78,18 @@ namespace Aggregator.BusinessLogic.Services
             return result.Value != null;
         }
 
-        public async Task<bool> RemoveSpecCategoryAsync(Guid categoryId)
+
+        public async Task<bool> RemoveSpecificationCategoryAsync(Guid categoryId)
         {
             await _categoryRepo.NotFoundCheckAsync(x => x.Id ==  categoryId);
+
+            var dependAttributes = await _attributeRepo.FindAllEntitiesAsync(
+                x => x.SpecificationCategoryId == categoryId);
+            dependAttributes.DataAnswerCheck();
+
+            DependDeleteException.ThrowIfConflict(dependAttributes.Value!.Count(),
+                nameof(SpecificationAttribute));
+            dependAttributes = null;
 
             var result = await _categoryRepo.RemoveEntityAsync(categoryId);
             result.DataAnswerCheck();
@@ -83,7 +97,8 @@ namespace Aggregator.BusinessLogic.Services
             return result.Value != null;
         }
 
-        public async Task<bool> UpdateSpecAttributeAsync(SpecificationAttributeDto attributeToUpdate)
+
+        public async Task<bool> UpdateSpecificationKeyAsync(SpecificationAttributeDto attributeToUpdate)
         {
             await _attributeRepo.AlreadyExistCheckAsync(
                 x => x.ComponentTypeId == attributeToUpdate.ComponentTypeId
@@ -105,7 +120,8 @@ namespace Aggregator.BusinessLogic.Services
             return result.Value != null;
         }
 
-        public async Task<bool> UpdateSpecCategoryAsync(SpecificationCategoryDto categoryToUpdate)
+
+        public async Task<bool> UpdateSpecificationCategoryAsync(SpecificationCategoryDto categoryToUpdate)
         {
             await _categoryRepo.AlreadyExistCheckAsync(
                 x => x.Name == categoryToUpdate.Name);

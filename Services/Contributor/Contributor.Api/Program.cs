@@ -2,29 +2,37 @@ using Microsoft.IdentityModel.Logging;
 using HardwareHero.Shared.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
-builder.Host.ConfigureSecretsFile();
 
-builder.Services.AddFluentValidation();
-builder.Services.ConfigureOpenTelemetry(builder);
+builder.Host
+    .ConfigureSecretsFile()
+    .ConfigureElasticLogging();
 
-builder.Services.ConfigureCommonJwtAuthentication(builder);
-builder.Services.ConfigurePolicyAuthorization();
+var connectionString = builder.Configuration.GetConnectionString(
+    ConnectionNames.ContributorsConnection);
 
-var connectionString = builder.Configuration.GetConnectionString(ConnectionNames.ContributorsConnection);
-builder.Services.ConfigureBusinessLogicLayer(connectionString);
-builder.Services.ConfigureOptions<PageSizeOptions>(builder.Configuration);
+builder.Services
+    .ConfigureBusinessLayer(connectionString)
+    .ConfigureEventServices(builder)
+    //.ConfigureEventHandlers()
+    .ConfigureOptions(builder);
 
-builder.Services.AddCustomControllers();
+builder.Services
+    .ConfigureFluentValidation()
+    .ConfigureOpenTelemetry(builder)
+    .ConfigureCommonJwtAuthentication(builder)
+    .ConfigurePolicyAuthorization()
+    .ConfigureSwagger()
+    .ConfigureCORSPolicy()
+    .ConfigureCustomControllers();
 
-builder.Services.ConfigureSwagger();
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.ConfigureCORSPolicy();
+builder.Services
+    .AddEndpointsApiExplorer();
 
 IdentityModelEventSource.ShowPII = true;
-builder.Host.ConfigureElasticLogging();
 var app = builder.Build();
 
 await app.DatabaseInitialization();
+
 app.UseCommonCustomMiddlewares();
 
 app.UseCors("default");

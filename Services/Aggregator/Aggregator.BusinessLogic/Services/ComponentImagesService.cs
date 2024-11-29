@@ -1,6 +1,8 @@
 ﻿using Aggregator.DataAccess.Models.Components;
 using Aggregator.DTOs.Components;
+using EventDriven.Shared.Services;
 using HardwareHero.Shared.Extensions.Repository;
+using Storage.DTOs.Events;
 
 namespace Aggregator.BusinessLogic.Services
 {
@@ -8,33 +10,47 @@ namespace Aggregator.BusinessLogic.Services
     {
         private readonly IBaseRepositoryAsync<ComponentImage> _componentImagesRepo;
         private readonly IBaseRepositoryAsync<Component> _componentRepo;
-        private readonly IFileRepositoryAsync _imagesRepo;
-        private readonly IMapper _mapper;
 
+        private readonly IRequestService<UploadFileEvent, ReturnFileUrlEvent> _uploadFileService;
+        private readonly IRequestService<ChangeFileEvent, ReturnFileUrlEvent> _changeFileService;
+        private readonly IRequestService<DeleteFileEvent, DeleteFileResultEvent> _deleteFileService;
+
+        private readonly IMapper _mapper;
 
         public ComponentImagesService(
             IBaseRepositoryAsync<ComponentImage> componentImagesRepo,
-            IFileRepositoryAsync imagesRepo,
             IMapper mapper,
-            IBaseRepositoryAsync<Component> componentRepo)
+            IBaseRepositoryAsync<Component> componentRepo,
+            IRequestService<UploadFileEvent, ReturnFileUrlEvent> uploadFileService,
+            IRequestService<ChangeFileEvent, ReturnFileUrlEvent> changeFileService,
+            IRequestService<DeleteFileEvent, DeleteFileResultEvent> deleteFileService)
         {
             _componentImagesRepo = componentImagesRepo;
-            _imagesRepo = imagesRepo;
             _mapper = mapper;
             _componentRepo = componentRepo;
+            _uploadFileService = uploadFileService;
+            _changeFileService = changeFileService;
+            _deleteFileService = deleteFileService;
         }
 
+        // TODO: FindInactiveImagesAsync();
+
+
+        // TODO: Index problem
         public async Task<Guid?> AddComponentImageAsync(ComponentImageDto componentImageToAdd)
         {
             componentImageToAdd.Id = Guid.NewGuid();
             var component = await _componentRepo.NotFoundCheckAsync(x => x.Id == componentImageToAdd.Id);
             
             var componentImage = _mapper.Map<ComponentImage>(componentImageToAdd);
-            var imageLink = await _imagesRepo.UploadFileAsync(componentImageToAdd.ImageData,
-                componentImage.ImageName!);
-            imageLink.DataAnswerCheck();
+            var response = await _uploadFileService.SendRequestAsync(
+                    new UploadFileEvent()
+                    {
+                        File = componentImageToAdd.ImageData,
+                        FileName = string.Join('_', component.Id, componentImageToAdd.Index)
+                    });
 
-            componentImage.ImageUrl = imageLink.Value;
+            componentImage.ImageUrl = response.FileUrl;
             var result = await _componentImagesRepo.CreateEntityAsync(componentImage);
             result.DataAnswerCheck();
 
@@ -42,22 +58,26 @@ namespace Aggregator.BusinessLogic.Services
         }
 
 
-        public async Task<bool> RemoveComponentImageAsync(Guid componentImageId, bool removeActive = false)
+        public async Task<bool> RemoveComponentImageAsync(Guid componentImageId, bool diactivate = false)
         {
             var existImage = await _componentImagesRepo.NotFoundCheckAsync(x => x.Id == componentImageId);
-            if (existImage.ComponentId != null && !removeActive)
+            if (existImage.ComponentId != null && !diactivate)
             {
                 return false;
             }
 
-            var result = await _imagesRepo.DeleteFileAsync(existImage.ImageName);
-            result.DataAnswerCheck();
+            var response = await _deleteFileService.SendRequestAsync(
+                new DeleteFileEvent()
+                {
+                    FileName = string.Join('_', existImage.ComponentId, existImage.Index)
+                });
 
             var final = await _componentImagesRepo.RemoveEntityAsync(componentImageId);
             final.DataAnswerCheck();
             
             return final.Value != null;
         }
+
 
         public async Task<bool> ChangeActiveImageStatusAsync(Guid componentImageId)
         {

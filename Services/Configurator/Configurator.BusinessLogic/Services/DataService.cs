@@ -16,8 +16,8 @@ namespace Configurator.BusinessLogic.Services
         public DataService(IOptions<DatabaseOptions> databaseSettings, ILogger<DataService> logger)
         {
             _databaseSettings = databaseSettings.Value;
-            _mongoClient = new MongoClient(_databaseSettings.ConnectionString);
-            _mongoDb = _mongoClient.GetDatabase(_databaseSettings.DatabaseName);
+            //_mongoClient = new MongoClient(_databaseSettings.ConnectionString);
+            //_mongoDb = _mongoClient.GetDatabase(_databaseSettings.DatabaseName);
             _logger = logger;
         }
 

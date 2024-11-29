@@ -1,5 +1,6 @@
 ﻿using HardwareHero.Shared.Options;
 using HardwareHero.Shared.Repositories.Mongo;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 
@@ -8,21 +9,11 @@ namespace HardwareHero.Shared.Extensions.MongoDb
     public static class MongoDbContextExtensions
     {
         public static IServiceCollection AddMongoDbContext<TContext>(
-            this IServiceCollection services,
-            string? connectionString,
-            string? databaseName)
+            this IServiceCollection services)
         where TContext : MongoDbContext
         {
             ArgumentNullException.ThrowIfNull(services, nameof(services));
-            ArgumentNullException.ThrowIfNullOrEmpty(connectionString, nameof(connectionString));
-            ArgumentNullException.ThrowIfNullOrEmpty(databaseName, nameof(databaseName));
 
-            services.AddSingleton(provider =>
-            {
-                var context = Activator.CreateInstance<TContext>();
-                context.Initialize(connectionString, databaseName);
-                return context;
-            });
             services.AddScoped<MongoDbContext, TContext>();
 
             return services;

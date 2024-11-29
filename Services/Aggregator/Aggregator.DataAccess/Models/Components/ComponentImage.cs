@@ -9,7 +9,6 @@ namespace Aggregator.DataAccess.Models.Components
         public Guid? RevokedId { get; set; }
 
         // For images storage
-        public string? ImageName { get; set; }
         public string? ImageUrl { get; set; }
         public int Index { get; set; }
 

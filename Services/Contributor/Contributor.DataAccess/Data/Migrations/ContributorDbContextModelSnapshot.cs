@@ -129,9 +129,6 @@ namespace Contributor.DataAccess.Data.Migrations
                         .HasMaxLength(512)
                         .HasColumnType("nvarchar(512)");
 
-                    b.Property<string>("LogoName")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("LogoUrl")
                         .HasColumnType("nvarchar(max)");
 

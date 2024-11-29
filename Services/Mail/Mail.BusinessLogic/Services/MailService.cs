@@ -3,9 +3,8 @@ using MailKit.Security;
 using MimeKit;
 using MimeKit.Text;
 using Microsoft.Extensions.Configuration;
+using Mail.DTOs.Events;
 using HardwareHero.Shared.Repositories.Contracts;
-using Mail.BusinessLogic.Models;
-using Mail.DTOs.Mail;
 using HardwareHero.Shared.Extensions.Repository;
 
 namespace Mail.BusinessLogic.Services
@@ -13,21 +12,19 @@ namespace Mail.BusinessLogic.Services
     public class MailService : IMailService
     {
         private readonly IConfiguration _configuration;
-        //private readonly IBaseRepositoryAsync<MailMessage> _messageRepo;
-        private readonly IMapper _mapper;
+        private readonly IBaseRepositoryAsync<SendMailEvent> _messagesRepo;
 
 
         public MailService(
             IConfiguration configuration,
-            //IBaseRepositoryAsync<MailMessage> messageRepository,
-            IMapper mapper)
+            IBaseRepositoryAsync<SendMailEvent> messagesRepo)
         {
             _configuration = configuration;
-            //_messageRepo = messageRepository;
-            _mapper = mapper;
+            _messagesRepo = messagesRepo;
         }
 
-        public async Task<Guid> SendMailAsync(MailMessageDto messageToSend)
+
+        public async Task<Guid?> SendMailAsync(SendMailEvent messageToSend)
         {
             var config = _configuration.GetSection("SMTP");
             var email = new MimeMessage();
@@ -49,13 +46,19 @@ namespace Mail.BusinessLogic.Services
             messageToSend.Id = Guid.NewGuid();
             messageToSend.Timestamp = DateTime.Now;
 
-            var message = _mapper.Map<MailMessage>(messageToSend);
-            message.Body = string.Empty;
-            // TODO: It's not working. For some reason it's create exception about DbContext
-            //var result = await _messageRepo.CreateEntityAsync(message);
-            //result.DataAnswerCheck();
+            return await Task.FromResult(messageToSend.Id);
+        }
 
-            return messageToSend.Id;
+
+        public async Task<Guid?> SaveMailAsync(SendMailEvent messageToSave)
+        {
+            messageToSave.Id = Guid.NewGuid();
+            messageToSave.Body = string.Empty;
+
+            var result = await _messagesRepo.CreateEntityAsync(messageToSave);
+            result.DataAnswerCheck();
+
+            return result.Value?.Id;
         }
     }
 }

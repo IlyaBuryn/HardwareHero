@@ -1,28 +1,35 @@
 using Users.Api.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
-builder.Host.ConfigureSecretsFile();
 
-builder.Services.ConfigureFluentValidation();
-builder.Services.ConfigureOpenTelemetry(builder);
+builder.Host
+    .ConfigureSecretsFile()
+    .ConfigureElasticLogging();
 
-builder.Services.ConfigureSQLServerContexts(builder);
-builder.Services.ConfigureCommonJwtAuthentication(builder);
-builder.Services.ConfigurePolicyAuthorization();
-builder.Services.ConfigureCustomIdentity();
+builder.Services
+    .ConfigureServices()
+    .ConfigureEventServices(builder)
+    .ConfigureEventHandlers();
 
-builder.Services.ConfigureServices();
+builder.Services
+    .ConfigureFluentValidation()
+    .ConfigureOpenTelemetry(builder)
+    .ConfigureSQLServerContexts(builder)
+    .ConfigureCommonJwtAuthentication(builder)
+    .ConfigurePolicyAuthorization()
+    .ConfigureCustomIdentity()
+    .ConfigureSwagger()
+    .ConfigureCORSPolicy()
+    .ConfigureCustomControllers();
 
-builder.Services.AddCustomControllers();
+builder.Services
+    .AddEndpointsApiExplorer();
 
-builder.Services.ConfigureSwagger();
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.ConfigureCORSPolicy();
-
-builder.Host.ConfigureElasticLogging();
 var app = builder.Build();
 
 app.UseMigration<UsersDbContext>("Identity.Shared");
+await app.SetupDefaultDataAsync();
+
 app.UseCommonCustomMiddlewares();
 
 app.UseCors("default");

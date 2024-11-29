@@ -12,10 +12,10 @@ namespace Identity.Shared.Requests
             string? LastName,
             Guid? RegionId,
             Guid? CurrencyId,
-            string? ImageName,
             IFormFile? ImageData);
 
         public record UpdateUserRequest(
+            string UserId,
             string? UserName,
             string? FirstName,
             string? LastName,

@@ -6,36 +6,51 @@ namespace Contributor.BusinessLogic.Extensions
 {
     public static class ServiceCollectionExtensions
     {
-        public static void ConfigureBusinessLogicLayer(this IServiceCollection builder, string connectionString)
+        public static IServiceCollection ConfigureBusinessLayer(
+            this IServiceCollection services, string connectionString)
         {
-            ConfigureServices(builder);
-            ConfigureMapProfiles(builder);
-            ConfigureDtoValidators(builder);
+            services
+                .ConfigureBusinessServices()
+                .ConfigureMapProfiles()
+                .ConfigureDtoValidators();
 
-            builder.ConfigureDataAccessLayer(connectionString);
+            services
+                .ConfigureDataAccessLayer(connectionString);
+
+            return services;
         }
 
-        private static void ConfigureServices(IServiceCollection service)
+        internal static IServiceCollection ConfigureBusinessServices(
+            this IServiceCollection services)
         {
-            service.AddScoped<IContributorService, ContributorService>();
-            service.AddScoped<IChatService, ChatService>();
-            service.AddScoped<IContributorExcellenceService, ContributorExcellenceService>();
-            service.AddScoped<ISubscriptionService, SubscriptionService>();
-            service.AddScoped<IReferencesDataService, ReferencesDataService>();
+            services
+                .AddScoped<IContributorService, ContributorService>()
+                .AddScoped<IChatService, ChatService>()
+                .AddScoped<IContributorExcellenceService, ContributorExcellenceService>()
+                .AddScoped<ISubscriptionService, SubscriptionService>()
+                .AddScoped<IReferencesDataService, ReferencesDataService>();
+
+            return services;
         }
 
-        private static void ConfigureMapProfiles(IServiceCollection service)
+        internal static IServiceCollection ConfigureMapProfiles(
+            this IServiceCollection services)
         {
-            service.AddAutoMapper(cfg =>
+            services.AddAutoMapper(cfg =>
             {
                 cfg.AddProfile<ContributorMapProfile>();
             });
+
+            return services;
         }
 
-        private static void ConfigureDtoValidators(IServiceCollection services)
+        internal static IServiceCollection ConfigureDtoValidators(
+            this IServiceCollection services)
         {
             var assembly = Assembly.Load(new AssemblyName("Contributor.DTOs"));
             services.AddValidatorsFromAssembly(assembly);
+
+            return services;
         }
     }
 }

@@ -18,6 +18,7 @@ namespace Aggregator.BusinessLogic.Services
             _mapper = mapper;
         }
 
+
         public async Task<Guid?> AddComponentAttributeAsync(ComponentAttributeDto attributeToAdd)
         {
             attributeToAdd.Id = Guid.NewGuid();
@@ -31,6 +32,7 @@ namespace Aggregator.BusinessLogic.Services
 
             return result.Value?.Id;
         }
+
 
         public async Task<bool> UpdateComponentAttributeValueAsync(ComponentAttributeDto attributeToUpdate)
         {
@@ -54,19 +56,23 @@ namespace Aggregator.BusinessLogic.Services
             return result.Value != null;
         }
 
+
         public async Task<ComponentSpecsResponse> GetComponentSpecsAsync(Guid componentId)
         {
             var attributes = await _componentAttributesRepo
-                .FindAllEntitiesAsync(x => x.Id == componentId,
-                x => x.SpecificationAttribute, x => x.SpecificationAttribute.SpecificationCategory);
+                .FindAllEntitiesAsync(
+                    x => x.Id == componentId 
+                    && x.SpecificationAttribute != null
+                    && x.SpecificationAttribute.SpecificationCategory != null,
+                x => x.SpecificationAttribute!, x => x.SpecificationAttribute!.SpecificationCategory!);
             attributes.DataAnswerCheck();
 
             var result = attributes.Value!
-                .GroupBy(x => x.SpecificationAttribute.SpecificationCategory.Name)
+                .GroupBy(x => x.SpecificationAttribute!.SpecificationCategory!.Name)
                 .ToDictionary(
                     g => g.Key,
                     g => g.ToDictionary(
-                        x => x.SpecificationAttribute.Key,
+                        x => x.SpecificationAttribute!.Key,
                         x => x.Value
                     )
                 );

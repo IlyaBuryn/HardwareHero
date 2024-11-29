@@ -135,9 +135,6 @@ namespace Aggregator.DataAccess.Data.Migrations
                     b.Property<Guid?>("ComponentId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("ImageName")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("ImageUrl")
                         .HasColumnType("nvarchar(max)");
 

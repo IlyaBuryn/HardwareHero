@@ -1,12 +1,17 @@
-﻿namespace Users.Api.Contracts
+﻿using static Identity.Shared.Requests.UsersRequestRecords;
+using static Identity.Shared.Responses.UsersResponseRecords;
+
+namespace Users.Api.Contracts
 {
     public interface IRolesService
     {
-        Task<IdentityRole> CreateRoleAsync(string roleName);
-        Task<IList<IdentityRole>> FetchRolesAsync();
-        Task<bool> SetupUserRoleAsync(string userId, string roleName);
-        Task<bool> SetupUserRolesAsync(string userId, string[] roles);
-        Task<bool> RemoveRoleAsync(string roleName);
-        Task<bool> RemoveUserRoleAsync(string userId, string roleName);
+        Task<RolesResponse> CreateRolesAsync(RolesRequest rolesToCreate);
+        Task<RolesResponse> DeleteRolesAsync(RolesRequest rolesToDelete);
+        Task<IEnumerable<IdentityRole>> FetchRolesAsync();
+
+        Task<bool> ChangeRoleNameAsync(string fromRole, string toRole);
+
+        Task<bool> SetupUserRolesAsync(UserRolesRequest userRoles);
+        Task<bool> RemoveUserRolesAsync(UserRolesRequest userRoles);
     }
 }

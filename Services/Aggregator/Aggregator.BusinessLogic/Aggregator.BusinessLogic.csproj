@@ -40,7 +40,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\Tools\Communication\EventDriven.Shared\EventDriven.Shared.csproj" />
     <ProjectReference Include="..\..\..\Tools\HardwareHero.Shared\HardwareHero.Shared.csproj" />
+    <ProjectReference Include="..\..\Storage\Storage.DTOs\Storage.DTOs.csproj" />
     <ProjectReference Include="..\Aggregator.DataAccess\Aggregator.DataAccess.csproj" />
     <ProjectReference Include="..\Aggregator.DTOs\Aggregator.DTOs.csproj" />
   </ItemGroup>

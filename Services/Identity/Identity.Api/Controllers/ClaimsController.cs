@@ -14,6 +14,7 @@ namespace Identity.Api.Controllers
             _claimsService = claimsService;
         }
 
+
         [HttpGet("{userId}")]
         [AllowAnonymous]
         public async Task<IActionResult> GetUserClaimsAsync([FromRoute] string userId)
@@ -22,6 +23,7 @@ namespace Identity.Api.Controllers
 
             return Ok(result);
         }
+
 
         [HttpPost("{userId}/{claimName}/{claimValue}")]
         [AllowAnonymous]

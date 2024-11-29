@@ -17,6 +17,7 @@ namespace Contributor.Api.Controllers
             _excellenceService = excellenceService;
         }
 
+
         [HttpGet("{contributorId}/excellence")]
         [AllowAnonymous]
         public async Task<IActionResult> GetAsync([FromRoute] Guid contributorId)
@@ -27,6 +28,7 @@ namespace Contributor.Api.Controllers
             return Ok(response);
         }
 
+
         [HttpPut("excellence")]
         [Authorize(Roles = Roles.Contributor)]
         public async Task<IActionResult> UpdateAsync([FromBody] ContributorExcellenceDto excellenceToUpdate)
@@ -36,6 +38,7 @@ namespace Contributor.Api.Controllers
             
             return Ok(response);
         }
+
 
         [HttpGet("excellence/{name}")]
         [AllowAnonymous]

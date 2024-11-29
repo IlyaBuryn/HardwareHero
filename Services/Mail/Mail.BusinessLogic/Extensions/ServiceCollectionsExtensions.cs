@@ -1,47 +1,50 @@
-﻿using FluentValidation;
-using HardwareHero.Shared.Extensions.MongoDb;
+﻿using HardwareHero.Shared.Extensions.MongoDb;
 using HardwareHero.Shared.Repositories.Contracts;
 using HardwareHero.Shared.Repositories.Mongo;
 using Mail.BusinessLogic.Data;
 using Microsoft.Extensions.DependencyInjection;
-using System.Reflection;
 
 namespace Mail.BusinessLogic.Extensions
 {
     public static class ServiceCollectionsExtensions
     {
-        public static void ConfigureBusinessLogicLayer(this IServiceCollection service)
+        public static IServiceCollection ConfigureBusinessLayer(
+            this IServiceCollection services)
         {
-            ConfigureServices(service);
-            ConfigureMapProfiles(service);
-            ConfigureDtoValidators(service);
+            services
+                .ConfigureDbContext()
+                .ConfigureRepositories()
+                .ConfigureServices();
+
+            return services;
         }
 
-        public static void ConfigureDbContext(this IServiceCollection service, DatabaseOptions options)
+        internal static IServiceCollection ConfigureDbContext(
+            this IServiceCollection services)
         {
-            service.AddMongoDbContext<MailDbContext>(options.ConnectionString, options.DatabaseName);
+            services
+                .AddMongoDbContext<MailEventDbContext>();
+
+            return services;
         }
 
-        private static void ConfigureServices(IServiceCollection service)
+        internal static IServiceCollection ConfigureServices(
+            this IServiceCollection services)
         {
-            //service.AddScoped(typeof(IBaseRepositoryAsync<>), typeof(MongoBaseRepositoryAsync<>));
+            services
+                .AddScoped<IMailServicePresets, MailServicePresets>()
+                .AddScoped<IMailService, MailService>();
 
-            service.AddScoped<IMailServicePresets, MailServicePresets>();
-            service.AddScoped<IMailService, MailService>();
+            return services;
         }
 
-        private static void ConfigureMapProfiles(IServiceCollection service)
+        internal static IServiceCollection ConfigureRepositories(
+            this IServiceCollection services)
         {
-            service.AddAutoMapper(cfg =>
-            {
-                cfg.AddProfile<MailMapProfile>();
-            });
-        }
+            services
+                .AddScoped(typeof(IBaseRepositoryAsync<>), typeof(MongoBaseRepositoryAsync<>));
 
-        private static void ConfigureDtoValidators(IServiceCollection service)
-        {
-            var assembly = Assembly.Load(new AssemblyName("Mail.DTOs"));
-            service.AddValidatorsFromAssembly(assembly);
+            return services;
         }
     }
 }

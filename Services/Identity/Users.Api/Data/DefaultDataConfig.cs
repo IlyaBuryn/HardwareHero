@@ -1,4 +1,4 @@
-﻿namespace Identity.Api.Data
+﻿namespace Users.Api.Data
 {
     public static class DefaultDataConfig
     {

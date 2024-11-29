@@ -6,7 +6,6 @@ namespace Contributor.DataAccess.Models
     {
         public string Name { get; set; }
         public string? LogoUrl { get; set; }
-        public string? LogoName { get; set; }
         public string? Description { get; set; }
         public string Phone { get; set; }
         public string? MainWebLink { get; set; }

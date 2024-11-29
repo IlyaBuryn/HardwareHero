@@ -1,38 +1,32 @@
-using EventDriven.Kafka.Config;
-using EventDriven.Kafka.Extensions;
 using HardwareHero.Shared.Extensions;
-using HardwareHero.Shared.Extensions.MongoDb;
 using Mail.Api.Handlers;
-using Mail.DTOs.Events;
 using Microsoft.IdentityModel.Logging;
 
 var builder = WebApplication.CreateBuilder(args);
-builder.Host.ConfigureSecretsFile();
 
-builder.Services.AddFluentValidation();
-builder.Services.ConfigureOpenTelemetry(builder);
+builder.Host
+    .ConfigureSecretsFile()
+    .ConfigureElasticLogging();
 
-builder.Services.ConfigureCommonJwtAuthentication(builder);
-builder.Services.ConfigurePolicyAuthorization();
+builder.Services
+    .ConfigureBusinessLayer()
+    .ConfigureEventServices(builder)
+    .ConfigureEventHandlers()
+    .ConfigureOptions(builder);
 
-// TODO:
-//builder.Services.ConfigureOptions<DatabaseOptions>(builder.Configuration, ConnectionNames.MailConnection);
-//builder.Services.ConfigureDbContext(builder.Services.GetMongoDatabaseOptions());
-builder.Services.ConfigureBusinessLogicLayer();
+builder.Services
+    .ConfigureFluentValidation()
+    .ConfigureOpenTelemetry(builder)
+    .ConfigureCommonJwtAuthentication(builder)
+    .ConfigurePolicyAuthorization()
+    .ConfigureSwagger()
+    .ConfigureCORSPolicy()
+    .ConfigureCustomControllers();
 
-//var eventsConfig = builder.Configuration.GetSection("MailEvents").Get<KafkaConfig>();
-//builder.Services.AddKafkaConsumer<MailSettingsEvent>(eventsConfig);
-
-builder.Services.AddCustomControllers();
-
-builder.Services.ConfigureSwagger();
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.ConfigureCORSPolicy();
-
-//builder.Services.AddHostedService<MailEventsHandler>();
+builder.Services
+    .AddEndpointsApiExplorer();
 
 IdentityModelEventSource.ShowPII = true;
-builder.Host.ConfigureElasticLogging();
 var app = builder.Build();
 
 app.UseCommonCustomMiddlewares();

@@ -1,9 +1,12 @@
-﻿using HardwareHero.Shared.Models;
+﻿using EventDriven.Shared.Services;
+using HardwareHero.Shared.Models;
 using Identity.Api.Contracts;
 using Identity.Api.Data;
 using Identity.Shared.Domain;
+using Identity.Shared.Events;
 using Identity.Shared.Requests;
 using Identity.Shared.Responses;
+using Mail.DTOs.Events;
 using static Identity.Shared.Requests.IdentityRequestRecords;
 
 namespace Identity.Api.Services
@@ -16,6 +19,12 @@ namespace Identity.Api.Services
         private readonly TokenValidationParameters _tokenValidationParameters;
         private readonly GrantsDbContext _grantDbContext;
         private readonly JwtConfig _jwtConfig;
+
+        private readonly IRequestService<CreateUserEvent, UserResultEvent> _createUserService;
+        //private readonly IRequestService<UpdateUserEvent, UserResultEvent> _updateUserService;
+        //private readonly IRequestService<DeleteUserEvent, UserResultEvent> _deleteUserService;
+        private readonly IProducerService<SendMailEvent> _mailProducer;
+
         private readonly ILogger<AuthService> _logger;
 
         public AuthService(
@@ -24,7 +33,9 @@ namespace Identity.Api.Services
             IOptionsMonitor<JwtConfig> optionsMonitor,
             TokenValidationParameters tokenValidationParameters,
             GrantsDbContext grantDbContext,
-            ILogger<AuthService> logger)
+            ILogger<AuthService> logger,
+            IProducerService<SendMailEvent> mailProducer,
+            IRequestService<CreateUserEvent, UserResultEvent> createUserService)
         {
             _userManager = userManager;
             _roleManager = roleManager;
@@ -32,6 +43,8 @@ namespace Identity.Api.Services
             _tokenValidationParameters = tokenValidationParameters;
             _grantDbContext = grantDbContext;
             _logger = logger;
+            _mailProducer = mailProducer;
+            _createUserService = createUserService;
         }
 
 
@@ -56,6 +69,7 @@ namespace Identity.Api.Services
             if (isValid)
             {
                 await RevokeOldTokensAsync(user.Id);
+                _logger.LogInformation($"Sign in user: {user.UserName}");
 
                 return user;
             }
@@ -63,44 +77,63 @@ namespace Identity.Api.Services
             throw new AuthenticationException();
         }
 
+
         public async Task<ApplicationUser> SignUpAsync(SignUpRequest model)
         {
-            var existingUsername = await _userManager.FindByNameAsync(model.Username);
-            if (existingUsername != null)
+            var createResponse = await _createUserService.SendRequestAsync(
+                new CreateUserEvent()
+                {
+                    Model = new CreateUserRequest(model.Username, model.Email, model.Password,
+                        null, null, null, null, null),
+                });
+
+            //var existingUsername = await _userManager.FindByNameAsync(model.Username);
+            //if (existingUsername != null)
+            //{
+            //    throw new AuthenticationException("This user already exist!");
+            //}
+
+            //var existingEmail = _userManager.FindByEmailAsync(model.Email).Result;
+            //if (existingEmail != null)
+            //{
+            //    throw new AuthenticationException("This user already exist!");
+            //}
+
+            //var user = new ApplicationUser
+            //{
+            //    UserName = model.Username,
+            //    Email = model.Email,
+            //    RegistrationDate = DateTime.Now,
+
+            //};
+
+            //var result = await _userManager.CreateAsync(user, model.Password);
+
+            //if (!result.Succeeded)
+            //{
+            //    throw new AuthenticationException(result.Errors.First().Description);
+            //}
+
+            //var roleResult = await _userManager.AddToRoleAsync(user, Roles.User);
+
+            if (createResponse.Success && createResponse.User != null)
             {
-                throw new AuthenticationException("This user already exist!");
+                _logger.LogInformation($"Sign up new user: {createResponse.User.UserName}");
+                await _mailProducer.ProduceAsync(new SendMailEvent
+                {
+                    Timestamp = DateTime.UtcNow,
+                    Username = createResponse.User.UserName,
+                    RecipientMailAddress = createResponse.User.Email,
+                    CreatedAt = DateTime.UtcNow,
+                    MailPreset = Mail.DTOs.MailPreset.Welcome
+                }, new CancellationToken());
+
+                return createResponse.User;
             }
 
-            var existingEmail = _userManager.FindByEmailAsync(model.Email).Result;
-            if (existingEmail != null)
-            {
-                throw new AuthenticationException("This user already exist!");
-            }
-
-            var user = new ApplicationUser
-            {
-                UserName = model.Username,
-                Email = model.Email,
-                RegistrationDate = DateTime.Now,
-
-            };
-
-            var result = await _userManager.CreateAsync(user, model.Password);
-
-            if (!result.Succeeded)
-            {
-                throw new AuthenticationException(result.Errors.First().Description);
-            }
-
-            var roleResult = await _userManager.AddToRoleAsync(user, Roles.User);
-
-            if (roleResult.Succeeded)
-            {
-                return user;
-            }
-
-            throw new AuthenticationException(roleResult.Errors.First().Description);
+            throw new AuthenticationException(createResponse.Error!);
         }
+
 
         public async Task<AuthenticationResponse> RefreshTokenAsync(TokenRequest tokenRequest)
         {
@@ -113,6 +146,7 @@ namespace Identity.Api.Services
 
             return result;
         }
+
 
         public async Task<AuthenticationResponse?> VerifyTokenAsync(TokenRequest tokenRequest)
         {
@@ -183,6 +217,7 @@ namespace Identity.Api.Services
             return await GenerateJwtTokenAsync(dbUser);
         }
 
+
         public async Task<AuthenticationResponse> GenerateJwtTokenAsync(ApplicationUser user)
         {
             var jwtTokenHandler = new JwtSecurityTokenHandler();
@@ -223,6 +258,7 @@ namespace Identity.Api.Services
             };
         }
 
+
         public async Task<List<Claim>> GetAllValidClaimsAsync(ApplicationUser user) 
         {
             var _option = new IdentityOptions();
@@ -259,6 +295,7 @@ namespace Identity.Api.Services
             return claims;
         }
 
+
         public async Task<AuthenticationResponse> UpdatePasswordAsync(UserPasswordChangeRequest model)
         {
             var user = await _userManager.FindByEmailAsync(model.Email);
@@ -274,6 +311,7 @@ namespace Identity.Api.Services
 
             return result;
         }
+
 
         private DateTime UnixTimeStampToDateTime(double unixTimeStamp)
         {

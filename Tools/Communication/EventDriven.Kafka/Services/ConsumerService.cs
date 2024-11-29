@@ -42,11 +42,21 @@ namespace EventDriven.Kafka.Services
             {
                 while (!cancellationToken.IsCancellationRequested)
                 {
+                    await Task.Delay(1);
+                    _logger.LogInformation("Waiting for message...");
+
                     var result = consumer.Consume(cancellationToken);
                     if (result?.Message?.Value != null)
                     {
                         _logger.LogInformation($"Consumed event at: {result.TopicPartitionOffset}");
-                        await handler(result.Message.Value);
+                        try
+                        {
+                            await handler(result.Message.Value);
+                        }
+                        catch (Exception ex)
+                        {
+                            _logger.LogError(ex, "Error in event handler.");
+                        }
                     }
                 }
             }
@@ -56,6 +66,7 @@ namespace EventDriven.Kafka.Services
             }
             finally
             {
+                _logger.LogInformation("Closing Kafka consumer...");
                 consumer.Close();
             }
         }

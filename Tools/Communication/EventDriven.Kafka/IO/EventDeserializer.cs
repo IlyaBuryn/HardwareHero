@@ -8,8 +8,14 @@ namespace EventDriven.Kafka.IO
     {
         public TEvent Deserialize(ReadOnlySpan<byte> data, bool isNull, SerializationContext context)
         {
-            if (isNull || data.IsEmpty) return null;
-            return JsonSerializer.Deserialize<TEvent>(data);
+            if (isNull || data.IsEmpty)
+            {
+                throw new ArgumentException("Data is null or empty.", nameof(data));
+            }
+
+            var result = JsonSerializer.Deserialize<TEvent>(data);
+
+            return result ?? throw new InvalidOperationException("Deserialization resulted in null.");
         }
     }
 }

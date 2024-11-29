@@ -1,7 +1,6 @@
 ﻿using HardwareHero.Shared.Repositories.Answers;
 using HardwareHero.Shared.Repositories.Contracts;
 using Microsoft.EntityFrameworkCore;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace HardwareHero.Shared.Repositories.EF
 {

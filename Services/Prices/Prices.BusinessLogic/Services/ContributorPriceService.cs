@@ -4,6 +4,7 @@ using HardwareHero.Shared.Repositories.Contracts;
 using HardwareHero.Shared.Responses;
 using MongoDB.Driver;
 using Prices.BusinessLogic.Models;
+using Prices.DTOs.Events;
 using Prices.DTOs.Prices;
 using static Prices.DTOs.Requests.PricesRequests;
 using static Prices.DTOs.Responses.PricesResponseRecords;
@@ -14,7 +15,6 @@ namespace Prices.BusinessLogic.Services
     {
         private readonly IBaseRepositoryAsync<ContributorComponentPrices> _pricesRepo;
         private readonly IMapper _mapper;
-
 
         public ContributorPriceService(
             IBaseRepositoryAsync<ContributorComponentPrices> pricesRepo,
@@ -67,6 +67,7 @@ namespace Prices.BusinessLogic.Services
             return updated.Value!.Id;
         }
 
+
         public async Task<PageResponse<PositionsResponse>> GetPositionsPagedAsync(Guid componentId, IPaginable filter)
         {
             // TODO: Need to edit IQueryRepo for mongoDb
@@ -80,23 +81,42 @@ namespace Prices.BusinessLogic.Services
             //return result;
         }
 
-        public async Task<PriceResponse> GetLowestFromLatestPricesAsync(Guid componentId)
+
+        public async Task<LatestLowestComponentPriceEvent> GetLowestFromLatestPricesAsync(Guid componentId)
         {
             var pricesAnswer = await _pricesRepo.FindAllEntitiesAsync(
                 x => x.ComponentId == componentId && x.IsUnsupported == false);
             pricesAnswer.DataAnswerCheck();
 
-            var prices = pricesAnswer.Value;
-            if (prices == null)
+            var positions = pricesAnswer.Value;
+            if (positions == null)
             {
-                throw new NullReferenceException(nameof(prices));
+                throw new NullReferenceException(nameof(positions));
             }
 
-            var latestLowPrice = prices.Select(x => x.Prices.Last().Price).Min();
+            var latestLowestPrice = positions
+                .Select(position => new
+                {
+                    ComponentPrice = position,
+                    MostRecentPrice = position.Prices
+                        .OrderByDescending(p => p.Timestamp)
+                        .FirstOrDefault()
+                })
+                .Where(x => x.MostRecentPrice != null)
+                .OrderBy(x => x.MostRecentPrice!.Price)
+                .FirstOrDefault()?.ComponentPrice;
 
-            // TODO: Change NewGuid to currencyId.
-            return new PriceResponse(Guid.NewGuid(), latestLowPrice);
+            // TODO: also send currencyId.
+            // TODO: Warning!
+            return new LatestLowestComponentPriceEvent()
+            {
+                LowestPrice = latestLowestPrice.Prices.OrderByDescending(p => p.Timestamp)
+                    .FirstOrDefault().Price,
+                ContributorId = latestLowestPrice.ContributorId
+            };
+
         }
+
 
         public async Task<bool> ChangeUnsupportedStatusAsync(Guid componentPriceId)
         {
@@ -108,6 +128,7 @@ namespace Prices.BusinessLogic.Services
 
             return result.Value != null;
         }
+
 
         //public async Task<PageResponse<ContributorComponentPricesDto?>> GetPricesToDiscreetlyUpdate(PaginationInfo pageInfo)
         //{

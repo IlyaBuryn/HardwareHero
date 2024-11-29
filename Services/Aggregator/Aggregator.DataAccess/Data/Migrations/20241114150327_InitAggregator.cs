@@ -128,7 +128,6 @@ namespace Aggregator.DataAccess.Data.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "NEWID()"),
                     ComponentId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     RevokedId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    ImageName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Index = table.Column<int>(type: "int", nullable: false)
                 },

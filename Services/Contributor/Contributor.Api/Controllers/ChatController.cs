@@ -21,6 +21,7 @@ namespace Contributor.Api.Controllers
             _pageSizeOptions = options.Value;
         }
 
+
         [HttpPost]
         [Authorize(Roles = Roles.Contributor)]
         public async Task<IActionResult> CreateAsync([FromBody] ChatRoomDto chatToAdd)
@@ -30,6 +31,7 @@ namespace Contributor.Api.Controllers
             
             return CreatedAtAction(nameof(CreateAsync), response);
         }
+
 
         [HttpPut]
         [Authorize(Roles = Roles.Manager)]
@@ -41,6 +43,7 @@ namespace Contributor.Api.Controllers
             return Ok(response);
         }
 
+
         [HttpDelete("{chatRoomId}")]
         [Authorize(Roles = Roles.Manager)]
         public async Task<IActionResult> DeleteAsync([FromRoute] Guid chatRoomId)
@@ -50,6 +53,7 @@ namespace Contributor.Api.Controllers
 
             return Ok(response);
         }
+
 
         [HttpGet("{chatRoomId}")]
         [Authorize(Roles = Roles.Contributor)]
@@ -61,9 +65,10 @@ namespace Contributor.Api.Controllers
             return Ok(response);
         }
 
-        [HttpPost("contributor/{contributorId}")]
+
+        [HttpGet("contributor/{contributorId}")]
         [Authorize(Roles = Roles.Contributor)]
-        public async Task<IActionResult> GetAsPageAsync([FromRoute] Guid contributorId, [FromBody] ChatRoomFilter filter)
+        public async Task<IActionResult> GetAsPageAsync([FromRoute] Guid contributorId, [FromQuery] ChatRoomFilter filter)
         {
             var response = await _chatService
                 .GetChatsByContributorIdAsync(contributorId, filter);
@@ -82,6 +87,7 @@ namespace Contributor.Api.Controllers
             return CreatedAtAction(nameof(SendMessageAsync), response);
         }
 
+
         [HttpPut("message")]
         [Authorize(Roles = Roles.Contributor)]
         public async Task<IActionResult> UpdateMessageAsync([FromBody] ChatMessageDto messageToUpdate)
@@ -92,14 +98,15 @@ namespace Contributor.Api.Controllers
             return Ok(response);
         }
 
-        [HttpPost("{chatRoomId}")]
-        [Authorize(Roles = Roles.Contributor)]
-        public async Task<IActionResult> GetMessagesAsync([FromRoute] Guid chatRoomId, [FromBody] MessagesFilter filter)
-        {
-            var response = await _chatService
-                .GetMessagesByChatIdAsync(chatRoomId, filter);
+        // TODO: What the difference between same method /\ getByChatRoomId() ?
+        //[HttpGet("{chatRoomId}")]
+        //[Authorize(Roles = Roles.Contributor)]
+        //public async Task<IActionResult> GetMessagesAsync([FromRoute] Guid chatRoomId, [FromQuery] MessagesFilter filter)
+        //{
+        //    var response = await _chatService
+        //        .GetMessagesByChatIdAsync(chatRoomId, filter);
 
-            return Ok(response);
-        }
+        //    return Ok(response);
+        //}
     }
 }

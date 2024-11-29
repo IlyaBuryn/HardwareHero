@@ -1,4 +1,4 @@
-﻿using Mail.DTOs.Mail;
+﻿using Mail.DTOs.Events;
 using Microsoft.Extensions.Configuration;
 
 namespace Mail.BusinessLogic.Presets
@@ -9,12 +9,12 @@ namespace Mail.BusinessLogic.Presets
             : base(configuration.GetSection("WelcomePagePath").Value)
         { }
 
-        protected override void SetupReplacedProperties(MailMessageDto message)
+        protected override void SetupReplacedProperties(SendMailEvent message)
         {
             base.SetupReplacedProperties(message);
         }
 
-        protected override void SetupTitle(MailMessageDto message)
+        protected override void SetupTitle(SendMailEvent message)
         {
             message.Subject = "Welcome to HardwareHero!";
         }

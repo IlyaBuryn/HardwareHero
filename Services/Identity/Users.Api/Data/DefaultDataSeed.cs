@@ -1,6 +1,6 @@
 ﻿using Identity.Shared.Domain;
 
-namespace Identity.Api.Data
+namespace Users.Api.Data
 {
     public class DefaultDataSeed
     {
@@ -18,7 +18,7 @@ namespace Identity.Api.Data
             _logger = logger;
         }
 
-        public async Task EnsureSeedData()
+        public async Task EnsureSeedDataAsync()
         {
             foreach (var role in DefaultDataConfig.DefaultIdentityRoles)
             {

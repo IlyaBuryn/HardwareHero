@@ -21,6 +21,7 @@ namespace Contributor.Api.Controllers
             _pageSizeSettings = pageSizeSettings.Value;
         }
 
+
         [HttpPost("sign-up")]
         [Authorize(Roles = Roles.User)]
         public async Task<IActionResult> SignUpAsync([FromBody] ContributorModelDto contributorToAdd)
@@ -31,6 +32,7 @@ namespace Contributor.Api.Controllers
             return CreatedAtAction(nameof(SignUpAsync), response);
         }
 
+
         [HttpDelete("{contributorId}")]
         [Authorize(Roles = Roles.User)]
         public async Task<IActionResult> DeleteAsync([FromRoute] Guid contributorId)
@@ -40,6 +42,7 @@ namespace Contributor.Api.Controllers
             
             return Ok(response);
         }
+
 
         [HttpGet("{param}")]
         [AllowAnonymous]
@@ -52,20 +55,22 @@ namespace Contributor.Api.Controllers
             }
             else
             {
-                var response = await _contributorService.GetContributorByExcNameAsync(param);
+                var response = await _contributorService.GetContributorByNameAsync(param);
                 return Ok(response);
             }
         }
 
-        [HttpPost]
+
+        [HttpGet]
         [Authorize(Roles = Roles.Manager)]
-        public async Task<IActionResult> GetAsPageAsync([FromBody] ContributorsFilter filter)
+        public async Task<IActionResult> GetAsPageAsync([FromQuery] ContributorsFilter filter)
         {
             var response = await _contributorService
                 .GetContributorsAsPageAsync(filter);
             
             return Ok(response);
         }
+
 
         [HttpGet("{contributorId}/confirm-info")]
         [Authorize(Roles = Roles.Manager)]
@@ -77,12 +82,13 @@ namespace Contributor.Api.Controllers
             return Ok(response);
         }
 
+
         [HttpPut("{contributorId}/confirm-info")]
         [Authorize(Roles = Roles.Manager)]
         public async Task<IActionResult> ChangeConfirmInfoAsync([FromRoute] Guid contributorId, [FromBody] ContributorConfirmInfoDto info)
         {
             var response = await _contributorService
-                .ChangeConfirmInfoForContributorAsync(contributorId, info);
+                .ChangeContributorConfirmInfoAsync(contributorId, info);
 
             return Ok(response);
         }

@@ -7,53 +7,110 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.OpenApi.Models;
 using HardwareHero.Shared.OpenApi;
 using Identity.Shared.Domain;
+using EventDriven.Kafka.Config;
+using EventDriven.Kafka.Extensions;
+using Identity.Shared.Events;
+using Mail.DTOs.Events;
+using Identity.Api.Handlers;
 
 namespace Identity.Api.Extensions
 {
     public static class ServiceCollectionExtensions
     {
-        public static void ConfigureFluentValidation(this IServiceCollection services)
+        public static IServiceCollection ConfigureFluentValidation(
+            this IServiceCollection services)
         {
-            services.AddFluentValidationAutoValidation()
+            var assembly = Assembly.Load(new AssemblyName("Identity.Shared"));
+            services
+                .AddValidatorsFromAssembly(assembly)
+                .AddFluentValidationAutoValidation()
                 .AddFluentValidationClientsideAdapters();
+
+            return services;
         }
 
-        public static void ConfigureOpenTelemetry(this IServiceCollection services, WebApplicationBuilder builder)
+        public static IServiceCollection ConfigureOpenTelemetry(
+            this IServiceCollection services, WebApplicationBuilder builder)
         {
             services.ConfigureCommonOpenTelemetry(
                 "IdentityRemoteManage",
                 builder.Configuration.GetValue<string>("OpenRemoteManageMeterName"),
                 builder.Configuration["Otel:Endpoint"]);
+
+            return services;
         }
 
-        public static void AddCustomControllers(this IServiceCollection services)
+        public static IServiceCollection ConfigureCustomControllers(
+            this IServiceCollection services)
         {
             services.AddControllers(options =>
             {
                 options.SuppressAsyncSuffixInActionNames = false;
             });
+
+            return services;
         }
 
-        public static void ConfigureSQLServerContexts(this IServiceCollection services, WebApplicationBuilder builder)
+        public static IServiceCollection ConfigureSQLServerContexts(
+            this IServiceCollection services, WebApplicationBuilder builder)
         {
-            services.ConfigureCommonSQLServerContext<GrantsDbContext>(builder, ConnectionNames.IdentityServerConnection);
-            services.ConfigureCommonSQLServerContext<UsersDbContext>(builder, ConnectionNames.UsersConnection);
+            services
+                .ConfigureCommonSQLServerContext<GrantsDbContext>
+                    (builder, ConnectionNames.IdentityServerConnection)
+                .ConfigureCommonSQLServerContext<UsersDbContext>
+                    (builder, ConnectionNames.UsersConnection);
+
+            return services;
         }
 
-        public static void ConfigureServices(this IServiceCollection services)
+        public static IServiceCollection ConfigureEventServices(
+            this IServiceCollection services, WebApplicationBuilder builder)
         {
-            services.AddScoped<IAuthService, AuthService>();
-            services.AddScoped<IClaimsService, ClaimsService>();
+            var messageConfig = builder.Configuration.GetSection("MessageKafkaConfig").Get<KafkaConfig>();
+            var eventsConfig = builder.Configuration.GetSection("EventKafkaConfig").Get<KafkaConfig>();
 
-            services.AddScoped<DefaultDataSeed>();
+            builder.Services
+                .AddKafkaRequestService<CreateUserEvent, UserResultEvent>(messageConfig)
+                .AddKafkaRequestService<UpdateUserEvent, UserResultEvent>(messageConfig)
+                .AddKafkaRequestService<DeleteUserEvent, UserResultEvent>(messageConfig)
+
+                .AddKafkaReplyService<TokenRequestEvent, AuthResultEvent>(messageConfig)
+
+                .AddKafkaProducer<SendMailEvent>(eventsConfig);
+
+            return services;
         }
 
-        public static void ConfigureBackgroundServices(this IServiceCollection services)
+        public static IServiceCollection ConfigureServices(
+            this IServiceCollection services)
         {
-            services.AddHostedService<TokenCleanupService>();
+            services
+                .AddScoped<IAuthService, AuthService>()
+                .AddScoped<IClaimsService, ClaimsService>();
+
+            return services;
         }
 
-        public static void ConfigurePolicyAuthorization(this IServiceCollection services)
+        public static IServiceCollection ConfigureEventHandlers(
+            this IServiceCollection services)
+        {
+            services
+                .AddHostedService<TokenEventsHandler>();
+
+            return services;
+        }
+
+        public static IServiceCollection ConfigureBackgroundServices(
+            this IServiceCollection services)
+        {
+            services
+                .AddHostedService<TokenCleanupService>();
+
+            return services;
+        }
+
+        public static IServiceCollection ConfigurePolicyAuthorization(
+            this IServiceCollection services)
         {
             services.AddAuthorization(options =>
             {
@@ -63,9 +120,12 @@ namespace Identity.Api.Extensions
                     policy.RequireClaim("scope", HardwareHero.Shared.Constants.IdentityConstants.ServicesApiScope);
                 });
             });
+
+            return services;
         }
 
-        public static void ConfigureCustomIdentity(this IServiceCollection services)
+        public static IServiceCollection ConfigureCustomIdentity(
+            this IServiceCollection services)
         {
             services.AddIdentity<ApplicationUser, IdentityRole>(options =>
             {
@@ -82,9 +142,12 @@ namespace Identity.Api.Extensions
             })
                 .AddEntityFrameworkStores<UsersDbContext>()
                 .AddDefaultTokenProviders();
+
+            return services;
         }
 
-        public static void ConfigureCORSPolicy(this IServiceCollection services)
+        public static IServiceCollection ConfigureCORSPolicy(
+            this IServiceCollection services)
         {
             services.AddCors(options =>
             {
@@ -95,9 +158,12 @@ namespace Identity.Api.Extensions
                           .AllowAnyMethod();
                 });
             });
+
+            return services;
         }
 
-        public static void ConfigureSwagger(this IServiceCollection services)
+        public static IServiceCollection ConfigureSwagger(
+            this IServiceCollection services)
         {
             services.AddSwaggerGen(c =>
             {
@@ -114,6 +180,8 @@ namespace Identity.Api.Extensions
 
                 c.OperationFilter<AuthResponsesOperationFilter>();
             });
+
+            return services;
         }
 
         //public static void AddCustomAuthentication(this IServiceCollection services, WebApplicationBuilder builder)

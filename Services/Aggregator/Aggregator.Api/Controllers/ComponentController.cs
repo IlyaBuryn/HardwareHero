@@ -23,6 +23,7 @@ namespace Aggregator.Api.Controllers
             _logger = logger;
         }
 
+
         [HttpPost("component")]
         [Authorize(Roles = Roles.Manager)]
         public async Task<IActionResult> CreateAsync([FromBody] ComponentDto componentToAdd)
@@ -77,9 +78,10 @@ namespace Aggregator.Api.Controllers
             return Ok(response);
         }
 
-        [HttpPost("components/ids")]
+
+        [HttpGet("components/ids")]
         [AllowAnonymous]
-        public async Task<IActionResult> GetByIds([FromBody] List<Guid> componentsIds)
+        public async Task<IActionResult> GetByIds([FromQuery] List<Guid> componentsIds)
         {
             var response = await _componentService
                 .GetComponentsByIdsAsync(componentsIds);
@@ -88,9 +90,9 @@ namespace Aggregator.Api.Controllers
         }
 
 
-        [HttpPost("components/page")]
+        [HttpGet("components/page")]
         [AllowAnonymous]
-        public async Task<IActionResult> GetComponents([FromBody] ComponentsFilter filter)
+        public async Task<IActionResult> GetComponents([FromQuery] ComponentsFilter filter)
         {
             var response = await _componentService.GetComponentsPageAsync(filter);
             

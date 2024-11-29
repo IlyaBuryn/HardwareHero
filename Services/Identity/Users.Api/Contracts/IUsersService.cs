@@ -9,9 +9,9 @@ namespace Users.Api.Contracts
     public interface IUsersService
     {
         Task<ApplicationUser> CreateUserAsync(CreateUserRequest model);
-        Task<ApplicationUser> UpdateUserAsync(string userId, UpdateUserRequest model);
+        Task<ApplicationUser> UpdateUserAsync(UpdateUserRequest model);
         Task<bool> RemoveUserAsync(string userId);
-        Task<PageResponse<FetchUserResponse>> FetchUsersAsync(UsersFilter filter);
-        Task<FetchUserResponse> GetUserByIdAsync(string userId);
+        Task<PageResponse<UserResponse>> FetchUsersAsync(UsersFilter filter);
+        Task<UserResponse> GetUserByIdAsync(string userId);
     }
 }

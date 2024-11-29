@@ -11,40 +11,67 @@ namespace Configurator.BusinessLogic.Extensions
 {
     public static class ServiceCollectionExtensions
     {
-        public static void ConfigureBusinessLogicLayer(this IServiceCollection builder)
+        public static IServiceCollection ConfigureBusinessLayer(
+            this IServiceCollection services)
         {
-            ConfigureServices(builder);
-            ConfigureMapProfiles(builder);
-            ConfigureDtoValidators(builder);
+            services
+                .ConfigureDbContext()
+                .ConfigureServices()
+                .ConfigureRepositories()
+                .ConfigureMapProfiles()
+                .ConfigureDtoValidators();
+
+            return services;
         }
 
-        public static void ConfigureDbContext(this IServiceCollection service, DatabaseOptions options)
+        internal static IServiceCollection ConfigureDbContext(
+            this IServiceCollection services)
         {
-            service.AddMongoDbContext<ConfiguratorDbContext>(options.ConnectionString, options.DatabaseName);
+            services
+                .AddMongoDbContext<ConfiguratorDbContext>();
+
+            return services;
         }
 
-        private static void ConfigureServices(IServiceCollection service)
+        internal static IServiceCollection ConfigureRepositories(
+            this IServiceCollection services)
         {
-            service.AddScoped(typeof(IBaseRepositoryAsync<>), typeof(MongoBaseRepositoryAsync<>));
+            services
+                .AddScoped(typeof(IBaseRepositoryAsync<>), typeof(MongoBaseRepositoryAsync<>));
 
-            service.AddScoped<IAssemblyService, AssemblyService>();
-            //service.AddScoped<IConfiguratorService, ConfiguratorService>();
-            service.AddScoped<IDataService, DataService>();
-            service.AddScoped<IAttributeService, AttributeService>();
+            return services;
         }
 
-        private static void ConfigureMapProfiles(IServiceCollection service)
+        internal static IServiceCollection ConfigureServices(
+            this IServiceCollection service)
         {
-            service.AddAutoMapper(cfg =>
+            service
+                .AddScoped<IAssemblyService, AssemblyService>()
+                .AddScoped<IConfiguratorService, ConfiguratorService>()
+                .AddScoped<IDataService, DataService>()
+                .AddScoped<IAttributeService, AttributeService>();
+
+            return service;
+        }
+
+        internal static IServiceCollection ConfigureMapProfiles(
+            this IServiceCollection services)
+        {
+            services.AddAutoMapper(cfg =>
             {
                 cfg.AddProfile<ConfiguratorMapProfile>();
             });
+
+            return services;
         }
 
-        private static void ConfigureDtoValidators(IServiceCollection service)
+        internal static IServiceCollection ConfigureDtoValidators(
+            this IServiceCollection service)
         {
             var assembly = Assembly.Load(new AssemblyName("Configurator.DTOs"));
             service.AddValidatorsFromAssembly(assembly);
+
+            return service;
         }
     }
 }

@@ -1,7 +1,10 @@
 ﻿using Contributor.DataAccess.Models;
 using Contributor.DTOs.Domain.Contributors;
+using EventDriven.Shared.Services;
 using HardwareHero.Shared.Extensions.Repository;
-using System.Linq.Expressions;
+using Identity.Shared.Events;
+using Mail.DTOs.Events;
+using Storage.DTOs.Events;
 
 namespace Contributor.BusinessLogic.Services
 {
@@ -12,8 +15,10 @@ namespace Contributor.BusinessLogic.Services
         private readonly IBaseRepositoryAsync<ContributorConfirmInfo> _contributorConfirmInfoRepo;
         private readonly IBaseRepositoryAsync<SubscriptionPlan> _subscriptionPlanRepo;
         private readonly IBaseRepositoryAsync<ContributorExcellence> _excellenceRepo;
-        
-        private readonly IFileRepositoryAsync _imagesRepo;
+
+        private readonly IRequestService<UploadFileEvent, ReturnFileUrlEvent> _uploadFileService;
+        private readonly IRequestService<DeleteFileEvent, DeleteFileResultEvent> _deleteFileService;
+        private readonly IProducerService<FindUserToMailSagaEvent> _mailSaga;
 
         private readonly IMapper _mapper;
 
@@ -22,16 +27,21 @@ namespace Contributor.BusinessLogic.Services
             IBaseRepositoryAsync<ContributorConfirmInfo> contributorConfirmInfoRepo,
             IBaseRepositoryAsync<SubscriptionPlan> subscriptionPlanRepo,
             IBaseRepositoryAsync<ContributorExcellence> excellenceRepo,
-            IFileRepositoryAsync imagesRepo,
-            IMapper mapper)
+            IMapper mapper,
+            IRequestService<UploadFileEvent, ReturnFileUrlEvent> uploadFileService,
+            IRequestService<DeleteFileEvent, DeleteFileResultEvent> deleteFileService,
+            IProducerService<FindUserToMailSagaEvent> mailSaga)
         {
             _contributorRepo = contributorRepo;
             _contributorConfirmInfoRepo = contributorConfirmInfoRepo;
             _subscriptionPlanRepo = subscriptionPlanRepo;
             _excellenceRepo = excellenceRepo;
-            _imagesRepo = imagesRepo;
             _mapper = mapper;
+            _uploadFileService = uploadFileService;
+            _deleteFileService = deleteFileService;
+            _mailSaga = mailSaga;
         }
+
 
         public async Task<Guid?> SignUpContributorAsync(ContributorModelDto contributorToAdd)
         {
@@ -43,27 +53,41 @@ namespace Contributor.BusinessLogic.Services
 
             if (contributorToAdd.ContributorExcellence.ImageData != null)
             {
-                var uploadResult = await _imagesRepo.UploadFileAsync(
-                    contributorToAdd.ContributorExcellence.ImageData,
-                    contributorToAdd.ContributorExcellence.LogoName);
+                var uploadResult = await _uploadFileService.SendRequestAsync(
+                    new UploadFileEvent()
+                    {
+                        FileName = string.Join('_', contributorToAdd.Id, contributorToAdd.ContributorExcellence.Name),
+                        File = contributorToAdd.ContributorExcellence.ImageData
+                    });
 
-                contributorToAdd.ContributorExcellence.LogoUrl = uploadResult.Value;
+                contributorToAdd.ContributorExcellence.LogoUrl = uploadResult.FileUrl;
             }
 
             var contributor = _mapper.Map<ContributorModel>(contributorToAdd);
             var result = await _contributorRepo.CreateEntityAsync(contributor);
             result.DataAnswerCheck();
 
+            await _mailSaga.ProduceAsync(new FindUserToMailSagaEvent()
+            {
+                UserId = contributorToAdd.UserId.ToString(),
+                Message = new SendMailEvent()
+                {
+                    MailPreset = Mail.DTOs.MailPreset.SignUpContributor,
+                }
+
+            }, default);
+
             return result.Value!.Id;
         }
+
 
         public async Task<bool> RemoveContributorAsync(Guid contributorId)
         {
             var contributor = await _contributorRepo
                 .NotFoundCheckAsync(x => x.Id == contributorId);
 
-            var imageName = contributor.ContributorExcellence.LogoName;
-            await _imagesRepo.DeleteFileAsync(imageName);
+            var imageName = string.Join('_', contributor.Id, contributor.ContributorExcellence.Name);
+            await _deleteFileService.SendRequestAsync(new DeleteFileEvent() { FileName = imageName });
 
             var result = await _contributorRepo.RemoveEntityAsync(contributorId);
             result.DataAnswerCheck();
@@ -71,34 +95,40 @@ namespace Contributor.BusinessLogic.Services
             return result.Value != null;
         }
 
-        public async Task<ContributorModelDto?> GetContributorByExcNameAsync(string name)
+
+        public async Task<ContributorModelDto?> GetContributorByNameAsync(string name)
         {
             var contributor = await _contributorRepo
-                .NotFoundCheckAsync(x => x.ContributorExcellence.Name == name);
+                .NotFoundCheckAsync(x => x.ContributorExcellence.Name == name,
+                x => x.ContributorConfirmInfo!,
+                x => x.SubscriptionPlanInfo!,
+                x => x.ContributorExcellence);
 
             var result = _mapper.Map<ContributorModelDto>(contributor);
             return result;
         }
+
 
         public async Task<ContributorModelDto?> GetContributorByUserIdAsync(Guid userId)
         {
             var contributor = await _contributorRepo
-                .NotFoundCheckAsync(x => x.UserId == userId);
+                .NotFoundCheckAsync(x => x.UserId == userId,
+                x => x.ContributorConfirmInfo!,
+                x => x.SubscriptionPlanInfo!,
+                x => x.ContributorExcellence);
 
             var result = _mapper.Map<ContributorModelDto>(contributor);
             return result;
         }
 
-        // TODO: remove switch from filter
+
         public async Task<PageResponse<ContributorModelDto?>> GetContributorsAsPageAsync(ContributorsFilter filter)
         {
-            var query = await _contributorRepo.FindPagedAsync(null, filter,
+            var query = await _contributorRepo.FindPagedAsync(
+                filter.BuildFilterPredicate(), filter,
                 x => x.ContributorExcellence, 
-                x => x.SubscriptionPlanInfo, 
-                x => x.ContributorConfirmInfo);
-
-            //query = query.ApplyFilter(filter).Query;
-            //query = query.ApplyOrderBy(filter).Query;
+                x => x.SubscriptionPlanInfo!, 
+                x => x.ContributorConfirmInfo!);
 
             var page = query.ToPageResponse;
             var mappedResult = _mapper.Map<PageResponse<ContributorModelDto?>>(page);
@@ -106,10 +136,12 @@ namespace Contributor.BusinessLogic.Services
             return mappedResult;
         }
 
+
         public async Task<ContributorConfirmInfoDto?> GetConfirmInfoByContributorIdAsync(Guid contributorId)
         {
             var contributor = await _contributorRepo
-                .NotFoundCheckAsync(x => x.Id == contributorId);
+                .NotFoundCheckAsync(x => x.Id == contributorId,
+                x => x.ContributorConfirmInfo!);
             
             if (contributor.ContributorConfirmInfo == null)
             {
@@ -121,10 +153,12 @@ namespace Contributor.BusinessLogic.Services
             return result;
         }
 
-        public async Task<bool> ChangeConfirmInfoForContributorAsync(Guid contributorId, ContributorConfirmInfoDto info)
+
+        public async Task<bool> ChangeContributorConfirmInfoAsync(Guid contributorId, ContributorConfirmInfoDto info)
         {
             var contributor = await _contributorRepo
-                .NotFoundCheckAsync(x => x.Id == contributorId);
+                .NotFoundCheckAsync(x => x.Id == contributorId,
+                x => x.ContributorConfirmInfo!);
 
             if (contributor.ContributorConfirmInfo == null)
             {
@@ -143,6 +177,7 @@ namespace Contributor.BusinessLogic.Services
             return result.Value != null;
 
         }
+
 
         private async Task<Guid?> CreateConfirmInfForContributorAsync(ContributorConfirmInfoDto info)
         {

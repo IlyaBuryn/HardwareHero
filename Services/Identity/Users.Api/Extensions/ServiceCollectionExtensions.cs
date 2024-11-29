@@ -1,49 +1,107 @@
-﻿using HardwareHero.Shared.Repositories.Contracts;
-using HardwareHero.Shared.Repositories.FS;
+﻿using EventDriven.Kafka.Config;
+using EventDriven.Kafka.Extensions;
+using FluentValidation;
 using Identity.Shared.Domain;
+using Identity.Shared.Events;
+using Mail.DTOs.Events;
+using Storage.DTOs.Events;
 using Users.Api.Contracts;
+using Users.Api.Data;
+using Users.Api.Handlers;
 using Users.Api.Services;
 
 namespace Users.Api.Extensions
 {
     public static class ServiceCollectionExtensions
     {
-        public static void ConfigureFluentValidation(this IServiceCollection services)
+        public static IServiceCollection ConfigureFluentValidation(
+            this IServiceCollection services)
         {
-            services.AddFluentValidationAutoValidation()
+            var assembly = Assembly.Load(new AssemblyName("Identity.Shared"));
+            services
+                .AddValidatorsFromAssembly(assembly)
+                .AddFluentValidationAutoValidation()
                 .AddFluentValidationClientsideAdapters();
+
+            return services;
         }
 
-        public static void ConfigureOpenTelemetry(this IServiceCollection services, WebApplicationBuilder builder)
+        public static IServiceCollection ConfigureOpenTelemetry(
+            this IServiceCollection services, WebApplicationBuilder builder)
         {
             services.ConfigureCommonOpenTelemetry(
                 "UsersRemoteManage",
                 builder.Configuration.GetValue<string>("OpenRemoteManageMeterName"),
                 builder.Configuration["Otel:Endpoint"]);
+
+            return services;
         }
 
-        public static void AddCustomControllers(this IServiceCollection services)
+        public static IServiceCollection ConfigureCustomControllers(
+            this IServiceCollection services)
         {
             services.AddControllers(options =>
             {
                 options.SuppressAsyncSuffixInActionNames = false;
             });
+
+            return services;
         }
 
-        public static void ConfigureSQLServerContexts(this IServiceCollection services, WebApplicationBuilder builder)
+        public static IServiceCollection ConfigureSQLServerContexts(
+            this IServiceCollection services, WebApplicationBuilder builder)
         {
-            services.ConfigureCommonSQLServerContext<UsersDbContext>(builder, ConnectionNames.UsersConnection);
+            services
+                .ConfigureCommonSQLServerContext<UsersDbContext>
+                    (builder, ConnectionNames.UsersConnection);
+
+            return services;
         }
 
-        public static void ConfigureServices(this IServiceCollection services)
+        public static IServiceCollection ConfigureEventServices(
+            this IServiceCollection services, WebApplicationBuilder builder)
         {
-            services.AddScoped<IUsersService, UsersService>();
-            services.AddScoped<IRolesService, RolesService>();
-            services.AddScoped<IWishListService, WishListService>();
-            services.AddScoped<IFileRepositoryAsync, GoogleDriveRepositoryAsync>();
+            var messageConfig = builder.Configuration.GetSection("MessageKafkaConfig").Get<KafkaConfig>();
+            var eventConfig = builder.Configuration.GetSection("EventKafkaConfig").Get<KafkaConfig>();
+
+            services
+                .AddKafkaRequestService<UploadFileEvent, ReturnFileUrlEvent>(messageConfig)
+                .AddKafkaRequestService<ChangeFileEvent, ReturnFileUrlEvent>(messageConfig)
+                .AddKafkaRequestService<DeleteFileEvent, DeleteFileResultEvent>(messageConfig)
+
+                .AddKafkaReplyService<CreateUserEvent, UserResultEvent>(messageConfig)
+                .AddKafkaReplyService<UpdateUserEvent, UserResultEvent>(messageConfig)
+                .AddKafkaReplyService<DeleteUserEvent, UserResultEvent>(messageConfig)
+
+                .AddKafkaConsumer<FindUserToMailSagaEvent>(eventConfig)
+
+                .AddKafkaProducer<SendMailEvent>(eventConfig);
+
+            return services;
         }
 
-        public static void ConfigureCORSPolicy(this IServiceCollection services)
+        public static IServiceCollection ConfigureEventHandlers(
+            this IServiceCollection services)
+        {
+            services
+                .AddHostedService<UserEventsHandler>();
+
+            return services;
+        }
+
+        public static IServiceCollection ConfigureServices(this IServiceCollection services)
+        {
+            services
+                .AddScoped<IUsersService, UsersService>()
+                .AddScoped<IRolesService, RolesService>()
+                .AddScoped<IWishListService, WishListService>()
+
+                .AddScoped<DefaultDataSeed>();
+
+            return services;
+        }
+
+        public static IServiceCollection ConfigureCORSPolicy(this IServiceCollection services)
         {
             services.AddCors(options =>
             {
@@ -54,9 +112,11 @@ namespace Users.Api.Extensions
                           .AllowAnyMethod();
                 });
             });
+
+            return services;
         }
 
-        public static void ConfigureSwagger(this IServiceCollection services)
+        public static IServiceCollection ConfigureSwagger(this IServiceCollection services)
         {
             services.AddSwaggerGen(c =>
             {
@@ -73,9 +133,11 @@ namespace Users.Api.Extensions
 
                 c.OperationFilter<AuthResponsesOperationFilter>();
             });
+
+            return services;
         }
 
-        public static void ConfigurePolicyAuthorization(this IServiceCollection services)
+        public static IServiceCollection ConfigurePolicyAuthorization(this IServiceCollection services)
         {
             services.AddAuthorization(options =>
             {
@@ -85,9 +147,11 @@ namespace Users.Api.Extensions
                     policy.RequireClaim("scope", HardwareHero.Shared.Constants.IdentityConstants.ServicesApiScope);
                 });
             });
+
+            return services;
         }
 
-        public static void ConfigureCustomIdentity(this IServiceCollection services)
+        public static IServiceCollection ConfigureCustomIdentity(this IServiceCollection services)
         {
             services.AddIdentity<ApplicationUser, IdentityRole>(options =>
             {
@@ -104,6 +168,8 @@ namespace Users.Api.Extensions
             })
                 .AddEntityFrameworkStores<UsersDbContext>()
                 .AddDefaultTokenProviders();
+
+            return services;
         }
     }
 }

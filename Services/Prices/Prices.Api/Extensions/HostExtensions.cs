@@ -7,7 +7,8 @@ namespace Prices.Api.Extensions
 {
     public static class HostExtensions
     {
-        public static void ConfigureElasticLogging(this IHostBuilder host)
+        public static IHostBuilder ConfigureElasticLogging(
+            this IHostBuilder host)
         {
             var environment = Environment
                 .GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
@@ -29,6 +30,8 @@ namespace Prices.Api.Extensions
                 .CreateLogger();
 
             host.UseSerilog();
+
+            return host;
         }
     }
 }

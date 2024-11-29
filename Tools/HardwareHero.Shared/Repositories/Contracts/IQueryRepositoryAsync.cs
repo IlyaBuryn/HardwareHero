@@ -8,6 +8,7 @@ namespace HardwareHero.Shared.Repositories.Contracts
     {
         Task<DataAnswer<IQueryable<T>>> FindAsync(Func<T, bool> predicate,
             params Expression<Func<T, object>>[] includeProperties);
+
         Task<PagedDataAnswer<T>> FindPagedAsync(Func<T, bool>? predicate, IPaginable filter,
             params Expression<Func<T, object>>[] includeProperties);
     }

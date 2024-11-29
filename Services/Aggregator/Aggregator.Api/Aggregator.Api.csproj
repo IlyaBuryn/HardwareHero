@@ -58,6 +58,8 @@
     <ProjectReference Include="..\..\..\Tools\Communication\EventDriven.Kafka\EventDriven.Kafka.csproj" />
     <ProjectReference Include="..\..\..\Tools\HardwareHero.Shared\HardwareHero.Shared.csproj" />
     <ProjectReference Include="..\..\Mail\Mail.DTOs\Mail.DTOs.csproj" />
+    <ProjectReference Include="..\..\Prices\Prices.DTOs\Prices.DTOs.csproj" />
+    <ProjectReference Include="..\..\Storage\Storage.DTOs\Storage.DTOs.csproj" />
     <ProjectReference Include="..\Aggregator.BusinessLogic\Aggregator.BusinessLogic.csproj" />
   </ItemGroup>
 

@@ -1,6 +1,10 @@
-﻿using FluentValidation.AspNetCore;
+﻿using EventDriven.Kafka.Config;
+using EventDriven.Kafka.Extensions;
+using FluentValidation.AspNetCore;
 using HardwareHero.Shared.Extensions;
 using HardwareHero.Shared.OpenApi;
+using Mail.Api.Handlers;
+using Mail.DTOs.Events;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.OpenApi.Models;
 
@@ -8,7 +12,69 @@ namespace Mail.Api.Extensions
 {
     public static class ServiceCollectionsExtensions
     {
-        public static void ConfigurePolicyAuthorization(this IServiceCollection services)
+        public static IServiceCollection ConfigureFluentValidation(
+            this IServiceCollection services)
+        {
+            services
+                .AddFluentValidationAutoValidation()
+                .AddFluentValidationClientsideAdapters();
+
+            return services;
+        }
+
+        public static IServiceCollection ConfigureOpenTelemetry(
+            this IServiceCollection services, WebApplicationBuilder builder)
+        {
+            services.ConfigureCommonOpenTelemetry(
+                "MainRemoteManage",
+                builder.Configuration.GetValue<string>("OpenRemoteManageMeterName"),
+                builder.Configuration["Otel:Endpoint"]);
+
+            return services;
+        }
+
+        public static IServiceCollection ConfigureCustomControllers(
+            this IServiceCollection services)
+        {
+            services.AddControllers(options =>
+            {
+                options.SuppressAsyncSuffixInActionNames = false;
+            });
+
+            return services;
+        }
+
+        public static IServiceCollection ConfigureEventServices(
+            this IServiceCollection services, WebApplicationBuilder builder)
+        {
+            var eventConfig = builder.Configuration.GetSection("EventKafkaConfig").Get<KafkaConfig>();
+
+            services
+                .AddKafkaConsumer<SendMailEvent>(eventConfig);
+
+            return services;
+        }
+
+        public static IServiceCollection ConfigureEventHandlers(
+            this IServiceCollection services)
+        {
+            services
+                .AddHostedService<MailEventsHandler>();
+
+            return services;
+        }
+
+        public static IServiceCollection ConfigureOptions(
+            this IServiceCollection services, WebApplicationBuilder builder)
+        {
+            services
+                .ConfigureOptions<PageSizeOptions>(builder.Configuration);
+
+            return services;
+        }
+
+        public static IServiceCollection ConfigurePolicyAuthorization(
+            this IServiceCollection services)
         {
             services.AddAuthorization(options =>
             {
@@ -19,39 +85,23 @@ namespace Mail.Api.Extensions
                     policy.RequireRole("User");
                 });
             });
+
+            return services;
         }
 
-        public static void ConfigureOpenTelemetry(this IServiceCollection services, WebApplicationBuilder builder)
-        {
-            services.ConfigureCommonOpenTelemetry(
-                "MainRemoteManage",
-                builder.Configuration.GetValue<string>("OpenRemoteManageMeterName"),
-                builder.Configuration["Otel:Endpoint"]);
-        }
-
-        public static void AddCustomControllers(this IServiceCollection services)
-        {
-            services.AddControllers(options =>
-            {
-                options.SuppressAsyncSuffixInActionNames = false;
-            });
-        }
-
-        public static void AddFluentValidation(this IServiceCollection services)
-        {
-            services.AddFluentValidationAutoValidation()
-                .AddFluentValidationClientsideAdapters();
-        }
-
-        public static void ConfigureOptions<T>(this IServiceCollection services, IConfiguration configuration, string optionName) where T : class
+        public static IServiceCollection ConfigureOptions<T>(
+            this IServiceCollection services, IConfiguration configuration) where T : class
         {
             services.Configure<T>(options =>
             {
-                configuration.GetSection(optionName).Bind(options);
+                configuration.GetSection(typeof(T).Name).Bind(options);
             });
+
+            return services;
         }
 
-        public static void ConfigureSwagger(this IServiceCollection services)
+        public static IServiceCollection ConfigureSwagger(
+            this IServiceCollection services)
         {
             services.AddSwaggerGen(c =>
             {
@@ -68,9 +118,12 @@ namespace Mail.Api.Extensions
 
                 c.OperationFilter<AuthResponsesOperationFilter>();
             });
+
+            return services;
         }
 
-        public static void ConfigureCORSPolicy(this IServiceCollection services)
+        public static IServiceCollection ConfigureCORSPolicy(
+            this IServiceCollection services)
         {
             services.AddCors(options =>
             {
@@ -81,6 +134,8 @@ namespace Mail.Api.Extensions
                           .AllowAnyMethod();
                 });
             });
+
+            return services;
         }
     }
 }

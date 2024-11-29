@@ -24,6 +24,7 @@ namespace Contributor.BusinessLogic.Services
             _mapper = mapper;
         }
 
+
         public async Task<Guid?> AddSubscriptionPlanAsync(SubscriptionPlanDto subscriptionPlanToAdd)
         {
             var subscriptionPlan = _mapper.Map<SubscriptionPlan>(subscriptionPlanToAdd);
@@ -32,6 +33,7 @@ namespace Contributor.BusinessLogic.Services
 
             return result.Value!.Id;
         }
+
 
         public async Task<bool> UpdateSubscriptionPlanAsync(SubscriptionPlanDto subscriptionPlanToUpdate)
         {
@@ -54,6 +56,7 @@ namespace Contributor.BusinessLogic.Services
             return result.Value != null;
         }
 
+
         public async Task<bool> RemoveSubscriptionPlanAsync(Guid subscriptionPlanId)
         {
             var subscriptionPlan = await _subscriptionPlanRepo
@@ -70,6 +73,7 @@ namespace Contributor.BusinessLogic.Services
             return result.Value != null;
         }
 
+
         public async Task<IEnumerable<SubscriptionPlanDto?>?> GetPlansByCurrencyAsync(Guid currencyId)
         {
             var plans = await _subscriptionPlanRepo.FindAllEntitiesAsync(
@@ -80,6 +84,7 @@ namespace Contributor.BusinessLogic.Services
             return result;
         }
 
+
         public async Task<IEnumerable<SubscriptionPlanDto?>?> GetPlansAsync()
         {
             var plansSet = await _subscriptionPlanRepo.FindAllEntitiesAsync();
@@ -88,6 +93,7 @@ namespace Contributor.BusinessLogic.Services
 
             return result;
         }
+
 
         public async Task<Guid?> SubscribeContributorAsync(Guid contributorId, Guid subscriptionPlanId)
         {
@@ -115,6 +121,7 @@ namespace Contributor.BusinessLogic.Services
             return result.Value!.Id;
         }
 
+
         public async Task<bool> UnsubscribeContributorAsync(Guid contributorId)
         {
             var contributor = await _contributorRepo
@@ -128,6 +135,7 @@ namespace Contributor.BusinessLogic.Services
 
             return result.Value != null;
         }
+
 
         private async Task<bool> ThisPlanHaveZeroSubscribers(Guid subscriptionPlanId)
         {

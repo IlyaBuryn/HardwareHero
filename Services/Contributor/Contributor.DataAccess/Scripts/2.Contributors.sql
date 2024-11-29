@@ -22,22 +22,22 @@ END;
 
 IF NOT EXISTS (SELECT 1 FROM ContributorExcellences)
 BEGIN
-    INSERT INTO ContributorExcellences (Id, Name, LogoUrl, LogoName, Description, Phone, MainWebLink, MainApiLink, RegionId, CurrencyId)
+    INSERT INTO ContributorExcellences (Id, Name, LogoUrl, Description, Phone, MainWebLink, MainApiLink, RegionId, CurrencyId)
     VALUES
-        ('611cd651-28bf-4039-8c38-a9d40be8864d', 'fk.by', NULL, 'fk.by_logo.png', 'Is confirmed contributor (FK.by)', '+1234567890', NULL, NULL, '8a29a4f7-164b-4106-b534-dc5e9209f346', '2200add2-b26e-4b78-a2bd-e6721eca0bcb'),
-        ('ae56b294-7daa-466a-b1a6-56c80deb4504', '4pc.by', NULL, '4pc.by_logo.png', 'Is confirmed contributor (4PC.by)', '+1234567890', NULL, NULL, '8a29a4f7-164b-4106-b534-dc5e9209f346', '2200add2-b26e-4b78-a2bd-e6721eca0bcb'),
-        ('67fd959e-c9cf-4159-8a90-658be0f8884a', 'RAM.by', NULL, 'RAM.by_logo.png', 'Is confirmed contributor (RAM.by)', '+1234567890', NULL, NULL, '8a29a4f7-164b-4106-b534-dc5e9209f346', '2200add2-b26e-4b78-a2bd-e6721eca0bcb'),
-        ('d628f359-e0fa-42a1-b9a6-989fd8be270a', '7745.by', NULL, '7745.by_logo.png', 'Is confirmed contributor (7745)', '+1234567890', NULL, NULL, '8a29a4f7-164b-4106-b534-dc5e9209f346', '2200add2-b26e-4b78-a2bd-e6721eca0bcb'),
-        ('5c8c1ce1-eaf2-40b3-9f35-ba5431eb0c32', 'Technoby.by', NULL, 'Technoby.by_logo.png', 'Is confirmed contributor (Technoby.by)', '+1234567890', NULL, NULL, '8a29a4f7-164b-4106-b534-dc5e9209f346', '2200add2-b26e-4b78-a2bd-e6721eca0bcb'),
+        ('611cd651-28bf-4039-8c38-a9d40be8864d', 'fk.by', NULL, 'Is confirmed contributor (FK.by)', '+1234567890', NULL, NULL, '8a29a4f7-164b-4106-b534-dc5e9209f346', '2200add2-b26e-4b78-a2bd-e6721eca0bcb'),
+        ('ae56b294-7daa-466a-b1a6-56c80deb4504', '4pc.by', NULL, 'Is confirmed contributor (4PC.by)', '+1234567890', NULL, NULL, '8a29a4f7-164b-4106-b534-dc5e9209f346', '2200add2-b26e-4b78-a2bd-e6721eca0bcb'),
+        ('67fd959e-c9cf-4159-8a90-658be0f8884a', 'RAM.by', NULL, 'Is confirmed contributor (RAM.by)', '+1234567890', NULL, NULL, '8a29a4f7-164b-4106-b534-dc5e9209f346', '2200add2-b26e-4b78-a2bd-e6721eca0bcb'),
+        ('d628f359-e0fa-42a1-b9a6-989fd8be270a', '7745.by', NULL, 'Is confirmed contributor (7745)', '+1234567890', NULL, NULL, '8a29a4f7-164b-4106-b534-dc5e9209f346', '2200add2-b26e-4b78-a2bd-e6721eca0bcb'),
+        ('5c8c1ce1-eaf2-40b3-9f35-ba5431eb0c32', 'Technoby.by', NULL, 'Is confirmed contributor (Technoby.by)', '+1234567890', NULL, NULL, '8a29a4f7-164b-4106-b534-dc5e9209f346', '2200add2-b26e-4b78-a2bd-e6721eca0bcb'),
     
-        ('ea5d7cfa-f3e6-4898-86bf-0eec7c2113c1', 'kns.ru', NULL, 'kns.ru_logo.png', 'Is confirmed contributor (KNS)', '+1234567890', NULL, NULL, 'aa3d6fc2-6129-4101-90ed-d49c0de13a67', '8cb73308-b77d-428b-9cf2-6ff3c1f33709'),
-        ('44bce2da-50d1-418d-b220-6086f5c38def', 'compday.ru', NULL, 'compday.ru_logo.png', 'Is confirmed contributor (Compday)', '+1234567890', NULL, NULL, 'aa3d6fc2-6129-4101-90ed-d49c0de13a67', '8cb73308-b77d-428b-9cf2-6ff3c1f33709'),
-        ('37cca2ef-5327-4238-8ffd-5d517b31ab96', 'xcom-shop.ru', NULL, 'xcom-shop.ru_logo.png', 'Is confirmed contributor (XCOM-shop)', '+1234567890', NULL, NULL, 'aa3d6fc2-6129-4101-90ed-d49c0de13a67', '8cb73308-b77d-428b-9cf2-6ff3c1f33709'),
-        ('0673a4bc-8bff-4de8-bc5a-069e20267920', 'pc-arena.ru', NULL, 'pc-arena.ru_logo.png', 'Is confirmed contributor (PC-arena)', '+1234567890', NULL, NULL, 'aa3d6fc2-6129-4101-90ed-d49c0de13a67', '8cb73308-b77d-428b-9cf2-6ff3c1f33709'),
+        ('ea5d7cfa-f3e6-4898-86bf-0eec7c2113c1', 'kns.ru', NULL, 'Is confirmed contributor (KNS)', '+1234567890', NULL, NULL, 'aa3d6fc2-6129-4101-90ed-d49c0de13a67', '8cb73308-b77d-428b-9cf2-6ff3c1f33709'),
+        ('44bce2da-50d1-418d-b220-6086f5c38def', 'compday.ru', NULL, 'Is confirmed contributor (Compday)', '+1234567890', NULL, NULL, 'aa3d6fc2-6129-4101-90ed-d49c0de13a67', '8cb73308-b77d-428b-9cf2-6ff3c1f33709'),
+        ('37cca2ef-5327-4238-8ffd-5d517b31ab96', 'xcom-shop.ru', NULL, 'Is confirmed contributor (XCOM-shop)', '+1234567890', NULL, NULL, 'aa3d6fc2-6129-4101-90ed-d49c0de13a67', '8cb73308-b77d-428b-9cf2-6ff3c1f33709'),
+        ('0673a4bc-8bff-4de8-bc5a-069e20267920', 'pc-arena.ru', NULL,  'Is confirmed contributor (PC-arena)', '+1234567890', NULL, NULL, 'aa3d6fc2-6129-4101-90ed-d49c0de13a67', '8cb73308-b77d-428b-9cf2-6ff3c1f33709'),
     
-        ('0711c4c7-1387-4df7-9055-6b6294f94be3', 'allegro.pl', NULL, 'allegro.pl_logo.png', 'Is confirmed contributor (Allegro)', '+1234567890', NULL, NULL, 'e1d77644-f691-4d44-a902-9065e60e82d1', '0bb32ff2-4821-4828-9a6d-418c64a4989f'),
-        ('2f6c0bf7-8b3f-4509-ac71-1b0f6bd1e10e', 'avans.pl', NULL, 'avans.pl_logo.png', 'Is confirmed contributor (Avans)', '+1234567890', NULL, NULL, 'e1d77644-f691-4d44-a902-9065e60e82d1', '0bb32ff2-4821-4828-9a6d-418c64a4989f'),
-        ('4576e636-fa93-4fcb-935c-c1dc10cc7dad', 'MediaMarkt.pl', NULL, 'MediaMarkt.pl_logo.png', 'Is confirmed contributor (MediaMarkt)', '+1234567890', NULL, NULL, 'e1d77644-f691-4d44-a902-9065e60e82d1', '0bb32ff2-4821-4828-9a6d-418c64a4989f');
+        ('0711c4c7-1387-4df7-9055-6b6294f94be3', 'allegro.pl', NULL, 'Is confirmed contributor (Allegro)', '+1234567890', NULL, NULL, 'e1d77644-f691-4d44-a902-9065e60e82d1', '0bb32ff2-4821-4828-9a6d-418c64a4989f'),
+        ('2f6c0bf7-8b3f-4509-ac71-1b0f6bd1e10e', 'avans.pl', NULL, 'Is confirmed contributor (Avans)', '+1234567890', NULL, NULL, 'e1d77644-f691-4d44-a902-9065e60e82d1', '0bb32ff2-4821-4828-9a6d-418c64a4989f'),
+        ('4576e636-fa93-4fcb-935c-c1dc10cc7dad', 'MediaMarkt.pl', NULL, 'Is confirmed contributor (MediaMarkt)', '+1234567890', NULL, NULL, 'e1d77644-f691-4d44-a902-9065e60e82d1', '0bb32ff2-4821-4828-9a6d-418c64a4989f');
 END;
 
 

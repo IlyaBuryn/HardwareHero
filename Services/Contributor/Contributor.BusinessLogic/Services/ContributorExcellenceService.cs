@@ -1,6 +1,8 @@
 ﻿using Contributor.DataAccess.Models;
 using Contributor.DTOs.Domain.Contributors;
+using EventDriven.Shared.Services;
 using HardwareHero.Shared.Extensions.Repository;
+using Storage.DTOs.Events;
 
 namespace Contributor.BusinessLogic.Services
 {
@@ -9,31 +11,40 @@ namespace Contributor.BusinessLogic.Services
         private readonly IBaseRepositoryAsync<ContributorExcellence> _excellenceRepo;
         private readonly IBaseRepositoryAsync<ContributorModel> _contributorRepo;
 
-        private readonly IFileRepositoryAsync _imageRepo;
+        private readonly IRequestService<UploadFileEvent, ReturnFileUrlEvent> _uploadFileService;
+        private readonly IRequestService<ChangeFileEvent, ReturnFileUrlEvent> _changeFileService;
+        private readonly IRequestService<DeleteFileEvent, DeleteFileResultEvent> _deleteFileService;
 
         private readonly IMapper _mapper;
 
         public ContributorExcellenceService(
             IBaseRepositoryAsync<ContributorExcellence> excellenceRepo,
             IBaseRepositoryAsync<ContributorModel> contributorRepo,
-            IFileRepositoryAsync imageRepo,
-            IMapper mapper)
+            IMapper mapper,
+            IRequestService<UploadFileEvent, ReturnFileUrlEvent> uploadFileService,
+            IRequestService<ChangeFileEvent, ReturnFileUrlEvent> changeFileService,
+            IRequestService<DeleteFileEvent, DeleteFileResultEvent> deleteFileService)
         {
             _excellenceRepo = excellenceRepo;
             _contributorRepo = contributorRepo;
-            _imageRepo = imageRepo;
             _mapper = mapper;
+            _uploadFileService = uploadFileService;
+            _changeFileService = changeFileService;
+            _deleteFileService = deleteFileService;
         }
+
 
         public async Task<ContributorExcellenceDto?> GetExcellenceByContributorIdAsync(Guid contributorId)
         {
             var contributor = await _contributorRepo
-                .NotFoundCheckAsync(x => x.Id == contributorId);
+                .NotFoundCheckAsync(x => x.Id == contributorId,
+                x => x.ContributorExcellence);
 
             var result = _mapper.Map<ContributorExcellenceDto>(contributor.ContributorExcellence);
 
             return result;
         }
+
 
         public async Task<bool> UpdateExcellenceAsync(ContributorExcellenceDto excellenceToUpdate)
         {
@@ -47,13 +58,18 @@ namespace Contributor.BusinessLogic.Services
             excellence.MainApiLink = excellenceToUpdate.MainApiLink;
             excellence.Description = excellenceToUpdate.Description;
             excellence.Name = excellenceToUpdate.Name;
-            excellence.LogoUrl = excellenceToUpdate.LogoUrl;
 
-            var imageName = excellence.LogoName;
+            if (excellenceToUpdate.ImageData != null)
+            {
+                var response = await _changeFileService.SendRequestAsync(new ChangeFileEvent()
+                {
+                    NewFile = excellenceToUpdate.ImageData,
+                    NewFileName = string.Join('_', excellenceToUpdate.Id, excellence.Name),
+                    OldFileName = string.Join('_', excellenceToUpdate.Id, excellence.Name),
+                });
 
-            var replaceResult = await _imageRepo.ReplaceFileAsync(imageName,
-                excellenceToUpdate.ImageData, excellenceToUpdate.LogoName);
-            excellenceToUpdate.LogoUrl = replaceResult.Value;
+                excellence.LogoUrl = response.FileUrl;
+            }
 
             excellence.Currency = _mapper.Map<Currency>(excellenceToUpdate.Currency);
             excellence.Region = _mapper.Map<Region>(excellenceToUpdate.Region);
@@ -63,6 +79,7 @@ namespace Contributor.BusinessLogic.Services
 
             return result.Value != null;
         }
+
 
         public async Task<ContributorExcellenceDto?> GetExcellenceByNameAsync(string name)
         {

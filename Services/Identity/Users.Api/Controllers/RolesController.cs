@@ -1,4 +1,5 @@
 ﻿using Users.Api.Contracts;
+using static Identity.Shared.Requests.UsersRequestRecords;
 
 namespace Users.Api.Controllers
 {
@@ -15,15 +16,29 @@ namespace Users.Api.Controllers
             _rolesService = rolesService;
         }
 
-        [HttpPost("{roleName}")]
-        public async Task<IActionResult> CreateRoleAsync([FromRoute] string roleName)
-        {
-            var result = await _rolesService.CreateRoleAsync(roleName);
 
-            return CreatedAtAction(nameof(CreateRoleAsync), result);
+        [HttpPost]
+        [Authorize(Roles = Roles.Admin)]
+        public async Task<IActionResult> CreateRolesAsync([FromQuery] RolesRequest rolesToCreate)
+        {
+            var result = await _rolesService.CreateRolesAsync(rolesToCreate);
+
+            return CreatedAtAction(nameof(CreateRolesAsync), result);
         }
 
+
+        [HttpDelete]
+        [Authorize(Roles = Roles.Admin)]
+        public async Task<IActionResult> RemoveRolesAsync([FromQuery] RolesRequest rolesToDelete)
+        {
+            var result = await _rolesService.DeleteRolesAsync(rolesToDelete);
+
+            return Ok(result);
+        }
+
+
         [HttpGet]
+        [AllowAnonymous]
         public async Task<IActionResult> GetAllRolesAsync()
         {
             var result = await _rolesService.FetchRolesAsync();
@@ -31,34 +46,32 @@ namespace Users.Api.Controllers
             return Ok(result);
         }
 
-        [HttpDelete("{roleName}")]
-        public async Task<IActionResult> RemoveRoleAsync([FromRoute] string roleName)
+
+        [HttpPut("{fromRole}/{toRole}")]
+        [Authorize(Roles = Roles.Admin)]
+        public async Task<IActionResult> UpdateRoleAsync([FromRoute] string fromRole, [FromRoute] string toRole)
         {
-            var result = await _rolesService.RemoveRoleAsync(roleName);
+            var result = await _rolesService.ChangeRoleNameAsync(fromRole, toRole);
 
             return Ok(result);
         }
 
-        [HttpDelete("{roleName}/{userId}")]
-        public async Task<IActionResult> RemoveUserRoleAsync([FromRoute] string roleName, [FromRoute] string userId)
+
+        [HttpPost]
+        [Authorize(Roles = Roles.Contributor)]
+        public async Task<IActionResult> SetupUserRolesAsync([FromQuery] UserRolesRequest userRoles)
         {
-            var result = await _rolesService.RemoveUserRoleAsync(userId, roleName);
+            var result = await _rolesService.SetupUserRolesAsync(userRoles);
 
             return Ok(result);
         }
 
-        [HttpPost("{userId}/{roleName}")]
-        public async Task<IActionResult> SetupUserRoleAsync([FromRoute] string userId, [FromRoute] string roleName)
-        {
-            var result = await _rolesService.SetupUserRoleAsync(userId, roleName);
 
-            return Ok(result);
-        }
-
-        [HttpPost("{userId}/roles")]
-        public async Task<IActionResult> SetupUserRolesAsync([FromRoute] string userId, [FromBody] string[] roles)
+        [HttpDelete]
+        [Authorize(Roles = Roles.Contributor)]
+        public async Task<IActionResult> RemoveUserRolesAsync([FromQuery] UserRolesRequest userRoles)
         {
-            var result = await _rolesService.SetupUserRolesAsync(userId, roles);
+            var result = await _rolesService.RemoveUserRolesAsync(userRoles);
 
             return Ok(result);
         }

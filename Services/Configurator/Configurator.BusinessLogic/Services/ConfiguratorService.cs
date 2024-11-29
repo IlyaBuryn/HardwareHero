@@ -6,10 +6,10 @@ using MongoDB.Driver;
 namespace Configurator.BusinessLogic.Services
 {
     // TODO: This service need to rework
-    //public class ConfiguratorService : IConfiguratorService
-    //{
-    //    private readonly IBaseRepositoryAsync<ConfiguratorRule> _rulesRepo;
-    //    private readonly IMapper _mapper;
+    public class ConfiguratorService : IConfiguratorService
+    {
+        //    private readonly IBaseRepositoryAsync<ConfiguratorRule> _rulesRepo;
+        //    private readonly IMapper _mapper;
 
 
         //public ConfiguratorService(
@@ -70,5 +70,9 @@ namespace Configurator.BusinessLogic.Services
 
         //    return true;
         //}
-    //}
+        public Task<AssemblyCompatibilityResult> CheckCompatibility(StoredAssembly assembly)
+        {
+            throw new NotImplementedException();
+        }
+    }
 }

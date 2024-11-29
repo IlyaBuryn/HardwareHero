@@ -1,41 +1,36 @@
-﻿using MongoDB.Driver;
+﻿using Microsoft.Extensions.Configuration;
+using MongoDB.Driver;
 using System.Collections.Concurrent;
 
 namespace HardwareHero.Shared.Repositories.Mongo
 {
     public abstract class MongoDbContext
     {
-        private IMongoDatabase _database;
-        private IMongoClient _client;
-
+        private readonly IMongoDatabase _database;
         private readonly ConcurrentDictionary<Type, object> _collections = new();
 
-        internal void Initialize(string connectionString, string databaseName)
+        protected MongoDbContext(IConfiguration configuration)
         {
-            _client = new MongoClient(connectionString);
-            _database = _client.GetDatabase(databaseName);
+            var connectionString = configuration["MongoDbSettings:ConnectionString"];
+            var databaseName = configuration["MongoDbSettings:DatabaseName"];
+
+            var client = new MongoClient(connectionString);
+            _database = client.GetDatabase(databaseName);
         }
 
-        protected IMongoCollection<T> Collection<T>(string collectionName)
+        protected void RegisterCollection<TEntity>(string collectionName)
         {
-            if (_database == null)
-            {
-                throw new InvalidOperationException("MongoDbContext is not initialized. Call AddMongoDbContext first.");
-            }
-
-            return (IMongoCollection<T>)_collections.GetOrAdd(typeof(T), _ =>
-                _database.GetCollection<T>(collectionName));
+            _collections[typeof(TEntity)] = _database.GetCollection<TEntity>(collectionName);
         }
 
-        public IMongoCollection<T> GetCollection<T>()
+        public IMongoCollection<TEntity> GetCollection<TEntity>()
         {
-            if (_database == null)
+            if (_collections.TryGetValue(typeof(TEntity), out var collection))
             {
-                throw new InvalidOperationException("MongoDbContext is not initialized. Call AddMongoDbContext first.");
+                return (IMongoCollection<TEntity>)collection;
             }
 
-            var collectionName = typeof(T).Name;
-            return Collection<T>(collectionName);
+            throw new InvalidOperationException($"The collection: {typeof(TEntity).Name} is not registered!");
         }
     }
 }

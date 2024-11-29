@@ -1,5 +1,4 @@
-﻿using Mail.BusinessLogic.Services;
-using Mail.DTOs.Mail;
+﻿using Mail.DTOs.Events;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -22,20 +21,12 @@ namespace Mail.Api.Controllers
             _mailServicePresets = mailServicePresets;
         }
 
+
         [HttpPost("send")]
         [AllowAnonymous]
-        public async Task<IActionResult> SendMessageAsync([FromBody] MailMessageDto message)
+        public async Task<IActionResult> SendMessageTemplateAsync([FromBody] SendMailEvent message)
         {
-            var response = await _mailService.SendMailAsync(message);
-
-            return Ok(response);
-        }
-
-        [HttpPost("send-welcome-message")]
-        [AllowAnonymous]
-        public async Task<IActionResult> SendWelcomeMessageAsync([FromBody] MailMessageDto message)
-        {
-            var response = await _mailServicePresets.SendMailAsync(message, MailPresets.Welcome);
+            var response = await _mailServicePresets.SendMailTemplateAsync(message);
 
             return Ok(response);
         }

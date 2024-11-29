@@ -1,9 +1,9 @@
-﻿using Mail.DTOs.Mail;
+﻿using Mail.DTOs.Events;
 
 namespace Mail.BusinessLogic.Contracts
 {
-    public interface IMailServicePresets
+    public interface IMailServicePresets : IMailService
     {
-        Task<Guid> SendMailAsync(MailMessageDto mailMessage, MailPresets mailPresets);
+        Task<Guid?> SendMailTemplateAsync(SendMailEvent mailEvent);
     }
 }

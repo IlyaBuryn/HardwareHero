@@ -33,7 +33,6 @@ namespace Identity.Shared.Data.Migrations
                     FirstName = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: true),
                     LastName = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: true),
                     ImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ImageName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     RegistrationDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     RegionId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     CurrencyId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),

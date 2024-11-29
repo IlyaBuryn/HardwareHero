@@ -4,10 +4,13 @@ namespace Contributor.BusinessLogic.Extensions
 {
     public static class ApplicationBuilderExtensions
     {
-        public static async Task DatabaseInitialization(this IApplicationBuilder app)
+        public static async Task<IApplicationBuilder> DatabaseInitialization(
+            this IApplicationBuilder app)
         {
             await DataAccess.Extensions
                 .ApplicationBuilderExtensions.DatabaseInitialization(app);
+
+            return app;
         }
     }
 }

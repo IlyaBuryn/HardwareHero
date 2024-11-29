@@ -1,20 +1,18 @@
 ﻿using EventDriven.Shared.Services;
-using Mail.BusinessLogic.Services;
 using Mail.DTOs.Events;
-using Mail.DTOs.Mail;
 using System.Text.Json;
+using System.Threading;
 
 namespace Mail.Api.Handlers
 {
     public class MailEventsHandler : BackgroundService
     {
-        private readonly IConsumerService<MailSettingsEvent> _consumerService;
-        //private readonly IMailServicePresets _mailServicePresets;
+        private readonly IConsumerService<SendMailEvent> _consumerService;
         private readonly IServiceProvider _serviceProvider;
         private readonly ILogger<MailEventsHandler> _logger;
 
         public MailEventsHandler(
-            IConsumerService<MailSettingsEvent> consumerService,
+            IConsumerService<SendMailEvent> consumerService,
             ILogger<MailEventsHandler> logger,
             IServiceProvider serviceProvider)
         {
@@ -25,29 +23,20 @@ namespace Mail.Api.Handlers
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
+            Console.WriteLine(1);
+
             await _consumerService.ConsumeAsync(async mailEvent =>
             {
                 _logger.LogInformation($"Processing event: {JsonSerializer.Serialize(mailEvent)}");
 
-                var mail = new MailMessageDto()
-                {
-                    SenderId = Guid.NewGuid(),
-                    Status = "sent",
-                    Subject = "-",
-                    Body = "-",
-                    RecipientId = Guid.NewGuid(),
-                    RecipientMailAddress = mailEvent.RecipientMailAddress,
-                    Id = Guid.NewGuid(),
-                    Timestamp = mailEvent.Timestamp,
-                    MailSettingsEvent = mailEvent
-                };
-
                 using (var scope = _serviceProvider.CreateScope())
                 {
                     var mailServicePresets = scope.ServiceProvider.GetRequiredService<IMailServicePresets>();
-                    await mailServicePresets.SendMailAsync(mail, MailPresets.Welcome);
+                    await mailServicePresets.SendMailTemplateAsync(mailEvent);
                 }
             }, stoppingToken);
+
+            Console.WriteLine(2);
         }
     }
 }

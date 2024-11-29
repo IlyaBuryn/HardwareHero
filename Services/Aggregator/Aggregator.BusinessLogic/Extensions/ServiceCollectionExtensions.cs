@@ -6,38 +6,53 @@ namespace Aggregator.BusinessLogic.Extensions
 {
     public static class ServiceCollectionExtensions
     {
-        public static void ConfigureBusinessLogicLayer(this IServiceCollection builder, string connectionString)
+        public static IServiceCollection ConfigureBusinessLayer(
+            this IServiceCollection services, string connectionString)
         {
-            ConfigureServices(builder);
-            ConfigureMapProfiles(builder);
-            ConfigureDtoValidators(builder);
+            services
+                .ConfigureBusinessServices()
+                .ConfigureMapProfiles()
+                .ConfigureDtoValidators();
 
-            builder.ConfigureDataAccessLayer(connectionString);
+            services
+                .ConfigureDataAccessLayer(connectionString);
+
+            return services;
         }
 
-        private static void ConfigureServices(IServiceCollection service)
+        internal static IServiceCollection ConfigureBusinessServices(
+            this IServiceCollection services)
         {
-            service.AddScoped<IComponentService, ComponentService>();
-            service.AddScoped<IComponentTypeService, ComponentTypeService>();
-            service.AddScoped<IComponentAttributesService, ComponentAttributesService>();
-            service.AddScoped<IComponentReviewService, ComponentReviewService>();
-            service.AddScoped<IComponentImagesService, ComponentImagesService>();
+            services
+                .AddScoped<IComponentService, ComponentService>()
+                .AddScoped<IComponentTypeService, ComponentTypeService>()
+                .AddScoped<IComponentAttributesService, ComponentAttributesService>()
+                .AddScoped<IComponentReviewService, ComponentReviewService>()
+                .AddScoped<IComponentImagesService, ComponentImagesService>()
 
-            service.AddScoped<ISpecificationService, SpecificationService>();
+                .AddScoped<ISpecificationService, SpecificationService>();
+
+            return services;
         }
 
-        private static void ConfigureMapProfiles(IServiceCollection service)
+        internal static IServiceCollection ConfigureMapProfiles(
+            this IServiceCollection services)
         {
-            service.AddAutoMapper(cfg =>
+            services.AddAutoMapper(cfg =>
             {
                 cfg.AddProfile<AggregatorMapProfile>();
             });
+
+            return services;
         }
 
-        private static void ConfigureDtoValidators(IServiceCollection services)
+        internal static IServiceCollection ConfigureDtoValidators(
+            this IServiceCollection services)
         {
             var assembly = Assembly.Load(new AssemblyName("Aggregator.DTOs"));
             services.AddValidatorsFromAssembly(assembly);
+
+            return services;
         }
     }
 }

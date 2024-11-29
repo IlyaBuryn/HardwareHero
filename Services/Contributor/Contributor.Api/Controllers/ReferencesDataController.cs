@@ -18,6 +18,7 @@ namespace Contributor.Api.Controllers
             _referencesDataService = referencesDataService;
         }
 
+
         [HttpPost("region")]
         [Authorize(Roles = Roles.Contributor)]
         public async Task<IActionResult> CreateRegionAsync([FromBody] RegionDto regionToAdd)
@@ -27,6 +28,7 @@ namespace Contributor.Api.Controllers
 
             return CreatedAtAction(nameof(CreateRegionAsync), response);
         }
+
 
         [HttpPut("region")]
         [Authorize(Roles = Roles.Manager)]
@@ -38,6 +40,7 @@ namespace Contributor.Api.Controllers
             return Ok(response);
         }
 
+
         [HttpGet("regions")]
         [AllowAnonymous]
         public async Task<IActionResult> GetRegionsAsync()
@@ -47,6 +50,7 @@ namespace Contributor.Api.Controllers
 
             return Ok(response);
         }
+
 
         [HttpGet("regions/{countryCode}")]
         [AllowAnonymous]
@@ -58,6 +62,7 @@ namespace Contributor.Api.Controllers
             return Ok(response);
         }
 
+
         [HttpGet("regions/{countryCode}/cities")]
         [AllowAnonymous]
         public async Task<IActionResult> GetCitiesByCodeAsync([FromRoute] string countryCode)
@@ -67,6 +72,7 @@ namespace Contributor.Api.Controllers
 
             return Ok(response);
         }
+
 
         [HttpGet("region/{city}")]
         [AllowAnonymous]
@@ -78,6 +84,7 @@ namespace Contributor.Api.Controllers
             return Ok(response);
         }
 
+
         [HttpPost("currency")]
         [Authorize(Roles = Roles.Manager)]
         public async Task<IActionResult> CreateCurrencyAsync([FromBody] CurrencyDto currencyToAdd)
@@ -87,6 +94,7 @@ namespace Contributor.Api.Controllers
 
             return CreatedAtAction(nameof(CreateCurrencyAsync), response);
         }
+
 
         [HttpPut("currency")]
         [Authorize(Roles = Roles.Manager)]
@@ -98,6 +106,7 @@ namespace Contributor.Api.Controllers
             return Ok(response);
         }
 
+
         [HttpGet("currencies")]
         [AllowAnonymous]
         public async Task<IActionResult> GetCurrenciesAsync()
@@ -107,6 +116,7 @@ namespace Contributor.Api.Controllers
 
             return Ok(response);
         }
+
 
         [HttpGet("references")]
         [AllowAnonymous]

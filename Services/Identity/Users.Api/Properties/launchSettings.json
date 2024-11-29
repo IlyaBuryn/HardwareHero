@@ -10,6 +10,7 @@
       "useSSL": true,
       "applicationUrl": "https://localhost:5002;http://localhost:5003"
     },
+
     "Container (Dockerfile)": {
       "commandName": "Docker",
       "launchBrowser": true,

@@ -16,6 +16,7 @@ namespace Users.Api.Controllers
             _wishListService = wishListService;
         }
 
+
         [HttpPost("{userId}")]
         public async Task<IActionResult> ChangeWishListAsync([FromRoute] string userId, [FromBody] Guid[] components)
         {
@@ -34,6 +35,7 @@ namespace Users.Api.Controllers
             return Ok(result);
         }
 
+
         [HttpDelete("{userId}")]
         public async Task<IActionResult> ClearWishListAsync([FromRoute] string userId)
         {
@@ -41,6 +43,7 @@ namespace Users.Api.Controllers
 
             return Ok(result);
         }
+
 
         [HttpGet("{userId}")]
         public async Task<IActionResult> GetWishListComponentsAsync([FromRoute] string userId)

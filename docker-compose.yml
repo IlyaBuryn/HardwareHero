@@ -1,11 +1,11 @@
 version: '3.5'
-name: backend
+name: backend   
 
 networks:
   backend:
     driver: bridge
-  web_frontend:
-    external: true
+  # web_frontend:
+  #   external: true
   elastic:
     driver: bridge
   monitoring:
@@ -13,8 +13,14 @@ networks:
      
 services:  
 
+  # proxy:
+  #   container_name: Nginx-proxy
+  #   image: nginx:mainline
+  #   networks:
+  #     - backend
+
   aggregator.api:
-    container_name: Aggregator-api
+    container_name: microservice_Aggregator-api
     image: ${DOCKER_REGISTRY-}aggregatorapi
     volumes:
       - ./../Aggregator.DataAccess/Scripts:/root/app
@@ -33,7 +39,7 @@ services:
       - identity.api
 
   contributor.api:
-    container_name: Contributor-api
+    container_name: microservice_Contributor-api
     image: ${DOCKER_REGISTRY-}contributorapi
     volumes:
       - ./../Contributor.DataAccess/Scripts:/root/app
@@ -52,7 +58,7 @@ services:
       - identity.api
 
   prices.api:
-    container_name: Prices-api
+    container_name: microservice_Prices-api
     image: ${DOCKER_REGISTRY-}pricesapi
     build:
       context: .
@@ -69,24 +75,41 @@ services:
       - DB_NAME=Prices      
 
   mail.api:
-   container_name: Mail-api
-   image: ${DOCKER_REGISTRY-}mailapi
-   build:
-     context: .
-     dockerfile: Services/Mail/Mail.Api/Dockerfile
-   depends_on:
-     - hardwarehero.mongo
-     - otel-collector
-     - identity.api
-   networks:
-     - backend
-   environment:
-     - Otel__Endpoint=http://otel-collector:4317
-     - DB_HOST=hardwarehero.mongo
-     - DB_NAME=Mail
+    container_name: microservice_Mail-api
+    image: ${DOCKER_REGISTRY-}mailapi
+    build:
+      context: .
+      dockerfile: Services/Mail/Mail.Api/Dockerfile
+    depends_on:
+      - hardwarehero.mongo
+      - otel-collector
+      - identity.api
+    networks:
+      - backend
+    environment:
+      - Otel__Endpoint=http://otel-collector:4317
+      - DB_HOST=hardwarehero.mongo
+      - DB_NAME=Mail
+
+  storage.api:
+    container_name: microservice_Storage-api
+    image: ${DOCKER_REGISTRY-}storageapi
+    build:
+      context: .
+      dockerfile: Services/Storage/Storage.Api/Dockerfile
+    depends_on:
+      - otel-collector
+    networks:
+      - backend
+    volumes:
+      - filedata:/data/files
+    environment:
+      - Otel__Endpoint=http://otel-collector:4317
+      - Storage:BasePath=/data/files
+      - Storage:BaseUrl=http://hardwarehero.com
 
   hardwarehero.mongo:
-    container_name: HardwareHero-mongo
+    container_name: database_HardwareHero-mongo
     image: mongo
     ports:
       - 8090:27017
@@ -94,7 +117,7 @@ services:
       - backend
 
   hardwarehero.mssql:
-    container_name: HardwareHero-mssql
+    container_name: database_HardwareHero-mssql
     image: mcr.microsoft.com/mssql/server:2022-latest
     environment:
       - ACCEPT_EULA=Y
@@ -108,7 +131,7 @@ services:
  
   zookeeper:
     image: confluentinc/cp-zookeeper
-    container_name: zookeeper
+    container_name: message-bus_Zookeeper
     ports:
       - "2181:2181"
     networks:
@@ -119,6 +142,7 @@ services:
 
   kafka1:
     image: confluentinc/cp-kafka
+    container_name: message-bus_Kafka-events-1
     ports:
       - "9092:9092"
     networks:
@@ -131,39 +155,38 @@ services:
     depends_on:
       - zookeeper
 
-  # kafka2:
-  #   image: docker.io/bitnami/kafka:3.6
-  #   ports:
-  #     - "9082:9082"
-  #   networks:
-  #     - backend
-  #   environment:
-  #     - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181
-  #     - KAFKA_CFG_LISTENERS=PLAINTEXT://:9082,CONTROLLER://:9083,EXTERNAL://:9084
-  #     - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://kafka2:9082,EXTERNAL://kafka2:9084
-  #     - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,EXTERNAL:PLAINTEXT,PLAINTEXT:PLAINTEXT
-  #     - KAFKA_CFG_MAX_REQUEST_SIZE=209715200
-  #     - KAFKA_CFG_SOCKET_REQUEST_MAX_BYTES=209715200
-  #     - KAFKA_CFG_BROKER_ID=2
-  #   depends_on:
-  #     - zookeeper
+  kafka2:
+    image: confluentinc/cp-kafka
+    container_name: message-bus_Kafka-messages-1
+    ports:
+      - "9082:9082"
+    networks:
+      - backend
+    environment:
+      - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
+      - KAFKA_BROKER_ID=2
+      - KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR=1
+      - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://kafka2:9082
+    depends_on:
+      - zookeeper
 
   kafka-ui:
     image: provectuslabs/kafka-ui:latest
+    container_name: message-bus_Kafka-UI
     ports:
       - 9100:8080
     networks:
       - backend
     environment:
       KAFKA_CLUSTERS_0_NAME: local
-      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka1:9092 # ,kafka2:9082
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka1:9092,kafka2:9082
       KAFKA_CLUSTERS_0_ZOOKEEPER: zookeeper:2181
     depends_on:
       - kafka1
-      # - kafka2
+      - kafka2
 
   apigateway.ocelot:
-   container_name: Ocelot
+   container_name: gateway_Ocelot
    image: ${DOCKER_REGISTRY-}apigatewayocelot
    build:
      context: .
@@ -173,10 +196,10 @@ services:
      - 8070:443
    networks:
      - backend
-     - web_frontend
+     # - web_frontend
 
   configurator.api:
-   container_name: Configurator-api
+   container_name: microservice_Configurator-api
    image: ${DOCKER_REGISTRY-}configuratorapi
    build:
      context: .
@@ -192,14 +215,14 @@ services:
      - DB_NAME=Configurator
 
   users.api:
-   container_name: Users-api
+   container_name: microservice_Users-api
    image: ${DOCKER_REGISTRY-}usersapi
    build:
      context: .
      dockerfile: Services/Identity/Users.Api/Dockerfile
    depends_on:
      - otel-collector
-     - identity.api
+     # - identity.api
    networks:
      - backend
    environment:
@@ -209,13 +232,14 @@ services:
      - DB_SA_PASSWORD=password@#12345
 
   identity.api:
-   container_name: Identity-api
+   container_name: microservice_Identity-api
    image: ${DOCKER_REGISTRY-}identityapi
    build:
      context: .
      dockerfile: Services/Identity/Identity.Api/Dockerfile
    depends_on:
      - otel-collector
+     - users.api
    networks:
      - backend
    environment:
@@ -225,10 +249,10 @@ services:
      - DB_SA_PASSWORD=password@#12345
      - SEED=/seed
 
-  ################################## It works but I won't use it cause that shit eats half of all RAM.
+  ################################## It works but I won't use it cause that eats half of all RAM.
 
   # elasticsearch:
-  #   container_name: els
+  #   container_name: logs_els
   #   image: docker.elastic.co/elasticsearch/elasticsearch:8.14.1
   #   ports:
   #     - 9200:9200
@@ -242,7 +266,7 @@ services:
   #     - backend
 
   # kibana:
-  #   container_name: kibana
+  #   container_name: logs_kibana
   #   image: docker.elastic.co/kibana/kibana:8.14.1
   #   ports:
   #     - 5601:5601
@@ -256,6 +280,7 @@ services:
   ##################################
 
   otel-collector:
+    container_name: monitoring_Otel-collector
     image: otel/opentelemetry-collector:0.95.0
     command: ["--config=/etc/otel-collector-config.yml"]
     volumes:
@@ -270,7 +295,7 @@ services:
 
   prometheus:
     image: prom/prometheus:latest
-    container_name: prometheus
+    container_name: monitoring_Prometheus
     ports:
       - 9090:9090
     command:
@@ -285,7 +310,7 @@ services:
 
   node_exporter:
     image: quay.io/prometheus/node-exporter:v1.5.0
-    container_name: node_exporter
+    container_name: monitoring_Node-exporter
     command: '--path.rootfs=/host'
     pid: host
     restart: unless-stopped
@@ -298,7 +323,7 @@ services:
 
   grafana:
     image: grafana/grafana-oss:latest
-    container_name: grafana
+    container_name: monitoring_Grafana
     ports:
       - '3000:3000'
     volumes:
@@ -311,6 +336,8 @@ services:
 volumes:
   # elasticsearch-data:
   #   driver: local
+
+  filedata:
 
   prometheus-data:
     driver: local

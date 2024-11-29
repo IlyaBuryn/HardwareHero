@@ -97,6 +97,10 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HardwareHero.Shared.Tests", "Tools\HardwareHero.Shared.Tests\HardwareHero.Shared.Tests.csproj", "{09B411F7-EF1F-4763-8C37-3ABA4611F03D}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Identity.Api", "Services\Identity\Identity.Api\Identity.Api.csproj", "{D0E5638D-6B4D-4FD7-B6BF-449DEEEBBC4C}"
+	ProjectSection(ProjectDependencies) = postProject
+		{BE1AC4A9-5BC8-4A39-9CE3-1D12ADE543E2} = {BE1AC4A9-5BC8-4A39-9CE3-1D12ADE543E2}
+		{D3A571C8-A718-4BC8-B830-B4674CC03E85} = {D3A571C8-A718-4BC8-B830-B4674CC03E85}
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Users.Api", "Services\Identity\Users.Api\Users.Api.csproj", "{B32A19B0-45DC-485E-BA46-6BEA39B89087}"
 EndProject
@@ -121,6 +125,19 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventDriven.Kafka", "Tools\Communication\EventDriven.Kafka\EventDriven.Kafka.csproj", "{D3A571C8-A718-4BC8-B830-B4674CC03E85}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventDriven.Shared", "Tools\Communication\EventDriven.Shared\EventDriven.Shared.csproj", "{C66ABB79-BBD5-4208-89E5-0AC01AF6E1E3}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Storage", "Storage", "{0BF472D2-05B3-4A34-8958-F1FEE8451BA6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Storage.Api", "Services\Storage\Storage.Api\Storage.Api.csproj", "{4F952DCB-E37C-47FB-9AD5-02073395E0DF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Storage.BusinessLogic", "Services\Storage\Storage.BusinessLogic\Storage.BusinessLogic.csproj", "{621475C8-B536-471A-92A2-B83C9FCF76AC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Storage.DTOs", "Services\Storage\Storage.DTOs\Storage.DTOs.csproj", "{95D9B420-B546-4D91-9EB9-360C376294E3}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Nginx", "Nginx", "{2227E654-1EF5-4F9F-AA64-A6DA21EB3AB2}"
+	ProjectSection(SolutionItems) = preProject
+		Tools\Nginx\nginx.conf = Tools\Nginx\nginx.conf
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -252,6 +269,18 @@ Global
 		{C66ABB79-BBD5-4208-89E5-0AC01AF6E1E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C66ABB79-BBD5-4208-89E5-0AC01AF6E1E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C66ABB79-BBD5-4208-89E5-0AC01AF6E1E3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4F952DCB-E37C-47FB-9AD5-02073395E0DF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4F952DCB-E37C-47FB-9AD5-02073395E0DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4F952DCB-E37C-47FB-9AD5-02073395E0DF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4F952DCB-E37C-47FB-9AD5-02073395E0DF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{621475C8-B536-471A-92A2-B83C9FCF76AC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{621475C8-B536-471A-92A2-B83C9FCF76AC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{621475C8-B536-471A-92A2-B83C9FCF76AC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{621475C8-B536-471A-92A2-B83C9FCF76AC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{95D9B420-B546-4D91-9EB9-360C376294E3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{95D9B420-B546-4D91-9EB9-360C376294E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{95D9B420-B546-4D91-9EB9-360C376294E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{95D9B420-B546-4D91-9EB9-360C376294E3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -296,6 +325,11 @@ Global
 		{30172438-8681-433E-9A5A-FFEB66457B9F} = {142BA8F5-95B5-4606-9E0C-AAB8889CB8CA}
 		{D3A571C8-A718-4BC8-B830-B4674CC03E85} = {30172438-8681-433E-9A5A-FFEB66457B9F}
 		{C66ABB79-BBD5-4208-89E5-0AC01AF6E1E3} = {30172438-8681-433E-9A5A-FFEB66457B9F}
+		{0BF472D2-05B3-4A34-8958-F1FEE8451BA6} = {5DB83572-6DDD-4B74-A338-4711FFF43E9F}
+		{4F952DCB-E37C-47FB-9AD5-02073395E0DF} = {0BF472D2-05B3-4A34-8958-F1FEE8451BA6}
+		{621475C8-B536-471A-92A2-B83C9FCF76AC} = {0BF472D2-05B3-4A34-8958-F1FEE8451BA6}
+		{95D9B420-B546-4D91-9EB9-360C376294E3} = {0BF472D2-05B3-4A34-8958-F1FEE8451BA6}
+		{2227E654-1EF5-4F9F-AA64-A6DA21EB3AB2} = {142BA8F5-95B5-4606-9E0C-AAB8889CB8CA}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A91C9261-8774-4C8D-A9AB-7E5C97CD9804}

@@ -4,15 +4,25 @@
       "commandName": "DockerCompose",
       "commandVersion": "1.0",
       "serviceActions": {
-        "hardwarehero.identity.api": "StartDebugging",
+        "hardwarehero.mssql": "StartWithoutDebugging",
         "aggregator.api": "StartDebugging",
         "contributor.api": "StartDebugging",
         "configurator.api": "StartDebugging",
-        "identityserver": "StartDebugging",
-        "usermanagement.api": "StartDebugging",
+        "hardwarehero.mongo": "StartWithoutDebugging",
+        "grafana": "StartWithoutDebugging",
         "apigateway.ocelot": "StartDebugging",
         "prices.api": "StartDebugging",
-        "mail.api": "StartDebugging"
+        "mail.api": "StartDebugging",
+        "identity.api": "StartDebugging",
+        "kafka1": "StartWithoutDebugging",
+        "kafka2": "StartWithoutDebugging",
+        "kafka-ui": "StartWithoutDebugging",
+        "node_exporter": "StartWithoutDebugging",
+        "otel-collector": "StartWithoutDebugging",
+        "prometheus": "StartWithoutDebugging",
+        "users.api": "StartDebugging",
+        "zookeeper": "StartWithoutDebugging",
+        "storage.api": "StartDebugging"
       }
     }
   }

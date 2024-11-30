@@ -30,8 +30,7 @@ namespace Contributor.DataAccess.Extensions
         {
             services
                 .AddScoped(typeof(IQueryRepositoryAsync<>), typeof(EFQueryRepositoryAsync<>))
-                .AddScoped(typeof(IBaseRepositoryAsync<>), typeof(EFBaseRepositoryAsync<>))
-                .AddScoped(typeof(IFileRepositoryAsync), typeof(GoogleDriveRepositoryAsync));
+                .AddScoped(typeof(IBaseRepositoryAsync<>), typeof(EFBaseRepositoryAsync<>));
 
             return services;
         }

@@ -1,12 +1,13 @@
 using HardwareHero.Shared.Extensions;
-using Mail.Api.Handlers;
+using HardwareHero.Shared.Extensions.Secrets;
+using HardwareHero.Shared.Extensions.Elastic;
 using Microsoft.IdentityModel.Logging;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Host
-    .ConfigureSecretsFile()
-    .ConfigureElasticLogging();
+    .ConfigureAuthenticationSecretsFiles()
+    .ConfigureElasticLogging(builder.Configuration);
 
 builder.Services
     .ConfigureBusinessLayer()

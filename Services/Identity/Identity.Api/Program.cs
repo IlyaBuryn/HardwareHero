@@ -1,11 +1,13 @@
+using HardwareHero.Shared.Extensions.Secrets;
+using HardwareHero.Shared.Extensions.Elastic;
 using Identity.Api.Data;
 using Identity.Api.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Host
-    .ConfigureSecretsFile()
-    .ConfigureElasticLogging();
+    .ConfigureAuthenticationSecretsFiles()
+    .ConfigureElasticLogging(builder.Configuration);
 
 builder.Services
     .ConfigureServices()
@@ -48,8 +50,8 @@ else
 app.UseStaticFiles();
 app.UseRouting();
 
-//app.UseAuthentication();
-//app.UseAuthorization();
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapControllers().RequireAuthorization("ApiScope");
 

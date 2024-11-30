@@ -1,11 +1,13 @@
 using Microsoft.IdentityModel.Logging;
 using HardwareHero.Shared.Extensions;
+using HardwareHero.Shared.Extensions.Secrets;
+using HardwareHero.Shared.Extensions.Elastic;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Host
-    .ConfigureSecretsFile()
-    .ConfigureElasticLogging();
+    .ConfigureAuthenticationSecretsFiles()
+    .ConfigureElasticLogging(builder.Configuration);
 
 var connectionString = builder.Configuration.GetConnectionString(
     ConnectionNames.AggregatorConnection);

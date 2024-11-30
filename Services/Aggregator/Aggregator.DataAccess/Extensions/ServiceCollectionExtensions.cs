@@ -31,8 +31,7 @@ namespace Aggregator.DataAccess.Extensions
             services
                 .AddScoped(typeof(IQueryRepositoryAsync<>), typeof(EFQueryRepositoryAsync<>))
                 .AddScoped(typeof(IBaseRepositoryAsync<>), typeof(EFBaseRepositoryAsync<>))
-                .AddScoped(typeof(ISpecificRepositoryAsync<>), typeof(EFSpecificRepositoryAsync<>))
-                .AddScoped(typeof(IFileRepositoryAsync), typeof(GoogleDriveRepositoryAsync));
+                .AddScoped(typeof(ISpecificRepositoryAsync<>), typeof(EFSpecificRepositoryAsync<>));
 
             return services;
         }

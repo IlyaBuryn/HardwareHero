@@ -3,12 +3,14 @@ using HardwareHero.Shared.Extensions;
 using Storage.BusinessLogic.Extensions;
 using Microsoft.IdentityModel.Logging;
 using Microsoft.Extensions.FileProviders;
+using HardwareHero.Shared.Extensions.Elastic;
+using HardwareHero.Shared.Extensions.Secrets;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Host
-    .ConfigureSecretsFile()
-    .ConfigureElasticLogging();
+    .ConfigureAuthenticationSecretsFiles()
+    .ConfigureElasticLogging(builder.Configuration);
 
 builder.Services
     .ConfigureBusinessLayer()

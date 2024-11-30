@@ -1,10 +1,12 @@
+using HardwareHero.Shared.Extensions.Secrets;
+using HardwareHero.Shared.Extensions.Elastic;
 using Users.Api.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Host
-    .ConfigureSecretsFile()
-    .ConfigureElasticLogging();
+    .ConfigureAuthenticationSecretsFiles()
+    .ConfigureElasticLogging(builder.Configuration);
 
 builder.Services
     .ConfigureServices()

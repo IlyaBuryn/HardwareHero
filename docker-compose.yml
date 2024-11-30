@@ -11,7 +11,7 @@ networks:
   monitoring:
     driver: bridge
      
-services:  
+services:   
 
   # proxy:
   #   container_name: Nginx-proxy

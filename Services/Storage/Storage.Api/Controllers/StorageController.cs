@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Storage.BusinessLogic.Contracts;
+using Storage.DTOs.Models;
 
 namespace Storage.Api.Controllers
 {
@@ -21,15 +22,16 @@ namespace Storage.Api.Controllers
         }
 
 
-        [HttpPost("file/{fileName}")]
+        [HttpPost("file")]
         [AllowAnonymous]
-        public async Task<IActionResult> UploadFileAsync([FromBody] IFormFile file, [FromRoute] string fileName)
+        public async Task<IActionResult> UploadFileAsync(
+            [FromForm] UploadFileModel model)
         {
             var response = await _fileEventService.UploadFileAsync(
                 new DTOs.Events.UploadFileEvent()
                 {
-                    File = file,
-                    FileName = fileName
+                    File = model.File,
+                    FileName = model.FileName
                 });
 
             return CreatedAtAction(nameof(UploadFileAsync), response);

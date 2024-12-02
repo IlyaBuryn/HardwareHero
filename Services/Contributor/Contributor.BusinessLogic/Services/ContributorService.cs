@@ -46,6 +46,7 @@ namespace Contributor.BusinessLogic.Services
         public async Task<Guid?> SignUpContributorAsync(ContributorModelDto contributorToAdd)
         {
             contributorToAdd.Id = Guid.NewGuid();
+            contributorToAdd.ContributorApplicationDate = DateTime.UtcNow;
 
             await _contributorRepo.AlreadyExistCheckAsync(x => x.UserId == contributorToAdd.UserId);
             await _excellenceRepo.AlreadyExistCheckAsync(

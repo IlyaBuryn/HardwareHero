@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Contributor.DataAccess.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class InitContributor : Migration
+    public partial class InitContributors : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -17,7 +17,7 @@ namespace Contributor.DataAccess.Data.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Subject = table.Column<string>(type: "nvarchar(32)", maxLength: 32, nullable: false),
-                    TimeStamp = table.Column<string>(type: "nvarchar(max)", nullable: false, defaultValue: "11/14/2024 20:00:52")
+                    TimeStamp = table.Column<string>(type: "nvarchar(max)", nullable: false, defaultValue: "12/02/2024 20:41:29")
                 },
                 constraints: table =>
                 {
@@ -30,7 +30,7 @@ namespace Contributor.DataAccess.Data.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     IsConfirmed = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
-                    TimeStamp = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValue: new DateTime(2024, 11, 14, 20, 0, 52, 910, DateTimeKind.Local).AddTicks(1132))
+                    TimeStamp = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValue: new DateTime(2024, 12, 2, 20, 41, 29, 359, DateTimeKind.Local).AddTicks(4743))
                 },
                 constraints: table =>
                 {
@@ -121,8 +121,8 @@ namespace Contributor.DataAccess.Data.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     PlanId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    RenewalDate = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValue: new DateTime(2024, 11, 14, 20, 0, 52, 911, DateTimeKind.Local).AddTicks(9753)),
-                    ExpiryDate = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValue: new DateTime(2024, 12, 14, 20, 0, 52, 912, DateTimeKind.Local).AddTicks(471))
+                    RenewalDate = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValue: new DateTime(2024, 12, 2, 20, 41, 29, 360, DateTimeKind.Local).AddTicks(4513)),
+                    ExpiryDate = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValue: new DateTime(2025, 1, 1, 20, 41, 29, 360, DateTimeKind.Local).AddTicks(4911))
                 },
                 constraints: table =>
                 {
@@ -143,7 +143,8 @@ namespace Contributor.DataAccess.Data.Migrations
                     UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     ContributorConfirmInfoId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     ContributorExcellenceId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    SubscriptionPlanInfoId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                    SubscriptionPlanInfoId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    ContributorApplicationDate = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -174,7 +175,7 @@ namespace Contributor.DataAccess.Data.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Text = table.Column<string>(type: "nvarchar(2048)", maxLength: 2048, nullable: false),
                     IsEdited = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
-                    Timestamp = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValue: new DateTime(2024, 11, 14, 20, 0, 52, 907, DateTimeKind.Local).AddTicks(3372)),
+                    Timestamp = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValue: new DateTime(2024, 12, 2, 20, 41, 29, 358, DateTimeKind.Local).AddTicks(2051)),
                     ChatRoomId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     SenderId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },

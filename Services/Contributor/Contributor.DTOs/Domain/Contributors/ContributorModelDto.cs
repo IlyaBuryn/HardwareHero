@@ -10,6 +10,7 @@ namespace Contributor.DTOs.Domain.Contributors
         public Guid? ContributorConfirmInfoId { get; set; }
         public Guid ContributorExcellenceId { get; set; }
         public Guid? SubscriptionPlanInfoId { get; set; }
+        public DateTime ContributorApplicationDate { get; set; }
 
         public ContributorConfirmInfoDto? ContributorConfirmInfo { get; set; }
         public SubscriptionPlanInfoDto? SubscriptionPlanInfo { get; set; }

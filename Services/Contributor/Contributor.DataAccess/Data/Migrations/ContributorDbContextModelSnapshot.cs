@@ -62,7 +62,7 @@ namespace Contributor.DataAccess.Data.Migrations
                     b.Property<DateTime>("Timestamp")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2024, 11, 14, 20, 0, 52, 907, DateTimeKind.Local).AddTicks(3372));
+                        .HasDefaultValue(new DateTime(2024, 12, 2, 20, 41, 29, 358, DateTimeKind.Local).AddTicks(2051));
 
                     b.HasKey("Id");
 
@@ -88,7 +88,7 @@ namespace Contributor.DataAccess.Data.Migrations
                         .IsRequired()
                         .ValueGeneratedOnAdd()
                         .HasColumnType("nvarchar(max)")
-                        .HasDefaultValue("11/14/2024 20:00:52");
+                        .HasDefaultValue("12/02/2024 20:41:29");
 
                     b.HasKey("Id");
 
@@ -109,7 +109,7 @@ namespace Contributor.DataAccess.Data.Migrations
                     b.Property<DateTime>("TimeStamp")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2024, 11, 14, 20, 0, 52, 910, DateTimeKind.Local).AddTicks(1132));
+                        .HasDefaultValue(new DateTime(2024, 12, 2, 20, 41, 29, 359, DateTimeKind.Local).AddTicks(4743));
 
                     b.HasKey("Id");
 
@@ -168,6 +168,9 @@ namespace Contributor.DataAccess.Data.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("ContributorApplicationDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<Guid?>("ContributorConfirmInfoId")
                         .HasColumnType("uniqueidentifier");
@@ -280,7 +283,7 @@ namespace Contributor.DataAccess.Data.Migrations
                     b.Property<DateTime>("ExpiryDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2024, 12, 14, 20, 0, 52, 912, DateTimeKind.Local).AddTicks(471));
+                        .HasDefaultValue(new DateTime(2025, 1, 1, 20, 41, 29, 360, DateTimeKind.Local).AddTicks(4911));
 
                     b.Property<Guid>("PlanId")
                         .HasColumnType("uniqueidentifier");
@@ -288,7 +291,7 @@ namespace Contributor.DataAccess.Data.Migrations
                     b.Property<DateTime>("RenewalDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2024, 11, 14, 20, 0, 52, 911, DateTimeKind.Local).AddTicks(9753));
+                        .HasDefaultValue(new DateTime(2024, 12, 2, 20, 41, 29, 360, DateTimeKind.Local).AddTicks(4513));
 
                     b.HasKey("Id");
 

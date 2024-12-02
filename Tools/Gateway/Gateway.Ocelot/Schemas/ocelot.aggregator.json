@@ -1,0 +1,320 @@
+{
+  "Routes": [
+    // Components
+    {
+      "UpstreamPathTemplate": "/aggregator/component",
+      "UpstreamHttpMethod": [ "Post", "Put" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "aggregator.api",
+          "Port": 80
+        }
+      ],
+      "UpstreamHeaderTransform": {
+        "DownstreamRequireAuth": true
+      },
+      "DownstreamPathTemplate": "/api/aggregator/component"
+    },
+
+    {
+      "UpstreamPathTemplate": "/aggregator/component/{componentId}",
+      "UpstreamHttpMethod": [ "Delete", "Get" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "aggregator.api",
+          "Port": 80
+        }
+      ],
+      "DownstreamPathTemplate": "/api/aggregator/component/{componentId}"
+    },
+
+    {
+      "UpstreamPathTemplate": "/aggregator/components",
+      "UpstreamHttpMethod": [ "Post" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "aggregator.api",
+          "Port": 80
+        }
+      ],
+      "DownstreamPathTemplate": "/api/aggregator/components"
+    },
+
+    {
+      "UpstreamPathTemplate": "/aggregator/components/ids",
+      "UpstreamHttpMethod": [ "Post" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "aggregator.api",
+          "Port": 80
+        }
+      ],
+      "DownstreamPathTemplate": "/api/aggregator/components/ids"
+    },
+
+    {
+      "UpstreamPathTemplate": "/aggregator/components/page",
+      "UpstreamHttpMethod": [ "Post" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "aggregator.api",
+          "Port": 80
+        }
+      ],
+      "DownstreamPathTemplate": "/api/aggregator/components/page"
+    },
+
+    // Components Data
+    {
+      "UpstreamPathTemplate": "/aggregator/component/type",
+      "UpstreamHttpMethod": [ "Post", "Put" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "aggregator.api",
+          "Port": 80
+        }
+      ],
+      "DownstreamPathTemplate": "/api/aggregator/component/type"
+    },
+
+    {
+      "UpstreamPathTemplate": "/aggregator/component/type/{typeId}",
+      "UpstreamHttpMethod": [ "Delete" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "aggregator.api",
+          "Port": 80
+        }
+      ],
+      "DownstreamPathTemplate": "/api/aggregator/component/type/{typeId}"
+    },
+
+    {
+      "UpstreamPathTemplate": "/aggregator/component/types",
+      "UpstreamHttpMethod": [ "Get" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "aggregator.api",
+          "Port": 80
+        }
+      ],
+      "DownstreamPathTemplate": "/api/aggregator/component/types"
+    },
+
+    {
+      "UpstreamPathTemplate": "/aggregator/component/image",
+      "UpstreamHttpMethod": [ "Post" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "aggregator.api",
+          "Port": 80
+        }
+      ],
+      "DownstreamPathTemplate": "/api/aggregator/component/image"
+    },
+
+    {
+      "UpstreamPathTemplate": "/aggregator/component/image/{imageId}",
+      "UpstreamHttpMethod": [ "Delete" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "aggregator.api",
+          "Port": 80
+        }
+      ],
+      "DownstreamPathTemplate": "/api/aggregator/component/image/{imageId}"
+    },
+
+    {
+      "UpstreamPathTemplate": "/aggregator/component/attribute",
+      "UpstreamHttpMethod": [ "Post", "Put" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "aggregator.api",
+          "Port": 80
+        }
+      ],
+      "DownstreamPathTemplate": "/api/aggregator/component/attribute"
+    },
+
+    {
+      "UpstreamPathTemplate": "/aggregator/component/{componentId}/attributes",
+      "UpstreamHttpMethod": [ "Put" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "aggregator.api",
+          "Port": 80
+        }
+      ],
+      "DownstreamPathTemplate": "/api/aggregator/component/{componentId}/attributes"
+    },
+
+    {
+      "UpstreamPathTemplate": "/aggregator/component/{componentId}/attribute/{key}",
+      "UpstreamHttpMethod": [ "Delete" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "aggregator.api",
+          "Port": 80
+        }
+      ],
+      "DownstreamPathTemplate": "/api/aggregator/component/{componentId}/attribute/{key}"
+    },
+
+    {
+      "UpstreamPathTemplate": "/aggregator/attributes",
+      "UpstreamHttpMethod": [ "Post" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "aggregator.api",
+          "Port": 80
+        }
+      ],
+      "DownstreamPathTemplate": "/api/aggregator/attributes"
+    },
+
+    // Component Reviews
+    {
+      "UpstreamPathTemplate": "/aggregator/component/review/local",
+      "UpstreamHttpMethod": [ "Post", "Put" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "aggregator.api",
+          "Port": 80
+        }
+      ],
+      "DownstreamPathTemplate": "/api/aggregator/component/review/local"
+    },
+
+    {
+      "UpstreamPathTemplate": "/aggregator/component/review/global",
+      "UpstreamHttpMethod": [ "Post", "Put" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "aggregator.api",
+          "Port": 80
+        }
+      ],
+      "DownstreamPathTemplate": "/api/aggregator/component/review/global"
+    },
+
+    {
+      "UpstreamPathTemplate": "/aggregator/component/review/local/{reviewId}",
+      "UpstreamHttpMethod": [ "Delete" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "aggregator.api",
+          "Port": 80
+        }
+      ],
+      "DownstreamPathTemplate": "/api/aggregator/component/review/local/{reviewId}"
+    },
+
+    {
+      "UpstreamPathTemplate": "/aggregator/component/review/global/{reviewId}",
+      "UpstreamHttpMethod": [ "Delete" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "aggregator.api",
+          "Port": 80
+        }
+      ],
+      "DownstreamPathTemplate": "/api/aggregator/component/review/global/{reviewId}"
+    },
+
+    {
+      "UpstreamPathTemplate": "/aggregator/components/reviews",
+      "UpstreamHttpMethod": [ "Post" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "aggregator.api",
+          "Port": 80
+        }
+      ],
+      "DownstreamPathTemplate": "/api/aggregator/components/reviews"
+    },
+
+    {
+      "UpstreamPathTemplate": "/aggregator/component/{componentId}/reviews/local",
+      "UpstreamHttpMethod": [ "Post" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "aggregator.api",
+          "Port": 80
+        }
+      ],
+      "DownstreamPathTemplate": "/api/aggregator/component/{componentId}/reviews/local"
+    },
+
+    {
+      "UpstreamPathTemplate": "/aggregator/component/{componentId}/reviews/global",
+      "UpstreamHttpMethod": [ "Post" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "aggregator.api",
+          "Port": 80
+        }
+      ],
+      "DownstreamPathTemplate": "/api/aggregator/component/{componentId}/reviews/global"
+    },
+
+    {
+      "UpstreamPathTemplate": "/aggregator/component/reviews/avg/{componentId}",
+      "UpstreamHttpMethod": [ "Get" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "aggregator.api",
+          "Port": 80
+        }
+      ],
+      "DownstreamPathTemplate": "/api/aggregator/component/reviews/avg/{componentId}"
+    }
+  ],
+  "GlobalConfiguration": {
+    "BaseUrl": "https://localhost:8070"
+  }
+}

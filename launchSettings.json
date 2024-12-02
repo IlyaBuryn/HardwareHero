@@ -10,7 +10,6 @@
         "configurator.api": "StartDebugging",
         "hardwarehero.mongo": "StartWithoutDebugging",
         "grafana": "StartWithoutDebugging",
-        "apigateway.ocelot": "StartDebugging",
         "prices.api": "StartDebugging",
         "mail.api": "StartDebugging",
         "identity.api": "StartDebugging",
@@ -22,7 +21,8 @@
         "prometheus": "StartWithoutDebugging",
         "users.api": "StartDebugging",
         "zookeeper": "StartWithoutDebugging",
-        "storage.api": "StartDebugging"
+        "storage.api": "StartDebugging",
+        "gateway.ocelot": "StartDebugging"
       }
     }
   }

@@ -1,0 +1,107 @@
+{
+  "Routes": [
+    // Users
+    {
+      "UpstreamPathTemplate": "/users",
+      "UpstreamHttpMethod": [ "Get" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "users.api",
+          "Port": 80
+        }
+      ],
+      "DownstreamPathTemplate": "/api/users"
+    },
+
+    {
+      "UpstreamPathTemplate": "/user",
+      "UpstreamHttpMethod": [ "Post", "Put" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "users.api",
+          "Port": 80
+        }
+      ],
+      "DownstreamPathTemplate": "/api/users"
+    },
+
+    {
+      "UpstreamPathTemplate": "/user/{userId}",
+      "UpstreamHttpMethod": [ "Delete", "Get" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "users.api",
+          "Port": 80
+        }
+      ],
+      "DownstreamPathTemplate": "/api/users/{userId}"
+    },
+
+    // Roles
+    {
+      "UpstreamPathTemplate": "/roles",
+      "UpstreamHttpMethod": [ "Get", "Post", "Delete" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "users.api",
+          "Port": 80
+        }
+      ],
+      "DownstreamPathTemplate": "/api/roles"
+    },
+
+    {
+      "UpstreamPathTemplate": "/roles/user-role",
+      "UpstreamHttpMethod": [ "Post", "Delete" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "users.api",
+          "Port": 80
+        }
+      ],
+      "DownstreamPathTemplate": "/api/roles/user-role"
+    },
+
+    {
+      "UpstreamPathTemplate": "/roles/{fromRole}/{toRole}",
+      "UpstreamHttpMethod": [ "Put" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "users.api",
+          "Port": 80
+        }
+      ],
+      "DownstreamPathTemplate": "/api/roles/{fromRole}/{toRole}"
+    },
+
+    // WishList
+    {
+      "UpstreamPathTemplate": "/users/{userId}/wishlist",
+      "UpstreamHttpMethod": [ "Post", "Delete", "Get" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "users.api",
+          "Port": 80
+        }
+      ],
+      "DownstreamPathTemplate": "/api/wishlist/{userId}"
+    }
+  ],
+  "GlobalConfiguration": {
+    "BaseUrl": "https://localhost:8070"
+  }
+}

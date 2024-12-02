@@ -186,19 +186,19 @@ services:
     depends_on:
       - kafka1
       - kafka2
-
-  apigateway.ocelot:
-   container_name: gateway_Ocelot
-   image: ${DOCKER_REGISTRY-}apigatewayocelot
-   build:
-     context: .
-     dockerfile: ApiGateway/ApiGateway.Ocelot/Dockerfile
-   ports:
-     - 8071:80
-     - 8070:443
-   networks:
-     - backend
-     # - web_frontend
+  
+  gateway.ocelot:
+    container_name: gateway_Ocelot
+    image: ${DOCKER_REGISTRY-}gatewayocelot
+    build:
+      context: .
+      dockerfile: Tools/Gateway/Gateway.Ocelot/Dockerfile
+    ports:
+      - 8071:80
+      - 8070:443
+    networks:
+      - backend
+      # - web_frontend
 
   configurator.api:
    container_name: microservice_Configurator-api
@@ -347,3 +347,4 @@ volumes:
     driver: local  
   
   shared-scripts:  
+

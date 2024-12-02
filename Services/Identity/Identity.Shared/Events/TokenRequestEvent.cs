@@ -5,6 +5,6 @@ namespace Identity.Shared.Events
 {
     public class TokenRequestEvent : BaseMessage
     {
-        public TokenRequest? Tokens { get; set; }
+        public TokenRequest Tokens { get; set; }
     }
 }

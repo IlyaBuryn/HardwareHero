@@ -7,7 +7,7 @@ namespace Identity.Api.Controllers
 {
     [Authorize(AuthenticationSchemes = "Bearer")]
     [Produces("application/json")]
-    [Route("api/identity/account")]
+    [Route("api/account")]
     [ApiController]
     public class AuthenticateController : ControllerBase
     {
@@ -48,6 +48,14 @@ namespace Identity.Api.Controllers
             AppendCookies(result, model.StayIn);
 
             return Ok(result);
+        }
+
+        [HttpPut]
+        [Authorize(Roles = Roles.User)]
+        public async Task<IActionResult> UpdateUserData([FromBody] UpdateUserRequest model)
+        {
+            // TODO: Not implemented
+            return BadRequest(new NotImplementedException());
         }
 
 

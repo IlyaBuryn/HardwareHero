@@ -4,6 +4,7 @@
 /.tmp/
 /images/
 /uploads/
+Tools/Gateway/Gateway.Ocelot/ocelot.json
 
 # Images
 *.png
@@ -405,4 +406,3 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
-ApiGateway/ApiGateway.Ocelot/ocelot.json

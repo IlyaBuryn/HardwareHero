@@ -111,9 +111,9 @@ services:
       - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
 
   
-  # proxy:
-  #   volumes:
-  #     - ./Tools/Nginx/nginx.conf:/etc/nginx/nginx.conf
-  #   ports:
-  #     - "82:80"
+  proxy:
+    volumes:
+      - ./Tools/Nginx/nginx.conf:/etc/nginx/nginx.conf
+    ports:
+      - "82:82"
 

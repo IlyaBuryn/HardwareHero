@@ -13,11 +13,13 @@ networks:
      
 services:   
 
-  # proxy:
-  #   container_name: Nginx-proxy
-  #   image: nginx:mainline
-  #   networks:
-  #     - backend
+  proxy:
+    container_name: Nginx-proxy
+    image: nginx:mainline
+    depends_on:
+      - storage.api
+    networks:
+      - backend
 
   aggregator.api:
     container_name: microservice_Aggregator-api
@@ -106,7 +108,7 @@ services:
     environment:
       - Otel__Endpoint=http://otel-collector:4317
       - Storage:BasePath=/data/files
-      - Storage:BaseUrl=http://hardwarehero.com
+      - Storage:BaseUrl=http://localhost:5015
 
   hardwarehero.mongo:
     container_name: database_HardwareHero-mongo

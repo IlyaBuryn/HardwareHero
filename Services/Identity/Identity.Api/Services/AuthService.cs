@@ -87,35 +87,6 @@ namespace Identity.Api.Services
                         null, null, null, null, null),
                 });
 
-            //var existingUsername = await _userManager.FindByNameAsync(model.Username);
-            //if (existingUsername != null)
-            //{
-            //    throw new AuthenticationException("This user already exist!");
-            //}
-
-            //var existingEmail = _userManager.FindByEmailAsync(model.Email).Result;
-            //if (existingEmail != null)
-            //{
-            //    throw new AuthenticationException("This user already exist!");
-            //}
-
-            //var user = new ApplicationUser
-            //{
-            //    UserName = model.Username,
-            //    Email = model.Email,
-            //    RegistrationDate = DateTime.Now,
-
-            //};
-
-            //var result = await _userManager.CreateAsync(user, model.Password);
-
-            //if (!result.Succeeded)
-            //{
-            //    throw new AuthenticationException(result.Errors.First().Description);
-            //}
-
-            //var roleResult = await _userManager.AddToRoleAsync(user, Roles.User);
-
             if (createResponse.Success && createResponse.User != null)
             {
                 _logger.LogInformation($"Sign up new user: {createResponse.User.UserName}");

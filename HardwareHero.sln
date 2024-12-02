@@ -84,7 +84,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HardwareHero.Shared", "Tool
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".credentials", ".credentials", "{4123D220-AAB9-4832-8306-0BA81FB13F0E}"
 	ProjectSection(SolutionItems) = preProject
-		.credentials\hardwarehero-google.json = .credentials\hardwarehero-google.json
 		.credentials\sharedsettings.json = .credentials\sharedsettings.json
 	EndProjectSection
 EndProject
@@ -128,11 +127,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventDriven.Shared", "Tools
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Storage", "Storage", "{0BF472D2-05B3-4A34-8958-F1FEE8451BA6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Storage.Api", "Services\Storage\Storage.Api\Storage.Api.csproj", "{4F952DCB-E37C-47FB-9AD5-02073395E0DF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Storage.Api", "Services\Storage\Storage.Api\Storage.Api.csproj", "{4F952DCB-E37C-47FB-9AD5-02073395E0DF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Storage.BusinessLogic", "Services\Storage\Storage.BusinessLogic\Storage.BusinessLogic.csproj", "{621475C8-B536-471A-92A2-B83C9FCF76AC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Storage.BusinessLogic", "Services\Storage\Storage.BusinessLogic\Storage.BusinessLogic.csproj", "{621475C8-B536-471A-92A2-B83C9FCF76AC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Storage.DTOs", "Services\Storage\Storage.DTOs\Storage.DTOs.csproj", "{95D9B420-B546-4D91-9EB9-360C376294E3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Storage.DTOs", "Services\Storage\Storage.DTOs\Storage.DTOs.csproj", "{95D9B420-B546-4D91-9EB9-360C376294E3}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Nginx", "Nginx", "{2227E654-1EF5-4F9F-AA64-A6DA21EB3AB2}"
 	ProjectSection(SolutionItems) = preProject

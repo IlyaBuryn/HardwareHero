@@ -9,7 +9,6 @@ namespace Contributor.DataAccess.Models
         public Guid ContributorExcellenceId { get; set; }
         public Guid? SubscriptionPlanInfoId { get; set; }
         
-        // TODO: To migrations
         public DateTime ContributorApplicationDate { get; set; } = DateTime.UtcNow;
 
         public virtual ContributorConfirmInfo? ContributorConfirmInfo { get; set; }

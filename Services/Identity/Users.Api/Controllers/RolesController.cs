@@ -57,7 +57,7 @@ namespace Users.Api.Controllers
         }
 
 
-        [HttpPost]
+        [HttpPost("user-role")]
         [Authorize(Roles = Roles.Contributor)]
         public async Task<IActionResult> SetupUserRolesAsync([FromQuery] UserRolesRequest userRoles)
         {
@@ -67,7 +67,7 @@ namespace Users.Api.Controllers
         }
 
 
-        [HttpDelete]
+        [HttpDelete("user-role")]
         [Authorize(Roles = Roles.Contributor)]
         public async Task<IActionResult> RemoveUserRolesAsync([FromQuery] UserRolesRequest userRoles)
         {

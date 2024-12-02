@@ -108,7 +108,7 @@ services:
     environment:
       - Otel__Endpoint=http://otel-collector:4317
       - Storage:BasePath=/data/files
-      - Storage:BaseUrl=http://localhost:5015
+      - Storage:BaseUrl=http://localhost:82/files
 
   hardwarehero.mongo:
     container_name: database_HardwareHero-mongo

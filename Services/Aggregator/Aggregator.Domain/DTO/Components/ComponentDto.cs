@@ -1,9 +1,9 @@
-﻿namespace Aggregator.DTOs.Components
+﻿namespace Aggregator.Domain.Components.DTO
 {
     public class ComponentDto
     {
-        public Guid Id { get; set; }
-        public string Name { get; set; }
+        public Guid Id { get; set; } = Guid.NewGuid();
+        public string? Name { get; set; }
         public string? Description { get; set; }
         public bool IsActive { get; set; }
         public Guid ComponentTypeId { get; set; }

@@ -1,8 +1,8 @@
-﻿namespace Aggregator.DTOs.Components
+﻿namespace Aggregator.Domain.Components.DTO
 {
     public class ComponentMetricDto
     {
-        public Guid Id { get; set; }
+        public Guid Id { get; set; } = Guid.NewGuid();
         public Guid? ComponentId { get; set; }
         public int ViewsCount { get; set; }
         public int ReviewCount { get; set; }

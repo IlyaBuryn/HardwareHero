@@ -1,4 +1,6 @@
-﻿namespace Contributor.DTOs.Domain.Subscription
+﻿using References.DTOs.Domain;
+
+namespace Contributor.Domain.DTO.Subscription
 {
     public class SubscriptionPlanDto
     {
@@ -7,5 +9,7 @@
         public decimal Price { get; set; }
         public int DaysCount { get; set; }
         public int PriorityLevel { get; set; }
+
+        public CurrencyDto? Currency { get; set; }
     }
 }

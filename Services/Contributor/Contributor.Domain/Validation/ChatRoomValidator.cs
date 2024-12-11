@@ -1,8 +1,8 @@
-﻿using Contributor.DTOs.Domain.Chat;
+﻿using Contributor.Domain.DTO.Chat;
 using FluentValidation;
 using HardwareHero.Shared.Constants;
 
-namespace Contributor.DTOs.Validation
+namespace Contributor.Domain.Validation
 {
     public class ChatRoomValidator : AbstractValidator<ChatRoomDto>
     {

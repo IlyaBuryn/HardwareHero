@@ -1,8 +1,8 @@
-﻿using Contributor.DTOs.Domain.Chat;
+﻿using Contributor.Domain.DTO.Chat;
 using FluentValidation;
 using HardwareHero.Shared.Constants;
 
-namespace Contributor.DTOs.Validation
+namespace Contributor.Domain.Validation
 {
     public class ChatMessageValidator : AbstractValidator<ChatMessageDto>
     {
@@ -11,14 +11,8 @@ namespace Contributor.DTOs.Validation
             RuleFor(c => c.Text).NotEmpty()
                 .WithMessage(ValidationMessages.IsRequired);
 
-            RuleFor(c => c.IsEdited).NotEmpty()
-                .WithMessage(ValidationMessages.IsRequired);
-
             RuleFor(c => c.Text).MaximumLength(ValidationValues.TextMaxLength)
                 .WithMessage(ValidationMessages.MaximumLength);
-
-            RuleFor(c => c.Timestamp).NotEmpty()
-                .WithMessage(ValidationMessages.IsRequired);
 
             RuleFor(c => c.SenderId).NotEmpty()
                 .WithMessage(ValidationMessages.IsRequired);

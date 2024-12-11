@@ -1,8 +1,8 @@
-﻿using Configurator.DTOs.Domain;
+﻿using Configurator.Domain.DTO;
 using FluentValidation;
 using HardwareHero.Shared.Constants;
 
-namespace Configurator.DTOs.Validation
+namespace Configurator.Domain.Validation
 {
     public class StoredAssemblyValidator : AbstractValidator<StoredAssemblyDto>
     {

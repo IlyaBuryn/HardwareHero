@@ -13,7 +13,6 @@ namespace References.BusinessLogic.Data.Init
                 new Currency(new Guid("8cb73308-b77d-428b-9cf2-6ff3c1f33709"), "RUB", "₽"),
                 new Currency(new Guid("0bb32ff2-4821-4828-9a6d-418c64a4989f"), "PLN", "zł"),
                 new Currency(new Guid("93e7717c-04d4-447f-8dfd-4a669cfa1d36"), "USD", "$"),
-                new Currency(new Guid("93e7717c-04d4-447f-8dfd-4a669cfa1d36"), "USD", "$"),
                 new Currency(new Guid("b6d10808-c502-42b9-a07f-51406296f8a3"), "EUR", "€"),
                 new Currency(new Guid("a5df38ad-4501-41f5-bd61-52206b25c61c"), "GBP", "£"),
                 new Currency(new Guid("1d3b0d48-8ded-48e1-bcd7-508b599e348f"), "JPY", "¥"),

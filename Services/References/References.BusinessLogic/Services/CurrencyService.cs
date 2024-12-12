@@ -29,7 +29,6 @@ namespace References.BusinessLogic.Services
                 x => x.Code == currencyToAdd.Code);
 
             var currency = _mapper.Map<Currency>(currencyToAdd);
-            currency.Id = Guid.NewGuid();
 
             var result = await _currencyRepo.CreateEntityAsync(currency);
             result.DataAnswerCheck();

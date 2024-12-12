@@ -1,8 +1,6 @@
 ﻿using HardwareHero.Shared.Constants;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using References.BusinessLogic.Contracts;
-using References.DTOs.Domain;
 
 namespace References.Api.Controllers
 {

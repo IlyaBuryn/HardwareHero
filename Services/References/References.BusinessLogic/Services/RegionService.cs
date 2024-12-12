@@ -30,7 +30,6 @@ namespace References.BusinessLogic.Services
                 x.Country == regionToAdd.Country);
 
             var region = _mapper.Map<Region>(regionToAdd);
-            region.Id = Guid.NewGuid();
 
             var result = await _regionRepo.CreateEntityAsync(region);
             result.DataAnswerCheck();
@@ -62,7 +61,7 @@ namespace References.BusinessLogic.Services
             var regions = await _regionRepo.FindAllEntitiesAsync();
             regions.DataAnswerCheck();
 
-            var mappedRegions = _mapper.Map<IEnumerable<RegionDto>>(regions);
+            var mappedRegions = _mapper.Map<IEnumerable<RegionDto>>(regions.Value);
 
             return mappedRegions;
         }

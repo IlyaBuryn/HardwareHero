@@ -38,12 +38,12 @@
             {
                 HttpOnly = false,
                 Secure = false,
-                SameSite = SameSiteMode.Lax, // TODO:
-                Domain = "localhost", // TODO:
-                Path = "/", // TODO:
+                SameSite = SameSiteMode.Lax,
+                Domain = "localhost",
+                Path = "/",
             };
 
-            cookieOptions.Expires = DateTime.Now + TimeSpan.FromDays(30); // TODO:
+            cookieOptions.Expires = DateTime.Now + TimeSpan.FromDays(30);
 
             return cookieOptions;
         }

@@ -1,7 +1,7 @@
 ﻿using EventDriven.Kafka.Config;
 using EventDriven.Kafka.Extensions;
-using Identity.Shared.Events;
-using Mail.DTOs.Events;
+using Identity.Domain.Messages.Tokens;
+using Identity.Domain.Messages.Users;
 
 namespace Gateway.Ocelot.Extensions
 {
@@ -29,7 +29,8 @@ namespace Gateway.Ocelot.Extensions
             var messageConfig = builder.Configuration.GetSection("MessageKafkaConfig").Get<KafkaConfig>();
 
             builder.Services
-                .AddKafkaRequestService<TokenRequestEvent, AuthResultEvent>(messageConfig);
+                .AddKafkaRequestService<TokenRequestMessage,
+                    AuthenticationResponseMessage>(messageConfig);
 
             return services;
         }

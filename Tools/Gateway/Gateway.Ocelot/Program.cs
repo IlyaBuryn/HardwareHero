@@ -13,7 +13,6 @@ builder.Host
 builder
     .ConfigureOcelotFiles();
 
-
 builder.Services
     .AddOcelot(builder.Configuration);
 

@@ -1,0 +1,85 @@
+{
+  "Routes": [
+    // Reggions
+    {
+      "UpstreamPathTemplate": "/gateway/region",
+      "UpstreamHttpMethod": [ "Post", "Put" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "references.api",
+          "Port": 80
+        }
+      ],
+      "UpstreamHeaderTransform": {
+        "DownstreamRequireAuth": true
+      },
+      "DownstreamPathTemplate": "/api/region"
+    },
+
+    {
+      "UpstreamPathTemplate": "/gateway/regions",
+      "UpstreamHttpMethod": [ "Get" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "references.api",
+          "Port": 80
+        }
+      ],
+      "DownstreamPathTemplate": "/api/region/every"
+    },
+
+    // Currencies
+    {
+      "UpstreamPathTemplate": "/gateway/currency",
+      "UpstreamHttpMethod": [ "Post", "Put" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "references.api",
+          "Port": 80
+        }
+      ],
+      "UpstreamHeaderTransform": {
+        "DownstreamRequireAuth": true
+      },
+      "DownstreamPathTemplate": "/api/currency"
+    },
+
+    {
+      "UpstreamPathTemplate": "/gateway/currencies",
+      "UpstreamHttpMethod": [ "Get" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "references.api",
+          "Port": 80
+        }
+      ],
+      "DownstreamPathTemplate": "/api/currency/every"
+    },
+
+    // References
+    {
+      "UpstreamPathTemplate": "/gateway/geo",
+      "UpstreamHttpMethod": [ "Get" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "references.api",
+          "Port": 80
+        }
+      ],
+      "DownstreamPathTemplate": "/api/references/geo"
+    }
+  ],
+  "GlobalConfiguration": {
+    "BaseUrl": "https://localhost:8070"
+  }
+}

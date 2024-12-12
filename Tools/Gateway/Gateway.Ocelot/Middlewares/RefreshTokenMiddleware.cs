@@ -1,7 +1,8 @@
 ﻿using EventDriven.Shared.Services;
 using Gateway.Ocelot.Extensions;
 using HardwareHero.Shared.Exceptions;
-using Identity.Shared.Events;
+using Identity.Domain.Messages.Tokens;
+using Identity.Domain.Messages.Users;
 using System.IdentityModel.Tokens.Jwt;
 
 namespace Gateway.Ocelot.Middlewares
@@ -10,20 +11,34 @@ namespace Gateway.Ocelot.Middlewares
     {
         private readonly RequestDelegate _next;
         private readonly IConfiguration _configuration;
-        private readonly IRequestService<TokenRequestEvent, AuthResultEvent> _refreshTokenService;
+        private readonly IRequestService<TokenRequestMessage,
+            AuthenticationResponseMessage> _refreshTokenService;
+        private readonly List<string> _excludedRoutes;
 
         public RefreshTokenMiddleware(
             RequestDelegate next,
             IConfiguration configuration,
-            IRequestService<TokenRequestEvent, AuthResultEvent> refreshTokenService)
+            IRequestService<TokenRequestMessage,
+                AuthenticationResponseMessage> refreshTokenService)
         {
             _next = next;
             _configuration = configuration;
             _refreshTokenService = refreshTokenService;
+            _excludedRoutes = configuration.GetSection("ExcludedRoutes")
+                .Get<List<string>>() ?? new List<string>();
         }
+
 
         public async Task InvokeAsync(HttpContext context)
         {
+            var path = context.Request.Path.Value ?? "";
+            if (_excludedRoutes.Any(route => path.StartsWith(route, StringComparison.OrdinalIgnoreCase)))
+            {
+                await _next(context);
+
+                return;
+            }
+
             var accessTokenKey = _configuration.GetSection("JwtConfig:JwtCookieKey").Value ?? string.Empty;
             var refreshTokenKey = _configuration.GetSection("JwtConfig:RefreshCookieKey").Value ?? string.Empty;
 
@@ -50,31 +65,30 @@ namespace Gateway.Ocelot.Middlewares
             await _next(context);
         }
 
-        private async Task<(string, string)?> TryCheckIfTokenExpiredAsync(string accessToken, string refreshToken)
+
+        private async Task<(string, string)?> TryCheckIfTokenExpiredAsync(
+            string accessToken, string refreshToken)
         {
             var response = await _refreshTokenService.SendRequestAsync(
-                new TokenRequestEvent()
+                new TokenRequestMessage()
                 {
-                    Tokens = new Identity.Shared.Requests.TokenRequest()
-                    {
-                        AccessToken = accessToken,
-                        RefreshToken = refreshToken
-                    }
+                    AccessToken = accessToken,
+                    RefreshToken = refreshToken,
                 });
 
-            var authModel = response.AuthenticationResponse;
-            if (response == null || authModel == null)
+            if (response == null)
             {
                 throw new DataValidationException("No response from Identity server!");
             }
 
-            if (!authModel.IsSuccessful)
+            if (!response.IsSuccess)
             {
-                throw new AuthenticationException(authModel.Errors.First());
+                throw new AuthenticationException(response.AnyError());
             }
 
             return (accessToken, refreshToken);
         }
+
 
         private bool IsTokenNotExpired(string token)
         {

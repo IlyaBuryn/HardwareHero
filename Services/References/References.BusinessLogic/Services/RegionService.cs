@@ -1,6 +1,8 @@
-﻿using AutoMapper;
+﻿using Amazon.Runtime.Internal.Util;
+using AutoMapper;
 using HardwareHero.Shared.Extensions.Repository;
 using HardwareHero.Shared.Repositories.Contracts;
+using Microsoft.Extensions.Logging;
 using References.BusinessLogic.Contracts;
 using References.BusinessLogic.Models;
 using References.DTOs.Domain;
@@ -13,17 +15,20 @@ namespace References.BusinessLogic.Services
     {
         private readonly IBaseRepositoryAsync<Region> _regionRepo;
         private readonly IMapper _mapper;
+        private readonly ILogger<RegionService> _logger;
 
         public RegionService(
             IBaseRepositoryAsync<Region> regionRepo,
-            IMapper mapper)
+            IMapper mapper,
+            ILogger<RegionService> logger)
         {
             _regionRepo = regionRepo;
             _mapper = mapper;
+            _logger = logger;
         }
 
 
-        public async Task<Guid?> AddRegionAsync(RegionDto regionToAdd)
+        public async Task<RegionDto> AddRegionAsync(RegionDto regionToAdd)
         {
             await _regionRepo.AlreadyExistCheckAsync(
                 x => x.Code == regionToAdd.Code ||
@@ -32,27 +37,35 @@ namespace References.BusinessLogic.Services
             var region = _mapper.Map<Region>(regionToAdd);
 
             var result = await _regionRepo.CreateEntityAsync(region);
-            result.DataAnswerCheck();
+            result.DataAnswerCheck(true, _logger);
 
-            return region.Id;
+            return regionToAdd;
         }
 
 
-        public async Task<bool> UpdateRegionAsync(RegionDto regionToUpdate)
+        public async Task<RegionDto> UpdateRegionAsync(RegionDto regionToUpdate)
         {
-            await _regionRepo.AlreadyExistCheckAsync(
-                x => x.Code == regionToUpdate.Code ||
-                x.Country == regionToUpdate.Country);
-
-            await _regionRepo.NotFoundCheckAsync(
+            var region = await _regionRepo.NotFoundCheckAsync(
                 x => x.Id == regionToUpdate.Id);
 
-            var region = _mapper.Map<Region>(regionToUpdate);
+            if (region.Code != regionToUpdate.Code)
+            {
+                await _regionRepo.AlreadyExistCheckAsync(
+                    x => x.Code == regionToUpdate.Code);
+            }
 
-            var result = await _regionRepo.UpdateEntityAsync(region);
-            result.DataAnswerCheck();
+            if (region.Country != regionToUpdate.Country)
+            {
+                await _regionRepo.AlreadyExistCheckAsync(
+                    x => x.Country == regionToUpdate.Country);
+            }
 
-            return result.Value != null;
+            var regionDto = _mapper.Map<Region>(regionToUpdate);
+
+            var result = await _regionRepo.UpdateEntityAsync(regionDto);
+            result.DataAnswerCheck(true, _logger);
+
+            return regionToUpdate;
         }
 
 

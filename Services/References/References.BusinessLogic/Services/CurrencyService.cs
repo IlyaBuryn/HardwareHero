@@ -1,6 +1,8 @@
-﻿using AutoMapper;
+﻿using Amazon.Runtime.Internal.Util;
+using AutoMapper;
 using HardwareHero.Shared.Extensions.Repository;
 using HardwareHero.Shared.Repositories.Contracts;
+using Microsoft.Extensions.Logging;
 using References.BusinessLogic.Contracts;
 using References.BusinessLogic.Models;
 using References.DTOs.Domain;
@@ -13,17 +15,20 @@ namespace References.BusinessLogic.Services
     {
         private readonly IBaseRepositoryAsync<Currency> _currencyRepo;
         private readonly IMapper _mapper;
+        private readonly ILogger<CurrencyService> _logger;
 
         public CurrencyService(
             IBaseRepositoryAsync<Currency> currencyRepo,
-            IMapper mapper)
+            IMapper mapper,
+            ILogger<CurrencyService> logger)
         {
             _currencyRepo = currencyRepo;
             _mapper = mapper;
+            _logger = logger;
         }
 
 
-        public async Task<Guid?> AddCurrencyAsync(CurrencyDto currencyToAdd)
+        public async Task<CurrencyDto> AddCurrencyAsync(CurrencyDto currencyToAdd)
         {
             await _currencyRepo.AlreadyExistCheckAsync(
                 x => x.Code == currencyToAdd.Code);
@@ -31,26 +36,29 @@ namespace References.BusinessLogic.Services
             var currency = _mapper.Map<Currency>(currencyToAdd);
 
             var result = await _currencyRepo.CreateEntityAsync(currency);
-            result.DataAnswerCheck();
+            result.DataAnswerCheck(true, _logger);
 
-            return currency.Id;
+            return currencyToAdd;
         }
 
 
-        public async Task<bool> UpdateCurrencyAsync(CurrencyDto currencyToUpdate)
+        public async Task<CurrencyDto> UpdateCurrencyAsync(CurrencyDto currencyToUpdate)
         {
-            await _currencyRepo.AlreadyExistCheckAsync(
-                x => x.Code == currencyToUpdate.Code);
-
-            await _currencyRepo.NotFoundCheckAsync(
+            var currency = await _currencyRepo.NotFoundCheckAsync(
                 x => x.Id == currencyToUpdate.Id);
 
-            var currency = _mapper.Map<Currency>(currencyToUpdate);
+            if (currency.Code != currencyToUpdate.Code)
+            {
+                await _currencyRepo.AlreadyExistCheckAsync(
+                    x => x.Code == currencyToUpdate.Code);
+            }
 
-            var result = await _currencyRepo.UpdateEntityAsync(currency);
-            result.DataAnswerCheck();
+            var currencyDto = _mapper.Map<Currency>(currencyToUpdate);
 
-            return result.Value != null;
+            var result = await _currencyRepo.UpdateEntityAsync(currencyDto);
+            result.DataAnswerCheck(true, _logger);
+
+            return currencyToUpdate;
         }
 
 
